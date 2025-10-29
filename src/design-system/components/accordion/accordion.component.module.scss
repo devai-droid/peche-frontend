@@ -1,0 +1,49 @@
+:global :local(.accordion) {
+  &.Mui-expanded {
+    margin: 0 !important;
+  }
+  .Mui-expanded {
+    margin: 0 !important;
+    min-height: min-content !important;
+  }
+  .MuiAccordionSummary-root {
+    min-height: min-content;
+    padding: 8px 16px;
+
+    > .MuiAccordionSummary-expandIconWrapper {
+      color: inherit;
+    }
+
+    > .MuiAccordionSummary-content {
+      width: 100%;
+      margin: 0;
+    }
+  }
+}
+
+.accordion {
+  box-shadow: none !important;
+  margin: 0;
+  &::before {
+    display: none;
+  }
+  .summary {
+    background-color: $color-primary;
+    color: white;
+    @include title($title-md);
+  }
+
+  .detail {
+    margin-top: 1px;
+    padding: 8px 16px;
+    background-color: $color-footer;
+    color: $color-label;
+    @include text($text-lg);
+  }
+}
+
+.accordion-expand-icon {
+  &.isExpandIconHidden {
+    display: none;
+  }
+}

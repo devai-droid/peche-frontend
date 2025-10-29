@@ -1,0 +1,72 @@
+$title-xxs: 0.625rem;
+$title-xs: 0.75rem;
+$title-sm: 0.875rem;
+$title-md: 1rem;
+$title-lg: 1.125rem;
+$title-xl: 1.25rem;
+$title-xxl: 2rem;
+
+$title-line-height: 150%;
+
+$text-xs: 0.625rem;
+$text-sm: 0.75rem;
+$text-md: 0.875rem;
+$text-lg: 1rem;
+$text-xl: 1.125rem;
+
+$text-line-height: 175%;
+
+@mixin title($size: $title-md) {
+  font-size: $size;
+  line-height: $title-line-height;
+  font-family: $font-pretendard;
+  font-weight: 700;
+}
+
+@mixin k-title($size: $title-md) {
+  font-size: $size;
+  font-family: $font-kopub;
+  line-height: $title-line-height;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  @include maxWidth($mobile-lg-max) {
+    @if ($size == $title-sm) {
+      font-size: 12px;
+    }
+    @if ($size == $title-lg) {
+      font-size: 16px;
+    }
+    @if ($size == $title-xl) {
+      font-size: 20px;
+    }
+    @if ($size == $title-xxl) {
+      font-size: 32px;
+    }
+  }
+}
+
+@mixin e-title($size: $title-md) {
+  font-size: $size;
+  line-height: $title-line-height;
+  font-weight: 700;
+  font-family: $font-emerald;
+  @include maxWidth($mobile-lg-max) {
+    @if ($size == $title-sm) {
+      font-size: 12px;
+    }
+    @if ($size == $title-lg) {
+      font-size: 16px;
+    }
+    @if ($size == $title-xl) {
+      font-size: 20px;
+    }
+    @if ($size == $title-xxl) {
+      font-size: 32px;
+    }
+  }
+}
+
+@mixin text($size: $text-md) {
+  font-size: $size;
+  line-height: $text-line-height;
+}

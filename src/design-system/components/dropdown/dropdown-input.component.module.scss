@@ -1,0 +1,17 @@
+div.select {
+  font-family: $font-pretendard;
+}
+
+svg.select-icon {
+  color: #999999;
+}
+
+div.hidden-border {
+  padding: 0;
+  border: none;
+
+  &::before,
+  &::after {
+    display: none !important;
+  }
+}

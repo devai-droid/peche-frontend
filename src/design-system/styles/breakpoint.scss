@@ -1,0 +1,45 @@
+// Responsive Web Design Breakpoint
+$mobile-sm: 330px;
+$mobile-lg: 428px;
+$tablet: 712px;
+$desktop: 1280px;
+
+$mobile-sm-max: $mobile-lg - 1px;
+$mobile-lg-max: $tablet - 1px;
+$tablet-max: $desktop - 1px;
+
+$breakpoints: (
+  $mobile-sm: "(max-width: #{$mobile-sm-max})",
+  $mobile-lg: "(min-width: #{$mobile-lg}) and (max-width: #{$mobile-lg-max})",
+  $tablet: "(min-width: #{$tablet}) and (max-width: #{$tablet-max})",
+  $desktop: "(min-width: #{$desktop})",
+) !default;
+
+@mixin mediaSize($breakpoint) {
+  @if map-has-key($breakpoints, $breakpoint) {
+    @media #{map-get($breakpoints, $breakpoint)} {
+      @content;
+    }
+  } @else {
+    @warn "Unfortunately, no value could be retrieved from `#{$breakpoint}`. "
+          + "Available breakpoints are: #{map-keys($breakpoints)}.";
+  }
+}
+
+@mixin minWidth($breakpoint) {
+  @media (min-width: $breakpoint) {
+    @content;
+  }
+}
+
+@mixin maxWidth($breakpoint) {
+  @media (max-width: $breakpoint) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @include mediaSize($desktop) {
+    @content;
+  }
+}

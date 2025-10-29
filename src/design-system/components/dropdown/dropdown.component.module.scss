@@ -1,0 +1,13 @@
+:global :local(li.item) {
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+
+  &.Mui-selected {
+    background-color: rgba(243, 232, 218, 0.7);
+  }
+
+  &.Mui-selected:hover {
+    background-color: #f3e8da;
+  }
+}

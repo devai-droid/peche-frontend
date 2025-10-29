@@ -1,0 +1,85 @@
+.toast-container {
+  @include minWidth(481px) {
+    width: calc(100% - 32px);
+  }
+
+  @include minWidth($tablet) {
+    width: 600px;
+  }
+}
+
+.toast {
+  padding-right: 4px;
+  padding-left: 16px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  background: $color-footer !important;
+}
+
+.body {
+  padding: 0;
+  margin: 0;
+}
+
+.content-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  .title {
+    @include title($title-xs);
+  }
+
+  .message {
+    @include text($text-lg);
+    color: white;
+  }
+}
+
+button.close-icon {
+  color: $color-gray-600;
+}
+
+.info {
+  .icon {
+    color: $color-gray-600;
+  }
+  .title {
+    color: $color-gray-700;
+  }
+  .progress {
+    background-color: $color-gray-600;
+  }
+}
+.success {
+  .icon {
+    color: $color-suc-500;
+  }
+  .title {
+    color: $color-suc-600;
+  }
+  .progress {
+    background-color: $color-suc-500;
+  }
+}
+.warning {
+  .icon {
+    color: $color-warn-600;
+  }
+  .title {
+    color: $color-warn-700;
+  }
+  .progress {
+    background-color: $color-warn-600;
+  }
+}
+.error {
+  .icon {
+    color: $color-error-500;
+  }
+  .title {
+    color: $color-error-500;
+  }
+  .progress {
+    background-color: $color-error-500;
+  }
+}

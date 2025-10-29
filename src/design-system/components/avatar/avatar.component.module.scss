@@ -1,0 +1,19 @@
+.avatar {
+  background-color: $color-hover;
+  border-radius: 50%;
+  object-fit: cover;
+  display: inline-block;
+}
+
+.sm {
+  width: 36px;
+  height: 36px;
+}
+.md {
+  width: 64px;
+  height: 64px;
+}
+.lg {
+  width: 96px;
+  height: 96px;
+}

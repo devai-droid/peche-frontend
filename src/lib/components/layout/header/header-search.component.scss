@@ -1,0 +1,20 @@
+/* CSSTransition specific classes starts here */
+.header-search-wrapper__content-enter {
+  overflow: hidden;
+  max-height: 0;
+}
+
+.header-search-wrapper__content-enter-active {
+  max-height: 1000px;
+  transition: max-height 0.6s ease-in-out;
+}
+
+.header-search-wrapper__content-exit {
+  max-height: 1000px;
+}
+
+.header-search-wrapper__content-exit-active {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.4s cubic-bezier(0, 1, 0, 1);
+}

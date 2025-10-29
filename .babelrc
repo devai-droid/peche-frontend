@@ -1,0 +1,16 @@
+{
+  "plugins": ["babel-plugin-twin", "babel-plugin-macros"],
+  "presets": [
+    "@babel/preset-react",
+    [
+      "@babel/preset-env",
+      {
+        "modules": false,
+        "useBuiltIns": "usage",
+        "corejs": 3
+      }
+    ],
+    "@emotion/babel-preset-css-prop",
+    "@babel/preset-typescript"
+  ]
+}

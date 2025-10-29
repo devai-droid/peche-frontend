@@ -1,0 +1,6 @@
+.PhoneInputInput::placeholder {
+  opacity: 1;
+  @media (min-width: 640px) {
+    opacity: 0;
+  }
+}

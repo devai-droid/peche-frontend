@@ -1,0 +1,17 @@
+{
+  "jsxSingleQuote": false,
+  "quoteProps": "as-needed",
+  "endOfLine": "auto",
+  "proseWrap": "preserve",
+  "bracketSpacing": true,
+  "bracketSameLine": true,
+  "useTabs": false,
+  "printWidth": 100,
+  "tabWidth": 2,
+  "singleQuote": false,
+  "trailingComma": "all",
+  "semi": false,
+  "newline-before-return": true,
+  "no-duplicate-variable": [true, "check-parameters"],
+  "no-var-keyword": true
+}

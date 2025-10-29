@@ -1,0 +1,14 @@
+.loading {
+  color: $color-point !important;
+  width: 48px !important;
+  height: 48px !important;
+
+  @include desktop {
+    width: 64px !important;
+    height: 64px !important;
+  }
+
+  circle {
+    stroke-width: 4;
+  }
+}

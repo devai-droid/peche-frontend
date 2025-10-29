@@ -1,0 +1,38 @@
+.segment-group[role="group"] {
+  background-color: $color-label;
+  box-sizing: border-box;
+
+  border-radius: 8px;
+
+  padding: 4px;
+
+  gap: 4px;
+
+  user-select: none;
+
+  :global :local(.segment-button[type="button"]) {
+    border: 0;
+    border-radius: 8px;
+
+    margin: 0;
+
+    @include text($text-md);
+    font-family: $font-pretendard;
+    font-weight: 400;
+    line-height: 150%;
+
+    color: $color-line;
+
+    &.Mui-selected[type="button"] {
+      @include title($title-sm);
+      font-weight: 700;
+
+      background-color: $color-footer;
+      color: white;
+
+      &:hover {
+        background-color: rgba($color-footer, 0.8);
+      }
+    }
+  }
+}

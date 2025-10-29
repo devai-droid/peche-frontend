@@ -1,0 +1,91 @@
+.input {
+  position: absolute;
+  opacity: 0;
+}
+
+.container {
+  @include flex(row, flex-start, center);
+  cursor: pointer;
+
+  .radio-button {
+    background-color: transparent;
+    width: 36px;
+    height: 36px;
+    @include flex;
+    &:before {
+      display: flex;
+
+      content: "";
+      background-color: #fff;
+
+      width: 24px;
+      height: 24px;
+
+      border-radius: 50%;
+      box-shadow: inset 0 0 0 1px $color-gray-500;
+
+      transition: 300ms ease;
+    }
+  }
+
+  .text-container {
+    .text,
+    .sub-text {
+      @include title($title-md);
+      color: white;
+    }
+
+    .label {
+      @include text($text-sm);
+      font-weight: 400;
+      color: $color-gray-300;
+      margin-left: 8px;
+      text-decoration: line-through;
+    }
+  }
+}
+
+.input:checked + .container {
+  .radio-button:before {
+    background-color: white;
+    box-shadow: inset 0 0 0 8px $color-point;
+  }
+}
+
+.input:disabled + .container {
+  cursor: not-allowed;
+  .text-container {
+    .text {
+      color: $color-gray-300;
+    }
+    .sub-text {
+      color: $color-point-sub;
+    }
+
+    .label {
+      color: $color-gray-700;
+    }
+  }
+
+  .radio-button:before {
+    background-color: $color-gray-400;
+  }
+}
+
+.input:checked:disabled + .container {
+  .text-container {
+    .text,
+    .sub-text {
+      color: $color-gray-600;
+    }
+
+    .label {
+      color: $color-gray-700;
+    }
+  }
+
+  .radio-button:before {
+    background-color: white;
+    box-shadow: inset 0 0 0 8px $color-label;
+  }
+}

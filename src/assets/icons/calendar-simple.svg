@@ -1,0 +1,13 @@
+<svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="calendar" clip-path="url(#clip0_198_570)">
+<path id="Vector" d="M12.9511 2.72217H3.71495C2.98624 2.72217 2.39551 3.3129 2.39551 4.04161V13.2777C2.39551 14.0064 2.98624 14.5972 3.71495 14.5972H12.9511C13.6798 14.5972 14.2705 14.0064 14.2705 13.2777V4.04161C14.2705 3.3129 13.6798 2.72217 12.9511 2.72217Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_2" d="M10.9722 1.40283V4.04172" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_3" d="M5.69434 1.40283V4.04172" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_4" d="M2.39551 6.68066H14.2705" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<defs>
+<clipPath id="clip0_198_570">
+<rect width="15.8333" height="15.8333" fill="currentColor" transform="translate(0.416504 0.0834961)"/>
+</clipPath>
+</defs>
+</svg>

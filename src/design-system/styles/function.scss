@@ -1,0 +1,3 @@
+@function vh100() {
+  @return calc(var(--vh, 1vh) * 100);
+}

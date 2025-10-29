@@ -1,0 +1,19 @@
+.overlay {
+  position: fixed;
+  z-index: 1400;
+  inset: 0px;
+  background: #2c2c2cb2;
+}
+.modal {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  transform: translate(-50%, -50%);
+  margin-right: -50%;
+  overflow: auto;
+  outline: none;
+  border: none;
+  border-radius: 10px;
+  background-color: #333333;
+  max-height: calc(100vh - 10rem);
+  max-width: calc(100vw - 10rem);
+}
