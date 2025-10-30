@@ -3,7 +3,7 @@ import tw from "twin.macro"
 import { Dropdown, DropdownItem, Icon } from "@/design-system/components"
 import { useTranslation } from "react-i18next"
 import useResponsive from "@/lib/hooks/use-responsive"
-import { DropDownIcon } from "@/assets/icon"
+import { GlobeIcon } from "@/assets/icon"
 import { Language } from "@/lib/locales/i18n.config"
 import { useLocation, useNavigate } from "react-router-dom"
 
@@ -11,27 +11,27 @@ const displayLanguages = [
   {
     key: Language.KOR,
     value: "KOR",
-    mobileValue: "KR",
+    mobileValue: "KOR",
   },
   {
     key: Language.ENG,
     value: "ENG",
-    mobileValue: "EN",
+    mobileValue: "ENG",
   },
   {
     key: Language.CHN,
     value: "CHN",
-    mobileValue: "CN",
+    mobileValue: "CHN",
   },
   {
     key: Language.JPN,
     value: "JPN",
-    mobileValue: "JP",
+    mobileValue: "JPN",
   },
   {
     key: Language.THA,
     value: "THA",
-    mobileValue: "TH",
+    mobileValue: "THA",
   },
 ]
 
@@ -55,21 +55,19 @@ const HeaderLanguage = () => {
   return (
     <Dropdown
       element={({ openDropdown, open }) => (
-        <button onClick={openDropdown} tw="flex items-center border-b border-black pb-1 pt-1.5">
-          <div tw="text-md font-bold font-nanumgothic mr-2">
-            {isDesktop ? language?.value : language?.mobileValue}
-          </div>
-          <Icon
-            icon={DropDownIcon}
-            tw="text-[#838383] -mr-2"
-            css={open ? tw`transform rotate-180` : tw`transform rotate-0`}
-          />
+        <button onClick={openDropdown} tw="flex items-center">
+          {isDesktop ? (
+            <div tw="font-pretendard mr-2">{language?.value}</div>
+          ) : (
+            <Icon icon={GlobeIcon} tw="mr-3" />
+          )}
         </button>
       )}>
       {(closeDropdown) =>
         displayLanguages.map((lang) => (
           <DropdownItem
             key={lang.key}
+            tw="md:text-[15px] text-[13px] font-medium"
             onClick={() => {
               closeDropdown()
               const restPath = location.pathname.split("/").slice(2).join("/")

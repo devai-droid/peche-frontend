@@ -59,8 +59,12 @@ const Dropdown: React.FC<Props> = ({
             },
           },
         }}
-        transformOrigin={{ horizontal: "right", vertical: "top" }}
-        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+        MenuListProps={{
+          disablePadding: true,
+        }}
+        tw="translate-x-[-5px]"
+        transformOrigin={{ horizontal: "center", vertical: "top" }}
+        anchorOrigin={{ horizontal: "center", vertical: "bottom" }}
         {...props}>
         {children(handleClose)}
       </Menu>

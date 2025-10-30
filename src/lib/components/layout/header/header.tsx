@@ -41,7 +41,7 @@ const Header = ({
             clickedKeyword={clickedKeyword}
             setClickedKeyword={setClickedKeyword}
           />
-          {!hideNavigator && <HeaderNavigator setOpenSearch={setOpenSearch} />}
+          {/* {!hideNavigator && <HeaderNavigator setOpenSearch={setOpenSearch} />} */}
         </DropShadow>
         {/* 데탑 */}
         {isDesktop && (

@@ -7,7 +7,7 @@ export { ReactComponent as DeveloperModeIcon } from "@/assets/icons/developer-mo
 export { ReactComponent as DropDownIcon } from "@/assets/icons/drop-down.svg"
 export { ReactComponent as HamburgerIcon } from "@/assets/icons/hamburger-button.svg"
 export { ReactComponent as RemindIcon } from "@/assets/icons/remind.svg"
-export { ReactComponent as ShoppingIcon } from "@/assets/icons/shopping.svg"
+export { ReactComponent as ShoppingIcon } from "@/assets/icons/shopping-bag.svg"
 export { ReactComponent as PeopleIcon } from "@/assets/icons/people.svg"
 export { ReactComponent as PlusIcon } from "@/assets/icons/plus.svg"
 export { ReactComponent as SearchIcon } from "@/assets/icons/search.svg"
@@ -41,3 +41,4 @@ export { ReactComponent as ShoppingCartIcon } from "@/assets/icons/shopping-cart
 export { ReactComponent as LetterIcon } from "@/assets/icons/letter.svg"
 export { ReactComponent as MailIcon } from "@/assets/icons/mail.svg"
 export { ReactComponent as ChatIcon } from "@/assets/icons/chat.svg"
+export { ReactComponent as GlobeIcon } from "@/assets/icons/globe.svg"

@@ -1,6 +1,6 @@
 import React from "react"
 import cx from "classnames"
-import LogoImg from "@/assets/images/peche-logo.png"
+import LogoImg from "@/assets/images/peche-mobile-logo.png"
 
 import styles from "./logo.component.module.scss"
 import { useTranslation } from "react-i18next"
@@ -10,7 +10,7 @@ interface Props {
   className?: string
 }
 
-const Logo: React.FC<Props> = ({ className, ...props }) => {
+const MobileLogo: React.FC<Props> = ({ className, ...props }) => {
   const { i18n } = useTranslation()
   const { language } = i18n
   const [searchParams] = useSearchParams()
@@ -24,9 +24,9 @@ const Logo: React.FC<Props> = ({ className, ...props }) => {
       className={cx(styles.link, className)}
       href={`${window.location.origin}/${language}?${search}`}
       {...props}>
-      <img className={cx(styles.logo, className)} src={LogoImg} alt="Logo" />
+      <img className={cx(styles.mobileLogo, className)} src={LogoImg} alt="mobileLogo" />
     </a>
   )
 }
 
-export default Logo
+export default MobileLogo

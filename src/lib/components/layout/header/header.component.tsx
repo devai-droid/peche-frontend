@@ -1,8 +1,8 @@
 /* eslint-disable react/no-unused-prop-types */
 import { useEffect, useState } from "react"
 import tw from "twin.macro"
-import { CalendarIcon, CloseIcon, HamburgerIcon, SearchThinIcon, ShoppingIcon } from "@/assets/icon"
-import { IconButton, Logo } from "@/design-system/components"
+import { CalendarIcon, CloseIcon, HamburgerIcon, SearchIcon, ShoppingIcon } from "@/assets/icon"
+import { IconButton, Logo, MobileLogo } from "@/design-system/components"
 import AppMaxWidth from "../app-max-width.component"
 import useResponsive from "@/lib/hooks/use-responsive"
 import HeaderLanguage from "./header-language.component"
@@ -13,7 +13,7 @@ import { Language } from "@/lib/locales/i18n.config"
 import { useSearchControllerFindMany } from "@/lib/orval/search/search"
 import CustomLink from "../../custom-link.component"
 
-const HeaderContainer = tw.header`h-20 lg:h-24 relative`
+const HeaderContainer = tw.header`h-16 lg:h-20 relative bg-neutral`
 
 interface MenuProps {
   isDesktop?: boolean
@@ -23,11 +23,12 @@ interface MenuProps {
   setClickedKeyword?: (keyword: string) => void
 }
 
-const LeftMenu = ({ isDesktop, onClickDrawer }: MenuProps) =>
+const LeftMenu = ({ isDesktop }: MenuProps) =>
   !isDesktop ? (
     <div tw="flex items-center gap-4">
-      <IconButton icon={HamburgerIcon} iconSize={24} onClick={onClickDrawer} />
-      <HeaderLanguage />
+      {/* <IconButton icon={HamburgerIcon} iconSize={24} onClick={onClickDrawer} /> */}
+      {/* <HeaderLanguage /> */}
+      <MobileLogo tw="" />
     </div>
   ) : (
     <div />
@@ -35,15 +36,72 @@ const LeftMenu = ({ isDesktop, onClickDrawer }: MenuProps) =>
 
 const RightMenu = ({ isDesktop, setOpenSearch }: MenuProps) => {
   const navigate = useCustomNavigate()
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+
   return (
     <div tw="flex items-center">
-      <IconButton icon={ShoppingIcon} onClick={() => navigate("/reservation/new")} />
-      {!isDesktop && <IconButton icon={SearchThinIcon} onClick={() => setOpenSearch?.(true)} />}
-      {isDesktop && <IconButton icon={CalendarIcon} onClick={() => navigate("/reservation")} />}
-      {isDesktop && (
+      {/* 데스크탑 */}
+      {isDesktop ? (
         <>
-          <div tw="w-3" />
+          <button
+            tw="ml-2 cursor-pointer flex items-center gap-1 text-[13px] md:text-[15px] leading-[150%] font-normal"
+            onClick={() => navigate("/reservation/new")}>
+            장바구니
+            <span tw="inline-flex items-center justify-center w-[18px] h-[18px] rounded-full bg-[#BD7B60] text-white text-[11px] font-medium">
+              0
+            </span>
+          </button>
+
+          <div tw="ml-8" />
+          <button tw="cursor-pointer" onClick={() => navigate("/reservation")}>
+            예약확인
+          </button>
+
+          <div tw="w-3 ml-8" />
           <HeaderLanguage />
+        </>
+      ) : (
+        <>
+          {/* 모바일: 메뉴 닫힘 상태 */}
+          {!isMenuOpen && (
+            <>
+              <div tw="relative inline-flex">
+                <IconButton
+                  tw="p-2"
+                  icon={ShoppingIcon}
+                  onClick={() => navigate("/reservation/new")}
+                />
+                <span tw="absolute top-0.5 -right-0.5 flex items-center justify-center w-[16px] h-[16px] rounded-full bg-[#DA7F67] text-white text-[10px] font-medium">
+                  0
+                </span>
+              </div>
+              <IconButton tw="p-2" icon={SearchIcon} onClick={() => setOpenSearch?.(true)} />
+              <IconButton
+                tw="p-2"
+                icon={HamburgerIcon}
+                iconSize={24}
+                onClick={() => setIsMenuOpen(true)}
+              />
+            </>
+          )}
+
+          {/* 모바일: 메뉴 열림 상태 */}
+          {isMenuOpen && (
+            <>
+              <button
+                tw="text-[14px] text-primary font-semibold mr-4 border-b border-primary"
+                onClick={() => navigate("/reservation")}>
+                예약확인
+              </button>
+              <HeaderLanguage />
+              <IconButton
+                tw="p-2"
+                icon={CloseIcon}
+                iconSize={24}
+                onClick={() => setIsMenuOpen(false)}
+              />
+            </>
+          )}
         </>
       )}
     </div>
@@ -64,7 +122,7 @@ const Product = ({ name, description, pageId, setOpenSearch }: ProductProps) => 
   }
 
   return (
-    <div tw="p-4 lg:p-6 rounded-lg border border-[#D0D0D0] shadow-[0px_4px_12px_0px_rgba(0,0,0,0.25)] font-nanumgothic">
+    <div tw="p-4 lg:p-6 rounded-lg border border-[#D0D0D0] shadow-[0px_4px_12px_0px_rgba(0,0,0,0.25)] font-pretendard">
       <div tw="text-[#333] text-lg font-bold">{name}</div>
       <div tw="mt-5 mb-3">{description}</div>
       <div tw="relative text-right">
@@ -122,7 +180,7 @@ const Search = ({ setOpenSearch, clickedKeyword, setClickedKeyword }: MenuProps)
           onSubmit={(e) => {
             e.preventDefault()
           }}>
-          <IconButton icon={SearchThinIcon} tw="-ml-2" type="submit" />
+          <IconButton icon={SearchIcon} tw="-ml-2" type="submit" />
           <input
             type="text"
             value={searchTerm}
@@ -215,12 +273,14 @@ const HeaderComponent = ({ onClickDrawer, clickedKeyword, setClickedKeyword }: P
         />
       ) : (
         <>
-          <div tw="w-24 lg:w-36 absolute-center">
-            <Logo />
-          </div>
-          <AppMaxWidth tw="h-full flex justify-between items-center">
-            <LeftMenu isDesktop={isDesktop} onClickDrawer={onClickDrawer} />
-            <RightMenu isDesktop={isDesktop} setOpenSearch={setOpenSearch} />
+          <div tw="w-24 lg:w-36 absolute-center">{isDesktop && <Logo />}</div>
+          <AppMaxWidth tw="h-full flex justify-between items-center font-pretendard md:text-[15px] text-[13px]">
+            <LeftMenu isDesktop={isDesktop} />
+            <RightMenu
+              isDesktop={isDesktop}
+              setOpenSearch={setOpenSearch}
+              onClickDrawer={onClickDrawer}
+            />
           </AppMaxWidth>
         </>
       )}

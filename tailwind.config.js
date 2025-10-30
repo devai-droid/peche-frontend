@@ -21,6 +21,9 @@ module.exports = {
         white: "#ffffff",
         black: "#000000",
         point: "#CAB69E",
+        neutral: "#F4F4F4",
+        primary: "#DA7F67",
+        tertiary: "#FEF5EA"
       },
       boxShadow: {},
       minWidth: {},

@@ -1,13 +1,26 @@
 :global :local(li.item) {
+  width: 82px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+
   &:hover {
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    color: #da7f67;
   }
 
   &.Mui-selected {
-    background-color: rgba(243, 232, 218, 0.7);
+    background-color: #fef5ea;
+    color: #da7f67;
   }
 
   &.Mui-selected:hover {
-    background-color: #f3e8da;
+    background-color: #fef5ea;
+  }
+
+  /* 👇 Non-desktop (mobile/tablet) width */
+  @media (max-width: 1024px) {
+    width: 52px;
   }
 }
