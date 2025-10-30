@@ -6,6 +6,7 @@ import { IconButton, Logo, MobileLogo } from "@/design-system/components"
 import AppMaxWidth from "../app-max-width.component"
 import useResponsive from "@/lib/hooks/use-responsive"
 import HeaderLanguage from "./header-language.component"
+import MobileAccordionMenu from "./mobile-accordion-menu.component"
 import useCustomNavigate from "@/lib/hooks/use-custom-navigate"
 import { useTranslation } from "react-i18next"
 import useLanguageValue from "@/lib/hooks/use-language-key"
@@ -21,6 +22,8 @@ interface MenuProps {
   onClickDrawer?: () => void
   clickedKeyword?: string
   setClickedKeyword?: (keyword: string) => void
+  isMenuOpen?: boolean
+  setIsMenuOpen?: (open: boolean) => void
 }
 
 const LeftMenu = ({ isDesktop }: MenuProps) =>
@@ -34,9 +37,8 @@ const LeftMenu = ({ isDesktop }: MenuProps) =>
     <div />
   )
 
-const RightMenu = ({ isDesktop, setOpenSearch }: MenuProps) => {
+const RightMenu = ({ isDesktop, setOpenSearch, isMenuOpen, setIsMenuOpen }: MenuProps) => {
   const navigate = useCustomNavigate()
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   return (
     <div tw="flex items-center">
@@ -80,7 +82,7 @@ const RightMenu = ({ isDesktop, setOpenSearch }: MenuProps) => {
                 tw="p-2"
                 icon={HamburgerIcon}
                 iconSize={24}
-                onClick={() => setIsMenuOpen(true)}
+                onClick={() => setIsMenuOpen?.(true)}
               />
             </>
           )}
@@ -98,7 +100,7 @@ const RightMenu = ({ isDesktop, setOpenSearch }: MenuProps) => {
                 tw="p-2"
                 icon={CloseIcon}
                 iconSize={24}
-                onClick={() => setIsMenuOpen(false)}
+                onClick={() => setIsMenuOpen?.(false)}
               />
             </>
           )}
@@ -256,6 +258,7 @@ interface Props {
 const HeaderComponent = ({ onClickDrawer, clickedKeyword, setClickedKeyword }: Props) => {
   const { isDesktop } = useResponsive()
   const [openSearch, setOpenSearch] = useState(false)
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   useEffect(() => {
     if (clickedKeyword && !isDesktop) {
@@ -280,8 +283,11 @@ const HeaderComponent = ({ onClickDrawer, clickedKeyword, setClickedKeyword }: P
               isDesktop={isDesktop}
               setOpenSearch={setOpenSearch}
               onClickDrawer={onClickDrawer}
+              isMenuOpen={isMenuOpen}
+              setIsMenuOpen={setIsMenuOpen}
             />
           </AppMaxWidth>
+          {!isDesktop && isMenuOpen && <MobileAccordionMenu />}
         </>
       )}
     </HeaderContainer>

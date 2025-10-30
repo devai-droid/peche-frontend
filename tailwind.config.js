@@ -20,6 +20,7 @@ module.exports = {
         current: "currentColor",
         white: "#ffffff",
         black: "#000000",
+        neutralBlack: "#121212",
         point: "#CAB69E",
         neutral: "#F4F4F4",
         primary: "#DA7F67",
