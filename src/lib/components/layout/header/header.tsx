@@ -41,7 +41,7 @@ const Header = ({
             clickedKeyword={clickedKeyword}
             setClickedKeyword={setClickedKeyword}
           />
-          {/* {!hideNavigator && <HeaderNavigator setOpenSearch={setOpenSearch} />} */}
+          {!hideNavigator && <HeaderNavigator />}
         </DropShadow>
         {/* 데탑 */}
         {isDesktop && (
@@ -53,7 +53,7 @@ const Header = ({
           />
         )}
       </AppBar>
-      <div id="header-height" tw="h-32 lg:h-40" css={hideNavigator && tw`h-20 lg:h-24`} />
+      {isDesktop && <div id="header-height" tw="h-32" />}
     </>
   )
 }

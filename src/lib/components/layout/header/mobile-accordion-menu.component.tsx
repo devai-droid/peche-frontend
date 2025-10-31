@@ -65,16 +65,15 @@ const MobileAccordionMenu = () => {
               isOpen={sectionOpen}
               onClick={() => setOpenSection(sectionOpen ? null : sectionIdx)}>
               {section.title}
-              {section.items && (
-                <ChevronDownIcon
-                  width={18}
-                  height={18}
-                  css={[
-                    tw`text-[#DA7F67] transition-transform duration-200`,
-                    sectionOpen && tw`rotate-180`,
-                  ]}
-                />
-              )}
+
+              <ChevronDownIcon
+                width={18}
+                height={18}
+                css={[
+                  tw`text-[#DA7F67] transition-transform duration-200`,
+                  sectionOpen && tw`rotate-180`,
+                ]}
+              />
             </SectionHeader>
 
             {/* 2️⃣ 2단계: 시술 카테고리 목록 */}

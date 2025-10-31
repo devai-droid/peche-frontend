@@ -1,15 +1,16 @@
 {
   "header": {
-    "home": "메인화면",
-    "surgeryAndPrice": "가격",
+    "home": "홈",
+    "surgeryAndPrice": "전체 시술",
     "hospital": "소개",
     "reservation": "상담 예약하기",
-    "event": "이벤트",
+    "event": "가격·이벤트",
     "searchSurgery": "원하는 시술을 검색해 보세요!",
     "recommendKeyword": "추천 검색어",
     "price": "가격",
-    "introduction": "소개",
-    "reservationCheck": "예약 확인"
+    "introduction": "페슈의원 소개",
+    "reservationCheck": "예약 확인",
+    "blog": "블로그"
   },
   "home": {
     "title": "촉촉한 수분 필링",

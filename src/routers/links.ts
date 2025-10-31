@@ -1,18 +1,18 @@
 export const menuLinks = [
   {
-    name: "header.home",
-    href: "/",
+    name: "header.introduction",
+    href: "/intro",
   },
   {
     name: "header.surgeryAndPrice",
     href: "/products",
   },
   {
-    name: "header.hospital",
-    href: "/intro",
+    name: "header.event",
+    href: "/event",
   },
   {
-    name: "header.reservation",
+    name: "header.blog",
     href: "/reservation/new",
   },
 ]

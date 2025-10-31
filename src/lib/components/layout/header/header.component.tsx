@@ -1,7 +1,17 @@
 /* eslint-disable react/no-unused-prop-types */
 import { useEffect, useState } from "react"
 import tw from "twin.macro"
-import { CalendarIcon, CloseIcon, HamburgerIcon, SearchIcon, ShoppingIcon } from "@/assets/icon"
+import {
+  CalendarIcon,
+  CloseIcon,
+  HamburgerIcon,
+  SearchIcon,
+  ShoppingIcon,
+  NaverBlogIcon,
+  InstaLogoIcon,
+  YoutubeIcon,
+  TiktokIcon,
+} from "@/assets/icon"
 import { IconButton, Logo, MobileLogo } from "@/design-system/components"
 import AppMaxWidth from "../app-max-width.component"
 import useResponsive from "@/lib/hooks/use-responsive"
@@ -26,16 +36,38 @@ interface MenuProps {
   setIsMenuOpen?: (open: boolean) => void
 }
 
-const LeftMenu = ({ isDesktop }: MenuProps) =>
-  !isDesktop ? (
+const LeftMenu = ({ isDesktop }: MenuProps) => {
+  if (!isDesktop) {
+    return (
+      <div tw="flex items-center gap-4">
+        <MobileLogo />
+      </div>
+    )
+  }
+
+  // 데스크탑일 때 아이콘들 나열
+  const socialLinks = [
+    { icon: NaverBlogIcon, url: "https://blog.naver.com/" },
+    { icon: InstaLogoIcon, url: "https://www.instagram.com/" },
+    { icon: YoutubeIcon, url: "https://www.youtube.com/" },
+    { icon: TiktokIcon, url: "https://www.tiktok.com/" },
+  ]
+
+  return (
     <div tw="flex items-center gap-4">
-      {/* <IconButton icon={HamburgerIcon} iconSize={24} onClick={onClickDrawer} /> */}
-      {/* <HeaderLanguage /> */}
-      <MobileLogo tw="" />
+      {socialLinks.map(({ icon: Icon, url }) => (
+        <a
+          key={url}
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          tw="flex items-center justify-center hover:opacity-80 transition-opacity">
+          <Icon width={22} height={22} />
+        </a>
+      ))}
     </div>
-  ) : (
-    <div />
   )
+}
 
 const RightMenu = ({ isDesktop, setOpenSearch, isMenuOpen, setIsMenuOpen }: MenuProps) => {
   const navigate = useCustomNavigate()
@@ -276,7 +308,7 @@ const HeaderComponent = ({ onClickDrawer, clickedKeyword, setClickedKeyword }: P
         />
       ) : (
         <>
-          <div tw="w-24 lg:w-36 absolute-center">{isDesktop && <Logo />}</div>
+          <div tw="absolute-center">{isDesktop && <Logo />}</div>
           <AppMaxWidth tw="h-full flex justify-between items-center font-pretendard md:text-[15px] text-[13px]">
             <LeftMenu isDesktop={isDesktop} />
             <RightMenu
