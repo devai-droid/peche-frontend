@@ -46,7 +46,7 @@ const Banner = () => {
       <div tw="absolute inset-0 bg-black bg-opacity-40" />
       <div tw="absolute top-1/4 inset-x-0 flex flex-col items-center">
         <div tw="mb-[5%]">
-          <div tw="font-nanumgothic font-extrabold text-[1.75rem] lg:text-[4rem] text-white">
+          <div tw="font-times font-extrabold text-[1.75rem] lg:text-[4rem] text-white">
             {t("home.title")}
           </div>
         </div>

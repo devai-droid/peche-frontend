@@ -47,3 +47,4 @@ export { ReactComponent as NaverBlogIcon } from "@/assets/icons/Logo-Naver-Blog.
 export { ReactComponent as InstaLogoIcon } from "@/assets/icons/Logo-Insta.svg"
 export { ReactComponent as YoutubeIcon } from "@/assets/icons/Logo-YouTube.svg"
 export { ReactComponent as TiktokIcon } from "@/assets/icons/Logo-Tiktok.svg"
+export { ReactComponent as GrayPlusIcon } from "@/assets/icons/plus-gray.svg"

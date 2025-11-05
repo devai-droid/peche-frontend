@@ -38,7 +38,7 @@ const Location = () => {
   return (
     <div tw="max-lg:px-4 flex flex-col lg:flex-row font-nanumgothic">
       <div tw="flex-1 max-lg:(aspect-square max-h-[50vh]) lg:min-w-[50%]">
-         <GoogleMapComponent />
+        <GoogleMapComponent />
       </div>
       <div tw="w-full overflow-hidden bg-[#2F323B] text-white px-4 py-8 lg:(px-16 pt-20 pb-36 gap-12) gap-5 flex flex-col">
         <h5 tw="font-bold text-xl">{t("home.hospitalName")}</h5>

@@ -5,8 +5,6 @@ import React, { useState } from "react"
 import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from "@react-google-maps/api"
 import { useTranslation } from "react-i18next"
 import { Language } from "@/lib/locales/i18n.config"
-import { useHospitalInfoControllerFindMany } from "@/lib/orval/hospital-infos/hospital-infos"
-import { HospitalInfo } from "@/lib/orval/model"
 
 const containerStyle = {
   width: "100%",
@@ -14,50 +12,40 @@ const containerStyle = {
 }
 
 const center = {
-  lat: 37.50178909301758,
-  lng: 127.02523803710938,
+  lat: 37.49556,
+  lng: 127.0294,
 }
 
-const secondMarkerPosition = {
-  lat: 37.50194558942308,
-  lng: 127.02475356660678,
-}
+// const getLocalizedValue = <T extends object>(
+//   base: keyof T & string,
+//   record: T | undefined,
+//   lang: string,
+// ): string => {
+//   if (!record) return ""
 
-const thirdMarkerPosition = {
-  lat: 37.501778430417126,
-  lng: 127.02425374665002,
-}
-
-const getLocalizedValue = <T extends object>(
-  base: keyof T & string,
-  record: T | undefined,
-  lang: string,
-): string => {
-  if (!record) return ""
-
-  switch (lang) {
-    case "en":
-      return (record as any)[`${base}EN`] || (record as any)[base]
-    case "zh":
-      return (record as any)[`${base}ZH`] || (record as any)[base]
-    case "ja":
-      return (record as any)[`${base}JA`] || (record as any)[base]
-    case "th":
-      return (record as any)[`${base}TH`] || (record as any)[base]
-    default:
-      return (record as any)[base]
-  }
-}
+//   switch (lang) {
+//     case "en":
+//       return (record as any)[`${base}EN`] || (record as any)[base]
+//     case "zh":
+//       return (record as any)[`${base}ZH`] || (record as any)[base]
+//     case "zh-TW":
+//       return (record as any)[`${base}ZHTW`] || (record as any)[base]
+//     case "ja":
+//       return (record as any)[`${base}JA`] || (record as any)[base]
+//     case "th":
+//       return (record as any)[`${base}TH`] || (record as any)[base]
+//     default:
+//       return (record as any)[base]
+//   }
+// }
 
 function GoogleMapComponent() {
   const { i18n, t } = useTranslation()
   const language = i18n.language as Language
-  const { data: hospitalInfoData } = useHospitalInfoControllerFindMany()
-  const hospitalInfo = (hospitalInfoData as unknown as HospitalInfo[])?.[0]
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
-    googleMapsApiKey: "AIzaSyCnwITjv4eAtku7my1KwCdFsh9Q4Upn2ZA",
+    googleMapsApiKey: "AIzaSyC3FKUB_8Mj0-nFmyb7CP8Pe5y0FzPjqhg",
     language: "en",
   })
 
@@ -89,27 +77,7 @@ function GoogleMapComponent() {
           setSelectedMarker({
             position: center,
             building: t("footer.address"),
-            address: getLocalizedValue("buildingOneFirstAddress", hospitalInfo, language),
-          })
-        }
-      />
-      <Marker
-        position={secondMarkerPosition}
-        onClick={() =>
-          setSelectedMarker({
-            position: secondMarkerPosition,
-            building: t("footer.newBuildingAddress"),
-            address: getLocalizedValue("buildingTwoAddress", hospitalInfo, language),
-          })
-        }
-      />
-      <Marker
-        position={thirdMarkerPosition}
-        onClick={() =>
-          setSelectedMarker({
-            position: thirdMarkerPosition,
-            building: t("footer.thirdBuildingAddress"),
-            address: getLocalizedValue("buildingThreeAddress", hospitalInfo, language),
+            address: t("footer.hospitalAddress"),
           })
         }
       />

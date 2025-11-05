@@ -33,6 +33,7 @@ module.exports = {
       inter: ["Inter", "sans-serif"],
       pretendard: ["Pretendard", "sans-serif"],
       nanumgothic: ["Nanum Gothic", "sans-serif"],
+      times: ["Times New Roman", "Times", "serif"],
     },
   },
   plugins: [
