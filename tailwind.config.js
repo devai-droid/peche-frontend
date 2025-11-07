@@ -7,12 +7,13 @@ module.exports = {
     fontSize: {
       xxs: "0.625rem",
       xs: "0.75rem",
-      sm: "0.875rem",
+      sm: "0.8rem",
       md: "1rem",
       lg: "1.125rem",
       xl: "1.25rem",
       "2xl": "1.5rem",
       xxl: "2rem",
+      detailMd: "0.8rem"
     },
     extend: {
       colors: {
@@ -23,6 +24,8 @@ module.exports = {
         neutralBlack: "#121212",
         point: "#CAB69E",
         neutral: "#F4F4F4",
+        neutral20: "#E4E4E4",
+        neutral50: "#9B9B9B",
         primary: "#DA7F67",
         tertiary: "#FEF5EA"
       },

@@ -29,7 +29,7 @@ const Page = ({
         clickedKeyword={clickedKeyword}
         setClickedKeyword={setClickedKeyword}
       />
-      <main tw="flex-1 mb-10 md:min-h-[70rem]">{children}</main>
+      <main tw="flex-1 md:min-h-[70rem]">{children}</main>
       {!hiddenFooter && <Footer />}
     </div>
   )
