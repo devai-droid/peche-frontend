@@ -26,6 +26,7 @@ module.exports = {
         neutral: "#F4F4F4",
         neutral20: "#E4E4E4",
         neutral50: "#9B9B9B",
+        neutral70: "#666666",
         primary: "#DA7F67",
         tertiary: "#FEF5EA"
       },

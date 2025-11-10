@@ -43,62 +43,82 @@ const SectionIntro = styled.section`
   background-image: url(${introBg});
 `
 const IntroTextWrapper = tw.div`
-  absolute left-[8vw] bottom-[8vh]
+  absolute left-[5vw] md:left-[8vw] top-[11vh] md:top-[8vh]
   text-neutralBlack
 `
 const IntroTitle = tw.h1`
   text-[40px] md:text-[52px] font-medium leading-tight mb-2 font-time
 `
 const IntroSubtitle = tw.p`
-  text-[16px] md:text-[18px] text-neutralBlack font-pretendard
+  text-[18px] md:text-[22px] text-neutralBlack font-pretendard
 `
 
-/* ──────────────────────────────
- * 2️⃣ TRUST Section
- * ────────────────────────────── */
-/* 2️⃣ TRUST Section */
 /* 2️⃣ TRUST Section */
 const SectionTrust = tw.section`
-  w-full bg-white text-neutralBlack py-20 md:py-32
-`
-const TrustInner = tw.div`
-  max-w-[1440px] mx-auto px-6 md:px-10
-  flex flex-col md:flex-row items-center justify-between
+  w-full bg-white text-neutralBlack pt-20 pb-16 md:py-32
 `
 
-const TrustTextBlock = tw.div`md:w-1/2 w-full mb-10 md:mb-0`
+const TrustInner = tw.div`
+  max-w-[1440px] mx-auto px-6 md:px-10
+  flex flex-col lg:flex-row justify-between
+  gap-8 lg:gap-20 xl:gap-28
+`
+
+// 왼쪽 전체 텍스트 블록
+const TrustTextBlock = tw.div`
+  w-full lg:w-1/2 flex flex-col justify-between
+  lg:h-[520px]
+`
+
+const TrustHeadingBlock = tw.div`
+  flex items-start
+`
+
 const TrustHeading = styled.h2`
-  ${tw`text-[28px] md:text-[36px] font-bold leading-[1.4] mb-6 font-pretendard`}
+  ${tw`text-[32px] md:text-[40px] font-semibold leading-[1.4] font-pretendard tracking-tight`}
   span {
-    ${tw`text-primary`}
+    ${tw`text-primary font-time font-normal tracking-tight`}
   }
 `
+
+// 작은 글씨 섹션
+const TrustParagraphBlock = tw.div`
+  flex items-end
+  mt-10 md:mt-0
+`
+
 const TrustParagraph = tw.p`
-  text-[15px] md:text-[16px] leading-relaxed text-[#555]
+  text-[16px] md:text-[18px] leading-[1.5] text-neutral70 tracking-tight
   font-pretendard whitespace-pre-line
 `
+
 const TrustImage = styled.img`
-  ${tw`md:w-[480px] w-full md:h-auto h-[400px] object-cover rounded-none`}
+  ${tw`
+    w-full lg:w-[550px] xl:w-[704px]
+    h-[280px] md:h-[420px] lg:h-[500px] xl:h-[520px]
+    object-cover rounded-none
+    lg:ml-auto
+  `}
 `
 
 /* ──────────────────────────────
  * 3️⃣ SYMBOL × TRUST Section
  * ────────────────────────────── */
 const SectionSymbolTrust = tw.section`
-  w-full bg-[#FFF7EE] py-20 md:py-28
+  w-full bg-[#FFF7EE] py-20 md:py-24
 `
 const SymbolInner = tw.div`
   max-w-[1440px] mx-auto px-6 md:px-10 flex flex-col items-center
 `
 
 const SymbolTitle = tw.h3`
-  text-center text-[#C18067] text-[16px] md:text-[18px] tracking-[0.1em] mb-3 font-medium
+  text-center text-primary text-[18px] md:text-[22px] tracking-[0.1em] mb-3 font-medium tracking-tight
 `
 const SymbolSubTitle = tw.h2`
-  text-center text-neutralBlack text-[28px] md:text-[32px] font-bold mb-4
+  text-center text-neutralBlack text-[24px] md:text-[30px] font-bold mb-4 tracking-tight
 `
 const SymbolDesc = tw.p`
-  text-center text-[#555] text-[15px] md:text-[16px] leading-relaxed mb-10 max-w-[700px]
+  text-center text-neutral70 text-[14px] md:text-[16px] leading-[1.5] mb-10 max-w-[700px] tracking-tight
 `
 
 // ✅ 이미지 그리드 수정됨
@@ -134,12 +154,12 @@ const SymbolImage = styled.img<{ index?: number }>`
 
 /* Core Value */
 const CoreValueContainer = tw.div`
-  w-full bg-white rounded-none mt-20 py-14 md:py-20 flex flex-col items-center
+  w-full bg-white rounded-none mt-20 py-14 flex flex-col items-center
 `
 const CoreTitle = tw.h3`
-  text-center text-[22px] md:text-[26px] font-semibold text-neutralBlack mb-12 font-pretendard
+  text-center text-[18px] md:text-[22px] font-medium text-neutralBlack mb-12 font-time tracking-tight
 `
-const Highlight = tw.span`text-primary ml-2 font-medium`
+const Highlight = tw.span`text-primary ml-2 font-medium font-pretendard text-[16px] md:text-[18px]`
 const CoreGrid = tw.div`
   flex flex-col md:flex-row items-center justify-center gap-12 md:gap-20
 `
@@ -147,30 +167,30 @@ const CoreItem = tw.div`flex flex-col items-center text-center max-w-[250px]`
 const CoreImage = styled.img`
   ${tw`w-[100px] h-[100px] object-contain mb-4`}
 `
-const CoreTextTitle = tw.h4`text-[18px] font-bold mb-2 text-neutralBlack`
-const CoreTextDesc = tw.p`text-[#666] text-[15px] leading-relaxed`
+const CoreTextTitle = tw.h4`text-[16px] md:text-[18px] font-bold mb-2 text-neutralBlack`
+const CoreTextDesc = tw.p`text-neutral70 text-[14px] md:text-[16px] leading-[1.5] tracking-tight`
 
 /* ──────────────────────────────
  * 4️⃣ INTERIOR × TRUST Section (상단)
  * ────────────────────────────── */
 const SectionInterior = tw.section`
-  w-full bg-white py-20 md:py-28 overflow-x-hidden
+  w-full bg-white pt-20 pb-0 md:pt-28 overflow-x-hidden
 `
 
 const InteriorInner = tw.div`
-  max-w-[1440px] mx-auto px-[20px] md:px-[30px]
+  max-w-[1440px] mx-auto px-6 md:px-10
   flex flex-col items-center
 `
 
 // 🧡 텍스트 블록
 const InteriorLabel = tw.h3`
-  text-primary text-[15px] md:text-[16px] tracking-[0.1em] mb-3 font-medium self-start
+  text-primary text-[18px] md:text-[22px] tracking-tight mb-3 font-medium self-start leading-[1.5]
 `
 const InteriorTitle = tw.h2`
-  text-[26px] md:text-[32px] font-bold text-neutralBlack mb-6 self-start leading-tight
+  text-[24px] md:text-[30px] font-bold text-neutralBlack mb-6 self-start tracking-tight leading-[1.5]
 `
 const InteriorDesc = tw.p`
-  text-[15px] md:text-[16px] leading-relaxed text-[#555] font-pretendard mb-10 self-start
+  text-[14px] md:text-[16px] tracking-tight text-neutral70 font-pretendard mb-10 self-start leading-[1.5]
   whitespace-pre-line
 `
 
@@ -233,7 +253,7 @@ const LeftBlock = styled.div`
 `
 
 const LeftText = styled.p`
-  ${tw`text-[15px] md:text-[16px] leading-relaxed text-[#555] font-pretendard`}
+  ${tw`text-[14px] md:text-[16px] tracking-tight text-neutral70 font-pretendard leading-[1.5]`}
   margin-bottom: 12px; /* ✅ 모바일용 좁은 여백 */
 
   @media (min-width: 768px) {
@@ -261,7 +281,7 @@ const RightImage = styled.img`
  * 5️⃣ CUSTOMER × TRUST Section
  * ────────────────────────────── */
 const SectionCustomerTrust = tw.section`
-  w-full bg-white py-20 md:py-28
+  w-full bg-white py-12 md:py-28
 `
 
 const CustomerTrustInner = tw.div`
@@ -270,7 +290,7 @@ const CustomerTrustInner = tw.div`
 
 // 🧡 섹션 제목
 const SectionTitle = tw.h2`
-  text-[22px] md:text-[28px] font-bold text-neutralBlack mb-12
+  text-[24px] md:text-[30px] font-bold text-neutralBlack tracking-tight mb-12 
 `
 
 // 🧡 카드 래퍼
@@ -278,7 +298,7 @@ const CustomerTrustCard = styled.div`
   ${tw`
     flex flex-col md:flex-row 
     items-center md:items-start justify-between 
-    gap-6 md:gap-10 mb-8
+    gap-10 md:gap-10 mb-8
   `}/* ✅ 항상 이미지 왼쪽 / 텍스트 오른쪽 */
 `
 
@@ -302,11 +322,11 @@ const CustomerTrustText = tw.div`
 `
 
 const CustomerTrustHeading = tw.h3`
-  text-[16px] md:text-[18px] font-semibold text-[#D47A5A] mb-3
+  text-[18px] md:text-[22px] font-semibold text-[#D47A5A] mb-3 tracking-tight leading-[1.4]
 `
 
 const CustomerTrustParagraph = tw.p`
-  text-[15px] md:text-[16px] leading-relaxed text-[#555]
+  text-[16px] md:text-[18px] text-neutral70 tracking-tight leading-[1.4]
 `
 
 /* ──────────────────────────────
@@ -322,13 +342,13 @@ const PeopleInner = tw.div`
 
 // 🧡 텍스트 영역 (이름 변경됨)
 const PeopleTag = tw.p`
-  text-[13px] md:text-[14px] text-[#C56A4B] mb-3 tracking-wide
+  text-primary text-[18px] md:text-[22px] tracking-tight mb-3 font-medium self-start leading-[1.5]
 `
 const PeopleTitle = tw.h2`
-  text-[22px] md:text-[28px] font-bold text-neutralBlack mb-4
+  text-[24px] md:text-[30px] font-bold text-neutralBlack tracking-tight mb-4
 `
 const PeopleParagraph = tw.p`
-  text-[15px] md:text-[16px] text-[#444] leading-relaxed max-w-[700px] mx-auto mb-14
+  text-[14px] md:text-[16px] text-neutral70 tracking-tight leading-[1.4] max-w-[700px] mx-auto mb-14
 `
 
 // 🧡 인물 그리드
@@ -373,11 +393,11 @@ const InfoBlock = tw.div`
 `
 
 const InfoTitle = tw.h3`
-  text-[17px] font-semibold text-[#C56A4B] mb-2
+  text-primary text-[16px] md:text-[18px] tracking-tight font-semibold mb-1
 `
 
 const InfoText = tw.p`
-  leading-[150%] mb-1
+  text-[14px] md:text-[16px] text-neutral70 tracking-tight leading-[150%] font-pretendard
 `
 
 /* Buttons */
@@ -436,19 +456,25 @@ const Intro = () => {
         <SectionTrust>
           <TrustInner>
             <TrustTextBlock>
-              <TrustHeading>
-                아름다움의 시작과 <br />
-                끝을 완성하는 <br />
-                페슈의원의 <span>‘TRUST’</span>
-              </TrustHeading>
-              <TrustParagraph>
-                페슈의원은 고객이 경험하는 모든 순간에서 신뢰를 만들기 위해 오랜 시간 깊은 고민과
-                노력을 쌓아 만들어졌습니다.
-                {"\n\n"}
-                처음 만나는 순간부터 치료를 마치고 병원을 나서는 순간까지, 페슈의원에서의 모든
-                경험은 언제나 투명하고 정직합니다.
-              </TrustParagraph>
+              <TrustHeadingBlock>
+                <TrustHeading>
+                  아름다움의 시작과 <br />
+                  끝을 완성하는 <br />
+                  페슈의원의 <span>‘TRUST’</span>
+                </TrustHeading>
+              </TrustHeadingBlock>
+
+              <TrustParagraphBlock>
+                <TrustParagraph>
+                  페슈의원은 고객이 경험하는 모든 순간에서 신뢰를 만들기 위해 오랜 시간 깊은 고민과
+                  노력을 쌓아 만들어졌습니다.
+                  {"\n"}
+                  처음 만나는 순간부터 치료를 마치고 병원을 나서는 순간까지, 페슈의원에서의 모든
+                  경험은 언제나 투명하고 정직합니다.
+                </TrustParagraph>
+              </TrustParagraphBlock>
             </TrustTextBlock>
+
             <TrustImage src={modelImg} alt="clinic model" />
           </TrustInner>
         </SectionTrust>
@@ -483,9 +509,7 @@ const Intro = () => {
                   <CoreImage src={beauty} alt="아름다움" />
                   <CoreTextTitle>아름다움</CoreTextTitle>
                   <CoreTextDesc>
-                    페슈의원의 심볼은 복숭아의 단면에서 시작되었습니다.
-                    <br />
-                    껍질을 넘어.
+                    페슈의원의 심볼은 복숭아의 단면에서 시작되었습니다. 껍질을 넘어.
                   </CoreTextDesc>
                 </CoreItem>
 
@@ -495,9 +519,7 @@ const Intro = () => {
                   <CoreImage src={trust} alt="신뢰" />
                   <CoreTextTitle>신뢰</CoreTextTitle>
                   <CoreTextDesc>
-                    페슈의원의 심볼은 복숭아의 단면에서 시작되었습니다.
-                    <br />
-                    껍질을 넘어.
+                    페슈의원의 심볼은 복숭아의 단면에서 시작되었습니다. 껍질을 넘어.
                   </CoreTextDesc>
                 </CoreItem>
 
@@ -507,9 +529,7 @@ const Intro = () => {
                   <CoreImage src={transparency} alt="투명함" />
                   <CoreTextTitle>투명함</CoreTextTitle>
                   <CoreTextDesc>
-                    페슈의원의 심볼은 복숭아의 단면에서 시작되었습니다.
-                    <br />
-                    껍질을 넘어.
+                    페슈의원의 심볼은 복숭아의 단면에서 시작되었습니다. 껍질을 넘어.
                   </CoreTextDesc>
                 </CoreItem>
               </CoreGrid>

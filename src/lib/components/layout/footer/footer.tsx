@@ -13,7 +13,7 @@ const FooterWrapper = tw.footer`
 `
 
 const FooterInner = styled.div`
-  ${tw`max-w-[1440px] mx-auto px-6 py-10 md:py-14 flex flex-col`}
+  ${tw`max-w-[1440px] mx-auto px-6 py-10 md:py-14 flex flex-col tracking-tight leading-[150%] font-pretendard text-[13px] md:text-[14px]`}
 `
 
 const FooterTop = tw.div`
@@ -28,16 +28,16 @@ const Divider = tw.hr`
   border-t border-[#DCDCDC] my-4
 `
 
-const BottomRow = tw.div`
-  flex flex-col md:flex-row md:items-center md:justify-between gap-4
-`
-
 const PolicyLinks = tw.div`
-  flex gap-3 justify-center md:justify-start text-neutral50
+  flex gap-3 justify-start md:justify-start text-neutral50
 `
 
 const SNSIcons = tw.div`
-  flex gap-4 justify-center md:justify-end items-center text-neutral50
+  flex gap-4 justify-start md:justify-end items-center text-neutral50
+`
+
+const BottomRow = tw.div`
+  flex flex-col md:flex-row md:items-center md:justify-between gap-4
 `
 
 const IconLink = styled.a`
