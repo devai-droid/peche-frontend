@@ -1,29 +1,23 @@
-import React from "react"
 import tw, { styled } from "twin.macro"
-import { Logo } from "@/design-system/components"
 import CustomLink from "@/lib/components/custom-link.component"
 import {
-  PecheFooterIcon,
   NaverBlogGrayIcon,
   InstaLogoGrayIcon,
   YoutubeGrayIcon,
   TiktokGrayIcon,
 } from "@/assets/icon"
+import FooterLogoImg from "@/assets/images/peche-footer-logo.png"
 
 const FooterWrapper = tw.footer`
   w-full bg-neutral20 text-[#444] text-sm
 `
 
 const FooterInner = styled.div`
-  ${tw`max-w-[1440px] mx-auto px-6 py-10 md:py-14 flex flex-col gap-6`}
+  ${tw`max-w-[1440px] mx-auto px-6 py-10 md:py-14 flex flex-col`}
 `
 
 const FooterTop = tw.div`
   flex flex-col md:flex-row md:justify-between md:items-start gap-6 md:gap-10
-`
-
-const InfoBlock = tw.div`
-  flex-1 flex flex-col gap-2
 `
 
 const LogoBlock = tw.div`
@@ -46,10 +40,6 @@ const SNSIcons = tw.div`
   flex gap-4 justify-center md:justify-end items-center text-neutral50
 `
 
-const Icon = styled.a`
-  ${tw`hover:opacity-60 transition`}
-`
-
 const IconLink = styled.a`
   ${tw`hover:opacity-60 transition flex items-center`}
 `
@@ -68,7 +58,7 @@ const Footer = () => {
         {/* Top */}
         <FooterTop>
           <LogoBlock>
-            <PecheFooterIcon />
+            <img src={FooterLogoImg} alt="Peche Clinic" tw="w-[129px] h-auto" loading="lazy" />
             <div tw="mt-2">
               서울특별시 강남구 강남대로 364, 3층 전체(역삼동, 미왕빌딩) | 대표 : 안태언 |
               사업자등록번호 219-05-28999 | 대표 번호 000-000-000

@@ -44,13 +44,13 @@ const SectionIntro = styled.section`
 `
 const IntroTextWrapper = tw.div`
   absolute left-[8vw] bottom-[8vh]
-  text-neutralBlack font-pretendard
+  text-neutralBlack
 `
 const IntroTitle = tw.h1`
-  text-[40px] md:text-[52px] font-medium leading-tight mb-2
+  text-[40px] md:text-[52px] font-medium leading-tight mb-2 font-time
 `
 const IntroSubtitle = tw.p`
-  text-[16px] md:text-[18px] text-[#333]
+  text-[16px] md:text-[18px] text-neutralBlack font-pretendard
 `
 
 /* ──────────────────────────────
