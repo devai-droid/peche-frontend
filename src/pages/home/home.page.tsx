@@ -4,6 +4,7 @@ import Banner from "./components/banner.component"
 import MostPopular from "./components/most-popular.component"
 import TodayKeywords from "./components/today-keywords.component"
 import SpecialEventSection from "./components/special-events.component"
+import SearchSection from "./components/search-section.component"
 import Location from "./components/location.component"
 import { ScrollRestoration } from "react-router-dom"
 import { useMainPopupControllerFindMany } from "@/lib/orval/main-popup/main-popup"
@@ -97,6 +98,7 @@ const Home = () => {
         <CartView isHome>
           <Banner />
           <SpecialEventSection />
+          <SearchSection />
           {/* <TodayKeywords onKeywordClick={handleKeywordClick} /> */}
           <MostPopular />
           <div tw="h-16" />
