@@ -11682,6 +11682,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"swiper@npm:^12.0.3":
+  version: 12.0.3
+  resolution: "swiper@npm:12.0.3"
+  checksum: 0686e81ca3cad14e38654d32761c079393d6a90b3df97c34e77d625313f3c70a4f4690e1290a03bcf0414f5e5c8958fa5ec97c8d3c48744c326ae720c60e3770
+  languageName: node
+  linkType: hard
+
 "synckit@npm:^0.9.1":
   version: 0.9.2
   resolution: "synckit@npm:0.9.2"
@@ -12786,6 +12793,7 @@ __metadata:
     sass-resources-loader: ^2.2.5
     slick-carousel: ^1.8.1
     style-loader: ^3.3.3
+    swiper: ^12.0.3
     tailwindcss: ^3.3.3
     terser-webpack-plugin: ^5.3.9
     tsconfig-paths-webpack-plugin: ^4.0.1
