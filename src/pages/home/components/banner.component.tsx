@@ -1,101 +1,72 @@
 import { useTranslation } from "react-i18next"
-import { Language } from "@/lib/locales/i18n.config"
-import tw from "twin.macro"
-import bannerImg from "@/assets/images/landing-page/landing-banner.webp"
-// import { PlusIcon } from "@/assets/icon"
-import { Button } from "@/design-system/components"
-import React, { useState } from "react"
-import Modal from "@/lib/components/modal/modal.component"
-import useCustomNavigate from "@/lib/hooks/use-custom-navigate"
+import tw, { styled } from "twin.macro"
+import bannerImg from "@/assets/images/landing-page/landing.jpeg"
+import bannerMobileImg from "@/assets/images/landing-page/mobile-landing.jpeg"
+import bannerLogo from "@/assets/images/landing-page/banner-logo.png"
 
-const BannerButton = tw.button`rounded-xl flex-1 h-12 text-lg font-bold sm:w-64`
+const BannerWrapper = styled.section`
+  ${tw`w-full relative overflow-hidden bg-white`}
+  height: 600px;
+
+  @media (min-width: 768px) {
+    height: 700px;
+  }
+`
+
+// ✅ 이미지 중앙에 고정 + max-width 제한
+const BannerImageContainer = styled.div`
+  ${tw`absolute inset-0 flex justify-center bg-neutral`}
+`
+
+const BannerImage = styled.img`
+  ${tw`h-full w-auto object-cover`}
+  max-width: 1440px;
+  width: 100%;
+`
+
+// ✅ 이 컨테이너가 로고 포함 (1440px 제한)
+const BannerContentWrapper = styled.div`
+  ${tw`
+    absolute inset-0 flex flex-col justify-center
+    text-black px-6 md:px-16
+  `}
+`
+
+const BannerContent = styled.div`
+  ${tw`
+    flex justify-start
+  `}
+  max-width: 1440px;
+  padding-left: 5%; /* 이미지 안에서 얼굴 기준 여백 조절 */
+
+  @media (max-width: 768px) {
+    padding-left: 0;
+  }
+`
+
+const BannerLogo = styled.img`
+  ${tw`w-[100px] md:w-[210px] h-[25px] md:h-[54px]`}
+`
 
 const Banner = () => {
-  const { t, i18n } = useTranslation()
-  const language = i18n.language as Language
-  const [isModalOpen, setIsModalOpen] = useState(false)
-
-  const openModal = () => {
-    setIsModalOpen(true)
-  }
-
-  const closeModal = () => {
-    setIsModalOpen(false)
-  }
-
-  const handleBannerButtonClick = () => {
-    if (language === Language.KOR) {
-      // Open the modal for Korean language
-      openModal()
-    } else if (language === Language.ENG) {
-      window.open("http://pf.kakao.com/_pmGVxj/chat", "_blank")
-    } else if (language === Language.CHN) {
-      window.open("https://work.weixin.qq.com/kfid/kfc8dbe1152fad99e74", "_blank")
-    } else if (language === Language.JPN) {
-      window.open("https://lin.ee/efw7rbT", "_blank")
-    } else if (language === Language.THA) {
-      window.open("https://lin.ee/BNTlo0y", "_blank")
-    }
-  }
-
-  const navigate = useCustomNavigate()
+  const { i18n } = useTranslation()
 
   return (
-    <div tw="w-full pb-[80%] md:pb-[36.718%] bg-orange-200 relative">
-      <img tw="absolute inset-0 w-full h-full object-cover" src={bannerImg} alt="banner" />
-      <div tw="absolute inset-0 bg-black bg-opacity-40" />
-      <div tw="absolute top-1/4 inset-x-0 flex flex-col items-center">
-        <div tw="mb-[5%]">
-          <div tw="font-time font-extrabold text-[1.75rem] lg:text-[4rem] text-white">
-            {t("home.title")}
-          </div>
-        </div>
-        <div tw="">
-          <div tw="text-[#FFCD00] flex text-lg items-center gap-1">
-            {/* {t("home.subTitle")} <Icon icon={PlusIcon} size={18} /> */}
-          </div>
-        </div>
-      </div>
-      <div tw="absolute bottom-[10%] flex gap-4 max-sm:inset-x-0 sm:(left-1/2 -translate-x-1/2) px-4">
-        <BannerButton tw="bg-white text-[#636363]" onClick={() => navigate("/reservation/new")}>
-          {t("home.onlineReserve")}
-        </BannerButton>
-        <BannerButton tw="bg-point text-white" onClick={handleBannerButtonClick}>
-          {t("home.onlineConsult")}
-        </BannerButton>
-      </div>
+    <BannerWrapper>
+      <BannerImageContainer>
+        <picture>
+          <source media="(max-width: 450px)" srcSet={bannerMobileImg} />
+          <BannerImage src={bannerImg} alt="Pêche Clinic banner" />
+        </picture>
+      </BannerImageContainer>
 
-      {/* Modal */}
-      <Modal open={isModalOpen} onClose={closeModal}>
-        <div tw="flex flex-col items-center justify-center h-full text-center">
-          <div tw="text-lg mt-8 mb-3">{t("home.consultationKoreanTitle")}</div>
-          <div tw="mt-6 mb-10 whitespace-pre-wrap text-[#999]">
-            {t("home.consultationKoreanDescription")}
-          </div>
-
-          <div tw="flex gap-4">
-            <Button
-              tw="min-w-[8rem] sm:hidden"
-              style={{ variant: "outlined", color: "black", size: "lg" }}
-              onClick={() => {
-                window.open("tel:1661-2365", "_blank")
-                closeModal()
-              }}>
-              {t("home.consultationKoreanPhone")}
-            </Button>
-            <Button
-              tw="min-w-[8rem]"
-              style={{ variant: "filled", color: "black", size: "lg" }}
-              onClick={() => {
-                window.open("http://pf.kakao.com/_pmGVxj/chat", "_blank")
-                closeModal()
-              }}>
-              {t("home.consultationKoreanKakao")}
-            </Button>
-          </div>
-        </div>
-      </Modal>
-    </div>
+      {/* ✅ max-width:1440px 컨테이너 내부에 로고 고정 */}
+      <BannerContentWrapper>
+        <BannerContent>
+          <BannerLogo src={bannerLogo} alt="Pêche Logo" loading="lazy" />
+        </BannerContent>
+      </BannerContentWrapper>
+    </BannerWrapper>
   )
 }
 
