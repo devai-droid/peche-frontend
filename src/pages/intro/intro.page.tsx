@@ -379,7 +379,7 @@ const MapSection = tw.section`
 `
 
 const MapInner = styled.div`
-  ${tw`max-w-[1440px] mx-auto flex flex-col md:flex-row gap-10 md:gap-[40px] px-[20px] md:px-[40px] items-stretch`}
+  ${tw`max-w-[1440px] mx-auto flex flex-col md:flex-row gap-2 md:gap-[40px] px-[20px] md:px-[40px] items-stretch`}
 `
 
 /* Left Column */
@@ -406,11 +406,11 @@ const ButtonGroup = tw.div`
 `
 
 const SolidButton = tw.button`
-  flex-1 bg-[#C56A4B] text-white py-2 md:py-2 text-[15px] font-medium hover:opacity-90 transition
+  flex-1 bg-primary text-white py-2 md:py-2 text-[15px] font-medium hover:opacity-90 transition
 `
 
 const OutlineButton = tw.button`
-  flex-1 border border-[#C56A4B] text-[#C56A4B] py-2 md:py-2 text-[15px] font-medium hover:bg-[#C56A4B]/10 transition
+  flex-1 border border-primary bg-white text-primary py-2 md:py-2 text-[15px] font-medium hover:bg-primary/10 transition
 `
 
 /* Right Column (Map) */
@@ -677,7 +677,7 @@ const Intro = () => {
 
                   <ButtonGroup>
                     <SolidButton>시술 예약하기</SolidButton>
-                    <SolidButton tw="bg-[#B15E47]">카카오톡 상담하기</SolidButton>
+                    <SolidButton>카카오톡 상담하기</SolidButton>
                   </ButtonGroup>
                 </InfoBlock>
 
