@@ -292,7 +292,7 @@ const Reservations = () => {
 
   return (
     <Page>
-      <AppMaxWidth tw="my-8">
+      {/* <AppMaxWidth tw="my-8">
         <div tw="font-bold">{t("reservationCheckPage.reservationCheck")}</div>
         <hr tw="mt-4 mb-6" />
         <Auth onAuth={() => setAuthenticated(true)} />
@@ -466,7 +466,7 @@ const Reservations = () => {
             </Button>
           </div>
         </div>
-      </Modal>
+      </Modal> */}
     </Page>
   )
 }
