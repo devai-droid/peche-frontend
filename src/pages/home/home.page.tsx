@@ -2,6 +2,7 @@ import Page from "@/lib/components/layout/page.component"
 import EventModal from "./components/event-modal.component"
 import Banner from "./components/banner.component"
 import MostPopular from "./components/most-popular.component"
+import IntroductionSection from "./components/introduction-section.component"
 import TodayKeywords from "./components/today-keywords.component"
 import SpecialEventSection from "./components/special-events.component"
 import SearchSection from "./components/search-section.component"
@@ -101,6 +102,7 @@ const Home = () => {
           <SearchSection />
           {/* <TodayKeywords onKeywordClick={handleKeywordClick} /> */}
           <MostPopular />
+          <IntroductionSection />
           <div tw="h-16" />
           <Location />
         </CartView>
