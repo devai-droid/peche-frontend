@@ -6,6 +6,7 @@ import IntroDoctor from "@/pages/intro/tabs/intro-doctor.tab"
 import IntroWorker from "@/pages/intro/tabs/intro-worker.tab"
 import IntroMachine from "@/pages/intro/tabs/intro-machine.tab"
 import IntroMap from "@/pages/intro/tabs/intro-map.tab"
+import AllTreatmentPage from "@/pages/treatment/all-treatment.page"
 import Products from "@/pages/product/products.page"
 import ProductDetail from "@/pages/product/product-detail.page"
 import Events from "@/pages/product/events.page"
@@ -47,6 +48,8 @@ const router = createBrowserRouter([
     ),
     children: [
       { path: "", element: <Home /> },
+
+      { path: "treatment", element: <AllTreatmentPage /> },
 
       { path: "products", element: <Products /> },
       { path: "products/:id", element: <ProductDetail /> },

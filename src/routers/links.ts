@@ -4,7 +4,7 @@ export const menuLinks = [
     href: "/intro",
   },
   {
-    name: "header.surgeryAndPrice",
+    name: "header.treatmentList",
     href: "/",
   },
   {

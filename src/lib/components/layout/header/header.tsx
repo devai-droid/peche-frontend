@@ -53,7 +53,7 @@ const Header = ({
           />
         )}
       </AppBar>
-      {isDesktop && <div id="header-height" tw="h-32" />}
+      {isDesktop && <div id="header-height" tw="h-28" />}
     </>
   )
 }

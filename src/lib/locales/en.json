@@ -2,6 +2,7 @@
   "header": {
     "home": "Main",
     "surgeryAndPrice": "Price",
+    "treatmentList": "전체 시술",
     "hospital": "About us",
     "reservation": "Book now",
     "event": "Event",
@@ -17,7 +18,7 @@
     "onlineReserve": "Book now",
     "onlineConsult": "Contact Us",
     "todaysSurgery": "Today's most consulted/reserved procedures",
-    "hospitalName": "Xenia Clinic",
+    "hospitalName": "Peche clinic",
     "location": "Building 1 Address",
     "newLocation": "Building 2 Address",
     "thirdLocation": "Building 3 Address",
@@ -48,7 +49,7 @@
     "consultationKoreanKakao": "카카오톡"
   },
   "footer": {
-    "title": "Xenia Clinic",
+    "title": "Peche clinic",
     "nameOfCEO": "CEO : 민원준",
     "companyNumber": "Business license number: 671-12-02176",
     "copyright": "Copyright 2023 XENIA Corporation. All Rights Reserved.",
@@ -133,7 +134,7 @@
     }
   },
   "reservePage": {
-    "welcome": ", welcome to Xenia Clinic.",
+    "welcome": ", welcome to Peche clinic.",
     "nameFix": "*If it is not your name, please contact through Whatsapp. (Whatsapp ID : +821027694410)",
     "reserve": "Reservation",
     "logout": "Logout",
@@ -175,7 +176,7 @@
     "loadingAvailableTime": "Loading available times...",
     "needAuth": "Identity verification is required.",
     "eventDateOutOfRange": "이벤트 예약은 이벤트 기간 내에만 가능합니다.",
-    "smsCodeTerms": "Message and data rates may apply. If you choose to receive our verification code as text messages, we (Xenia Clinic) will send you one text message per login/reservation attempt. You will also receive confirmation messages regarding your appointment after you are done with your reservation process. If you need assistance, call +82-1661-2365. Text STOP to opt-out of future messages.",
+    "smsCodeTerms": "Message and data rates may apply. If you choose to receive our verification code as text messages, we (Peche clinic) will send you one text message per login/reservation attempt. You will also receive confirmation messages regarding your appointment after you are done with your reservation process. If you need assistance, call +82-1661-2365. Text STOP to opt-out of future messages.",
     "appointmentTime": "Appointment time",
     "customer": "Customer",
     "treatmentName": "Treatment name",
