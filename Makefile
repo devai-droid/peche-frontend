@@ -15,8 +15,8 @@ KAKAO_APP_REST_KEY?=$(shell aws ssm get-parameter $(AWS_PNR) --name \
 KAKAO_APP_JAVASCRIPT_KEY ?= $(shell aws ssm get-parameter $(AWS_PNR) --name \
 	"/$(INFRA_NAME)/staging/$(SERVICE_NAME)/auth/kakao/app-javascript-key" | jq '.Parameter | .Value')
 else
-BACKEND_API_URL?=$(shell aws ssm get-parameter --profile xenia --region us-east-1 --name \
-	"/xenia/dev/$(SERVICE_NAME)/backend/url" | jq '.Parameter | .Value')
+BACKEND_API_URL?=$(shell aws ssm get-parameter $(AWS_PNR) --name \
+	"/$(INFRA_NAME)/$(STAGE)/$(SERVICE_NAME)/backend/url" | jq '.Parameter | .Value')
 S3_BUCKET_NAME?=$(shell aws ssm get-parameter $(AWS_PNR) --name \
 	"/$(INFRA_NAME)/$(STAGE)/$(SERVICE_NAME)/frontend/bucket-name" | jq '.Parameter | .Value')
 DISTRIBUTION_ID?=$(shell aws ssm get-parameter $(AWS_PNR) --name \
