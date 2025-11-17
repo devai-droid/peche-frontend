@@ -2,7 +2,7 @@
 
 STAGE ?= dev
 SERVICE_NAME ?= base
-INFRA_NAME ?= nohd
+INFRA_NAME ?= peche
 AWS_REGION ?= ap-northeast-2
 ENV ?= $(STAGE)
 AWS_PNR = --profile $(INFRA_NAME) --region $(AWS_REGION)
@@ -21,7 +21,7 @@ S3_BUCKET_NAME?=$(shell aws ssm get-parameter $(AWS_PNR) --name \
 	"/$(INFRA_NAME)/$(STAGE)/$(SERVICE_NAME)/frontend/bucket-name" | jq '.Parameter | .Value')
 DISTRIBUTION_ID?=$(shell aws ssm get-parameter $(AWS_PNR) --name \
 	"/$(INFRA_NAME)/$(STAGE)/$(SERVICE_NAME)/frontend/distribution-id" | jq '.Parameter | .Value')
-DISTRIBUTION_URL?=$(if $(filter dev,$(STAGE)),https://dev.nohdclinic.com,https://nohdclinic.com)
+DISTRIBUTION_URL?=$(if $(filter dev,$(STAGE)),https://dev.pecheclinic.com,https://pecheclinic.com)
 KAKAO_APP_REST_KEY?=$(shell aws ssm get-parameter $(AWS_PNR) --name \
 	"/$(INFRA_NAME)/$(STAGE)/$(SERVICE_NAME)/auth/kakao/app-rest-key" | jq '.Parameter | .Value')
 KAKAO_APP_JAVASCRIPT_KEY ?= $(shell aws ssm get-parameter $(AWS_PNR) --name \
