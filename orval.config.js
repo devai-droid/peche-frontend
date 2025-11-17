@@ -1,5 +1,5 @@
 export default {
-  "xenia-backend": {
+  "peche-backend": {
     output: {
       target: "src/lib/orval/store.ts",
       schemas: "src/lib/orval/model",

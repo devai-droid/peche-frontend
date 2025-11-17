@@ -1,8 +1,8 @@
 {
-  "name": "xenia-frontend",
+  "name": "peche-frontend",
   "version": "1.0.0",
   "main": "index.js",
-  "repository": "https://github.com/fatkat-projects/xenia-frontend.git",
+  "repository": "https://github.com/fatkat-projects/peche-frontend.git",
   "author": "kmjmn <kmjmn@mesquad.co>",
   "license": "MIT",
   "scripts": {

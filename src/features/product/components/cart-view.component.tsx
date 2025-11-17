@@ -374,7 +374,7 @@ const BottomButtons = ({
       icon: InstagramImg,
       css: instagram,
       lang: [Language.ENG],
-      link: "https://www.instagram.com/xeniaclinic_eng",
+      link: "https://www.instagram.com/pecheclinic_eng",
     },
     {
       id: 8,
