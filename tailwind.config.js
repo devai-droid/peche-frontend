@@ -25,6 +25,7 @@ module.exports = {
         point: "#CAB69E",
         neutral: "#F4F4F4",
         neutral20: "#E4E4E4",
+        neutral30: "#C8C8C8",
         neutral50: "#9B9B9B",
         neutral60: "#8A8A8A",
         neutral70: "#666666",

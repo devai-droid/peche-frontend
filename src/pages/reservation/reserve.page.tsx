@@ -529,7 +529,7 @@ const Reserve = () => {
 
   return (
     <Page>
-      {/* <AppMaxWidth tw="font-nanumgothic py-8 lg:py-12">
+      <AppMaxWidth tw="font-nanumgothic py-8 lg:py-12">
         <H1>{t("reservePage.reserve")}</H1>
         <hr tw="mt-4 mb-6" />
         <Auth
@@ -692,7 +692,7 @@ const Reserve = () => {
             </div>
           )}
         </div>
-      </AppMaxWidth> */}
+      </AppMaxWidth>
     </Page>
   )
 }

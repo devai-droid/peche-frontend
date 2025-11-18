@@ -38,28 +38,55 @@ const SurgeryItem = ({
   onCheck: (checked: boolean) => void
 }) => {
   const tv = useLanguageValue()
+  const name = tv(item.product ?? (item.event as Event), "name")
+  const description = tv(item.product ?? (item.event as Event), "description")
+  const discount = item.event?.discountPrice
+  const price = item.event?.price || item.product?.price
 
   return (
-    <div tw="flex justify-between items-center -ml-3">
-      <div tw="flex-1">
-        <Checkbox
-          checked={checked}
-          onChange={(event) => {
-            onCheck(event.target.checked)
-          }}
-          label={tv(item.product ?? (item.event as Event), "name")}
-        />
+    <div tw="flex justify-between items-start py-4 font-pretendard">
+      {/* 왼쪽 영역 */}
+      <div tw="flex flex-1">
+        {/* 체크박스 */}
+        <Checkbox checked={checked} onChange={(event) => onCheck(event.target.checked)} />
+
+        {/* 텍스트 묶음 */}
+        <div tw="flex flex-col gap-2 font-pretendard">
+          <div tw="font-semibold text-[14px] md:text-[16px] leading-snug">{name}</div>
+
+          {description && (
+            <div tw="text-neutral70 text-[13px] md:text-[14px] leading-snug whitespace-pre-wrap">
+              {description}
+            </div>
+          )}
+
+          <div tw="flex items-center gap-2 mt-1">
+            {/* 원래 가격(취소선) */}
+            {discount && (
+              <span tw="text-neutral50 line-through text-[13px] md:text-[14px]">
+                {price?.toLocaleString()}원
+              </span>
+            )}
+
+            {/* 실제 가격 */}
+            <span tw="text-[16px] md:text-[18px] font-bold text-neutralBlack">
+              {(discount || price || 0).toLocaleString()}원
+            </span>
+          </div>
+        </div>
       </div>
-      <div tw="shrink-0 flex gap-2 items-center">
+
+      {/* 수량 조절 */}
+      <div tw="flex items-center gap-2 shrink-0 mt-14">
         <button
-          tw="w-6 h-6 flex justify-center items-center rounded-full text-point border border-point"
+          tw="w-6 h-6 flex justify-center items-center text-neutral50 bg-neutral"
           disabled={item.count === 1}
           onClick={() => updateCartItem({ ...item, count: item.count - 1 })}>
           -
         </button>
-        <span>{item.count}</span>
+        <span tw="w-4 text-center">{item.count}</span>
         <button
-          tw="w-6 h-6 flex justify-center items-center rounded-full text-white bg-point border border-point"
+          tw="w-6 h-6 flex justify-center items-center text-neutral50 bg-neutral"
           onClick={() => updateCartItem({ ...item, count: item.count + 1 })}>
           +
         </button>
@@ -88,72 +115,73 @@ const SurgeryList = () => {
       setCheckedList([...checkedList, justAddedId])
     }
   }, [justAddedId])
+
+  const selectedCount = checkedList.length
+  const totalCount = cart.length
+
   return (
     <>
-      <div tw="font-bold text-xl">
-        {t("productDetail.productList")} <span tw="text-point">{cart.length}</span>
-      </div>
+      <div tw="pl-5 pr-4 py-6 bg-white font-pretendard tracking-tight leading-[150%]">
+        <div tw="flex justify-between items-center pb-4 border-b border-b-[0.5px] border-neutral50">
+          <div tw="font-bold text-[18px] md:text-[22px] flex items-center gap-1">
+            장바구니
+            <span tw="text-primary text-[16px] md:text-[18px] font-semibold">
+              ({checkedList.length}/{cart.length})
+            </span>
+          </div>
 
-      <div tw="whitespace-pre-wrap text-[#888] text-center my-20" css={cart.length && tw`hidden`}>
-        {t("productDetail.addProductYouWant")}
-      </div>
+          <Button
+            onClick={() => {
+              removeFromCart(checkedList)
+              setCheckedList([])
+              setInquiryChecked(false)
+              setInquiry(!inquiryChecked)
+            }}
+            style={{ variant: "outlined", color: "point", size: "sm" }}>
+            선택삭제
+          </Button>
+        </div>
 
-      <div tw="mt-6 mb-9" css={cart.length === 0 && tw`hidden`}>
-        <div tw="rounded-lg border border-[#d0d0d0] shadow-[0px_4px_12px_0px_rgba(0,0,0,0.25)] pl-5 pr-4 py-6">
-          <div tw="flex justify-between items-center -ml-3">
-            <div>
-              <Checkbox
-                checked={inquiryChecked}
-                onChange={(event) => {
-                  setInquiryChecked(event.target.checked)
-                  setInquiry(event.target.checked)
-                }}
-                label={t("reservePage.bookConsultation")}
-              />
-            </div>
-
-            <Button
-              onClick={() => {
-                removeFromCart(checkedList)
-                setCheckedList([])
-                setInquiryChecked(false)
-                setInquiry(!inquiryChecked)
+        <div>
+          {cart.map((item) => (
+            <SurgeryItem
+              key={item.event?.id || item.product?.id}
+              checked={checkedList.includes(item.event?.id || item.product?.id || "")}
+              onCheck={(checked) => {
+                const id = item.event?.id || item.product?.id || ""
+                if (checked) {
+                  setCheckedList([...checkedList, id])
+                } else {
+                  setCheckedList(checkedList.filter((checkedId) => id !== checkedId))
+                }
               }}
-              style={{
-                color: "black",
-                size: "sm",
-              }}>
-              {t("button.deleteSelection")}
-            </Button>
-          </div>
+              item={item}
+              updateCartItem={updateCartItem}
+            />
+          ))}
+        </div>
 
-          <hr tw="my-6" />
+        <div tw="mt-2 pt-4 border-t border-t-[0.5px] border-neutralBlack text-[14px] md:text-[16px] font-semibold">
+          <Checkbox
+            checked={inquiryChecked}
+            onChange={(event) => {
+              setInquiryChecked(event.target.checked)
+              setInquiry(event.target.checked)
+            }}
+            label="방문 상담 후 시술 선택"
+          />
+        </div>
 
-          <div>
-            <div tw="flex flex-col">
-              {cart.map((item) => (
-                <SurgeryItem
-                  key={item.event?.id || item.product?.id}
-                  checked={checkedList.includes(item.event?.id || item.product?.id || "")}
-                  onCheck={(checked) => {
-                    const id = item.event?.id || item.product?.id || ""
-                    if (checked) {
-                      setCheckedList([...checkedList, id])
-                    } else {
-                      setCheckedList(checkedList.filter((checkedId) => id !== checkedId))
-                    }
-                  }}
-                  item={item}
-                  updateCartItem={updateCartItem}
-                />
-              ))}
+        <div tw="mt-4 pt-4">
+          <div tw="flex justify-between items-center">
+            <div tw="text-[18px] md:text-[22px] font-semibold text-primary">
+              총 금액{" "}
+              <span tw="text-[13px] md:text-[14px] font-normal relative" css={{ top: "-2px" }}>
+                (부가세 별도)
+              </span>
             </div>
-          </div>
-          <hr tw="my-6" />
 
-          <div>
-            <h1 tw="text-black text-lg font-extrabold">{t("productDetail.totalPrice")}</h1>
-            <div tw="text-xl text-point font-bold text-right">
+            <div tw="text-[18px] md:text-[22px] font-semibold text-neutralBlack">
               {cart
                 .reduce(
                   (acc, cur) =>
@@ -163,27 +191,26 @@ const SurgeryList = () => {
                   0,
                 )
                 .toLocaleString()}
-              {t("reservePage.won")}
+              원
             </div>
           </div>
         </div>
-        <div tw="mt-6 text-xs text-[#898989] whitespace-pre-wrap tracking-tight">
-          {t("productDetail.reserveDescription")}
-        </div>
       </div>
-
       <Button
         disabled={cart.length === 0 && !inquiryChecked}
         onClick={() => {
           navigate("/reservation/new")
         }}
-        tw="mb-10"
+        tw="mt-4 font-pretendard text-[15px] md:text-[17px]"
         style={{
           flexible: true,
           variant: "filled",
         }}>
         {t("button.reserve")}
       </Button>
+      <div tw="mt-4 text-[13px] md:text-[14px] font-pretendard text-neutral70 whitespace-pre-wrap tracking-tight">
+        {t("productDetail.reserveDescription")}
+      </div>
     </>
   )
 }
@@ -443,7 +470,7 @@ const CartView = ({ children, isHome }: { children?: React.ReactNode; isHome: bo
 
   return (
     <>
-      <div tw="flex gap-5 mb-20">
+      <div tw="flex gap-8 mb-20">
         {!isHome && <div tw="w-full lg:w-4/6">{children}</div>}
         {isHome && <div tw="w-full">{children}</div>}
 

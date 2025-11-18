@@ -75,17 +75,18 @@ const getButtonStyle = (style: StyleOptions): TwStyle[] => {
     flexible,
     shadow,
     bold,
-    variant = _ButtonVariant.OUTLINED,
+    variant = _ButtonVariant.FILLED,
     color = _ButtonColor.POINT,
     size = _ButtonSize.MEDIUM,
   } = style ?? {}
 
   const buttonStyle: TwStyle[] = [
-    tw`min-w-[5rem] border px-4 opacity-95 hover:opacity-100 transition-all relative overflow-hidden leading-none`,
+    tw`min-w-[5rem] px-4 transition-all relative overflow-hidden leading-none`,
   ]
 
+  // 🔥 border-radius: 1px
   if (rounded) {
-    buttonStyle.push(tw`rounded-full`)
+    buttonStyle.push(tw`rounded-[1px]`)
   }
 
   if (shadow) {
@@ -96,32 +97,47 @@ const getButtonStyle = (style: StyleOptions): TwStyle[] => {
     buttonStyle.push(tw`w-full`)
   }
 
-  if (variant === _ButtonVariant.OUTLINED && color === _ButtonColor.BLACK) {
-    buttonStyle.push(tw`text-[#2f2f2f] bg-white border-[#2f2f2f]`)
-  } else if (variant === _ButtonVariant.OUTLINED && color === _ButtonColor.POINT) {
-    buttonStyle.push(tw`text-point bg-white border-point`)
-  } else if (variant === _ButtonVariant.FILLED && color === _ButtonColor.BLACK) {
-    buttonStyle.push(tw`text-white bg-[#2f2f2f] border-[#2f2f2f]`)
-  } else if (variant === _ButtonVariant.FILLED && color === _ButtonColor.POINT) {
-    buttonStyle.push(tw`text-white bg-point border-point`)
-  }
+  // ---------------------------
+  // 🔥 COLOR / VARIANT SYSTEM
+  // ---------------------------
 
   if (variant === _ButtonVariant.OUTLINED) {
-    buttonStyle.push(tw`disabled:(text-[#cacaca] border-[#cacaca])`)
-  } else if (variant === _ButtonVariant.FILLED) {
-    buttonStyle.push(tw`disabled:(text-white bg-[#cacaca] border-[#cacaca])`)
+    // 🔸 OUTLINED BLACK
+    if (color === _ButtonColor.BLACK) {
+      buttonStyle.push(tw`text-neutralBlack bg-white border border-neutralBlack`)
+    }
+    // 🔸 OUTLINED PRIMARY
+    else {
+      buttonStyle.push(tw`text-primary bg-white border border-primary`)
+    }
+
+    buttonStyle.push(tw`disabled:(text-neutral50 border-neutral20 bg-neutral20)`)
+  } else {
+    // 🔸 FILLED BLACK
+    if (color === _ButtonColor.BLACK) {
+      buttonStyle.push(tw`text-white bg-neutralBlack border border-neutralBlack`)
+    }
+    // 🔸 FILLED PRIMARY
+    else {
+      buttonStyle.push(tw`text-white bg-primary border border-primary`)
+    }
+
+    buttonStyle.push(tw`disabled:(text-white bg-neutral20 border-neutral20)`)
   }
 
+  // ---------------------------
+  // 🔥 SIZE SYSTEM
+  // ---------------------------
   if (size === _ButtonSize.SMALL) {
-    buttonStyle.push(tw`h-9 text-xs`)
+    buttonStyle.push(tw`h-9 text-xs`) // 36px
   } else if (size === _ButtonSize.MEDIUM) {
-    buttonStyle.push(tw`h-10 text-sm`)
+    buttonStyle.push(tw`h-11 text-sm`) // 44px
   } else if (size === _ButtonSize.LARGE) {
-    buttonStyle.push(tw`h-12 text-md`)
+    buttonStyle.push(tw`h-14 text-md`) // 56px
   }
 
   if (bold) {
-    buttonStyle.push(tw`font-bold`)
+    buttonStyle.push(tw`font-semibold`)
   }
 
   return buttonStyle

@@ -4,12 +4,12 @@ export const menuLinks = [
     href: "/intro",
   },
   {
-    name: "header.treatmentList",
-    href: "/",
+    name: "header.surgeryAndPrice",
+    href: "/products",
   },
   {
     name: "header.event",
-    href: "/",
+    href: "/events",
   },
   {
     name: "header.blog",

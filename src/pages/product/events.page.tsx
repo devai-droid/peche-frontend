@@ -2,8 +2,8 @@ import React, { useLayoutEffect } from "react"
 import AppMaxWidth from "@/lib/components/layout/app-max-width.component"
 import Page from "@/lib/components/layout/page.component"
 
-import bannerImg from "@/assets/images/products-banner.webp"
-import mobileBannerImg from "@/assets/images/products-mobile-banner.webp"
+import bannerImg from "@/assets/images/events-banner.jpg"
+import mobileBannerImg from "@/assets/images/events-mobile-banner.jpg"
 import useResponsive from "@/lib/hooks/use-responsive"
 
 import tw from "twin.macro"
@@ -184,52 +184,59 @@ const Events = () => {
   const colSpan = (column: number) => `span ${column} / span ${column}`
   return (
     <Page hiddenFooter={false}>
-      <div tw="max-lg:bg-[#FCF5EC] min-h-screen">
+      <div tw="w-screen overflow-hidden">
+        <img
+          src={isMobile ? mobileBannerImg : bannerImg}
+          alt="banner"
+          tw="w-full max-h-[700px] h-[700px] object-cover block"
+        />
+      </div>
+
+      <div tw="bg-neutral min-h-screen pt-[1px]">
         <AppMaxWidth tw="max-lg:p-0">
-          <CartView isHome={false}>
-            <div tw="max-lg:hidden">
+          {/* <div tw="max-lg:hidden">
               <img src={isMobile ? mobileBannerImg : bannerImg} alt="banner" tw="w-full" />
-            </div>
+            </div> */}
 
-            <div tw="flex justify-center mt-8 lg:mt-16 mb-4 lg:mb-8 max-lg:p-4">
-              <div tw="grid justify-center bg-[#EBECEF] gap-px p-px grid-cols-3 lg:grid-cols-5 w-full">
-                {categories?.items?.map((category) => (
-                  <button
-                    key={category.id}
-                    onClick={() => {
-                      handleCategory(category.id)
-                    }}
-                    css={[
-                      item,
-                      selectedCategoryId === category.id ? tw`text-white bg-point` : tw`text-black`,
-                    ]}>
-                    <div tw="px-2 overflow-hidden text-ellipsis">{tv(category, "name")}</div>
-                  </button>
-                ))}
-                <div
-                  tw="max-lg:hidden"
+          <div tw="flex justify-center mt-8 lg:mt-16 mb-4 lg:mb-12 max-lg:p-4">
+            <div tw="grid justify-center bg-[#EBECEF] gap-px p-px grid-cols-3 lg:grid-cols-5 w-full">
+              {categories?.items?.map((category) => (
+                <button
+                  key={category.id}
+                  onClick={() => {
+                    handleCategory(category.id)
+                  }}
                   css={[
                     item,
-                    {
-                      gridColumn: colSpan(5 - (categories.items.length % 5)),
-                      display: categories.items.length % 5 === 0 ? "none" : "block",
-                    },
-                  ]}
-                />
-                <div
-                  tw="lg:hidden"
-                  css={[
-                    item,
-                    {
-                      gridColumn: colSpan(3 - (categories.items.length % 3)),
-                      display: categories.items.length % 3 === 0 ? "none" : "block",
-                    },
-                  ]}
-                />
-              </div>
+                    selectedCategoryId === category.id ? tw`text-white bg-point` : tw`text-black`,
+                  ]}>
+                  <div tw="px-2 overflow-hidden text-ellipsis">{tv(category, "name")}</div>
+                </button>
+              ))}
+              <div
+                tw="max-lg:hidden"
+                css={[
+                  item,
+                  {
+                    gridColumn: colSpan(5 - (categories.items.length % 5)),
+                    display: categories.items.length % 5 === 0 ? "none" : "block",
+                  },
+                ]}
+              />
+              <div
+                tw="lg:hidden"
+                css={[
+                  item,
+                  {
+                    gridColumn: colSpan(3 - (categories.items.length % 3)),
+                    display: categories.items.length % 3 === 0 ? "none" : "block",
+                  },
+                ]}
+              />
             </div>
-
-            <div tw="border-b border-[#e5e5e5] my-10 bg-white pt-1">
+          </div>
+          <CartView isHome={false}>
+            {/* <div tw="border-b border-[#e5e5e5] my-10 bg-white pt-1">
               <div tw="flex justify-center items-center">
                 {visibleEvents
                   .sort((a, b) => {
@@ -255,7 +262,7 @@ const Events = () => {
                     </button>
                   ))}
               </div>
-            </div>
+            </div> */}
 
             <div tw="flex flex-col gap-6 max-lg:px-4">
               {events?.pages
