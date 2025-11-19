@@ -326,11 +326,11 @@ const Reserve = () => {
   const [eventDateOutOfRange, setEventDateOutOfRange] = React.useState(false)
 
   const pdfUrls = {
-    ko: "https://xenia-files.s3.us-east-1.amazonaws.com/xenia_ko.pdf",
-    en: "https://xenia-files.s3.us-east-1.amazonaws.com/xenia_en.pdf",
-    ja: "https://xenia-files.s3.us-east-1.amazonaws.com/xenia_ja.pdf",
-    zh: "https://xenia-files.s3.us-east-1.amazonaws.com/xenia_zh.pdf",
-    th: "https://xenia-files.s3.us-east-1.amazonaws.com/xenia_th.pdf",
+    ko: "https://peche-files.s3.us-east-1.amazonaws.com/peche_ko.pdf",
+    en: "https://peche-files.s3.us-east-1.amazonaws.com/peche_en.pdf",
+    ja: "https://peche-files.s3.us-east-1.amazonaws.com/peche_ja.pdf",
+    zh: "https://peche-files.s3.us-east-1.amazonaws.com/peche_zh.pdf",
+    th: "https://peche-files.s3.us-east-1.amazonaws.com/peche_th.pdf",
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

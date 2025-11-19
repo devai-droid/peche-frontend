@@ -139,7 +139,7 @@ const PrivacyPolicy = () => {
 Privacy Policy
 
 Article 1 (Purpose of Processing Personal Information)
-XENIA Hospital (hereinafter referred to as the 'Hospital') processes personal information for the following purposes. The personal information processed shall not be used for any purpose other than the following purposes, and if the purpose of use changes
+PECHE Hospital (hereinafter referred to as the 'Hospital') processes personal information for the following purposes. The personal information processed shall not be used for any purpose other than the following purposes, and if the purpose of use changes
 If the purpose of use is changed, we will take necessary measures such as obtaining separate consent in accordance with Article 18 of the Personal Information Protection Act.
 1.Homepage user management
 Identification and management of website users, prevention of unauthorized use, and various notices and notifications.
@@ -453,7 +453,7 @@ C. クッキーの保存を拒否する場合、カスタマイズされたサ�
   นโยบายข้อมูลส่วนบุคคล
   
   มาตรา 1 (วัตถุประสงค์ในการประมวลผลข้อมูลส่วนบุคคล)
-  Peche clinic (ต่อไปนี้เรียกว่า ""โรงพยาบาล"") ประมวลผลข้อมูลส่วนบุคคลเพื่อวัตถุประสงค์ดังต่อไปนี้ ข้อมูลส่วนบุคคลที่ได้รับการจัดการจะไม่ใช้เพื่อวัตถุประสงค์อื่นนอกเหนือจากวัตถุประสงค์ต่อไปนี้
+  Peche Clinic (ต่อไปนี้เรียกว่า ""โรงพยาบาล"") ประมวลผลข้อมูลส่วนบุคคลเพื่อวัตถุประสงค์ดังต่อไปนี้ ข้อมูลส่วนบุคคลที่ได้รับการจัดการจะไม่ใช้เพื่อวัตถุประสงค์อื่นนอกเหนือจากวัตถุประสงค์ต่อไปนี้
   ในกรณีที่มีการเปลี่ยนแปลง ｢พระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล｣ มีแผนจะดำเนินการตามมาตรการที่จำเป็นเช่นการได้รับความยินยอมแยกต่างหากตามมาตรา 18
   1. การจัดการผู้ใช้โฮมเพจ
   การระบุและจัดการผู้ใช้โฮมเพจ การป้องกันการใช้งานที่ไม่เป็นธรรม และวัตถุประสงค์ของการแจ้งและการแจ้งเตือนต่างๆ

@@ -18,7 +18,7 @@
     "onlineReserve": "Book now",
     "onlineConsult": "Contact Us",
     "todaysSurgery": "Today's most consulted/reserved procedures",
-    "hospitalName": "Peche clinic",
+    "hospitalName": "Peche Clinic",
     "location": "Building 1 Address",
     "newLocation": "Building 2 Address",
     "thirdLocation": "Building 3 Address",
@@ -49,15 +49,15 @@
     "consultationKoreanKakao": "카카오톡"
   },
   "footer": {
-    "title": "Peche clinic",
+    "title": "Peche Clinic",
     "nameOfCEO": "CEO : 민원준",
     "companyNumber": "Business license number: 671-12-02176",
-    "copyright": "Copyright 2023 XENIA Corporation. All Rights Reserved.",
+    "copyright": "Copyright 2023 PECHE Corporation. All Rights Reserved.",
     "contact": "Phone number",
     "tel": "1661-2365",
     "openTime": "(Mon-Fri 09:00 AM - 06:00 PM / Weekends, Holidays Closed)",
     "email": "E-Mail",
-    "hospitalEmail": "Xenia@gmail.com",
+    "hospitalEmail": "Peche@gmail.com",
     "address": "Building 1 Address",
     "newBuildingAddress": "Building 2 Address",
     "thirdBuildingAddress": "Building 3 Address",
@@ -73,8 +73,8 @@
     "introMachine": "Equipment",
     "introWorker": "About staff",
     "introDoctor": "About doctors",
-    "introduction1": "<bold>We sincerely welcome you to Xeniaclinic,</bold> where you can experience beauty.\n\nThe name ‘Xenia’ was inspired by the Greek word ‘Xenia,’ which means ‘hospitality.’\n\nIt embodies our philosophy that a hospital should be a place\nwhere guests are treated with the utmost hospitality.\n\nThere are moments that remain vivid in our memories even as time passes.\nThe scent and temperature of that day that lingers on the tip of your nose as if brushed by the wind, as well as its color tones and melodies.",
-    "introduction2": "It is probably because delicate intangible feelings came together to offer a different experience.\n\nWhile you stay at Xeniaclinic,\nwe will do our utmost with dedication and effort to allow you to fully feel not only the external beauty but also the inner beauty.\nExperience beauty at Xeniaclinic."
+    "introduction1": "<bold>We sincerely welcome you to Pecheclinic,</bold> where you can experience beauty.\n\nThe name ‘Peche’ was inspired by the Greek word ‘Peche,’ which means ‘hospitality.’\n\nIt embodies our philosophy that a hospital should be a place\nwhere guests are treated with the utmost hospitality.\n\nThere are moments that remain vivid in our memories even as time passes.\nThe scent and temperature of that day that lingers on the tip of your nose as if brushed by the wind, as well as its color tones and melodies.",
+    "introduction2": "It is probably because delicate intangible feelings came together to offer a different experience.\n\nWhile you stay at Pecheclinic,\nwe will do our utmost with dedication and effort to allow you to fully feel not only the external beauty but also the inner beauty.\nExperience beauty at Pecheclinic."
   },
   "occupations": {
     "원장": "Doctor",
@@ -134,7 +134,7 @@
     }
   },
   "reservePage": {
-    "welcome": ", welcome to Peche clinic.",
+    "welcome": ", welcome to Peche Clinic.",
     "nameFix": "*If it is not your name, please contact through Whatsapp. (Whatsapp ID : +821027694410)",
     "reserve": "Reservation",
     "logout": "Logout",
@@ -176,7 +176,7 @@
     "loadingAvailableTime": "Loading available times...",
     "needAuth": "Identity verification is required.",
     "eventDateOutOfRange": "이벤트 예약은 이벤트 기간 내에만 가능합니다.",
-    "smsCodeTerms": "Message and data rates may apply. If you choose to receive our verification code as text messages, we (Peche clinic) will send you one text message per login/reservation attempt. You will also receive confirmation messages regarding your appointment after you are done with your reservation process. If you need assistance, call +82-1661-2365. Text STOP to opt-out of future messages.",
+    "smsCodeTerms": "Message and data rates may apply. If you choose to receive our verification code as text messages, we (Peche Clinic) will send you one text message per login/reservation attempt. You will also receive confirmation messages regarding your appointment after you are done with your reservation process. If you need assistance, call +82-1661-2365. Text STOP to opt-out of future messages.",
     "appointmentTime": "Appointment time",
     "customer": "Customer",
     "treatmentName": "Treatment name",

@@ -1,4 +1,4 @@
-# nohd-frontend
+# peche-frontend
 
 ## Tools and Prerequisites
 - node version >= 16.15
@@ -12,7 +12,7 @@
 - [twin macro](https://github.com/ben-rogerson/twin.macro)
 
 ## Installation
-- `aws configure --profile nohd`
+- `aws configure --profile peche`
 - `make init STAGE=dev`
 
 ## Running the app

@@ -2,7 +2,7 @@
 
 STAGE ?= dev
 SERVICE_NAME ?= base
-INFRA_NAME ?= nohd
+INFRA_NAME ?= peche
 AWS_REGION ?= ap-northeast-2
 ENV ?= $(STAGE)
 AWS_PNR = --profile $(INFRA_NAME) --region $(AWS_REGION)
@@ -15,13 +15,13 @@ KAKAO_APP_REST_KEY?=$(shell aws ssm get-parameter $(AWS_PNR) --name \
 KAKAO_APP_JAVASCRIPT_KEY ?= $(shell aws ssm get-parameter $(AWS_PNR) --name \
 	"/$(INFRA_NAME)/staging/$(SERVICE_NAME)/auth/kakao/app-javascript-key" | jq '.Parameter | .Value')
 else
-BACKEND_API_URL?=$(shell aws ssm get-parameter --profile xenia --region us-east-1 --name \
-	"/xenia/dev/$(SERVICE_NAME)/backend/url" | jq '.Parameter | .Value')
+BACKEND_API_URL?=$(shell aws ssm get-parameter $(AWS_PNR) --name \
+	"/$(INFRA_NAME)/$(STAGE)/$(SERVICE_NAME)/backend/url" | jq '.Parameter | .Value')/api
 S3_BUCKET_NAME?=$(shell aws ssm get-parameter $(AWS_PNR) --name \
 	"/$(INFRA_NAME)/$(STAGE)/$(SERVICE_NAME)/frontend/bucket-name" | jq '.Parameter | .Value')
 DISTRIBUTION_ID?=$(shell aws ssm get-parameter $(AWS_PNR) --name \
 	"/$(INFRA_NAME)/$(STAGE)/$(SERVICE_NAME)/frontend/distribution-id" | jq '.Parameter | .Value')
-DISTRIBUTION_URL?=$(if $(filter dev,$(STAGE)),https://dev.nohdclinic.com,https://nohdclinic.com)
+DISTRIBUTION_URL?=$(if $(filter dev,$(STAGE)),https://dev.pecheskin.clinic,https://pecheskin.clinic)
 KAKAO_APP_REST_KEY?=$(shell aws ssm get-parameter $(AWS_PNR) --name \
 	"/$(INFRA_NAME)/$(STAGE)/$(SERVICE_NAME)/auth/kakao/app-rest-key" | jq '.Parameter | .Value')
 KAKAO_APP_JAVASCRIPT_KEY ?= $(shell aws ssm get-parameter $(AWS_PNR) --name \

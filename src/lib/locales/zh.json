@@ -52,12 +52,12 @@
     "title": "可感知美丽的诗丽雅皮肤科",
     "nameOfCEO": "代表人姓名：민원준",
     "companyNumber": "营业执照号码: 671-12-02176",
-    "copyright": "Copyright 2023 XENIA Corporation. All Rights Reserved.",
+    "copyright": "Copyright 2023 PECHE Corporation. All Rights Reserved.",
     "contact": "电话号码",
     "tel": "1661-2365",
     "openTime": "(월-금 09:00-18:00 / 주말, 공휴일 휴무)",
     "email": "E-Mail",
-    "hospitalEmail": "Xenia@gmail.com",
+    "hospitalEmail": "Peche@gmail.com",
     "address": "1馆地址",
     "newBuildingAddress": "2馆地址",
     "thirdBuildingAddress": "3馆地址",
@@ -73,8 +73,8 @@
     "introMachine": "仪器介绍",
     "introWorker": "职员介绍",
     "introDoctor": "医疗团队介绍",
-    "introduction1": "XENIA是从意为'款待(hospitality)'\n的希腊语'Xenia, xenia'中获得灵感而起名的。\n\n它包含了XENIA的哲学,即医院是应该最款待顾客的空间。\n即使过了很长时间,也有清晰地记忆的瞬间。\n",
-    "introduction2": "因为细腻的无形感觉融为一体,带来了与众不同的体验。\n\n在XENIA(江南诗丽雅皮肤科)逗留期间，\n不仅外在美，内在美也\n我们会尽最大的努力款待您~"
+    "introduction1": "PECHE是从意为'款待(hospitality)'\n的希腊语'Peche, peche'中获得灵感而起名的。\n\n它包含了PECHE的哲学,即医院是应该最款待顾客的空间。\n即使过了很长时间,也有清晰地记忆的瞬间。\n",
+    "introduction2": "因为细腻的无形感觉融为一体,带来了与众不同的体验。\n\n在PECHE(江南诗丽雅皮肤科)逗留期间，\n不仅外在美，内在美也\n我们会尽最大的努力款待您~"
   },
   "occupations": {
     "원장": "院长",
@@ -135,7 +135,7 @@
   },
   "reservePage": {
     "welcome": ", 欢迎光临",
-    "nameFix": "*如果不是您本人的名字，请通过微信公众号与我们联系。(微信公众号：韩国江南诗丽雅皮肤科)\n*如果不是本人姓名，請通過LINE或WhatsApp聯繫。(LINE ID : @xeniaclinic.tw) (whatsapp ID : +821059494410)",
+    "nameFix": "*如果不是您本人的名字，请通过微信公众号与我们联系。(微信公众号：韩国江南诗丽雅皮肤科)\n*如果不是本人姓名，請通過LINE或WhatsApp聯繫。(LINE ID : @pecheclinic.tw) (whatsapp ID : +821059494410)",
     "reserve": "预约",
     "logout": "Logout",
     "logoutConfirm": "Are you sure you want to logout?",

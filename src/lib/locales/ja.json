@@ -18,7 +18,7 @@
     "onlineReserve": "予約する",
     "onlineConsult": "カウンセリングのお問い合わせ",
     "todaysSurgery": "本日の人気施術",
-    "hospitalName": "Peche clinic",
+    "hospitalName": "Peche Clinic",
     "location": "1館住所",
     "newLocation": "2館住所",
     "thirdLocation": "3館住所",
@@ -49,15 +49,15 @@
     "consultationKoreanKakao": "카카오톡"
   },
   "footer": {
-    "title": "美しさを感覚する、XENIAクリニック",
+    "title": "美しさを感覚する、PECHEクリニック",
     "nameOfCEO": "代表者名:ミン·ウォンジュン",
     "companyNumber": "事業者番号:671-12-02176",
-    "copyright": "Copyright 2023 XENIA Corporation. All Rights Reserved.",
+    "copyright": "Copyright 2023 PECHE Corporation. All Rights Reserved.",
     "contact": "電話番号",
     "tel": "1661-2365",
     "openTime": "(월-금 09:00-18:00 / 주말, 공휴일 휴무)",
     "email": "E-Mail",
-    "hospitalEmail": "Xenia@gmail.com",
+    "hospitalEmail": "Peche@gmail.com",
     "address": "1館住所",
     "newBuildingAddress": "2館住所",
     "thirdBuildingAddress": "3館住所",
@@ -73,7 +73,7 @@
     "introMachine": "導入機器一覧",
     "introWorker": "スタッフ一覧",
     "introDoctor": "ドクター紹介",
-    "introduction1": "セニアは『歓待(hospitality)』を意味するギリシャ語の『クセニア、\nxenia』からインスピレーションを得て建てられました。\n\n病院が、お客様を最高にもてなさなければならない空間だというセニアの哲学が込められています。\n長い時間が経っても鮮明に記憶される瞬間があります。\n風に触れるように鼻先に余韻を残すあの日の香りと温度、\nそして色味と旋律まで。",
+    "introduction1": "セニアは『歓待(hospitality)』を意味するギリシャ語の『クセニア、\npeche』からインスピレーションを得て建てられました。\n\n病院が、お客様を最高にもてなさなければならない空間だというセニアの哲学が込められています。\n長い時間が経っても鮮明に記憶される瞬間があります。\n風に触れるように鼻先に余韻を残すあの日の香りと温度、\nそして色味と旋律まで。",
     "introduction2": "繊細な無形の感覚が一つに調和し、\nユニークな経験を与えたからでしょう。\n\nセニアクリニックに滞在する間、\n外面の美しさはもちろん、内面の美しさまで\n完全に感覚できるように、\n真心と努力を尽くします。"
   },
   "occupations": {
@@ -135,7 +135,7 @@
   },
   "reservePage": {
     "welcome": ", ようこそ",
-    "nameFix": "*お名前が間違った場合、LINEにてお問い合わせお願いいたします。(LINE ID : @xeniaclinic)",
+    "nameFix": "*お名前が間違った場合、LINEにてお問い合わせお願いいたします。(LINE ID : @pecheclinic)",
     "reserve": "ご予約はこちら",
     "logout": "Logout",
     "logoutConfirm": "Are you sure you want to logout?",
