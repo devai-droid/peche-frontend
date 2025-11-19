@@ -15,9 +15,11 @@ const useCart = () => {
   const [justAddedId, setJustAddedId] = useSessionStorage<string>("justAddedId", "")
   const [checkedList, setCheckedList] = useSessionStorage<string[]>("checkedList", [])
   const [openBottomSheet, setOpenBottomSheet] = useSessionStorage<boolean>("openBottomSheet", false)
+  const [inquiryMemo, setInquiryMemo] = useSessionStorage<string>("inquiryMemo", "")
+
   const resetCart = () => {
     setCart([])
-    setInquiry(true)
+    // setInquiry(true)
     setJustAddedId("")
     setCheckedList([])
     localStorage.removeItem("eventEndDates") // 장바구니 비우면 이벤트 종료일자 저장된 데이터 삭제
@@ -36,9 +38,16 @@ const useCart = () => {
   }
 
   const addToCart = ({ event, product }: { event?: Event; product?: Product }) => {
-    if (cart.length === 0) {
-      setInquiry(true)
+    if (inquiry) {
+      return {
+        blockedByInquiry: true,
+        pendingItem: { event, product },
+      }
     }
+
+    // if (cart.length === 0) {
+    //   setInquiry(true)
+    // }
     const item = cart.findIndex(
       (i) => (i.event && i.event?.id === event?.id) || (i.product && i.product?.id === product?.id),
     )
@@ -58,6 +67,8 @@ const useCart = () => {
     }
     setJustAddedId(event?.id || product?.id || "")
     setOpenBottomSheet(true)
+
+    return { blockedByInquiry: false }
   }
   const removeFromCart = (targetIds = [] as string[]) => {
     // justAddedId 에 해당하는 아이템이 삭제되는 경우, justAddedId를 초기화
@@ -96,6 +107,8 @@ const useCart = () => {
     getCheckedEventIds,
     openBottomSheet,
     setOpenBottomSheet,
+    inquiryMemo,
+    setInquiryMemo,
   }
 }
 

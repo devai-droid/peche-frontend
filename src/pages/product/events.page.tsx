@@ -20,6 +20,7 @@ import { useEventBundleControllerFindVisible } from "@/lib/orval/event-bundle/ev
 import dayjs from "dayjs"
 import useCart from "@/features/product/hooks/use-cart"
 import { getNextPageParam } from "@/lib/api/http-client.helper"
+import Modal from "@/lib/components/modal/modal.component"
 
 const item = tw`w-full font-bold font-nanumgothic text-center h-14 flex items-center justify-center bg-white`
 
@@ -78,6 +79,7 @@ const Events = () => {
   const [params, setParams] = useSearchParams()
   const selectedCategoryId = params.get("category")
   const selectedEventBundleId = params.get("bundle")
+  const [showInquiryModal, setShowInquiryModal] = React.useState(false)
 
   const keyMatch = {
     ko: "",
@@ -89,10 +91,17 @@ const Events = () => {
   const { i18n } = useTranslation()
   const lang = i18n.language as keyof typeof keyMatch
 
-  const { addToCart } = useCart()
+  const { addToCart, resetCart, inquiry, setInquiry } = useCart()
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleAddToCart = (event: any) => {
+    // 상담모드일 경우 → addToCart가 blockedByInquiry=true 반환함
+    const result = addToCart(item)
+
+    if (result?.blockedByInquiry) {
+      setShowInquiryModal(true)
+      return
+    }
     // Utility function to get event end dates from local storage
     const getEventEndDates = () => {
       const storedData = localStorage.getItem("eventEndDates")
@@ -298,6 +307,33 @@ const Events = () => {
           </CartView>
         </AppMaxWidth>
       </div>
+      <Modal open={showInquiryModal} title="안내" onClose={() => setShowInquiryModal(false)}>
+        <div tw="flex flex-col items-center justify-center h-full">
+          <div tw="text-center text-[16px] font-semibold leading-snug">
+            방문 상담이 담겨있는 상태에서는 시술 선택이 어렵습니다.
+          </div>
+
+          <div tw="text-neutral70 text-center mt-3">방문 상담을 비운 후 시술을 담아주세요.</div>
+
+          <div tw="flex justify-end gap-2 mt-8">
+            <Button
+              tw="min-w-[8rem]"
+              style={{ variant: "outlined", color: "point", size: "lg" }}
+              onClick={() => setShowInquiryModal(false)}>
+              취소하기
+            </Button>
+
+            <Button
+              onClick={() => {
+                // resetCart()
+                setInquiry(false)
+                setShowInquiryModal(false)
+              }}>
+              방문 상담 비우기
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </Page>
   )
 }
