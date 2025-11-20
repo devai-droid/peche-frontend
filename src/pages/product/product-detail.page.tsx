@@ -401,7 +401,9 @@ const ProductDetail = () => {
             {showEvents && (
               <div>
                 <div tw="flex flex-col gap-4 lg:gap-6">
-                  {eventList?.map((product, index) => <ProductItem key={index} {...product} />)}
+                  {eventList?.map((product, index) => (
+                    <ProductItem key={index} {...product} />
+                  ))}
                 </div>
                 {!eventList?.length && (
                   <div tw="flex flex-col gap-4 lg:gap-6" style={{ textAlign: "center" }}>

@@ -9,7 +9,7 @@ import useResponsive from "@/lib/hooks/use-responsive"
 import tw from "twin.macro"
 import { useTranslation } from "react-i18next"
 import CartView from "@/features/product/components/cart-view.component"
-import { Button, Icon, LinkButton } from "@/design-system/components"
+import { Button, Icon, LinkButton, Chip } from "@/design-system/components"
 import { ShoppingCartIcon } from "@/assets/icon"
 import { useEventControllerFindManyInfinite } from "@/lib/orval/events/events"
 import useLanguageValue from "@/lib/hooks/use-language-key"
@@ -22,7 +22,7 @@ import useCart from "@/features/product/hooks/use-cart"
 import { getNextPageParam } from "@/lib/api/http-client.helper"
 import Modal from "@/lib/components/modal/modal.component"
 
-const item = tw`w-full font-bold font-nanumgothic text-center h-14 flex items-center justify-center bg-white`
+const item = tw`w-full font-semibold font-pretendard text-center h-14 flex items-center justify-center bg-white`
 
 interface EventProps {
   name: string
@@ -42,30 +42,79 @@ const Event = ({
   price,
   id,
   addToCart,
-}: EventProps) => {
+  isNew,
+  isPop,
+  isBest,
+  isKakao,
+}: EventProps & {
+  isNew?: boolean
+  isPop?: boolean
+  isBest?: boolean
+  isKakao?: boolean
+}) => {
   const { t } = useTranslation()
+
   return (
-    <div tw="bg-white p-4 lg:p-6 rounded-lg border border-[#D0D0D0] shadow-[0px_4px_12px_0px_rgba(0,0,0,0.25)] font-nanumgothic flex flex-col gap-1">
-      <div tw="text-[#333] text-lg font-bold">{name}</div>
-      <div style={{ whiteSpace: "pre-line" }}>{description}</div>
-      <div tw="text-sm text-[#888]">{subDescription}</div>
-      <div tw="flex items-center gap-2">
-        {!!originalPrice && <div tw="text-[#717171] text-md line-through">{originalPrice}</div>}
-        <div tw="text-xl text-[#8d7b64] font-bold">{price}</div>
+    <div tw="bg-white p-4 lg:p-6 font-pretendard flex flex-col gap-2 tracking-tight leading-[150%]">
+      {/* Chip 영역 */}
+      <div tw="flex gap-1">
+        {isPop && (
+          <Chip tw="h-[24px] px-2 text-[11px] leading-[1] flex items-center mb-1" color="primary">
+            {t("common.pop")}
+          </Chip>
+        )}
+
+        {isNew && (
+          <Chip tw="h-[24px] px-2 text-[11px] leading-[1] flex items-center mb-1" color="gray">
+            {t("common.new")}
+          </Chip>
+        )}
+
+        {isKakao && (
+          <Chip tw="h-[24px] px-2 text-[11px] leading-[1] flex items-center mb-1" color="pink">
+            {t("common.kakaoFriend")}
+          </Chip>
+        )}
+
+        {isBest && (
+          <Chip tw="h-[24px] px-2 text-[11px] leading-[1] flex items-center mb-1" color="darkgray">
+            {t("common.best")}
+          </Chip>
+        )}
       </div>
-      <div tw="mt-2 text-[#F40000] text-sm">{t("common.vatNotIncluded")}</div>
-      <div tw="relative text-right">
-        <div tw="md:absolute right-0 bottom-0 inline-flex gap-3 ">
-          <LinkButton style={{ size: "sm" }} to={`/products/${id}`}>
-            {t("products.detail")}
-          </LinkButton>
-          <Button
-            onClick={addToCart}
-            tw="flex items-center justify-center gap-1"
-            style={{ size: "sm", variant: "filled" }}>
-            <Icon icon={ShoppingCartIcon} size={16} /> {t("common.save")}
-          </Button>
-        </div>
+
+      {/* 제목 */}
+      <div tw="text-neutralBlack text-[16px] md:text-[18px] font-semibold">{name}</div>
+
+      {/* 설명 */}
+      <div tw="text-[13px] md:text-[14px] text-neutral70" style={{ whiteSpace: "pre-line" }}>
+        {description}
+      </div>
+
+      {/* 서브 설명 */}
+      <div tw="text-sm text-[#888]">{subDescription}</div>
+
+      {/* 🔥 가격을 버튼 위로 이동 — 버튼과 완전히 분리됨 */}
+      <div tw="flex items-center gap-2 mb-2">
+        {!!originalPrice && (
+          <div tw="line-through text-[13px] sm:text-[14px] text-neutral50">{originalPrice}</div>
+        )}
+        <div tw="text-[16px] md:text-[18px] text-neutralBlack font-bold">{price}</div>
+      </div>
+
+      {/* 버튼 영역 — 절대 위치 제거하고 자연스럽게 아래 배치 */}
+      <div tw="flex justify-end gap-3 md:-mt-10 -mt-2">
+        <LinkButton style={{ variant: "outlined", size: "sm" }} to={`/products/${id}`}>
+          {t("products.detail")}
+        </LinkButton>
+
+        <Button
+          onClick={addToCart}
+          tw="flex items-center justify-center gap-1"
+          style={{ size: "sm", variant: "filled" }}>
+          {t("common.save")}
+          <Icon tw="ml-[5px]" icon={ShoppingCartIcon} size={16} />
+        </Button>
       </div>
     </div>
   )
@@ -191,6 +240,7 @@ const Events = () => {
   }
 
   const colSpan = (column: number) => `span ${column} / span ${column}`
+
   return (
     <Page hiddenFooter={false}>
       <div tw="w-screen overflow-hidden">
@@ -208,20 +258,33 @@ const Events = () => {
             </div> */}
 
           <div tw="flex justify-center mt-8 lg:mt-16 mb-4 lg:mb-12 max-lg:p-4">
-            <div tw="grid justify-center bg-[#EBECEF] gap-px p-px grid-cols-3 lg:grid-cols-5 w-full">
-              {categories?.items?.map((category) => (
-                <button
-                  key={category.id}
-                  onClick={() => {
-                    handleCategory(category.id)
-                  }}
-                  css={[
-                    item,
-                    selectedCategoryId === category.id ? tw`text-white bg-point` : tw`text-black`,
-                  ]}>
-                  <div tw="px-2 overflow-hidden text-ellipsis">{tv(category, "name")}</div>
-                </button>
-              ))}
+            <div tw="grid justify-center bg-neutral30 gap-px p-px grid-cols-3 lg:grid-cols-5 w-full">
+              {categories?.items?.map((category, index) => {
+                const isSelected = selectedCategoryId === category.id
+
+                // 모바일/데스크탑 구분
+                const isFirstRow = (isMobile && index < 3) || (!isMobile && index < 5)
+
+                return (
+                  <button
+                    key={category.id}
+                    onClick={() => handleCategory(category.id)}
+                    css={[
+                      item,
+
+                      // 선택된 버튼 스타일 (공통)
+                      isSelected && tw`bg-[#DA7F67] text-white`,
+
+                      // 비선택 버튼: 첫줄 / 아니면 구분
+                      !isSelected &&
+                        (isFirstRow
+                          ? tw`bg-[#FEF5EA] text-black`
+                          : tw`bg-white font-normal text-black`),
+                    ]}>
+                    <div tw="px-2 overflow-hidden text-ellipsis">{tv(category, "name")}</div>
+                  </button>
+                )
+              })}
               <div
                 tw="max-lg:hidden"
                 css={[
@@ -295,7 +358,13 @@ const Events = () => {
                         ? `${event.price.toLocaleString()} ${t("reservePage.won")}`
                         : undefined
                     }
-                    price={`${(event.discountPrice || event.price).toLocaleString()} ${t("reservePage.won")}`}
+                    price={`${(event.discountPrice || event.price).toLocaleString()} ${t(
+                      "reservePage.won",
+                    )}`}
+                    isNew={event.label?.includes("NEW")}
+                    isPop={event.label?.includes("POP")}
+                    isBest={event.label?.includes("BEST")}
+                    isKakao={event.label?.includes("KAKAO")}
                   />
                 ))}
             </div>
