@@ -77,16 +77,13 @@ const HeaderNavigator = () => {
   React.useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (!dropdownRef.current) {
-        console.log("1", dropdownRef, isOpenAllMenu)
         return
       }
       if (!isOpenAllMenu) {
-        console.log("2", isOpenAllMenu)
         return
       }
 
       if (!dropdownRef.current.contains(e.target as Node)) {
-        console.log("close it!")
         setIsOpenAllMenu(false)
       }
     }

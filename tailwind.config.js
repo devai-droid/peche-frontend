@@ -30,6 +30,7 @@ module.exports = {
         neutral60: "#8A8A8A",
         neutral70: "#666666",
         primary: "#DA7F67",
+        secondary: "#CC917D",
         tertiary: "#FEF5EA"
       },
       boxShadow: {},

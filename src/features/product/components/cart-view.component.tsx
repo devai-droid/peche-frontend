@@ -17,7 +17,7 @@ import InstagramImg from "@/assets/images/sns/instagram.png"
 import useCustomNavigate from "@/lib/hooks/use-custom-navigate"
 import Modal from "@/lib/components/modal/modal.component"
 
-const BottomButton = tw.button`flex-1 h-16 flex justify-center items-center gap-2 text-white bg-point hover:bg-[#BCA386]`
+const BottomButton = tw.button`flex-1 h-16 flex justify-center items-center gap-2 text-white bg-secondary`
 const InquiryButton = tw.button`rounded-lg border border-[#d0d0d0] w-16 h-16 flex justify-center items-center flex-col`
 
 const call = tw`bg-[#F8EEEA]`
@@ -643,21 +643,23 @@ const BottomButtons = ({
 
   return (
     <div tw="fixed lg:hidden bottom-0 inset-x-0">
-      <div tw="bg-white gap-px flex">
-        <BottomButton onClick={() => setShowInquiryButtons(!showInquiryButtons)}>
-          <Icon icon={ChatIcon} />
+      <div tw="bg-secondary gap-px flex">
+        <BottomButton
+          onClick={() => {
+            console.log("clicked")
+          }}>
           {t("button.inquiry")}
         </BottomButton>
+        <div tw="w-px bg-neutral" />
         <BottomButton
           onClick={() => {
             navigate("/reservation/new")
             setInquiry(true)
           }}>
-          <Icon icon={CalendarIcon} />
           {t("button.reserve")}
         </BottomButton>
       </div>
-      {showInquiryButtons && (
+      {/* {showInquiryButtons && (
         <div tw="flex gap-3 absolute bottom-full px-4 py-2">
           {inquiryButtons
             .filter((button) => button.lang.includes(language))
@@ -672,7 +674,7 @@ const BottomButtons = ({
               </InquiryButton>
             ))}
         </div>
-      )}
+      )} */}
     </div>
   )
 }

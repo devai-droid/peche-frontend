@@ -249,6 +249,12 @@ const Events = () => {
           alt="banner"
           tw="w-full max-h-[700px] h-[700px] object-cover block"
         />
+        <div tw="absolute left-[8%] top-[10%] text-left text-neutralBlack">
+          <div tw="text-[39px] lg:text-[50px] font-time font-normal tracking-tight">
+            Price & Events
+          </div>
+          <div tw="text-[18px] lg:text-[22px] font-pretendard">가격 및 이벤트</div>
+        </div>
       </div>
 
       <div tw="bg-neutral min-h-screen pt-[1px]">
