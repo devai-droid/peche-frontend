@@ -103,7 +103,9 @@
     "target": "เป้าหมายการรักษาที่แนะนำ",
     "qAndA": "Q&A",
     "caution": "คำเตือน",
-    "noEvents": "ไม่มีสินค้ากิจกรรม"
+    "noEvents": "ไม่มีสินค้ากิจกรรม",
+    "moreProcedures": "시술 더보기",
+    "treatmentVideo": "시술 소개 영상"
   },
   "common": {
     "all": "All",

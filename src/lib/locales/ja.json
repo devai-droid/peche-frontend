@@ -103,7 +103,9 @@
     "target": "施術推薦対象",
     "qAndA": "Q&A",
     "caution": "注意事項",
-    "noEvents": "イベント商品はありません"
+    "noEvents": "イベント商品はありません",
+    "moreProcedures": "시술 더보기",
+    "treatmentVideo": "시술 소개 영상"
   },
   "common": {
     "all": "All",

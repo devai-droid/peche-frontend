@@ -249,7 +249,7 @@ const Events = () => {
           alt="banner"
           tw="w-full max-h-[700px] h-[700px] object-cover block"
         />
-        <div tw="absolute left-[8%] top-[10%] text-left text-neutralBlack">
+        <div tw="absolute left-[8%] top-[10%] text-left text-neutralBlack tracking-tight leading-[150%]">
           <div tw="text-[39px] lg:text-[50px] font-time font-normal tracking-tight">
             Price & Events
           </div>
@@ -257,7 +257,7 @@ const Events = () => {
         </div>
       </div>
 
-      <div tw="bg-neutral min-h-screen pt-[1px]">
+      <div tw="bg-neutral min-h-screen pt-[1px] tracking-tight leading-[150%]">
         <AppMaxWidth tw="max-lg:p-0">
           {/* <div tw="max-lg:hidden">
               <img src={isMobile ? mobileBannerImg : bannerImg} alt="banner" tw="w-full" />
@@ -342,7 +342,7 @@ const Events = () => {
               </div>
             </div> */}
 
-            <div tw="flex flex-col gap-6 max-lg:px-4">
+            <div tw="flex flex-col gap-4 max-lg:px-4">
               {events?.pages
                 .flatMap((page) => page.items)
                 .map((event, index) => (

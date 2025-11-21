@@ -175,7 +175,7 @@ const Products = () => {
             </div>
           </div>
 
-          <div tw="flex flex-col gap-6 max-lg:p-4 mb-16">
+          <div tw="flex flex-col gap-4 max-lg:p-4 mb-16">
             {products?.pages
               .flatMap((p) => p.items)
               .map((product) => {

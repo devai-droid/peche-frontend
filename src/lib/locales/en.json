@@ -103,7 +103,9 @@
     "target": "Candidate for the Treatment",
     "qAndA": "Q&A",
     "caution": "Caution and Side Effects",
-    "noEvents": "No Event Products"
+    "noEvents": "No Event Products",
+    "moreProcedures": "시술 더보기",
+    "treatmentVideo": "시술 소개 영상"
   },
   "common": {
     "all": "All",

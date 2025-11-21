@@ -103,7 +103,9 @@
     "target": "推荐治疗目标",
     "qAndA": "Q&A",
     "caution": "警告",
-    "noEvents": "没有活动产品"
+    "noEvents": "没有活动产品",
+    "moreProcedures": "시술 더보기",
+    "treatmentVideo": "시술 소개 영상"
   },
   "common": {
     "all": "All",
