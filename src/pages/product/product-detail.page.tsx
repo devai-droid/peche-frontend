@@ -293,6 +293,13 @@ const ProductDetail = () => {
                 </div>
               </div>
             )}
+
+            {/* 대표 이미지 영역 */}
+            {productDetail.image?.url && (
+              <div tw="bg-white p-6 md:p-10 mt-10">
+                <img src={productDetail.image.url} alt={name} tw="w-full rounded-lg" />
+              </div>
+            )}
           </CartView>
         </AppMaxWidth>
       </div>
