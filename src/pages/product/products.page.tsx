@@ -35,8 +35,8 @@ interface ProductProps {
 const Product = ({ name, description, price, id }: ProductProps) => {
   const { t } = useTranslation()
   return (
-    <div tw="bg-white p-4 lg:p-6 font-pretendard flex flex-col gap-2 tracking-tight leading-[150%]">
-      <div tw="text-neutralBlack text-[16px] md:text-[18px] font-semibold">{name}</div>
+    <div tw="bg-white p-4 font-pretendard flex flex-col gap-2 tracking-tight leading-[150%]">
+      <div tw="text-neutralBlack text-[18px] md:text-[22px] font-semibold">{name}</div>
       <div tw="text-[13px] md:text-[14px] text-neutral70" style={{ whiteSpace: "pre-line" }}>
         {description}
       </div>

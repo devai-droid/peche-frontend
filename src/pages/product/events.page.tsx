@@ -55,7 +55,7 @@ const Event = ({
   const { t } = useTranslation()
 
   return (
-    <div tw="bg-white p-4 lg:p-6 font-pretendard flex flex-col gap-2 tracking-tight leading-[150%]">
+    <div tw="bg-white p-4 font-pretendard flex flex-col gap-2 tracking-tight leading-[150%]">
       {/* Chip 영역 */}
       <div tw="flex gap-1">
         {isPop && (
@@ -84,7 +84,7 @@ const Event = ({
       </div>
 
       {/* 제목 */}
-      <div tw="text-neutralBlack text-[16px] md:text-[18px] font-semibold">{name}</div>
+      <div tw="text-neutralBlack text-[18px] md:text-[22px] font-semibold">{name}</div>
 
       {/* 설명 */}
       <div tw="text-[13px] md:text-[14px] text-neutral70" style={{ whiteSpace: "pre-line" }}>
@@ -249,7 +249,7 @@ const Events = () => {
           alt="banner"
           tw="w-full max-h-[700px] h-[700px] object-cover block"
         />
-        <div tw="absolute left-[8%] top-[10%] text-left text-neutralBlack tracking-tight leading-[150%]">
+        <div tw="absolute left-[8%] top-[10%] text-left text-neutralBlack">
           <div tw="text-[39px] lg:text-[50px] font-time font-normal tracking-tight">
             Price & Events
           </div>

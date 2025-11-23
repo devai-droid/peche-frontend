@@ -6,6 +6,12 @@ import "swiper/css"
 import "swiper/css/navigation"
 import leftArrow from "@/assets/images/left-arrow.png"
 import rightArrow from "@/assets/images/right-arrow.png"
+import { useNavigate } from "react-router-dom"
+import CustomLink from "@/lib/components/custom-link.component"
+import { useEventCategoryControllerFindManyWithPaginationQuery } from "@/lib/orval/event-categories/event-categories"
+import { useEventBundleControllerFindVisible } from "@/lib/orval/event-bundle/event-bundle"
+import useLanguageQuery from "@/lib/hooks/use-language-query"
+import useLanguageValue from "@/lib/hooks/use-language-key"
 
 const Section = tw.section`
   w-full bg-white py-12 md:py-20 tracking-tight leading-[140%] font-pretendard
@@ -35,7 +41,6 @@ const MoreButton = tw.button`
   border border-primary text-primary text-[13px] md:text-[15px] px-2 py-2 rounded hover:bg-primary hover:text-white transition
 `
 
-// ✅ Swiper Wrapper + 커스텀 네비게이션 버튼
 const StyledSwiperWrapper = styled.div`
   position: relative;
 
@@ -66,20 +71,16 @@ const StyledSwiperWrapper = styled.div`
 `
 
 const StyledSwiperSlide = styled(SwiperSlide)`
-  width: 215px !important; /* 모바일 기본 */
+  width: 215px !important;
   @media (min-width: 768px) {
-    width: 295px !important; /* 데스크탑 카드와 동일 */
+    width: 295px !important;
   }
 `
 
-// ✅ 카드 사이즈 고정
 const Card = styled.div`
-  ${tw`
-    bg-white flex flex-col items-center justify-start cursor-pointer
-  `}
+  ${tw`bg-white flex flex-col items-center justify-start cursor-pointer`}
   width: 215px;
   height: 285px;
-  margin: 0 auto;
 
   @media (min-width: 768px) {
     width: 295px;
@@ -87,15 +88,19 @@ const Card = styled.div`
   }
 `
 
-// ✅ 이미지 placeholder
-const ImagePlaceholder = styled.div`
-  ${tw`bg-gray-100 rounded overflow-hidden mb-2`}
+const ImageBox = styled.div`
+  ${tw`rounded overflow-hidden mb-2 bg-gray-100`}
   width: 212px;
   height: 212px;
-
   @media (min-width: 768px) {
     width: 292px;
     height: 292px;
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 `
 
@@ -111,16 +116,34 @@ const Discount = tw.span`
   text-primary text-[13px] md:text-[14px] font-semibold mr-1
 `
 
-// 더미 데이터
-const events = [
-  { id: 1, title: "복숭복숭 할인 이벤트", discount: "~ 49%", price: "99,000원부터" },
-  { id: 2, title: "피부 탄력 UP 이벤트", discount: "~ 35%", price: "120,000원부터" },
-  { id: 3, title: "가을 리프팅 시즌", discount: "~ 42%", price: "150,000원부터" },
-  { id: 4, title: "NEW 레이저 런칭 프로모션", discount: "~ 50%", price: "89,000원부터" },
-  { id: 5, title: "기미 잡티 집중관리", discount: "~ 30%", price: "110,000원부터" },
-]
-
 const SpecialEventSection = () => {
+  const nav = useNavigate()
+  const langQuery = useLanguageQuery()
+  const tv = useLanguageValue()
+
+  const { data: categories } = useEventCategoryControllerFindManyWithPaginationQuery({
+    status: "ACTIVE",
+    sortBy: ["order"],
+    sortOrder: ["ASC"],
+    limit: 200,
+    ...langQuery,
+  })
+
+  const { data: visibleBundles } = useEventBundleControllerFindVisible()
+
+  // ⚠️ bundle이 없으면 페이지 이동 불가능 → 섹션 자체 숨김
+  if (!visibleBundles || visibleBundles.length === 0) return null
+  const firstBundleId = visibleBundles[0].id
+
+  // ⭐ 이미지 있는 대분류만 표시
+  const imageCategories = categories?.items?.filter((cat) => !!cat.image?.url) ?? []
+
+  if (imageCategories.length === 0) return null
+
+  const handleClick = (categoryId: string) => {
+    nav(`/events?category=${categoryId}&bundle=${firstBundleId}`)
+  }
+
   return (
     <Section>
       <Inner>
@@ -129,39 +152,45 @@ const SpecialEventSection = () => {
             <NewBadge>New</NewBadge>
             <Title>최신 이벤트 소식</Title>
           </TitleBox>
-          <MoreButton>전체 이벤트 보기</MoreButton>
+          <CustomLink to="/events" style={{ textDecoration: "none" }}>
+            <MoreButton as="div">전체 이벤트 보기</MoreButton>
+          </CustomLink>
         </Header>
 
         <StyledSwiperWrapper>
-          {/* ✅ 커스텀 화살표 버튼 */}
           <div className="nav-button nav-prev">
-            <img src={leftArrow} alt="이전" />
+            <img src={leftArrow} alt="prev" />
           </div>
           <div className="nav-button nav-next">
-            <img src={rightArrow} alt="다음" />
+            <img src={rightArrow} alt="next" />
           </div>
 
           <Swiper
             modules={[Navigation]}
-            navigation={{
-              prevEl: ".nav-prev",
-              nextEl: ".nav-next",
-            }}
+            navigation={{ prevEl: ".nav-prev", nextEl: ".nav-next" }}
             breakpoints={{
               0: { slidesPerView: "auto", spaceBetween: 0 },
               768: { slidesPerView: "auto", spaceBetween: 0 },
               1024: { slidesPerView: "auto", spaceBetween: 0 },
             }}>
-            {events.map((event) => (
-              <StyledSwiperSlide key={event.id}>
-                <Card>
-                  <ImagePlaceholder />
-                  <EventTitle>{event.title}</EventTitle>
-                  <EventPrice>
-                    <Discount>{event.discount}</Discount>
-                    {event.price}
-                  </EventPrice>
-                </Card>
+            {imageCategories.map((cat) => (
+              <StyledSwiperSlide key={cat.id}>
+                <CustomLink
+                  to={`/events?category=${cat.id}&bundle=${firstBundleId}`}
+                  style={{ textDecoration: "none" }}>
+                  <Card>
+                    <ImageBox>
+                      <img src={cat.image.url} alt={tv(cat, "name")} />
+                    </ImageBox>
+
+                    <EventTitle>{tv(cat, "name")}</EventTitle>
+
+                    <EventPrice>
+                      {cat.discountPercent && <Discount>~ {cat.discountPercent}%</Discount>}
+                      {cat.minPrice ? `${cat.minPrice.toLocaleString()}원부터` : ""}
+                    </EventPrice>
+                  </Card>
+                </CustomLink>
               </StyledSwiperSlide>
             ))}
           </Swiper>
