@@ -241,6 +241,48 @@ const Events = () => {
 
   const colSpan = (column: number) => `span ${column} / span ${column}`
 
+  // -----------------------------
+  // Event Category Header UI
+  // -----------------------------
+  interface EventCategoryBannerProps {
+    name: string
+    startDate: string | Date
+    endDate: string | Date
+    imageUrl: string
+  }
+  const selectedCategory = categories?.items?.find((c) => c.id === selectedCategoryId)
+
+  // visibleEvents에 선택된 번들의 날짜 정보가 있음
+  const selectedBundle = visibleEvents?.find((b) => b.id === selectedEventBundleId)
+
+  const eventStartDate = selectedBundle?.startDate
+  const eventEndDate = selectedBundle?.endDate
+
+  const EventCategoryBanner = ({
+    name,
+    startDate,
+    endDate,
+    imageUrl,
+  }: EventCategoryBannerProps) => {
+    return (
+      <div tw="w-full mb-6 px-4 md:px-0 font-pretendard tracking-tight leading-[150%]">
+        <div tw="bg-white px-4 py-4 md:py-6 md:px-4 border-b border-neutral20">
+          <div tw="text-[18px] md:text-[22px] font-semibold text-neutralBlack mb-2">{name}</div>
+          <div tw="text-[13px] md:text-[14px] text-neutral70">
+            이벤트 기간: {dayjs(startDate).format("YY.MM.DD")}~{dayjs(endDate).format("YY.MM.DD")}
+          </div>
+        </div>
+
+        <div tw="w-full bg-gray-100 overflow-hidden">
+          <img src={imageUrl} alt={name} tw="w-full object-cover md:h-[380px] h-[250px]" />
+        </div>
+      </div>
+    )
+  }
+
+  // 날짜 포맷
+  const formatDate = (d?: string) => (d ? dayjs(d).format("YYYY.MM.DD") : "")
+
   return (
     <Page hiddenFooter={false}>
       <div tw="w-screen overflow-hidden">
@@ -341,6 +383,15 @@ const Events = () => {
                   ))}
               </div>
             </div> */}
+
+            {selectedCategory?.image?.url && selectedBundle && (
+              <EventCategoryBanner
+                name={tv(selectedCategory, "name")}
+                startDate={selectedBundle.startDate}
+                endDate={selectedBundle.endDate}
+                imageUrl={selectedCategory.image.url}
+              />
+            )}
 
             <div tw="flex flex-col gap-4 max-lg:px-4">
               {events?.pages
