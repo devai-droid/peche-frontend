@@ -130,7 +130,7 @@ const HeaderNavigator = () => {
   }
 
   const TextButton = styled.button<{ selected: boolean }>(({ selected }) => [
-    tw`p-4 text-[17px] font-medium tracking-[-0.02em] transition-colors duration-200 relative pb-[10px]`,
+    tw`p-4 text-[17px] font-medium tracking-[-0.02em] transition-colors duration-200 relative pb-[10px] font-pretendard`,
     selected
       ? tw`text-[#DA7F67] font-semibold border-b-[3px] border-[#DA7F67]`
       : tw`text-neutralBlack border-b-[3px] border-transparent`,
@@ -157,7 +157,7 @@ const HeaderNavigator = () => {
 
           return (
             <TextLink to={link.href} key={link.name} selected={isSelected(link.href)}>
-              <div>{t(link.name)}</div>
+              <div tw="font-pretendard">{t(link.name)}</div>
             </TextLink>
           )
         })}

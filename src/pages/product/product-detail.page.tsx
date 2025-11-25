@@ -84,7 +84,7 @@ const ProductItem = ({
       {/* 가격 */}
       <div tw="flex items-center gap-2 mb-2">
         {originalPrice && <div tw="line-through text-[13px] text-neutral50">{originalPrice}</div>}
-        <div tw="text-[18px] md:text-[22px] text-neutralBlack font-bold">{price}</div>
+        <div tw="text-[16px] md:text-[18px] text-neutralBlack font-bold">{price}</div>
       </div>
 
       {/* 버튼 */}
