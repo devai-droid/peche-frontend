@@ -17,6 +17,7 @@ import AppMaxWidth from "../app-max-width.component"
 import useResponsive from "@/lib/hooks/use-responsive"
 import HeaderLanguage from "./header-language.component"
 import MobileAccordionMenu from "./mobile-accordion-menu.component"
+import MobileMenu from "./mobile-menu.component"
 import useCustomNavigate from "@/lib/hooks/use-custom-navigate"
 import { useTranslation } from "react-i18next"
 import useLanguageValue from "@/lib/hooks/use-language-key"
@@ -319,7 +320,7 @@ const HeaderComponent = ({ onClickDrawer, clickedKeyword, setClickedKeyword }: P
               setIsMenuOpen={setIsMenuOpen}
             />
           </AppMaxWidth>
-          {!isDesktop && isMenuOpen && <MobileAccordionMenu />}
+          {!isDesktop && isMenuOpen && <MobileMenu />}
         </>
       )}
     </HeaderContainer>
