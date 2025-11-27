@@ -132,7 +132,7 @@ const PrivacyPolicy = () => {
 6. 정보주체의 영상정보 열람 등 요구에 대한 조치 : 개인영상정보 열람․존재확인 청구서로 신청하여야 하며, 정보주체 자신이 촬영된 경우 또는 명백히 정보주체의 생명․신체․재산 이익을 위해 필요한 경우에 한해 열람을 허용함
 7. 영상정보 보호를 위한 기술적·관리적·물리적 조치 : 내부관리계획 수립, 접근통제 및 접근권한 제한, 영상정보의 안전한 저장·전송기술 적용, 처리기록 보관 및 위·변조 방지조치, 보관시설 마련 및 잠금장치 설치 등
 
-제15조(개인정보 처리방침의 적용 및 변경) 이 개인정보 처리방침은 2021. 03. 29 부터 적용됩니다.
+제15조(개인정보 처리방침의 적용 및 변경) 이 개인정보 처리방침은 2025. 12. 01 부터 적용됩니다.
 `
 
   const privacyPolicyEng = `
@@ -259,7 +259,7 @@ Article 14 (Installation and Operation of Image Information Processing Equipment
 6. Measures for the request of the information subject to view the video information: It must be applied with a personal video information viewing and existence confirmation request, and access is allowed only when the information subject himself is filmed or when it is clearly necessary for the life, body, and property interests of the information subject.
 7. Technical, administrative, and physical measures to protect video information: establishment of internal management plans, access control and restriction of access rights, application of safe storage and transmission technology of video information, storage of processing records and measures to prevent forgery and tampering, provision of storage facilities and installation of locks, etc.
 
-Article 15 (Application and Change of Privacy Policy) This Privacy Policy shall be applied from March 29, 2021.
+Article 15 (Application and Change of Privacy Policy) This Privacy Policy shall be applied from December 1, 2025.
 `
 
   const privacyPolicyChn = `
@@ -446,7 +446,7 @@ C. クッキーの保存を拒否する場合、カスタマイズされたサ�
 情報主体の映像情報閲覧等要求についてした措置:個人映像情報閲覧·存在確認請求書で申請しなければならず、情報主体自身が撮影された場合、または明らかに情報主体の生命·身体·財産利益のために必要な場合に限り閲覧を許可する
 映像情報保護のための技術的·管理的·物理的措置:内部管理計画樹立、アクセス統制およびアクセス権限制限、映像情報の安全な保存·転送技術適用、処理記録保管および偽造·変造防止措置、保管施設準備およびロック装置設置など
 
-第15条（個人情報処理方針の適用及び変更） この個人情報処理方針は、2021.03.29から適用されます。
+第15条（個人情報処理方針の適用及び変更） この個人情報処理方針は、2025.12.01から適用されます。
 `
 
   const privacyPolicyTha = `

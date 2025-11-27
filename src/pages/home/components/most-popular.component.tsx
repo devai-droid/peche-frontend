@@ -114,6 +114,12 @@ const MostPopular = () => {
 
   const { data: categories } = useMostPopularCategoryControllerFindAll()
 
+  React.useEffect(() => {
+    if (categories && categories.length > 0 && !openId) {
+      setOpenId(categories[0].id)
+    }
+  }, [categories])
+
   const ImageCardLink = styled(CustomLink)`
     ${tw`relative overflow-hidden bg-gray-100 cursor-pointer`}
     width: 296px;
