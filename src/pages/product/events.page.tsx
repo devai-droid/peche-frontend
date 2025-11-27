@@ -285,7 +285,7 @@ const Events = () => {
 
   return (
     <Page hiddenFooter={false}>
-      <div tw="w-screen overflow-hidden">
+      <div tw="w-screen overflow-hidden relative">
         <img
           src={isMobile ? mobileBannerImg : bannerImg}
           alt="banner"
@@ -399,7 +399,7 @@ const Events = () => {
                 .map((event, index) => (
                   <Event
                     addToCart={() => handleAddToCart({ event })}
-                    id={event.detailPage.id}
+                    id={event.detailPage?.id}
                     key={index}
                     name={tv(event, "name")}
                     description={tv(event, "description")}

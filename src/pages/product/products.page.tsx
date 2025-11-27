@@ -110,7 +110,7 @@ const Products = () => {
 
   useLayoutEffect(() => {
     if (categories && !selectedCategoryId) {
-      handleCategory(categories.items[0].id, true)
+      handleCategory(categories?.items[0].id, true)
     }
   }, [categories])
 
@@ -122,7 +122,7 @@ const Products = () => {
 
   return (
     <Page hiddenFooter={false}>
-      <div tw="w-screen overflow-hidden">
+      <div tw="w-screen overflow-hidden relative">
         <img
           src={isMobile ? mobileBannerImg : bannerImg}
           alt="banner"
@@ -133,6 +133,7 @@ const Products = () => {
           <div tw="text-[18px] lg:text-[22px] font-pretendard">전체 시술</div>
         </div>
       </div>
+
       <div tw="bg-neutral min-h-screen pt-[1px]">
         <AppMaxWidth tw="max-lg:p-0">
           <div tw="bg-neutral flex justify-center mt-8 lg:mt-16 mb-4 lg:mb-8 max-lg:p-4">

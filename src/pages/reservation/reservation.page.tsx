@@ -63,17 +63,23 @@ const allSlots = [
   "20:30",
 ]
 
-// [TODO] XEN-69 예약 확인 페이지
-
 const Reservations = () => {
   const { t, i18n } = useTranslation()
   const { user } = useMe()
   const [authenticated, setAuthenticated] = React.useState(!!user?.id)
   const [changeId, setChangeId] = useState<string | null>(null)
   const [cancelId, setCancelId] = useState<string | null>(null)
-  const { data: reservations } = useReservationControllerFindMine({
-    statusIn: ["DONE", "WAITING", "CANCELED"],
-  })
+  const { data: reservations } = useReservationControllerFindMine(
+    {
+      statusIn: ["DONE", "WAITING", "CANCELED"],
+    },
+    {
+      query: {
+        enabled: authenticated, // 로그인 해야만 호출됨
+        retry: false,
+      },
+    },
+  )
   const language = i18n.language as Language
   const [todaySlots, setTodaySlots] = React.useState<AvailableReservationResultDto[]>([])
   const [today, setToday] = React.useState(dayjs())

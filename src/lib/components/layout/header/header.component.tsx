@@ -79,6 +79,7 @@ const RightMenu = ({ isDesktop, setOpenSearch, isMenuOpen, setIsMenuOpen }: Menu
       {isDesktop ? (
         <>
           <button
+            disabled
             tw="ml-2 cursor-pointer flex items-center gap-1 text-[13px] md:text-[15px] leading-[150%] font-normal"
             onClick={() => navigate("/reservation/new")}>
             장바구니
@@ -88,7 +89,7 @@ const RightMenu = ({ isDesktop, setOpenSearch, isMenuOpen, setIsMenuOpen }: Menu
           </button>
 
           <div tw="ml-8" />
-          <button tw="cursor-pointer" onClick={() => navigate("/reservation")}>
+          <button tw="cursor-pointer" disabled onClick={() => navigate("/reservation")}>
             예약확인
           </button>
 
