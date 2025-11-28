@@ -179,6 +179,11 @@ const ProductDetail = () => {
       addToCart: () => addToCart({ event }),
     })) ?? []
 
+  // 🔥 이름이 같은 이벤트는 하나만 남기기
+  const dedupedEventList = eventList.filter(
+    (item, idx, self) => idx === self.findIndex((e) => e.name === item.name),
+  )
+
   // 일반 상품 리스트
   const normalProducts = products.items.map((product) => ({
     type: "normal" as const,
@@ -189,13 +194,13 @@ const ProductDetail = () => {
   }))
 
   // 합치기
-  const mergedList = [...eventList, ...normalProducts]
+  const mergedList = [...dedupedEventList, ...normalProducts]
 
   const DISPLAY_LIMIT = 5
   const displayedList = showAllProducts ? mergedList : mergedList.slice(0, DISPLAY_LIMIT)
 
   // 마지막 이벤트 index
-  const lastEventIndex = eventList.length - 1
+  const lastEventIndex = dedupedEventList.length - 1
 
   // 마지막 일반 상품 index (mergedList 기준 X, normalProducts 기준)
   const lastNormalIndex = normalProducts.length - 1

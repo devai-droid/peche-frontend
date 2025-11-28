@@ -291,7 +291,7 @@ const Events = () => {
           alt="banner"
           tw="w-full max-h-[700px] h-[700px] object-cover block"
         />
-        <div tw="absolute left-[8%] top-[10%] text-left text-neutralBlack">
+        <div tw="absolute left-[8%] top-[15%] md:top-[10%] text-left text-neutralBlack">
           <div tw="text-[39px] lg:text-[50px] font-time font-normal tracking-tight">
             Price & Events
           </div>
