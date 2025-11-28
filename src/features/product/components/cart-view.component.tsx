@@ -643,7 +643,7 @@ const BottomButtons = ({
   ]
 
   return (
-    <div tw="fixed lg:hidden bottom-0 inset-x-0">
+    <div tw="fixed lg:hidden bottom-0 inset-x-0 z-50">
       <div tw="bg-secondary gap-px flex">
         <BottomButton
           onClick={() => {
