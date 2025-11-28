@@ -103,6 +103,8 @@ const ImageCard = styled.div`
 
 const CardLabel = styled.div`
   ${tw`absolute bottom-2 right-2 bg-white text-[13px] px-2 py-1`}
+  min-width: 40px; /* 또는 60~100px 사이로 네가 원하는 값 */
+  white-space: nowrap;
 `
 
 // ─────────────────────────────
@@ -178,18 +180,21 @@ const MostPopular = () => {
                   modules={[Navigation]}
                   navigation
                   breakpoints={{
-                    0: { slidesPerView: 2, spaceBetween: 2 },
+                    0: { slidesPerView: "auto", spaceBetween: 8 },
                     768: { slidesPerView: 3, spaceBetween: 2 },
                     1024: { slidesPerView: 4, spaceBetween: 4 },
                   }}>
-                  {category.items?.map((item) => (
-                    <StyledSwiperSlide key={item.id}>
-                      <ImageCardLink to={`/products/${item.productDetailPageId}`}>
-                        <img src={item.image?.url} alt="" />
-                        <CardLabel>{tv(item, "title")}</CardLabel>
-                      </ImageCardLink>
-                    </StyledSwiperSlide>
-                  ))}
+                  {category.items
+                    ?.slice()
+                    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+                    .map((item) => (
+                      <StyledSwiperSlide key={item.id}>
+                        <ImageCardLink to={`/products/${item.productDetailPageId}`}>
+                          <img src={item.image?.url} alt="" />
+                          <CardLabel>{tv(item, "title")}</CardLabel>
+                        </ImageCardLink>
+                      </StyledSwiperSlide>
+                    ))}
                 </Swiper>
               </StyledSwiperWrapper>
             </AccordionContent>
