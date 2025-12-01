@@ -1,525 +1,211 @@
+// auth.component.tsx
 import React from "react"
 import tw from "twin.macro"
 import { useTranslation } from "react-i18next"
 import i18n from "i18next"
-import "react-phone-number-input/style.css"
-import PhoneInput from "react-phone-number-input"
-import { E164Number } from "libphonenumber-js/core"
 import { Language } from "@/lib/locales/i18n.config"
-import { KakaoLogo, LetterIcon, MailIcon } from "@/assets/icon"
-import { Button, Icon, toast } from "@/design-system/components"
-// import { useLogin } from "@/features/auth/hooks/use-auth"
-import { authService } from "@/lib/service/auth.service"
-import { useMe } from "@/features/user/hooks/use-user"
-import "./auth.component.scss"
-import {
-  useAuthControllerAuthenticateByEmail,
-  useAuthControllerAuthenticateByPhone,
-  useAuthControllerCreateEmailCode,
-  useAuthControllerCreatePhoneCode,
-} from "@/lib/orval/auth/auth"
-import { AxiosError } from "axios"
+import { KakaoLogoMini, EmailIcon } from "@/assets/icon"
+import { Checkbox, Icon, toast } from "@/design-system/components"
 import { ToastType } from "@/design-system/components/toast/toast.component.type"
-import { useToken } from "@/lib/hooks/use-token"
-import { CountryCode } from "libphonenumber-js/types"
+import { authService } from "@/lib/service/auth.service"
 import { useSearchParams } from "react-router-dom"
-import LineHelpImg from "@/assets/images/sns/icon_LINE_help.png"
-import wechatHelpImg from "@/assets/images/sns/icon_WeChat_help.png"
-import whatsappHelpImg from "@/assets/images/sns/icon_WhatsApp_help.png"
+import EmailAuthModal from "./email-auth-modal.component"
 
 const H2 = tw.h2`text-lg font-extrabold`
 
-const AuthBtn = tw.button`flex-1 shrink-0 h-24 border border-[#d0d0d0] rounded-lg flex flex-col justify-center items-center gap-2 font-extrabold`
-const SocialAuthBtn = tw(
-  Button,
-)`flex-1 shrink-0 h-24 border border-[#d0d0d0] rounded-lg flex flex-col justify-center items-center gap-2 font-extrabold`
-
-const InputWrapper = tw.div`flex gap-2 justify-between items-center`
-const InputLabel = tw.div`text-sm w-14 shrink-0 hidden sm:block`
-const Input = tw.input`h-10 py-1.5 px-2 border border-[#d0d0d0] rounded-lg flex-1 min-w-0 w-full placeholder-gray-400`
-const PhoneWrapper = tw.div`h-10 py-1.5 px-2 border border-[#d0d0d0] rounded-lg flex-1 min-w-0 w-full`
-
 interface Props {
-  onAuth: () => void
+  onAuthChange: (state: {
+    authInfo: {
+      name: string
+      phone?: string
+      email?: string
+    } | null
+    agreeTerms: boolean
+    agreePrivacy: boolean
+    agreeMarketing: boolean
+  }) => void
 }
 
-const Auth = ({ onAuth }: Props) => {
+const Auth = ({ onAuthChange }: Props) => {
   const { t } = useTranslation()
   const { language } = i18n
-  const { user: me } = useMe()
-  const { setToken } = useToken()
-  const [authType, setAuthType] = React.useState<"kakao" | "sms" | "email">("sms")
-  const [phoneNumber, setPhoneNumber] = React.useState<E164Number>()
-  const [code, setCode] = React.useState<string>("")
-  const [name, setName] = React.useState<string>("")
-  const [email, setEmail] = React.useState<string>("")
-  const [isTermsCheckboxChecked, setTermsCheckboxChecked] = React.useState(false)
+  const isKorean = language === Language.KOR
+
   const [params] = useSearchParams()
   const pathVisit = params.get("path_visit")
   const detailVisit = params.get("detail_visit")
 
+  /* ================= 인증 성공 정보 ================= */
+  const [authInfo, setAuthInfo] = React.useState<{
+    name: string
+    phone?: string
+    email?: string
+  } | null>(null)
+
+  /* ================= 약관 상태 ================= */
+  const [agreeAll, setAgreeAll] = React.useState(false)
+  const [agreeTerms, setAgreeTerms] = React.useState(false)
+  const [agreePrivacy, setAgreePrivacy] = React.useState(false)
+  const [agreeMarketing, setAgreeMarketing] = React.useState(false)
+  const [openEmailModal, setOpenEmailModal] = React.useState(false)
+
+  /* ================= 상태 변경 시 부모에게 전달 ================= */
   React.useEffect(() => {
-    // 중국어일때 이메일 인증만 가능하게
-    if (language === Language.CHN) {
-      setAuthType("email")
+    onAuthChange({
+      authInfo,
+      agreeTerms,
+      agreePrivacy,
+      agreeMarketing,
+    })
+  }, [authInfo, agreeTerms, agreePrivacy, agreeMarketing])
+
+  /* ================= 전체 동의 체크 ================= */
+  React.useEffect(() => {
+    if (agreeAll) {
+      setAgreeTerms(true)
+      setAgreePrivacy(true)
+      setAgreeMarketing(true)
     }
-    // 한국어 일때는 이용약관 체크박스 체크 안해도 인증 가능하게
-    // if (language === Language.KOR) {
-    //   setTermsCheckboxChecked(true)
-    // } else {
-    //   setTermsCheckboxChecked(false)
-    // }
-  }, [language])
+  }, [agreeAll])
 
-  const { mutate: createEmailCode } = useAuthControllerCreateEmailCode({
-    mutation: {
-      onSuccess: () => {
-        toast({ type: ToastType.Success, message: t("auth.authSent") })
-      },
-      onError: (error: AxiosError) => {
-        const { message, response } = error
-        const { message: responseMessage } = response?.data as { message: string }
-        toast({
-          message: `${responseMessage || message}`,
-          type: ToastType.Highlight,
-        })
-      },
-    },
-  })
-
-  const { mutate: createPhoneCode } = useAuthControllerCreatePhoneCode({
-    mutation: {
-      onSuccess: () => {
-        toast({ type: ToastType.Success, message: t("auth.authSent") })
-      },
-      onError: (error: AxiosError) => {
-        const { message, response } = error
-        const { message: responseMessage } = response?.data as { message: string }
-
-        const finalMessage = (responseMessage || message).includes("Delay")
-          ? t("error.authErrorDelay")
-          : `${responseMessage || message}`
-
-        toast({
-          message: finalMessage,
-          type: ToastType.Highlight,
-        })
-      },
-    },
-  })
-
-  const { mutate: authByPhone } = useAuthControllerAuthenticateByPhone({
-    mutation: {
-      onSuccess: (data) => {
-        setToken(data.token)
-        onAuth()
-        toast({ type: ToastType.Success, message: t("auth.authSuccess") })
-      },
-      onError: (error: AxiosError) => {
-        const { message, response } = error
-        const { message: responseMessage } = response?.data as { message: string }
-        toast({
-          message: `${responseMessage || message}`,
-          type: ToastType.Highlight,
-        })
-      },
-    },
-  })
-
-  const { mutate: authByEmailCode } = useAuthControllerAuthenticateByEmail({
-    mutation: {
-      onSuccess: (data) => {
-        setToken(data.token)
-        onAuth()
-        toast({ type: ToastType.Success, message: t("auth.authSuccess") })
-      },
-      onError: (error: AxiosError) => {
-        const { message, response } = error
-        const { message: responseMessage } = response?.data as { message: string }
-
-        const finalMessage = (responseMessage || message).includes("Unauthorized")
-          ? t("error.emailError")
-          : `${responseMessage || message}`
-        toast({
-          message: finalMessage,
-          type: ToastType.Highlight,
-        })
-      },
-    },
-  })
-
-  // 전화번호 국가코드 매핑
-  const languageToCountryMap: { [key: string]: string } = {
-    ko: "KR",
-    en: "US",
-    zh: "CN",
-    ja: "JP",
-    th: "TH",
+  const validate = () => {
+    if (!agreeTerms || !agreePrivacy) {
+      toast({
+        type: ToastType.Highlight,
+        message: t("reservePage.needTerms"),
+      })
+      return false
+    }
+    return true
   }
 
-  const inputField = document.getElementById("inputField")
-  const errorDiv = document.getElementById("error")
-  inputField?.addEventListener("input", (event) => {
-    const { value } = event.target as HTMLInputElement
-    const isEnglishOrKorean =
-      /^[A-Za-z0-9\u3131-\uD79D\s]*$/.test(value) && !/[\u4E00-\u9FFF]/.test(value)
+  return (
+    <div tw="w-full bg-white p-6 font-pretendard tracking-tight leading-[150%] text-[13px] lg:text-[15px]">
+      {/* ================= 본인인증 ================= */}
+      <div tw="mb-2">
+        <H2>{t("reservePage.customerInfo")}</H2>
+        <div tw="mt-4 mb-3 border-t border-neutral20"></div>
 
-    if (errorDiv) {
-      if (isEnglishOrKorean || value === "") {
-        errorDiv.style.display = "none"
-        inputField.style.backgroundColor = "white" // Reset to default background color
-      } else {
-        errorDiv.style.display = "block"
-        inputField.style.backgroundColor = "lightcoral" // Set background color to red
-      }
-    }
-  })
-  const [showDisabledText, setShowDisabledText] = React.useState(false)
-
-  return me ? (
-    <div>
-      <H2>
-        <span tw="text-point">{me.name}</span>
-        {t("reservePage.welcome")}
-      </H2>
-      <div tw="mt-1 text-sm text-[#999] whitespace-pre-wrap tracking-tight">
-        {t("reservePage.nameFix")}
+        <p tw="font-bold mb-3 text-[14px] lg:text-[16px]">
+          {t("reservePage.authTitle")}
+          <span tw="text-error">*</span>
+        </p>
       </div>
-      <Button
-        onClick={() => {
-          // 로그아웃 / 인증 토큰 삭제
-          // eslint-disable-next-line no-alert
-          const confirmLogout = window.confirm(t("reservePage.logoutConfirm"))
-          if (confirmLogout) {
-            localStorage.removeItem("authToken") // Remove the authToken
-            localStorage.removeItem("user") // Remove the user
-            window.location.reload() // Refresh the page
-          }
-        }}
-        tw="w-28 px-2 mt-4"
-        style={{
-          bold: true,
-          variant: "filled",
-        }}>
-        {t("reservePage.logout")}
-      </Button>
-    </div>
-  ) : (
-    <div>
-      <H2>{t("reservePage.auth")}</H2>
-      <div tw="mt-3 mb-6">{t("reservePage.authDescription")}</div>
-      <div tw="flex gap-4 justify-center items-center lg:max-w-2xl mx-auto">
-        {language === Language.KOR ? (
-          <SocialAuthBtn
-            tw=""
-            onClick={() => {
-              setAuthType("kakao")
-              authService.loginWithKakaoSDK(pathVisit, detailVisit)
-            }}>
-            <div tw="w-10 h-10 rounded-full bg-[#FFE812] flex justify-center items-center">
-              <Icon icon={KakaoLogo} />
-            </div>
-            카카오톡 인증
-          </SocialAuthBtn>
-        ) : null}
-        <AuthBtn
-          css={authType === "sms" && tw`bg-[#f3e8da]`}
-          onClick={() => {
-            if (language === "zh") return // 중국어일때는 클릭 불가
-            setAuthType("sms")
-          }}
-          style={language === "zh" ? { cursor: "not-allowed", opacity: 0.6 } : {}}>
-          <div
-            tw="w-10 h-10 rounded-full  flex justify-center items-center"
-            css={[authType === "sms" ? tw`bg-white` : tw`bg-[#f3e8da]`]}>
-            <Icon icon={LetterIcon} size={40} />
-          </div>
-          {t("reservePage.smsVerification")}
-        </AuthBtn>
-        {language !== Language.KOR ? (
-          <AuthBtn
-            css={authType === "email" && tw`bg-[#f3e8da]`}
-            onClick={() => setAuthType("email")}>
-            <div
-              tw="w-10 h-10 rounded-full  flex justify-center items-center"
-              css={[authType === "email" ? tw`bg-white` : tw`bg-[#f3e8da]`]}>
-              <Icon icon={MailIcon} size={40} />
-            </div>
-            {t("reservePage.emailVerification")}
-          </AuthBtn>
-        ) : null}
-      </div>
-      <div
-        tw="flex flex-col gap-6 mt-10 sm:(max-w-md mx-auto)"
-        css={authType !== "sms" && tw`hidden`}>
-        <InputWrapper>
-          <InputLabel>{t("reservePage.name")}</InputLabel>
-          <Input
-            id="inputField"
-            placeholder={t("reservePage.name")}
-            value={name}
-            onChange={(e) => {
-              setName(e.target.value)
-            }}
-          />
-        </InputWrapper>
-        <div
-          id="error"
-          tw="flex"
-          style={{ marginTop: "-1rem", fontSize: "16px", color: "red", display: "none" }}>
-          {t("reservePage.nameError")}
-        </div>
-        <div tw="flex" style={{ marginTop: "-1rem", fontSize: "16px", color: "red" }}>
-          {t("reservePage.namePlaceholder")}
-        </div>
-        <InputWrapper>
-          <InputLabel>{t("reservePage.phone")}</InputLabel>
-          <div tw="flex-1 flex gap-2.5">
-            <PhoneWrapper>
-              <PhoneInput
-                international
-                className="placeholder-transparent"
-                countryCallingCodeEditable={false}
-                placeholder={t("reservePage.phone")}
-                defaultCountry={languageToCountryMap[language] as CountryCode | undefined}
-                value={phoneNumber}
-                onChange={setPhoneNumber}
-              />
-            </PhoneWrapper>
-            {/* <Button
-              onClick={() => createPhoneCode({ data: { phoneNumber: `${phoneNumber}` } })}
-              tw="w-28 px-2"
-              style={{
-                bold: true,
-                variant: "filled",
-              }}
-              disabled={!isTermsCheckboxChecked}>
-              {t("reservePage.getVerificationCode")}
-            </Button> */}
 
-            <div
-              onMouseEnter={() => {
-                if (!isTermsCheckboxChecked) {
-                  setShowDisabledText(true) // Show the text on hover
-                }
-              }}
-              onMouseLeave={() => {
-                setShowDisabledText(false) // Hide the text when hover ends
-              }}>
-              <Button
-                onClick={() => {
-                  if (isTermsCheckboxChecked) {
-                    createPhoneCode({ data: { phoneNumber: `${phoneNumber}` } })
-                  }
-                }}
-                tw="w-28 px-2"
-                style={{
-                  bold: true,
-                  variant: "filled",
-                }}
-                disabled={!isTermsCheckboxChecked} // Still disable the button functionality
-              >
-                {t("reservePage.getVerificationCode")}
-              </Button>
-            </div>
+      {/* ================= 인증 성공 UI ================= */}
+      {authInfo ? (
+        <div tw="mb-6 text-[13px] lg:text-[14px]">
+          <div tw="flex mb-2">
+            <span tw="w-[70px] text-neutral50">이름</span>
+            <span tw="text-neutral50">{authInfo.name}</span>
           </div>
-        </InputWrapper>
-        <div id="error" tw="flex" style={{ marginTop: "-1rem", fontSize: "16px", color: "red" }}>
-          {!isTermsCheckboxChecked && showDisabledText && (
-            <p tw="text-red-500 mt-2">{t("reservePage.checkBoxPress")}</p>
+
+          {authInfo.phone && (
+            <div tw="flex mb-2">
+              <span tw="w-[70px] text-neutral50">연락처</span>
+              <span tw="text-neutral50">{authInfo.phone}</span>
+            </div>
+          )}
+
+          {authInfo.email && (
+            <div tw="flex mb-2">
+              <span tw="w-[70px] text-neutral50">이메일</span>
+              <span tw="text-neutral50">{authInfo.email}</span>
+            </div>
           )}
         </div>
-        {/* 체크박스 확인 안되있으면 인증코드 버튼 안눌리게 해야함 */}
-        <div tw="flex flex-col gap-2">
-          <div tw="flex items-start gap-2">
-            <input
-              tw="mt-1"
-              type="checkbox"
-              id="termsCheckbox"
-              onChange={(e) => setTermsCheckboxChecked(e.target.checked)}
-            />
-            <label htmlFor="termsCheckbox">{t("reservePage.smsCodeTerms")}</label>
-          </div>
+      ) : (
+        /* ================= 인증 전 UI ================= */
+        <div tw="flex gap-3 justify-center items-center mb-10">
+          {isKorean && (
+            <button
+              tw="h-[80px] flex flex-col items-center justify-center gap-2 font-bold"
+              css={tw`flex-1 bg-[#FFE812]`}
+              onClick={() => authService.loginWithKakaoSDK(pathVisit, detailVisit)}>
+              <Icon icon={KakaoLogoMini} size={25} />
+              카카오 인증
+            </button>
+          )}
+
+          <button
+            tw="h-[80px] flex flex-col items-center justify-center gap-2 font-bold text-white"
+            css={isKorean ? tw`flex-1 bg-[#4DAA57]` : tw`w-full bg-[#4DAA57]`}
+            onClick={() => setOpenEmailModal(true)}>
+            <Icon icon={EmailIcon} size={25} />
+            {t("reservePage.emailVerification")}
+          </button>
         </div>
-        <div tw="flex" style={{ marginTop: "-1rem", marginLeft: "1rem", fontSize: "12px" }}>
+      )}
+
+      {/* ================= 약관동의 ================= */}
+      <div>
+        <p tw="font-bold mb-3 text-[14px] lg:text-[16px]">
+          {t("reservePage.agreementTitle")}
+          <span tw="text-error">*</span>
+        </p>
+
+        <div tw="bg-neutral py-4 border border-[#ddd] mb-3">
+          <Checkbox
+            checked={agreeAll}
+            onChange={(e) => setAgreeAll(e.target.checked)}
+            label={<span tw="font-bold">{t("reservePage.agreeToAll")}</span>}
+          />
+        </div>
+
+        <div tw="flex justify-between items-start mb-6">
+          <Checkbox
+            checked={agreeTerms}
+            onChange={(e) => setAgreeTerms(e.target.checked)}
+            label={t("reservePage.termsOfService")}
+          />
+
           <a
+            tw="underline text-neutral70 ml-4 whitespace-nowrap"
             href={`/${language}/termsofservice`}
             target="_blank"
-            rel="noopener noreferrer"
-            style={{ marginRight: "6px", textDecoration: "underline" }}>
-            {t("footer.termsOfService")}
+            rel="noreferrer">
+            {t("reservePage.detail")}
           </a>
+        </div>
+
+        <div tw="flex justify-between items-start mb-6">
+          <Checkbox
+            checked={agreePrivacy}
+            onChange={(e) => setAgreePrivacy(e.target.checked)}
+            label={t("reservePage.privacyAgreement")}
+          />
+
           <a
+            tw="underline text-neutral70 ml-4 whitespace-nowrap"
             href={`/${language}/privacypolicy`}
             target="_blank"
-            rel="noopener noreferrer"
-            style={{ textDecoration: "underline" }}>
-            {t("footer.privacyPolicy")}
+            rel="noreferrer">
+            {t("reservePage.detail")}
           </a>
         </div>
-        <InputWrapper>
-          <InputLabel>{t("reservePage.verificationCode")}</InputLabel>
-          <div tw="flex-1 flex gap-2.5">
-            <Input
-              placeholder={t("reservePage.verificationCodePlaceholder")}
-              value={code}
-              onChange={(e) => {
-                setCode(e.target.value)
-              }}
-            />
-            <Button
-              onClick={() => authByPhone({ data: { phoneNumber: `${phoneNumber}`, code, name } })}
-              tw="w-28 px-2"
-              style={{
-                bold: true,
-                variant: "filled",
-                color: "black",
-              }}>
-              {t("reservePage.confirmVerificationCode")}
-            </Button>
-          </div>
-        </InputWrapper>
-      </div>
-      <div
-        tw="flex flex-col gap-6 mt-10 sm:(max-w-md mx-auto)"
-        css={authType !== "email" && tw`hidden`}>
-        <InputWrapper>
-          <InputLabel>{t("reservePage.name")}</InputLabel>
-          <Input
-            placeholder={t("reservePage.name")}
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+
+        <div tw="flex justify-between items-start mb-6">
+          <Checkbox
+            checked={agreeMarketing}
+            onChange={(e) => setAgreeMarketing(e.target.checked)}
+            label={t("reservePage.marketingAgreement")}
           />
-        </InputWrapper>
-        <div tw="flex" style={{ marginTop: "-1rem", fontSize: "16px", color: "red" }}>
-          {t("reservePage.namePlaceholder")}
         </div>
-        <InputWrapper>
-          <InputLabel>{t("reservePage.email")}</InputLabel>
-          <div tw="flex-1 flex gap-2.5">
-            <Input
-              placeholder={t("reservePage.email")}
-              value={email}
-              onChange={(e) => setEmail(e.target.value.toLowerCase())}
-            />
-            <Button
-              onClick={() => createEmailCode({ data: { email } })}
-              type="submit"
-              tw="w-28 px-2"
-              disabled={!name.trim()}
-              style={{
-                bold: true,
-                variant: "filled",
-              }}>
-              {t("reservePage.getVerificationCode")}
-            </Button>
-          </div>
-        </InputWrapper>
-        <InputWrapper>
-          <InputLabel>{t("reservePage.verificationCode")}</InputLabel>
-          <div tw="flex-1 flex gap-2.5">
-            <Input
-              placeholder={t("reservePage.verificationCodePlaceholder")}
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
-            />
-            <Button
-              onClick={() => authByEmailCode({ data: { email, code, name } })}
-              tw="w-28 px-2"
-              style={{
-                bold: true,
-                variant: "filled",
-                color: "black",
-              }}>
-              {t("reservePage.confirmVerificationCode")}
-            </Button>
-          </div>
-        </InputWrapper>
+
+        <div tw="text-[13px] lg:text-[14px] text-secondary3">
+          {t("reservePage.marketingNotice")}
+        </div>
       </div>
-      <div
-        tw="flex gap-4 justify-center items-center mt-10 lg:max-w-2xl mx-auto"
-        style={{ fontSize: "15px" }}>
-        {language === Language.ENG && (
-          <div>
-            *If the verification code is not working, please contact us through the channels below.
-            <div tw="flex" style={{ marginTop: "1rem" }}>
-              <a
-                href="https://wa.me/+1027694410"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ marginRight: "6px", textDecoration: "underline" }}>
-                <img
-                  src={whatsappHelpImg}
-                  alt="WhatsApp"
-                  style={{ width: "100px", height: "50px" }}
-                />
-              </a>
-            </div>
-          </div>
-        )}
-        {language === Language.CHN && (
-          <div>
-            无法确认验证码时，请通过以下渠道进行咨询。
-            <div tw="flex" style={{ marginTop: "1rem" }}>
-              <a
-                href="https://work.weixin.qq.com/kfid/kfc8dbe1152fad99e74"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ marginRight: "6px", textDecoration: "underline" }}>
-                <img src={wechatHelpImg} alt="weChat" style={{ width: "100px", height: "50px" }} />
-              </a>
-              <span>&nbsp;</span>
-              <a
-                href="https://lin.ee/DDK3D3JK"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ marginRight: "6px", textDecoration: "underline" }}>
-                <img src={LineHelpImg} alt="Line" style={{ width: "100px", height: "50px" }} />
-              </a>
-              <span>&nbsp;</span>
-              <a
-                href="https://wa.me/821059494410"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ marginRight: "6px", textDecoration: "underline" }}>
-                <img
-                  src={whatsappHelpImg}
-                  alt="whatsApp"
-                  style={{ width: "100px", height: "50px" }}
-                />
-              </a>
-            </div>
-          </div>
-        )}
-        {language === Language.JPN && (
-          <div>
-            認証コードの確認ができない場合は、下記のチャンネルでお問い合わせください
-            <div tw="flex" style={{ marginTop: "1rem" }}>
-              <a
-                href="https://lin.ee/efw7rbT"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ marginRight: "6px", textDecoration: "underline" }}>
-                <img src={LineHelpImg} alt="Line" style={{ width: "100px", height: "50px" }} />
-              </a>
-            </div>
-          </div>
-        )}
-        {language === Language.THA && (
-          <div>
-            กรณีที่ไม่สามารถดูโค้ดได้ สามารถติดต่อช่องทางด้านล่างนี้ได้เลยนะคะ
-            <div tw="flex" style={{ marginTop: "1rem" }}>
-              <a
-                href="https://lin.ee/BNTlo0y"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ marginRight: "6px", textDecoration: "underline" }}>
-                <img src={LineHelpImg} alt="Line" style={{ width: "100px", height: "50px" }} />
-              </a>
-            </div>
-          </div>
-        )}
-      </div>
+
+      {/* ================= 이메일 인증 모달 ================= */}
+      <EmailAuthModal
+        open={openEmailModal}
+        onClose={() => setOpenEmailModal(false)}
+        onComplete={(info) => {
+          setOpenEmailModal(false)
+          setAuthInfo(info)
+        }}
+      />
     </div>
   )
 }

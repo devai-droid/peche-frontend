@@ -23,7 +23,6 @@ import {
 } from "@/lib/orval/reservations/reservations"
 import { DEFAULT_CONSULTATION_PRODUCT_ID } from "@/lib/constants/reservation.constants"
 import { env } from "@/lib/env"
-import { useSearchParams } from "react-router-dom"
 import { Language } from "@/lib/locales/i18n.config"
 import { userControllerUpdateMine } from "@/lib/orval/users/users"
 import { useMe } from "@/features/user/hooks/use-user"
@@ -269,8 +268,14 @@ const Reserve = () => {
   const [selectedDatetime, setSelectedDatetime] = React.useState<string>("")
   const [userMemo, setUserMemo] = React.useState("")
 
-  const [privacyAgreement, setPrivacyAgreement] = React.useState(false)
-  const [marketingAgreement, setMarketingAgreement] = React.useState(false)
+  /* ---- NEW: Auth 상태 저장 ---- */
+  const [authState, setAuthState] = React.useState({
+    authInfo: null as null | { name: string; phone?: string; email?: string },
+    agreeTerms: false,
+    agreePrivacy: false,
+    agreeMarketing: false,
+  })
+
   const [isLoading, setIsLoading] = React.useState(false)
 
   const { mutate, isLoading: createLoading } = useReservationControllerCreate()
@@ -369,8 +374,13 @@ const Reserve = () => {
 
   /* ---------------------------- Reservation Submission ---------------------------- */
   const reserve = () => {
-    if (!me) {
+    if (!authState.authInfo) {
       alert("본인인증이 필요합니다.")
+      return
+    }
+
+    if (!authState.agreeTerms || !authState.agreePrivacy) {
+      alert("필수 약관에 동의해주세요.")
       return
     }
 
@@ -421,161 +431,99 @@ const Reserve = () => {
 
   const estimatedPrice = cart
     .filter((item) => checkedList.includes(item.event?.id || item.product?.id || ""))
-    .reduce((acc, cur) => {
-      return (
-        acc + (cur.event?.discountPrice || cur.event?.price || cur.product?.price || 0) * cur.count
-      )
-    }, 0)
+    .reduce(
+      (acc, cur) =>
+        acc + (cur.event?.discountPrice || cur.event?.price || cur.product?.price || 0) * cur.count,
+      0,
+    )
 
   /* ---------------------------- Render ---------------------------- */
   return (
     <Page>
-      <AppMaxWidth tw="py-8 lg:py-12 overflow-x-hidden">
-        <H1>{t("reservePage.reserve")}</H1>
-        <hr tw="mt-4 mb-10" />
+      <div tw="bg-neutral w-screen min-h-screen">
+        <AppMaxWidth tw="py-8 lg:py-12 overflow-x-hidden">
+          <H1>{t("reservePage.reserve")}</H1>
+          <hr tw="mt-4 mb-10" />
 
-        {/* ---- DESKTOP: 2-Column Layout ---- */}
-        <div tw="flex flex-col lg:flex-row lg:items-start gap-12 w-full">
-          {/* ===================== LEFT COLUMN ======================= */}
-          <div tw="flex-1 min-w-0">
-            {/* --- 시술 목록 --- */}
-            <H2 tw="mb-6">
-              {t("reservePage.addedTreatments")} <span tw="text-point">{cart.length}</span>
-            </H2>
+          {/* ---- DESKTOP: 2-Column Layout ---- */}
+          <div tw="flex flex-col lg:flex-row lg:items-start gap-12 w-full">
+            {/* ===================== LEFT COLUMN ======================= */}
+            <div tw="flex-1 min-w-0">
+              {/* --- 시술 목록 --- */}
+              <H2 tw="mb-6">
+                {t("reservePage.addedTreatments")} <span tw="text-point">{cart.length}</span>
+              </H2>
 
-            <SurgeryList
-              cart={cart}
-              updateCartItem={updateCartItem}
-              inquiry={inquiry}
-              setInquiry={setInquiry}
-              removeFromCart={removeFromCart}
-            />
+              <SurgeryList
+                cart={cart}
+                updateCartItem={updateCartItem}
+                inquiry={inquiry}
+                setInquiry={setInquiry}
+                removeFromCart={removeFromCart}
+              />
 
-            {/* --- 날짜 선택 캘린더 --- */}
-            <div tw="mt-12 min-w-0">
-              <H2 tw="mb-6">{t("reservePage.selectDateAndTime")}</H2>
+              {/* --- 날짜 선택 캘린더 --- */}
+              <div tw="mt-12 min-w-0">
+                <H2 tw="mb-6">{t("reservePage.selectDateAndTime")}</H2>
 
-              <Calendar
-                key={language}
-                disabled={isLoading}
-                value={today}
-                onChange={(value) => {
-                  if (value) {
-                    setToday(value)
-                    setSelectedDatetime("")
+                <Calendar
+                  key={language}
+                  disabled={isLoading}
+                  value={today}
+                  onChange={(value) => {
+                    if (value) {
+                      setToday(value)
+                      setSelectedDatetime("")
+                    }
+                  }}
+                  footer={<div tw="flex gap-4 p-4">{renderTimeSlots()}</div>}
+                />
+              </div>
+
+              {/* ---- 시간 선택 ---- */}
+              <div tw="min-w-0">{renderTimeSlots()}</div>
+
+              {/* --- 예약하기 버튼 --- */}
+              <div tw="mx-auto lg:max-w-lg mt-10">
+                <Button
+                  disabled={
+                    !authState.authInfo ||
+                    !authState.agreeTerms ||
+                    !authState.agreePrivacy ||
+                    !selectedDatetime ||
+                    createLoading
                   }
-                }}
-                footer={<div tw="flex gap-4 p-4">{renderTimeSlots()}</div>}
-              />
-            </div>
+                  tw="w-full h-[50px] text-lg"
+                  style={{ variant: "filled", color: "point" }}
+                  onClick={reserve}>
+                  {t("button.reserve")}
+                </Button>
 
-            {/* --- 시간 선택 --- */}
-            <div tw="min-w-0">{renderTimeSlots()}</div>
-
-            {/* --- 메모 --- */}
-            <div tw="mt-12">
-              <div tw="flex items-center gap-9 lg:(max-w-xl items-start) mx-auto">
-                <p tw="text-sm">{t("reservePage.memo")}</p>
-                <Textarea
-                  tw="lg:h-24"
-                  value={userMemo}
-                  onChange={(e) => setUserMemo(e.target.value)}
-                />
+                {/* ---- 오류 메시지 ---- */}
+                {!authState.authInfo && (
+                  <div tw="text-xs text-red-500 mt-2">{t("reservePage.needAuth")}</div>
+                )}
+                {!authState.agreeTerms && (
+                  <div tw="text-xs text-red-500">{t("reservePage.needTerms")}</div>
+                )}
+                {!selectedDatetime && (
+                  <div tw="text-xs text-red-500">{t("productDetail.reserveButtonActiveText1")}</div>
+                )}
               </div>
 
-              <div tw="text-[#717171] text-center my-10">
-                {t("reservePage.guardianConsentText")}
+              {/* ---- MOBILE Auth ---- */}
+              <div tw="block lg:hidden mt-14">
+                <Auth onAuthChange={setAuthState} />
               </div>
-
-              <Button
-                tw="flex justify-center items-center gap-2 min-w-[15rem] mx-auto"
-                style={{ color: "black", variant: "filled", size: "lg" }}
-                onClick={() => window.open(pdfUrls[language] || pdfUrls.en)}>
-                <Icon icon={DownloadIcon} size={30} />
-                {t("reservePage.guardianConsent")}
-              </Button>
             </div>
 
-            {/* --- 약관 --- */}
-            <hr tw="mt-16" />
-            <div tw="py-4 text-[#333]">
-              <Checkbox
-                checked={privacyAgreement && marketingAgreement}
-                onChange={(e) => {
-                  setPrivacyAgreement(e.target.checked)
-                  setMarketingAgreement(e.target.checked)
-                }}
-                label={<div tw="font-bold">{t("reservePage.agreeToAll")}</div>}
-              />
-
-              <div tw="flex items-center">
-                <Checkbox
-                  checked={privacyAgreement}
-                  onChange={(e) => setPrivacyAgreement(e.target.checked)}
-                  label={t("reservePage.privacyAgreement")}
-                />
-                <CustomLink
-                  target="_blank"
-                  to="/"
-                  tw="text-point underline pl-2"
-                  onClick={(e) => e.stopPropagation()}>
-                  {t("reservePage.detail")}
-                </CustomLink>
-              </div>
-
-              <Checkbox
-                checked={marketingAgreement}
-                onChange={(e) => setMarketingAgreement(e.target.checked)}
-                label={t("reservePage.marketingAgreement")}
-              />
-            </div>
-            <hr />
-
-            {/* --- 최종 가격 + 예약하기 버튼 --- */}
-            <div tw="mx-auto lg:max-w-lg mt-10">
-              <div tw="flex justify-between">
-                <div tw="font-extrabold text-sm mt-1 lg:text-xl">
-                  {t("reservePage.estimatedPrice")}
-                </div>
-
-                <div tw="text-right">
-                  <div tw="text-point font-extrabold text-lg lg:text-[1.5rem] mb-2">
-                    {estimatedPrice.toLocaleString()}
-                    {t("reservePage.won")}
-                  </div>
-                  {t("reservePage.vatNotIncluded")}
-                </div>
-              </div>
-
-              <Button
-                disabled
-                tw="mt-8 mb-5"
-                style={{ flexible: true, variant: "filled", size: "lg" }}
-                // disabled={!selectedDatetime || !privacyAgreement || createLoading}
-                onClick={reserve}>
-                {t("button.reserve")}
-              </Button>
-
-              {!selectedDatetime && (
-                <div tw="text-xs text-[#F40000]">{t("productDetail.reserveButtonActiveText1")}</div>
-              )}
-              {!privacyAgreement && (
-                <div tw="text-xs text-[#F40000]">{t("productDetail.reserveButtonActiveText2")}</div>
-              )}
-            </div>
-
-            {/* ---- MOBILE Auth ---- */}
-            <div tw="block lg:hidden mt-14">
-              <Auth onAuth={() => {}} />
+            {/* ===================== RIGHT COLUMN ======================= */}
+            <div tw="hidden lg:block w-[390px] shrink-0">
+              <Auth onAuthChange={setAuthState} />
             </div>
           </div>
-
-          {/* ===================== RIGHT COLUMN ======================= */}
-          <div tw="hidden lg:block w-[360px] shrink-0">
-            <Auth onAuth={() => {}} />
-          </div>
-        </div>
-      </AppMaxWidth>
+        </AppMaxWidth>
+      </div>
     </Page>
   )
 }

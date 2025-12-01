@@ -53,3 +53,5 @@ export { ReactComponent as YoutubeGrayIcon } from "@/assets/icons/Logo-YouTube-G
 export { ReactComponent as TiktokGrayIcon } from "@/assets/icons/Logo-Tiktok-Gray.svg"
 export { ReactComponent as GrayPlusIcon } from "@/assets/icons/plus-gray.svg"
 export { ReactComponent as PecheFooterIcon } from "@/assets/icons/peche-footer-logo.svg"
+export { ReactComponent as KakaoLogoMini } from "@/assets/icons/kakao.svg"
+export { ReactComponent as EmailIcon } from "@/assets/icons/email.svg"

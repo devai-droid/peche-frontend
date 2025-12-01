@@ -31,7 +31,10 @@ module.exports = {
         neutral70: "#666666",
         primary: "#DA7F67",
         secondary: "#CC917D",
-        tertiary: "#FEF5EA"
+        secondary3: "#AB6655",
+        tertiary: "#FEF5EA",
+        tertiaryDark: "#79473B",
+        error: "#E23526"
       },
       boxShadow: {},
       minWidth: {},
