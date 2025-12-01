@@ -282,20 +282,20 @@ const SurgeryList = () => {
         {t("productDetail.reserveDescription")}
       </div>
 
-      <Modal open={showInquiryModal} title="안내" onClose={() => setShowInquiryModal(false)}>
+      <Modal open={showInquiryModal} onClose={() => setShowInquiryModal(false)}>
         <div tw="flex flex-col items-center justify-center h-full font-pretendard">
-          <div tw="text-center text-[16px] font-semibold leading-snug">
+          <div tw="text-center text-[16px] lg:text-[18px] font-semibold leading-snug">
             시술이 담겨있는 상태에서는 방문 상담 선택이 어렵습니다.
           </div>
 
-          <div tw="text-neutral70 text-center mt-3">
+          <div tw="text-neutral70 text-[14px] lg:text-[16px] text-center mt-3">
             선택한 시술을 모두 비운 후 상담을 예약해주세요.
           </div>
 
           <div tw="flex justify-end gap-2 mt-8">
             <Button
               tw="min-w-[8rem]"
-              style={{ variant: "outlined", color: "point", size: "lg" }}
+              style={{ variant: "outlined", color: "point", size: "sm" }}
               onClick={() => {
                 setInquiryChecked(false) // 🔥 체크박스 끄기
                 setInquiryMemo("")
@@ -307,7 +307,7 @@ const SurgeryList = () => {
 
             <Button
               tw="min-w-[8rem]"
-              style={{ variant: "filled", color: "point", size: "lg" }}
+              style={{ variant: "filled", color: "point", size: "sm" }}
               onClick={() => {
                 resetCart() // 장바구니 비우기
                 setInquiry(true) // 상담모드 활성화

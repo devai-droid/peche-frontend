@@ -15,6 +15,7 @@ import { useTranslation } from "react-i18next"
 import { useParams, useSearchParams } from "react-router-dom"
 import tw from "twin.macro"
 import { Helmet } from "react-helmet-async"
+import Modal from "@/lib/components/modal/modal.component"
 
 interface ProductProps {
   // eslint-disable-next-line react/no-unused-prop-types
@@ -103,7 +104,7 @@ const ProductItem = ({
 
 const ProductDetail = () => {
   const { t } = useTranslation()
-  const { addToCart } = useCart()
+  const { addToCart, inquiry, setInquiry } = useCart()
   const { id } = useParams<{ id: string }>()
   const langQuery = useLanguageQuery()
   const tv = useLanguageValue()
@@ -146,6 +147,7 @@ const ProductDetail = () => {
   )
 
   const [showAllProducts, setShowAllProducts] = React.useState(false)
+  const [showInquiryModal, setShowInquiryModal] = React.useState(false)
 
   // 최초 번들 자동 선택
   React.useEffect(() => {
@@ -176,7 +178,12 @@ const ProductDetail = () => {
       isNew: event.label?.includes("NEW"),
       isBest: event.label?.includes("BEST"),
       isPop: event.label?.includes("POP"),
-      addToCart: () => addToCart({ event }),
+      addToCart: () => {
+        const result = addToCart({ event })
+        if (result?.blockedByInquiry) {
+          setShowInquiryModal(true)
+        }
+      },
     })) ?? []
 
   // 🔥 이름이 같은 이벤트는 하나만 남기기
@@ -190,7 +197,12 @@ const ProductDetail = () => {
     name: tv(product, "name"),
     description: tv(product, "description"),
     price: `${product.price.toLocaleString()} ${t("reservePage.won")}`,
-    addToCart: () => addToCart({ product }),
+    addToCart: () => {
+      const result = addToCart({ product })
+      if (result?.blockedByInquiry) {
+        setShowInquiryModal(true)
+      }
+    },
   }))
 
   // 합치기
@@ -308,6 +320,36 @@ const ProductDetail = () => {
           </CartView>
         </AppMaxWidth>
       </div>
+      <Modal open={showInquiryModal} onClose={() => setShowInquiryModal(false)}>
+        <div tw="flex flex-col items-center justify-center h-full">
+          <div tw="text-center text-[16px] lg:text-[18px] font-semibold leading-snug">
+            방문 상담이 담겨있는 상태에서는 시술 선택이 어렵습니다.
+          </div>
+
+          <div tw="text-neutral70 text-[14px] lg:text-[16px] text-center mt-3">
+            방문 상담을 비운 후 시술을 담아주세요.
+          </div>
+
+          <div tw="flex justify-end gap-2 mt-8">
+            <Button
+              tw="min-w-[8rem]"
+              style={{ variant: "outlined", color: "point", size: "sm" }}
+              onClick={() => setShowInquiryModal(false)}>
+              취소하기
+            </Button>
+
+            <Button
+              tw="min-w-[8rem]"
+              style={{ variant: "filled", color: "point", size: "sm" }}
+              onClick={() => {
+                setInquiry(false)
+                setShowInquiryModal(false)
+              }}>
+              방문 상담 비우기
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </Page>
   )
 }

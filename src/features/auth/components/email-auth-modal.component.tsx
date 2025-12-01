@@ -71,6 +71,8 @@ const EmailAuthModal = ({ open, onClose, onComplete }: Props) => {
           email,
         })
 
+        localStorage.setItem("user", JSON.stringify({ name, email }))
+
         toast({ type: ToastType.Success, message: t("auth.authSuccess") })
       },
       onError: () => {

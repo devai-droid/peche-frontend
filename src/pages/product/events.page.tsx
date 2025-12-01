@@ -433,25 +433,28 @@ const Events = () => {
           </CartView>
         </AppMaxWidth>
       </div>
-      <Modal open={showInquiryModal} title="안내" onClose={() => setShowInquiryModal(false)}>
+      <Modal open={showInquiryModal} onClose={() => setShowInquiryModal(false)}>
         <div tw="flex flex-col items-center justify-center h-full">
-          <div tw="text-center text-[16px] font-semibold leading-snug">
+          <div tw="text-center text-[16px] lg:text-[18px] font-semibold leading-snug">
             방문 상담이 담겨있는 상태에서는 시술 선택이 어렵습니다.
           </div>
 
-          <div tw="text-neutral70 text-center mt-3">방문 상담을 비운 후 시술을 담아주세요.</div>
+          <div tw="text-neutral70 text-[14px] lg:text-[16px] text-center mt-3">
+            방문 상담을 비운 후 시술을 담아주세요.
+          </div>
 
           <div tw="flex justify-end gap-2 mt-8">
             <Button
               tw="min-w-[8rem]"
-              style={{ variant: "outlined", color: "point", size: "lg" }}
+              style={{ variant: "outlined", color: "point", size: "sm" }}
               onClick={() => setShowInquiryModal(false)}>
               취소하기
             </Button>
 
             <Button
+              tw="min-w-[8rem]"
+              style={{ variant: "filled", color: "point", size: "sm" }}
               onClick={() => {
-                // resetCart()
                 setInquiry(false)
                 setShowInquiryModal(false)
               }}>
