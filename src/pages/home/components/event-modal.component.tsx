@@ -83,7 +83,7 @@ const EventModal = ({ popup, onClose, isOpen, style, highestZIndexModalId }: Eve
               onClick={handleClose}
             />
           </header>
-          <div tw="w-full aspect-[6/7] bg-[#d9d9d9]">
+          <div tw="w-full aspect-[6/7] bg-[#d9d9d9] max-h-[700px] max-w-[600px] mx-auto">
             <img src={imageUrl} alt="팝업 이미지" tw="w-full h-full object-cover" />
           </div>
           <footer tw="px-4 py-2 flex items-center">

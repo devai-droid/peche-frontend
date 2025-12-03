@@ -21,7 +21,7 @@ const InfoBlock = tw.div`
 `
 
 const InfoTitle = tw.h3`
-  text-primary text-[16px] md:text-[18px] tracking-tight font-semibold mb-1
+  text-primary text-[16px] md:text-[18px] tracking-tight font-semibold mb-2 md:mb-3
 `
 
 const InfoText = tw.p`
@@ -30,7 +30,7 @@ const InfoText = tw.p`
 
 /* Buttons */
 const ButtonGroup = tw.div`
-  flex flex-row md:flex-col gap-3 mt-6
+  flex flex-row md:flex-col gap-3 mt-3
 `
 
 const SolidButton = tw.button`
@@ -61,9 +61,9 @@ const Location = () => {
             <InfoBlock>
               <InfoTitle>진료시간 안내</InfoTitle>
               <InfoText>평일 : AM 10:30 ~ PM 21:00</InfoText>
-              <InfoText>토요일, 공휴일 : AM 10:00 ~ PM 18:00</InfoText>
-              <InfoText>점심시간 : 00:00 ~ 00:00</InfoText>
-              <InfoText tw="text-[14px] text-[#666]">※ 일요일은 휴무입니다.</InfoText>
+              <InfoText>주말·공휴일 : AM 10:00 ~ PM 18:00</InfoText>
+              <InfoText tw="text-primary">※ 점심시간 없이 연중무휴 진료합니다.</InfoText>
+              {/* <InfoText tw="text-[14px] text-[#666]">※ 일요일은 휴무입니다.</InfoText> */}
 
               <ButtonGroup>
                 <SolidButton>시술 예약하기</SolidButton>
@@ -76,7 +76,7 @@ const Location = () => {
               <InfoTitle>오시는 길</InfoTitle>
               <InfoText>서울특별시 강남구 강남대로 364,</InfoText>
               <InfoText>3층 전체 (역삼동, 미왕빌딩)</InfoText>
-              <InfoText>강남역 4번 출구 앞</InfoText>
+              <InfoText tw="text-primary">※ 강남역 4번 출구 앞</InfoText>
 
               <ButtonGroup>
                 <OutlineButton>네이버 플레이스 보기</OutlineButton>

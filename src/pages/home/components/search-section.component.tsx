@@ -1,7 +1,7 @@
 import React from "react"
 import tw, { styled } from "twin.macro"
 import searchImage from "@/assets/images/search-image.png"
-import searchPrimaryIcon from "@/assets/images/search-primary.png"
+import { SearchPrimaryIcon } from "@/assets/icon"
 import SearchModal from "./search-modal.component"
 import { useSearchKeywordControllerFindMany } from "@/lib/orval/search-keywords/search-keywords"
 import { useTranslation } from "react-i18next"
@@ -50,7 +50,7 @@ const Title = styled.h2`
 
 const SearchBar = styled.div`
   ${tw`
-    flex items-center w-full bg-white border border-gray-200
+    flex items-center w-full bg-white border-b border-neutral20
     rounded-none px-3 md:px-4 py-2 md:py-3 mb-3 md:mb-4 shadow-sm
   `}
   max-width: 500px;
@@ -63,12 +63,15 @@ const Input = styled.input`
   `}
 `
 
-const SearchIcon = tw.img`
-  w-4 h-4 md:w-5 md:h-5 ml-2 object-contain
+const SearchIcon = styled(SearchPrimaryIcon)`
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  margin-left: 8px; /* ml-2 동일 */
 `
 
 const SuggestBox = tw.div`
-  flex flex-wrap gap-2 md:gap-3 text-[12px] md:text-[15px] text-gray-600
+  flex flex-wrap gap-2 md:gap-3 text-[14px] md:text-[16px] text-neutral70
 `
 
 const SuggestTitle = tw.span`
@@ -109,7 +112,7 @@ const SearchSection = () => {
 
           <SearchBar onClick={() => setOpenSearchModal(true)}>
             <Input placeholder="시술명, 효과로 검색해보세요" />
-            <SearchIcon src={searchPrimaryIcon} alt="search icon" />
+            <SearchIcon />
           </SearchBar>
 
           <SuggestBox>

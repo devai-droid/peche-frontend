@@ -372,7 +372,7 @@ const BottomSheet = () => {
 
   return (
     <div
-      tw="fixed lg:hidden inset-x-0 font-pretendard tracking-tight leading-[150%]"
+      tw="fixed lg:hidden inset-x-0 font-pretendard tracking-tight leading-[150%] z-50"
       style={{ bottom: "60px" }}>
       <div tw="bg-neutral overflow-hidden p-1 pl-4">
         {/* 헤더 */}
@@ -694,7 +694,7 @@ const CartView = ({ children, isHome }: { children?: React.ReactNode; isHome: bo
 
   return (
     <>
-      <div tw="flex gap-8 mb-20">
+      <div tw="flex gap-8 mb-0">
         {!isHome && <div tw="w-full lg:w-4/6">{children}</div>}
         {isHome && <div tw="w-full">{children}</div>}
 

@@ -5,9 +5,9 @@ import useResponsive from "@/lib/hooks/use-responsive"
 import { useTranslation } from "react-i18next"
 import { menuLinks } from "@/routers/links"
 import CustomLink from "@/lib/components/custom-link.component"
-import AllTreatmentDropdown from "@/pages/treatment/all-treatment-dropdown"
+// import AllTreatmentDropdown from "@/pages/treatment/all-treatment-dropdown"
 // 나중에 수정
-import { dummyTreatments } from "@/pages/treatment/dummyTreatments"
+// import { dummyTreatments } from "@/pages/treatment/dummyTreatments"
 
 const Container = tw.nav`
 relative
@@ -23,10 +23,20 @@ const DesktopLinkContainer = tw.div`
 `
 
 const TextLink = styled(CustomLink)<{ selected: boolean }>(({ selected }) => [
-  tw`p-4 text-[17px] font-medium tracking-[-0.02em] transition-colors duration-200 relative pb-[10px]`,
+  tw`p-4 text-[17px] font-medium tracking-[-0.02em] transition-colors duration-200 relative pb-[10px] hover:text-[#DA7F67]`,
   selected
     ? tw`text-[#DA7F67] font-semibold border-b-[3px] border-[#DA7F67]`
     : tw`text-neutralBlack border-b-[3px] border-transparent`,
+])
+
+const DotWrapper = styled.div<{ hasDot?: boolean }>(({ hasDot }) => [
+  tw`relative inline-flex items-end`,
+
+  hasDot &&
+    tw`
+      after:(content-[''] absolute top-[17px] right-[6px]
+      w-[8px] h-[8px] bg-[#DA7F67] rounded-full)
+    `,
 ])
 
 const HeaderNavigator = () => {
@@ -39,31 +49,22 @@ const HeaderNavigator = () => {
   const dropdownRef = useRef<HTMLDivElement>(null)
   const urlType = searchParams.get("type")
   // 나중에 수정해야됨. 첫 시술 고르는 부분임
-  function getDefaultType() {
-    return dummyTreatments[0].children[0].id
-  }
+  // function getDefaultType() {
+  //   return dummyTreatments[0].children[0].id
+  // }
 
-  function resolveChildType(type: string | null) {
-    if (!type) return getDefaultType()
+  // function resolveChildType(type: string | null) {
+  //   if (!type) return getDefaultType()
 
-    // 모든 child를 하나의 array로 펼친 뒤 검색
-    const allChildren = dummyTreatments.flatMap((g) => g.children)
+  //   // 모든 child를 하나의 array로 펼친 뒤 검색
+  //   const allChildren = dummyTreatments.flatMap((g) => g.children)
 
-    const found = allChildren.find((c) => c.id === type)
+  //   const found = allChildren.find((c) => c.id === type)
 
-    return found ? found.id : getDefaultType()
-  }
+  //   return found ? found.id : getDefaultType()
+  // }
 
-  const selectedType = resolveChildType(urlType)
-
-  function resolveSelectedGroup(type: string) {
-    return (
-      dummyTreatments.find((group) => group.children.some((child) => child.id === type))?.id ??
-      dummyTreatments[0].id
-    )
-  }
-
-  const selectedGroupId = resolveSelectedGroup(selectedType)
+  // const selectedType = resolveChildType(urlType)
 
   // 페이지 변경될 때 전체 시술 페이지면 드롭다운 자동 오픈
   React.useEffect(() => {
@@ -156,14 +157,16 @@ const HeaderNavigator = () => {
           }
 
           return (
-            <TextLink to={link.href} key={link.name} selected={isSelected(link.href)}>
-              <div tw="font-pretendard">{t(link.name)}</div>
-            </TextLink>
+            <DotWrapper key={link.name} hasDot={link.name === "header.event"}>
+              <TextLink to={link.href} selected={isSelected(link.href)}>
+                <div tw="font-pretendard">{t(link.name)}</div>
+              </TextLink>
+            </DotWrapper>
           )
         })}
       </DesktopLinkContainer>
 
-      {isOpenAllMenu && (
+      {/* {isOpenAllMenu && (
         <div ref={dropdownRef}>
           <AllTreatmentDropdown
             onSelect={handleSelectFromDropdown}
@@ -171,7 +174,7 @@ const HeaderNavigator = () => {
             selectedGroupId={selectedGroupId}
           />
         </div>
-      )}
+      )} */}
     </Container>
   )
 }

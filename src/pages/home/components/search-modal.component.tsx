@@ -5,7 +5,7 @@ import { CSSTransition } from "react-transition-group"
 import { useTranslation } from "react-i18next"
 import { Language } from "@/lib/locales/i18n.config"
 import { IconButton } from "@/design-system/components"
-import { CloseIcon, SearchSmallIcon } from "@/assets/icon"
+import { CloseIcon, SearchSmallIcon, SearchPrimaryIcon } from "@/assets/icon"
 import CustomLink from "@/lib/components/custom-link.component"
 
 import { useSearchKeywordControllerFindMany } from "@/lib/orval/search-keywords/search-keywords"
@@ -17,7 +17,6 @@ const Overlay = tw.div`
   flex justify-center items-start overflow-auto
 `
 
-// 🔥 전체 배경을 #FEF5EA 로 바꾼 영역
 const ModalOuter = tw.div`
   w-full md:w-[900px] mt-[4rem] md:mt-[9rem]
   bg-[#FEF5EA] rounded-t-none shadow-xl
@@ -25,7 +24,7 @@ const ModalOuter = tw.div`
 
 // 내부 박스 (화이트 영역)
 const ModalInner = tw.div`
-  bg-white w-full rounded-none py-6 md:py-10 px-6 md:px-10
+  bg-white w-full rounded-none py-6 md:py-10 px-6 md:px-10 md:min-h-[400px] min-h-[250px]
 `
 
 const HeaderArea = tw.div`
@@ -41,8 +40,8 @@ const Title = styled.h2`
 
 // 검색 UI
 const SearchBar = tw.div`
-  flex items-center bg-white border border-gray-300
-  rounded-none px-4 py-3 shadow-sm max-w-[600px] mx-auto mb-4
+  flex items-center bg-white border-b-[1.6px] border-neutral20
+  rounded-none px-4 py-3 shadow-sm max-w-[600px] sm:mx-auto mb-4 mx-[15px]
 `
 
 const Input = tw.input`
@@ -51,7 +50,9 @@ const Input = tw.input`
 
 // 추천 검색어
 const SuggestBox = tw.div`
-  flex flex-wrap gap-3 text-[13px] md:text-[15px] text-gray-600 justify-center mb-6
+  flex flex-wrap gap-3 text-[14px] md:text-[16px] text-neutral70
+  max-w-[600px] sm:mx-auto mx-[15px]
+  mb-6
 `
 
 const SuggestTitle = tw.span`font-semibold text-black mr-2`
@@ -74,6 +75,11 @@ const ProductTitle = tw.div`
 
 const ProductDesc = tw.div`
   text-[14px] text-neutral60 leading-[140%]
+`
+
+const NoResult = tw.div`
+  w-full flex justify-center items-center py-10
+  text-neutral90 text-[13px] md:text-[14px]
 `
 
 interface Props {
@@ -110,14 +116,14 @@ const SearchModal = ({ open, onClose }: Props) => {
   // eslint-disable-next-line @typescript-eslint/no-shadow
   const truncate = (t: string, len: number) => (t?.length > len ? `${t.slice(0, len)}...` : t)
 
-  // 🔥 검색어와 일치하는 부분만 primary 색상으로 하이라이트
+  // 검색어와 일치하는 부분만 primary 색상으로 하이라이트
   const highlight = (text: string, keyword: string) => {
     if (!text || !keyword) return text
 
     const escaped = keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") // 정규식 특수문자 처리
     const regex = new RegExp(`(${escaped})`, "gi")
 
-    return text.replace(regex, `<span style="color:#FE7A00;">$1</span>`)
+    return text.replace(regex, `<span style="color:#DA7F67;">$1</span>`)
   }
 
   return (
@@ -140,7 +146,7 @@ const SearchModal = ({ open, onClose }: Props) => {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
-            <IconButton icon={SearchSmallIcon} iconSize={20} tw="w-5 h-5 ml-2" />
+            <IconButton icon={SearchPrimaryIcon} iconSize={20} tw="w-5 h-5 ml-2" />
           </SearchBar>
 
           <SuggestBox>
@@ -155,61 +161,71 @@ const SearchModal = ({ open, onClose }: Props) => {
           {/* 🔥 아래는 흰색 검색결과 영역 */}
           <ModalInner>
             <ResultContainer>
-              {searchResults && delayedSearchTerm && (
+              {delayedSearchTerm && searchResults && (
                 <>
-                  {/* 이벤트 검색결과 */}
-                  {searchResults.events
-                    .filter((event) => {
-                      return (
-                        (language === "ko" && event.visible) ||
-                        (language === "en" && event.visibleEN) ||
-                        (language === "ja" && event.visibleJA) ||
-                        (language === "zh" && event.visibleZH) ||
-                        (language === "th" && event.visibleTH)
-                      )
-                    })
-                    .map((ev) => (
-                      <CustomLink
-                        to={`/products/${ev.detailPage?.id}`}
-                        key={ev.id}
-                        onClick={onClose}>
-                        <ProductCard>
-                          <ProductTitle
-                            dangerouslySetInnerHTML={{
-                              __html: highlight(tv(ev, "name"), delayedSearchTerm),
-                            }}
-                          />
-                          <ProductDesc
-                            dangerouslySetInnerHTML={{
-                              __html: highlight(
-                                truncate(tv(ev, "description"), 80),
-                                delayedSearchTerm,
-                              ),
-                            }}
-                          />
-                        </ProductCard>
-                      </CustomLink>
-                    ))}
-                  {/* 상품 검색결과 */}
-                  {searchResults.products.map((pd) => (
-                    <CustomLink to={`/products/${pd.detailPage?.id}`} key={pd.id} onClick={onClose}>
-                      <ProductCard>
-                        <ProductTitle
-                          dangerouslySetInnerHTML={{
-                            __html: highlight(tv(pd, "name"), delayedSearchTerm),
-                          }}
-                        />
-                        <ProductDesc
-                          dangerouslySetInnerHTML={{
-                            __html: highlight(
-                              truncate(tv(pd, "description"), 80),
-                              delayedSearchTerm,
-                            ),
-                          }}
-                        />
-                      </ProductCard>
-                    </CustomLink>
-                  ))}
+                  {searchResults.events.length === 0 && searchResults.products.length === 0 ? (
+                    <NoResult>검색 결과가 없습니다</NoResult>
+                  ) : (
+                    <>
+                      {/* 이벤트 검색결과 */}
+                      {searchResults.events
+                        .filter((event) => {
+                          return (
+                            (language === "ko" && event.visible) ||
+                            (language === "en" && event.visibleEN) ||
+                            (language === "ja" && event.visibleJA) ||
+                            (language === "zh" && event.visibleZH) ||
+                            (language === "th" && event.visibleTH)
+                          )
+                        })
+                        .map((ev) => (
+                          <CustomLink
+                            to={`/products/${ev.detailPage?.id}`}
+                            key={ev.id}
+                            onClick={onClose}>
+                            <ProductCard>
+                              <ProductTitle
+                                dangerouslySetInnerHTML={{
+                                  __html: highlight(tv(ev, "name"), delayedSearchTerm),
+                                }}
+                              />
+                              <ProductDesc
+                                dangerouslySetInnerHTML={{
+                                  __html: highlight(
+                                    truncate(tv(ev, "description"), 80),
+                                    delayedSearchTerm,
+                                  ),
+                                }}
+                              />
+                            </ProductCard>
+                          </CustomLink>
+                        ))}
+
+                      {/* 상품 검색결과 */}
+                      {searchResults.products.map((pd) => (
+                        <CustomLink
+                          to={`/products/${pd.detailPage?.id}`}
+                          key={pd.id}
+                          onClick={onClose}>
+                          <ProductCard>
+                            <ProductTitle
+                              dangerouslySetInnerHTML={{
+                                __html: highlight(tv(pd, "name"), delayedSearchTerm),
+                              }}
+                            />
+                            <ProductDesc
+                              dangerouslySetInnerHTML={{
+                                __html: highlight(
+                                  truncate(tv(pd, "description"), 80),
+                                  delayedSearchTerm,
+                                ),
+                              }}
+                            />
+                          </ProductCard>
+                        </CustomLink>
+                      ))}
+                    </>
+                  )}
                 </>
               )}
             </ResultContainer>

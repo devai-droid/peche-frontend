@@ -38,7 +38,7 @@ const Title = tw.h2`
 `
 
 const MoreButton = tw.button`
-  border border-primary text-primary text-[13px] md:text-[15px] px-2 py-2 rounded hover:bg-primary hover:text-white transition
+  border border-primary text-primary text-[13px] md:text-[15px] px-2 py-2 hover:bg-primary hover:text-white transition
 `
 
 const StyledSwiperWrapper = styled.div`
@@ -49,7 +49,7 @@ const StyledSwiperWrapper = styled.div`
       hidden md:flex items-center justify-center
       absolute top-1/2 transform -translate-y-1/2
       w-[40px] h-[40px] bg-[#f5f5f5] rounded-none
-      shadow-sm hover:bg-[#eaeaea] transition
+      hover:bg-[#eaeaea] transition
       cursor-pointer z-10
     `}
   }
@@ -113,7 +113,7 @@ const EventPrice = tw.div`
 `
 
 const Discount = tw.span`
-  text-primary text-[13px] md:text-[14px] font-semibold mr-1
+  text-primary text-[13px] md:text-[14px] font-semibold mr-[12px] md:mr-[16px]
 `
 
 const SpecialEventSection = () => {
@@ -169,9 +169,9 @@ const SpecialEventSection = () => {
             modules={[Navigation]}
             navigation={{ prevEl: ".nav-prev", nextEl: ".nav-next" }}
             breakpoints={{
-              0: { slidesPerView: "auto", spaceBetween: 0 },
-              768: { slidesPerView: "auto", spaceBetween: 0 },
-              1024: { slidesPerView: "auto", spaceBetween: 0 },
+              0: { slidesPerView: "auto", spaceBetween: 8 },
+              768: { slidesPerView: "auto", spaceBetween: 8 },
+              1024: { slidesPerView: "auto", spaceBetween: 20 },
             }}>
             {imageCategories.map((cat) => (
               <StyledSwiperSlide key={cat.id}>

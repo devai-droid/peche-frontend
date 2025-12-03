@@ -11,6 +11,8 @@ import {
   InstaLogoIcon,
   YoutubeIcon,
   TiktokIcon,
+  NaverPlaceIcon,
+  KakaoFriendsIcon,
 } from "@/assets/icon"
 import { IconButton, Logo, MobileLogo } from "@/design-system/components"
 import AppMaxWidth from "../app-max-width.component"
@@ -48,8 +50,10 @@ const LeftMenu = ({ isDesktop }: MenuProps) => {
 
   // 데스크탑일 때 아이콘들 나열
   const socialLinks = [
+    { icon: NaverPlaceIcon, url: "https://blog.naver.com/" },
     { icon: NaverBlogIcon, url: "https://blog.naver.com/" },
     { icon: InstaLogoIcon, url: "https://www.instagram.com/" },
+    { icon: KakaoFriendsIcon, url: "https://www.kakaocorp.com/" },
     { icon: YoutubeIcon, url: "https://www.youtube.com/" },
     { icon: TiktokIcon, url: "https://www.tiktok.com/" },
   ]

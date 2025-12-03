@@ -60,7 +60,7 @@ const AccordionContent = styled.div<{ open: boolean }>`
 `
 
 const KeywordList = tw.div`
-  flex flex-wrap gap-3 text-neutralBlack text-[13px] md:text-[14px] mb-[2px]
+  flex flex-wrap gap-3 text-neutralBlack text-[14px] md:text-[16px] mb-[2px] font-normal
 `
 
 const Keyword = tw.span`
@@ -155,7 +155,7 @@ const MostPopular = () => {
               open={openId === category.id}
               onClick={() => toggleAccordion(category.id)}>
               <div tw="flex flex-wrap items-center gap-3 text-[15px] md:text-[18px]">
-                <span tw="font-semibold text-[15px] md:text-[17px]">{tv(category, "name")}</span>
+                <span tw="font-semibold text-[16px] md:text-[18px]">{tv(category, "name")}</span>
 
                 <KeywordList>
                   {(category.keywords || []).map((kw, idx) => (
@@ -178,11 +178,11 @@ const MostPopular = () => {
               <StyledSwiperWrapper>
                 <Swiper
                   modules={[Navigation]}
-                  navigation
+                  navigation={false}
                   breakpoints={{
                     0: { slidesPerView: "auto", spaceBetween: 8 },
-                    768: { slidesPerView: 3, spaceBetween: 2 },
-                    1024: { slidesPerView: 4, spaceBetween: 4 },
+                    768: { slidesPerView: 3, spaceBetween: 8 },
+                    1024: { slidesPerView: 4, spaceBetween: 20 },
                   }}>
                   {category.items
                     ?.slice()
