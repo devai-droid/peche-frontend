@@ -7,11 +7,11 @@ import mobileBannerImg from "@/assets/images/products-mobile-banner.jpg"
 import useResponsive from "@/lib/hooks/use-responsive"
 import { useSearchParams } from "react-router-dom"
 import CustomLink from "@/lib/components/custom-link.component"
+import CartView from "@/features/product/components/cart-view.component"
 
 import tw from "twin.macro"
 import { useTranslation } from "react-i18next"
 import { useProductCategoryControllerFindMany } from "@/lib/orval/product-categories/product-categories"
-// import useLanguageQuery from "@/lib/hooks/use-language-query"
 import useLanguageValue from "@/lib/hooks/use-language-key"
 import { useProductDetailPageControllerFindManyInfinite } from "@/lib/orval/product-detail-pages/product-detail-pages"
 import {
@@ -40,9 +40,14 @@ const Product = ({ name, description, price, id }: ProductProps) => {
       <div tw="text-[13px] md:text-[14px] text-neutral70" style={{ whiteSpace: "pre-line" }}>
         {description}
       </div>
-      <div tw="text-[16px] md:text-[18px] text-neutralBlack font-bold">{price}</div>
+      <div
+        tw="text-[16px] md:text-[18px] text-neutralBlack font-semibold"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: price }}
+      />
+
       <div tw="relative text-right">
-        <div tw="md:absolute right-0 bottom-0">
+        <div tw="absolute right-0 bottom-0">
           <CustomLink
             to={`/products/${id}`}
             tw="inline-block px-3 h-10 leading-10 border border-primary text-primary text-xs">
@@ -126,11 +131,16 @@ const Products = () => {
         <img
           src={isMobile ? mobileBannerImg : bannerImg}
           alt="banner"
-          tw="w-full max-h-[700px] h-[700px] object-cover block"
+          tw="w-full max-h-[310px] h-[310px] object-cover block"
         />
-        <div tw="absolute left-[8%] top-[15%] md:top-[10%] text-left text-neutralBlack">
+        <div
+          tw="
+      absolute top-1/2 left-1/2 
+      -translate-x-1/2 -translate-y-1/2 
+      text-center text-neutralBlack
+    ">
           <div tw="text-[39px] lg:text-[50px] font-time font-normal tracking-tight">Treatments</div>
-          <div tw="text-[18px] lg:text-[22px] font-pretendard">전체 시술</div>
+          <div tw="text-[18px] lg:text-[22px] font-pretendard text-center">전체 시술</div>
         </div>
       </div>
 
@@ -148,9 +158,11 @@ const Products = () => {
                     item,
                     selectedCategoryId === category.id
                       ? tw`text-white bg-primary`
-                      : tw`text-neutralBlack`,
+                      : tw`text-neutralBlack hover:(bg-tertiary) hover:(text-primary)`,
                   ]}>
-                  <div tw="px-2 overflow-hidden text-ellipsis">{tv(category, "name")}</div>
+                  <div tw="px-2 overflow-hidden text-ellipsis text-[13px] sm:text-[15px] md:text-[17px]">
+                    {tv(category, "name")}
+                  </div>
                 </button>
               ))}
               <div
@@ -175,66 +187,52 @@ const Products = () => {
               />
             </div>
           </div>
+          <CartView isHome={false}>
+            <div tw="flex flex-col gap-4 max-lg:p-4 mb-16">
+              {products?.pages
+                .flatMap((p) => p.items)
+                .map((product) => {
+                  let price
+                  // Check if product.products is an empty array
+                  if (Array.isArray(product.products) && product.products.length === 0) {
+                    // Filter events where events[].detailPage.id matches product.id
+                    const relatedEvents = events
+                      ? events.items.filter((event) => event.detailPage?.id === product.id)
+                      : []
 
-          <div tw="flex flex-col gap-4 max-lg:p-4 mb-16">
-            {products?.pages
-              .flatMap((p) => p.items)
-              .map((product) => {
-                let price
-                // Check if product.products is an empty array
-                if (Array.isArray(product.products) && product.products.length === 0) {
-                  // Filter events where events[].detailPage.id matches product.id
-                  const relatedEvents = events
-                    ? events.items.filter((event) => event.detailPage?.id === product.id)
-                    : []
+                    const minDiscountPrice = relatedEvents.reduce((min, event) => {
+                      return event.discountPrice < min ? event.discountPrice : min
+                    }, Infinity)
 
-                  const minDiscountPrice = relatedEvents.reduce((min, event) => {
-                    return event.discountPrice < min ? event.discountPrice : min
-                  }, Infinity)
-
-                  price =
-                    minDiscountPrice === Infinity
-                      ? `0 ${t("reservePage.won")}`
-                      : `${minDiscountPrice.toLocaleString()} ${t("reservePage.won")}`
-                } else {
-                  // Calculate the minimum price from product.products if available
-                  price = `${product.products
-                    .reduce((acc, cur) => {
+                    price =
+                      minDiscountPrice === Infinity
+                        ? `0 ${t("reservePage.won")}`
+                        : `${minDiscountPrice.toLocaleString()} ${t("reservePage.won")}`
+                  } else {
+                    // Calculate the minimum price from product.products if available
+                    const minPrice = product.products.reduce((acc, cur) => {
                       const p = cur as unknown as ProductModel
                       return acc === 0 ? p.price : Math.min(acc, p.price)
                     }, 0)
-                    .toLocaleString()} ${t("reservePage.won")} ~`
-                }
 
-                return (
-                  <Product
-                    key={product.id}
-                    id={product.id}
-                    name={tv(product, "name")}
-                    description={tv(product, "description")}
-                    price={price}
-                  />
-                )
-              })}
-          </div>
-          {/* <div tw="flex flex-col gap-6 max-lg:p-4 mb-16">
-          {products?.pages
-            .flatMap((p) => p.items)
-            .map((product) => (
-              <Product
-                key={product.id}
-                id={product.id}
-                name={tv(product, "name")}
-                description={tv(product, "description")}
-                price={`${product.products
-                  .reduce((acc, cur) => {
-                    const p = cur as unknown as ProductModel
-                    return acc === 0 ? p.price : Math.min(acc, p.price)
-                  }, 0)
-                  .toLocaleString()}원 ~`}
-              />
-            ))}
-        </div> */}
+                    price = `
+  <span style="color:#AB6655">${minPrice.toLocaleString()}</span>
+  <span style="color:#AB6655"> ${t("reservePage.won")} ~</span>
+`
+                  }
+
+                  return (
+                    <Product
+                      key={product.id}
+                      id={product.id}
+                      name={tv(product, "name")}
+                      description={tv(product, "description")}
+                      price={price}
+                    />
+                  )
+                })}
+            </div>
+          </CartView>
         </AppMaxWidth>
       </div>
     </Page>

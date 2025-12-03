@@ -59,32 +59,40 @@ const Event = ({
       {/* Chip 영역 */}
       <div tw="flex gap-1">
         {isPop && (
-          <Chip tw="h-[24px] px-2 text-[11px] leading-[1] flex items-center mb-1" color="primary">
+          <Chip
+            tw="h-[24px] px-2 text-[13px] md:text-[15px] leading-[1] flex items-center mb-1 px-[4px]"
+            color="primary">
             {t("common.pop")}
           </Chip>
         )}
 
         {isNew && (
-          <Chip tw="h-[24px] px-2 text-[11px] leading-[1] flex items-center mb-1" color="gray">
+          <Chip
+            tw="h-[24px] px-2 text-[13px] md:text-[15px] leading-[1] flex items-center mb-1 px-[4px]"
+            color="gray">
             {t("common.new")}
           </Chip>
         )}
 
         {isKakao && (
-          <Chip tw="h-[24px] px-2 text-[11px] leading-[1] flex items-center mb-1" color="pink">
+          <Chip
+            tw="h-[24px] px-2 text-[13px] md:text-[15px] leading-[1] flex items-center mb-1 px-[4px]"
+            color="pink">
             {t("common.kakaoFriend")}
           </Chip>
         )}
 
         {isBest && (
-          <Chip tw="h-[24px] px-2 text-[11px] leading-[1] flex items-center mb-1" color="darkgray">
+          <Chip
+            tw="h-[24px] px-2 text-[13px] md:text-[15px] leading-[1] flex items-center mb-1 px-[4px]"
+            color="darkgray">
             {t("common.best")}
           </Chip>
         )}
       </div>
 
       {/* 제목 */}
-      <div tw="text-neutralBlack text-[18px] md:text-[22px] font-semibold">{name}</div>
+      <div tw="text-neutralBlack text-[16px] md:text-[18px] font-semibold">{name}</div>
 
       {/* 설명 */}
       <div tw="text-[13px] md:text-[14px] text-neutral70" style={{ whiteSpace: "pre-line" }}>
@@ -94,12 +102,12 @@ const Event = ({
       {/* 서브 설명 */}
       <div tw="text-sm text-[#888]">{subDescription}</div>
 
-      {/* 🔥 가격을 버튼 위로 이동 — 버튼과 완전히 분리됨 */}
+      {/* 가격을 버튼 위로 이동 — 버튼과 완전히 분리됨 */}
       <div tw="flex items-center gap-2 mb-2">
         {!!originalPrice && (
           <div tw="line-through text-[13px] sm:text-[14px] text-neutral50">{originalPrice}</div>
         )}
-        <div tw="text-[16px] md:text-[18px] text-neutralBlack font-bold">{price}</div>
+        <div tw="text-[16px] md:text-[18px] text-secondary3 font-semibold">{price}</div>
       </div>
 
       {/* 버튼 영역 — 절대 위치 제거하고 자연스럽게 아래 배치 */}
@@ -289,9 +297,15 @@ const Events = () => {
         <img
           src={isMobile ? mobileBannerImg : bannerImg}
           alt="banner"
-          tw="w-full max-h-[700px] h-[700px] object-cover block"
+          tw="w-full max-h-[310px] h-[310px] object-cover block"
         />
-        <div tw="absolute left-[8%] top-[15%] md:top-[10%] text-left text-neutralBlack">
+        <div
+          tw="
+              absolute top-1/2 left-1/2 
+              -translate-x-1/2 -translate-y-1/2 
+              text-center text-neutralBlack
+              min-w-[300px]
+            ">
           <div tw="text-[39px] lg:text-[50px] font-time font-normal tracking-tight">
             Price & Events
           </div>
@@ -311,7 +325,7 @@ const Events = () => {
                 const isSelected = selectedCategoryId === category.id
 
                 // 모바일/데스크탑 구분
-                const isFirstRow = (isMobile && index < 3) || (!isMobile && index < 5)
+                const isFirstRow = (isMobile && index < 5) || (!isMobile && index < 5)
 
                 return (
                   <button
@@ -326,10 +340,12 @@ const Events = () => {
                       // 비선택 버튼: 첫줄 / 아니면 구분
                       !isSelected &&
                         (isFirstRow
-                          ? tw`bg-[#FEF5EA] text-black`
-                          : tw`bg-white font-normal text-black`),
+                          ? tw`bg-[#FEF5EA] hover:(bg-tertiary) text-black hover:(text-primary)`
+                          : tw`bg-white hover:(bg-tertiary) font-normal text-black hover:(text-primary)`),
                     ]}>
-                    <div tw="px-2 overflow-hidden text-ellipsis">{tv(category, "name")}</div>
+                    <div tw="px-2 overflow-hidden text-ellipsis text-[13px] sm:text-[15px] md:text-[17px]">
+                      {tv(category, "name")}
+                    </div>
                   </button>
                 )
               })}
@@ -356,34 +372,6 @@ const Events = () => {
             </div>
           </div>
           <CartView isHome={false}>
-            {/* <div tw="border-b border-[#e5e5e5] my-10 bg-white pt-1">
-              <div tw="flex justify-center items-center">
-                {visibleEvents
-                  .sort((a, b) => {
-                    // Sorting logic to prioritize events with `visibleFirst` as true
-                    if (a.visibleFirst === b.visibleFirst) {
-                      return 0 // No change in order if both are the same
-                    }
-                    return a.visibleFirst ? -1 : 1 // Place `true` before `false`
-                  })
-                  .map((event) => (
-                    <button
-                      key={event.id}
-                      tw="px-5 -mb-px text-center text-[#888]"
-                      css={
-                        selectedEventBundleId === event.id && tw`border-b-2 border-point text-point`
-                      }
-                      onClick={() => handleBundle(event.id)}>
-                      <p tw="text-sm">{tv(event, "name")}</p>
-                      <p tw="text-xs">
-                        {dayjs(event.postStartDate).format("YYYY.MM.DD")}~
-                        {dayjs(event.postEndDate).format("YYYY.MM.DD")}
-                      </p>
-                    </button>
-                  ))}
-              </div>
-            </div> */}
-
             {selectedCategory?.image?.url && selectedBundle && (
               <EventCategoryBanner
                 name={tv(selectedCategory, "name")}
@@ -433,7 +421,10 @@ const Events = () => {
           </CartView>
         </AppMaxWidth>
       </div>
-      <Modal open={showInquiryModal} onClose={() => setShowInquiryModal(false)}>
+      <Modal
+        open={showInquiryModal}
+        width="max-w-[400px]"
+        onClose={() => setShowInquiryModal(false)}>
         <div tw="flex flex-col items-center justify-center h-full">
           <div tw="text-center text-[16px] lg:text-[18px] font-semibold leading-snug">
             방문 상담이 담겨있는 상태에서는 시술 선택이 어렵습니다.

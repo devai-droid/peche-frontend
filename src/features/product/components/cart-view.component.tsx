@@ -71,7 +71,7 @@ const SurgeryItem = ({
                   {price?.toLocaleString()}원
                 </span>
               )}
-              <span tw="text-[16px] md:text-[18px] font-bold text-neutralBlack">
+              <span tw="text-[16px] md:text-[18px] font-semibold text-secondary3">
                 {(discount || price || 0).toLocaleString()}원
               </span>
             </div>
@@ -237,7 +237,7 @@ const SurgeryList = () => {
           />
         </div>
 
-        <div tw="mt-4 pt-4">
+        <div tw="pt-4">
           <div tw="flex justify-between items-center">
             <div tw="text-[18px] md:text-[22px] font-semibold text-primary">
               총 금액{" "}
@@ -246,7 +246,7 @@ const SurgeryList = () => {
               </span>
             </div>
 
-            <div tw="text-[18px] md:text-[22px] font-semibold text-neutralBlack">
+            <div tw="text-[18px] md:text-[22px] font-semibold text-primary">
               {cart
                 .reduce(
                   (acc, cur) =>
@@ -374,6 +374,13 @@ const BottomSheet = () => {
     <div
       tw="fixed lg:hidden inset-x-0 font-pretendard tracking-tight leading-[150%] z-50"
       style={{ bottom: "60px" }}>
+      {/* 상단 Gradient Bar 추가 */}
+      <div
+        tw="absolute top-[-30px] left-0 w-full h-[30px] pointer-events-none"
+        style={{
+          background: "linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.2))",
+        }}
+      />
       <div tw="bg-neutral overflow-hidden p-1 pl-4">
         {/* 헤더 */}
         <div tw="flex justify-between items-center">
@@ -499,26 +506,29 @@ const BottomSheet = () => {
             <div tw="text-[18px] font-semibold text-primary">
               총 금액 <span tw="text-[13px] font-normal">(부가세 별도)</span>
             </div>
-            <div tw="text-[20px] font-bold text-neutralBlack">{totalPrice.toLocaleString()}원</div>
+            <div tw="text-[20px] font-semibold text-primary">{totalPrice.toLocaleString()}원</div>
           </div>
         </div>
       </div>
 
       {/* 안내 모달 (데스크탑과 동일) */}
-      <Modal open={showInquiryModal} title="안내" onClose={() => setShowInquiryModal(false)}>
+      <Modal
+        open={showInquiryModal}
+        width="max-w-[400px]"
+        onClose={() => setShowInquiryModal(false)}>
         <div tw="flex flex-col items-center justify-center h-full font-pretendard">
-          <div tw="text-center text-[16px] font-semibold leading-snug">
+          <div tw="text-left text-[16px] md:text-[18px] font-semibold leading-snug">
             시술이 담겨있는 상태에서는 방문 상담 선택이 어렵습니다.
           </div>
 
-          <div tw="text-neutral70 text-center mt-3">
+          <div tw="text-neutral70 text-left text-[14px] md:text-[16px] mt-3 w-full">
             선택한 시술을 모두 비운 후 상담을 예약해주세요.
           </div>
 
-          <div tw="flex justify-end gap-2 mt-8">
+          <div tw="flex justify-end gap-2 mt-4 md:mt-8">
             <Button
               tw="min-w-[8rem]"
-              style={{ variant: "outlined", color: "point", size: "lg" }}
+              style={{ variant: "outlined", color: "point", size: "sm" }}
               onClick={() => {
                 setInquiryChecked(false)
                 setInquiry(false)
@@ -529,7 +539,7 @@ const BottomSheet = () => {
 
             <Button
               tw="min-w-[8rem]"
-              style={{ variant: "filled", color: "point", size: "lg" }}
+              style={{ variant: "filled", color: "point", size: "sm" }}
               onClick={() => {
                 removeFromCart(checkedList) // 기존 상품 삭제
                 setCheckedList([])

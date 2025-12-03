@@ -108,7 +108,7 @@ const getButtonStyle = (style: StyleOptions): TwStyle[] => {
     }
     // 🔸 OUTLINED PRIMARY
     else {
-      buttonStyle.push(tw`text-primary bg-white border border-primary`)
+      buttonStyle.push(tw`text-primary bg-white border border-primary hover:bg-tertiary`)
     }
 
     buttonStyle.push(tw`disabled:(text-neutral50 border-neutral20 bg-neutral20)`)
