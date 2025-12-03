@@ -21,16 +21,20 @@ const Calendar = ({ disabledDate, footer, ...props }: CalendarProp) => {
     () => disabledDate?.map((date) => dayjs(date)) || [],
     [disabledDate],
   )
+
   const { i18n } = useTranslation()
   const language = i18n.language as Language
   const isChinese = language === "zh"
 
   return (
-    <div tw="border border-[#ddd] rounded-lg">
+    <div>
       <LocalizationProvider adapterLocale={language} dateAdapter={AdapterDayjs}>
         <DateCalendar
           className="!w-full !max-h-[28rem] !h-[28rem]"
           sx={{
+            /* ----------------------
+             * 헤더 스타일
+             * ---------------------- */
             ".MuiPickersCalendarHeader-root": {
               marginTop: "1rem",
               marginBottom: "1rem",
@@ -40,14 +44,19 @@ const Calendar = ({ disabledDate, footer, ...props }: CalendarProp) => {
               position: "relative",
             },
             ".MuiPickersCalendarHeader-labelContainer": {
-              fontFamily: "Nanum Gothic",
+              margin: "0 auto !important",
+              textAlign: "center",
+              fontFamily: "Pretendard",
               fontSize: "1.125rem",
-              fontWeight: 800,
-              marginRight: "0",
+              fontWeight: 400,
             },
             ".MuiPickersCalendarHeader-switchViewButton": {
               display: "none",
             },
+
+            /* ----------------------
+             * 요일 / 날짜 정렬
+             * ---------------------- */
             ".MuiDayCalendar-header, .MuiDayCalendar-weekContainer": {
               justifyContent: "space-around",
               margin: "1rem 0",
@@ -59,97 +68,119 @@ const Calendar = ({ disabledDate, footer, ...props }: CalendarProp) => {
               marginBottom: 0,
             },
             ".MuiPickersArrowSwitcher-root": {
-              position: "absolute",
-              left: "1rem",
-              right: "1rem",
+              width: "100%",
               display: "flex",
               justifyContent: "space-between",
+              position: "absolute",
+              top: "50%",
+              transform: "translateY(-50%)",
+              pointerEvents: "none",
             },
+
+            ".MuiPickersArrowSwitcher-root .MuiIconButton-root": {
+              pointerEvents: "auto",
+            },
+
+            /* ----------------------
+             * 날짜 공통 스타일
+             * ---------------------- */
             ".MuiPickersDay-root, .MuiDayCalendar-weekDayLabel": {
-              fontFamily: "Nanum Gothic",
-              fontWeight: 800,
+              fontFamily: "Pretendard",
+              fontWeight: 400,
               fontSize: "1rem",
               width: "2.25rem",
               height: "2.25rem",
-
-              "&.Mui-selected": {
-                color: "white !important",
-                fontWeight: 800,
-                backgroundColor: "#CAB69E !important",
-                "&:hover": {
-                  // backgroundColor: "#CAB69E ",
-                },
-              },
+              position: "relative", // pseudo-element 위한 포지션
             },
+
+            /* ----------------------
+             * 날짜 선택 스타일
+             * ---------------------- */
+            ".MuiPickersDay-root.Mui-selected": {
+              color: "white !important",
+              backgroundColor: "transparent !important",
+              fontWeight: 400,
+              position: "relative",
+              zIndex: 1,
+            },
+
+            ".MuiPickersDay-root.Mui-selected::before": {
+              content: '""',
+              position: "absolute",
+              inset: 0,
+              margin: "auto",
+              width: "4.5rem",
+              height: "2.5rem",
+              backgroundColor: "#DA7F67",
+              zIndex: -1,
+            },
+
+            /* ----------------------
+             * 기본 날짜 스타일
+             * ---------------------- */
             ".MuiPickersDay-root": {
-              color: "black",
+              width: "4.5rem !important",
+              height: "2.5rem !important",
+              lineHeight: "normal",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              position: "relative",
               "&:disabled": {
                 color: "#B3B3B3",
               },
+
               ...(isChinese
                 ? {
-                    ":nth-child(6)": {
-                      color: "#327BFF",
-                      "&:disabled": {
-                        color: "#b2cdff",
-                      },
-                    },
                     ":last-child": {
                       color: "#F40000",
-                      "&:disabled": {
-                        color: "#FFACAC",
-                      },
+                      "&:disabled": { color: "#FFACAC" },
                     },
                   }
                 : {
                     ":first-of-type": {
                       color: "#F40000",
-                      "&:disabled": {
-                        color: "#FFACAC",
-                      },
-                    },
-                    ":last-child": {
-                      color: "#327BFF",
-                      "&:disabled": {
-                        color: "#b2cdff",
-                      },
+                      "&:disabled": { color: "#FFACAC" },
                     },
                   }),
             },
+
+            /* 요일 색상 */
             ".MuiDayCalendar-weekDayLabel": {
               color: "black",
               ...(isChinese
-                ? {
-                    ":nth-child(6)": {
-                      color: "#327BFF",
-                    },
-                    ":last-child": {
-                      color: "#F40000",
-                    },
-                  }
-                : {
-                    ":first-of-type": {
-                      color: "#F40000",
-                    },
-                    ":last-child": {
-                      color: "#327BFF",
-                    },
-                  }),
+                ? { ":last-child": { color: "#F40000" } }
+                : { ":first-of-type": { color: "#F40000" } }),
             },
+
             ".MuiPickersSlideTransition-root": {
               minHeight: "21rem",
             },
+            /* -------------------------
+             * 500px 이하 (모바일)
+             * 선택 네모 + 날짜 셀 크기 축소
+             * ------------------------- */
+            "@media (max-width: 500px)": {
+              ".MuiPickersDay-root": {
+                width: "2rem !important",
+                height: "2rem !important",
+              },
+              ".MuiPickersDay-root.Mui-selected::before": {
+                width: "2rem",
+                height: "2rem",
+              },
+            },
           }}
-          // maxDate={dayjs(Date.now()).add(1, "month").endOf("month")}
           minDate={dayjs().startOf("day")}
           disablePast
           disableHighlightToday
           shouldDisableDate={(date: Dayjs) =>
-            disabledDates.some((dateFromProp) => dayjs(dateFromProp).isSame(date, "day"))
+            disabledDates.some((d) => dayjs(d).isSame(date, "day"))
           }
           {...props}
         />
       </LocalizationProvider>
+
       {footer && <div tw="border-t border-[#ddd]">{footer}</div>}
     </div>
   )

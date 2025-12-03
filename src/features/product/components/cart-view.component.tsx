@@ -63,7 +63,7 @@ const SurgeryItem = ({
           )}
 
           {/* 가격 + 수량 조절 (한 줄로 맞춤) */}
-          <div tw="flex justify-between items-center mt-1">
+          <div tw="flex justify-between items-start mt-1 flex-col gap-2 sm:flex-row sm:items-center">
             {/* 가격 */}
             <div tw="flex items-center gap-2">
               {discount && (

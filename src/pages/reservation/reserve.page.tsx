@@ -36,7 +36,7 @@ const Textarea = tw.textarea`h-10 py-1.5 px-2 border border-[#d0d0d0] rounded-lg
 const TimeButton = ({ selected, children, ...props }: { selected?: boolean } & any) => {
   return (
     <Button
-      tw="shrink-0"
+      tw="shrink-0 sm:h-[58px] h-[40px]"
       {...props}
       style={{
         size: "sm",
@@ -74,7 +74,7 @@ const SurgeryItem = ({ item, updateCartItem, checked, onCheck }: SurgeryItemProp
   }
 
   return (
-    <div tw="py-2 font-pretendard last-of-type:([&>hr]:hidden)">
+    <div tw="py-2 font-pretendard tracking-tight leading-[150%] last-of-type:([&>hr]:hidden)">
       <div tw="flex gap-3 -ml-3">
         {/* 체크박스 */}
         <Checkbox checked={checked} onChange={(e) => onCheck(e.target.checked)} />
@@ -102,7 +102,7 @@ const SurgeryItem = ({ item, updateCartItem, checked, onCheck }: SurgeryItemProp
           )}
 
           {/* 가격 + 수량 */}
-          <div tw="flex justify-between items-center mt-1">
+          <div tw="flex justify-between items-start mt-1 flex-col gap-2 sm:flex-row sm:items-center">
             {/* 가격 */}
             <div tw="flex items-center gap-2">
               {discount && (
@@ -159,7 +159,7 @@ const SurgeryList = ({
   const { checkedList, setCheckedList, resetCart } = useCart()
   const { t } = useTranslation()
 
-  // 🔥 cart와 동일한 모달 상태 추가
+  // cart와 동일한 모달 상태 추가
   const [inquiryChecked, setInquiryChecked] = React.useState(inquiry)
   const [showInquiryModal, setShowInquiryModal] = React.useState(false)
 
@@ -167,7 +167,7 @@ const SurgeryList = ({
     setInquiryChecked(inquiry)
   }, [inquiry])
 
-  // 🔥 cart 페이지와 동일한 체크 로직
+  // cart 페이지와 동일한 체크 로직
   const handleInquiryCheckbox = (checked: boolean) => {
     if (checked && cart.length > 0) {
       // 장바구니에 시술이 있는데 방문 상담을 켜려는 경우 → 모달 띄움
@@ -181,7 +181,7 @@ const SurgeryList = ({
 
   return (
     <>
-      <div tw="flex items-center justify-between mb-3 -ml-3">
+      <div tw="flex items-center justify-between mb-3 -ml-3 font-pretendard tracking-tight leading-[150%]">
         <Checkbox
           checked={checkedList.length === cart.length}
           onChange={(e) => {
@@ -191,9 +191,15 @@ const SurgeryList = ({
               setCheckedList([])
             }
           }}
-          label={<H2>{t("button.selectAll")} </H2>}
+          label={
+            <div tw="flex items-center gap-2">
+              <H2>{t("button.selectAll")}</H2>
+              <span tw="text-primary font-semibold text-[18px] lg:text-[22px]">
+                ({checkedList.length}/{cart.length})
+              </span>
+            </div>
+          }
         />
-        ({checkedList.length}/{cart.length})
         <Button
           style={{ size: "sm", variant: "outlined" }}
           onClick={() => {
@@ -225,7 +231,7 @@ const SurgeryList = ({
             />
           ))}
         </div>
-
+        <hr tw="border-t border-neutral20 my-4" />
         <div tw="flex gap-2 my-6 justify-center">
           <LinkButton
             to="/products"
@@ -237,7 +243,7 @@ const SurgeryList = ({
         </div>
 
         <div tw="-ml-3 my-3 text-[14px] md:text-[16px] font-semibold">
-          {/* 🔥 여기! cart와 동일한 체크박스 로직 */}
+          {/* cart와 동일한 체크박스 로직 */}
           <Checkbox
             checked={inquiryChecked}
             onChange={(e) => handleInquiryCheckbox(e.target.checked)}
@@ -246,7 +252,7 @@ const SurgeryList = ({
         </div>
       </div>
 
-      {/* 🔥 모달 (cart와 완전 동일) */}
+      {/* 모달 (cart와 완전 동일) */}
       <Modal open={showInquiryModal} title="안내" onClose={() => setShowInquiryModal(false)}>
         <div tw="flex flex-col items-center justify-center h-full font-pretendard">
           <div tw="text-center text-[16px] font-semibold leading-snug">
@@ -360,47 +366,57 @@ const Reserve = () => {
     )
 
     return (
-      <div tw="flex gap-4 overflow-auto p-4">
-        {[
-          "10:00",
-          "10:30",
-          "11:00",
-          "11:30",
-          "12:00",
-          "12:30",
-          "13:00",
-          "13:30",
-          "14:00",
-          "14:30",
-          "15:00",
-          "15:30",
-          "16:00",
-          "16:30",
-          "17:00",
-          "17:30",
-          "18:00",
-          "18:30",
-          "19:00",
-          "19:30",
-          "20:00",
-          "20:30",
-        ].map((slot) => {
-          const available = availableTimes.has(slot)
-          return (
-            <TimeButton
-              key={slot}
-              disabled={!available}
-              selected={selectedDatetime.includes(slot)}
-              onClick={() => {
-                const base = todaySlots[0]?.datetime
-                if (!base) return
-                const [datePart] = base.split("T")
-                setSelectedDatetime(`${datePart}T${slot}:00.000Z`)
-              }}>
-              {slot}
-            </TimeButton>
-          )
-        })}
+      <div tw="w-full p-4 font-pretendard">
+        <div
+          css={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(90px, 1fr))",
+            gap: "5px",
+            width: "100%",
+          }}>
+          {[
+            "10:00",
+            "10:30",
+            "11:00",
+            "11:30",
+            "12:00",
+            "12:30",
+            "13:00",
+            "13:30",
+            "14:00",
+            "14:30",
+            "15:00",
+            "15:30",
+            "16:00",
+            "16:30",
+            "17:00",
+            "17:30",
+            "18:00",
+            "18:30",
+            "19:00",
+            "19:30",
+            "20:00",
+            "20:30",
+          ].map((slot) => {
+            const available = availableTimes.has(slot)
+            const selected = selectedDatetime.includes(slot)
+
+            return (
+              <TimeButton
+                key={slot}
+                disabled={!available}
+                selected={selected}
+                onClick={() => {
+                  const base = todaySlots[0]?.datetime
+                  if (!base) return
+                  const [datePart] = base.split("T")
+                  setSelectedDatetime(`${datePart}T${slot}:00.000Z`)
+                }}>
+                {slot}
+              </TimeButton>
+            )
+          })}
+        </div>
       </div>
     )
   }
@@ -451,8 +467,9 @@ const Reserve = () => {
     <Page>
       <div tw="bg-neutral w-screen min-h-screen">
         <AppMaxWidth tw="py-8 lg:py-12 overflow-x-hidden">
-          <H1>{t("reservePage.reserve")}</H1>
-          <hr tw="mt-4 mb-10" />
+          <H1 tw="pt-16 md:pt-10 pb-10 text-[24px] lg:text-[30px] text-center">
+            {t("reservePage.shoppingCart")}
+          </H1>
 
           <div tw="flex flex-col lg:flex-row gap-12 w-full">
             {/* ---------------- LEFT ---------------- */}
@@ -474,8 +491,6 @@ const Reserve = () => {
 
               {/* --- 캘린더 섹션 --- */}
               <div tw="bg-white p-6">
-                <H2 tw="mb-6">{t("reservePage.selectDateAndTime")}</H2>
-
                 <Calendar
                   key={language}
                   value={today}
@@ -489,7 +504,7 @@ const Reserve = () => {
                 />
 
                 {/* 캘린더 바깥 여백에서 시간 선택 컴포넌트가 필요 없다면 제거 가능 */}
-                <div tw="mt-6">{renderTimeSlots()}</div>
+                {/* <div tw="mt-6">{renderTimeSlots()}</div> */}
               </div>
             </div>
 
