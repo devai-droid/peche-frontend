@@ -5,6 +5,8 @@ import {
   InstaLogoGrayIcon,
   YoutubeGrayIcon,
   TiktokGrayIcon,
+  NaverPlaceGrayIcon,
+  KakaoFriendsGrayIcon,
 } from "@/assets/icon"
 import FooterLogoImg from "@/assets/images/peche-footer-logo.png"
 
@@ -46,8 +48,10 @@ const IconLink = styled.a`
 
 const Footer = () => {
   const socialLinks = [
+    { icon: NaverPlaceGrayIcon, url: "https://blog.naver.com/" },
     { icon: NaverBlogGrayIcon, url: "https://blog.naver.com/" },
     { icon: InstaLogoGrayIcon, url: "https://www.instagram.com/" },
+    { icon: KakaoFriendsGrayIcon, url: "https://www.kakaocorp.com/" },
     { icon: YoutubeGrayIcon, url: "https://www.youtube.com/" },
     { icon: TiktokGrayIcon, url: "https://www.tiktok.com/" },
   ]

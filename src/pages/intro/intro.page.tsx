@@ -35,27 +35,9 @@ import person8 from "@/assets/images/person8.png"
 
 const PageContainer = tw.div`w-full flex flex-col items-center bg-white`
 
-/* ──────────────────────────────
- * 1️⃣ Hero Section (배경 위 텍스트)
- * ────────────────────────────── */
-const SectionIntro = styled.section`
-  ${tw`relative w-full h-[500px] md:h-[650px] bg-center bg-cover flex items-center`}
-  background-image: url(${introBg});
-`
-const IntroTextWrapper = tw.div`
-  absolute left-[5vw] md:left-[8vw] top-[11vh] md:top-[8vh]
-  text-neutralBlack
-`
-const IntroTitle = tw.h1`
-  text-[40px] md:text-[52px] font-medium leading-tight mb-2 font-time
-`
-const IntroSubtitle = tw.p`
-  text-[18px] md:text-[22px] text-neutralBlack font-pretendard
-`
-
 /* 2️⃣ TRUST Section */
 const SectionTrust = tw.section`
-  w-full bg-white text-neutralBlack pt-20 pb-16 md:py-32
+  w-full bg-white text-neutralBlack pt-32 md:pt-20 pb-16 md:py-32
 `
 
 const TrustInner = tw.div`
@@ -66,7 +48,8 @@ const TrustInner = tw.div`
 
 // 왼쪽 전체 텍스트 블록
 const TrustTextBlock = tw.div`
-  w-full lg:w-1/2 flex flex-col justify-between
+  w-full lg:w-1/2 flex flex-col 
+  justify-center
   lg:h-[520px]
 `
 
@@ -83,8 +66,7 @@ const TrustHeading = styled.h2`
 
 // 작은 글씨 섹션
 const TrustParagraphBlock = tw.div`
-  flex items-end
-  mt-10 md:mt-0
+  mt-4
 `
 
 const TrustParagraph = tw.p`
@@ -163,7 +145,7 @@ const Highlight = tw.span`text-primary ml-2 font-medium font-pretendard text-[16
 const CoreGrid = tw.div`
   flex flex-col md:flex-row items-center justify-center gap-12 md:gap-20
 `
-const CoreItem = tw.div`flex flex-col items-center text-center max-w-[250px]`
+const CoreItem = tw.div`flex flex-col items-center text-center max-w-[265px]`
 const CoreImage = styled.img`
   ${tw`w-[100px] h-[100px] object-contain mb-4`}
 `
@@ -175,6 +157,23 @@ const CoreTextDesc = tw.p`text-neutral70 text-[14px] md:text-[16px] leading-[1.5
  * ────────────────────────────── */
 const SectionInterior = tw.section`
   w-full bg-white pt-20 pb-0 md:pt-28 overflow-x-hidden
+`
+
+const InteriorTextWrapper = tw.div`
+  w-full max-w-[1440px] mx-auto px-6 md:px-10
+`
+
+const InteriorBottomTextWrapper = tw.div`
+  flex flex-col
+  md:w-[48%]
+`
+
+const FullWidthImageWrapper = tw.div`
+  w-full
+`
+
+const InteriorImageContainer = tw.div`
+  max-w-[1440px] mx-auto w-full px-0
 `
 
 const InteriorInner = tw.div`
@@ -194,28 +193,9 @@ const InteriorDesc = tw.p`
   whitespace-pre-line
 `
 
-// ✅ 풀블리드 이미지 섹션 (뷰포트 기준 확장)
-const FullWidthImageRow = styled.div`
-  ${tw`w-screen flex flex-col md:flex-row gap-0`}
-  position: relative;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
-  overflow: hidden;
-
-  img {
-    ${tw`w-full object-cover`}
-    height: auto;
-    @media (min-width: 768px) {
-      height: 460px;
-    }
-  }
-`
-
 // 🧡 상단 이미지 (2장, 1440px 컨테이너 내부 / 높이 351px 고정)
 const TopImageRow = styled.div`
-  ${tw`w-full flex flex-col md:flex-row items-center justify-center mb-20 md:mb-28`} /* ✅ 여백 추가 */
+  ${tw`w-full flex flex-col md:flex-row items-center justify-center mb-16 md:mb-28`}
   gap: 0;
 
   img {
@@ -224,21 +204,30 @@ const TopImageRow = styled.div`
   }
 
   @media (max-width: 767px) {
+    margin-left: -20px;
+    margin-right: -20px;
+    width: calc(100% + 40px);
     img {
-      height: auto; /* ✅ 모바일은 자동 높이 (비율 유지) */
+      height: auto;
     }
   }
 
-  img + img {
-    margin-left: 0;
-  }
+  // img + img {
+  //   margin-left: 0;
+  // }
 `
 
 // 🧡 하단 이미지 섹션
 const BottomImageRow = styled.div`
-  ${tw`flex flex-col md:flex-row w-full justify-between items-start`}
+  ${tw`flex flex-col md:flex-row w-full justify-between items-start md:items-end`}
   align-items: flex-start;
   gap: 0;
+
+  @media (max-width: 767px) {
+    margin-left: -20px;
+    margin-right: -20px;
+    width: calc(100% + 40px);
+  }
 `
 
 // ✅ 왼쪽 블록 전체 높이를 오른쪽과 맞춤
@@ -254,7 +243,8 @@ const LeftBlock = styled.div`
 
 const LeftText = styled.p`
   ${tw`text-[14px] md:text-[16px] tracking-tight text-neutral70 font-pretendard leading-[1.5]`}
-  margin-bottom: 12px; /* ✅ 모바일용 좁은 여백 */
+  margin-bottom: 25px; /* ✅ 모바일용 좁은 여백 */
+  padding-left: 25px;
 
   @media (min-width: 768px) {
     margin-bottom: 32px; /* ✅ 데스크탑 여유 */
@@ -264,13 +254,14 @@ const LeftText = styled.p`
 const LeftImage = styled.img`
   ${tw`w-full object-cover`}
   height: 292px; /* ✅ 고정 */
+  margin-top: auto;
   @media (max-width: 767px) {
     height: auto;
   }
 `
 
 const RightImage = styled.img`
-  ${tw`md:w-[48%] w-full object-cover`}
+  ${tw`md:w-[49%] w-full object-cover`}
   height: 584px; /* ✅ 오른쪽 기준 높이 */
   @media (max-width: 767px) {
     height: auto;
@@ -333,7 +324,7 @@ const CustomerTrustParagraph = tw.p`
  * PEOPLE × TRUST SECTION
  * ────────────────────────────── */
 const PeopleSection = tw.section`
-  w-full bg-[#FEF3E6] py-20 md:py-28
+  w-full bg-[#FEF3E6] pt-20 pb-12 md:pt-28 md:pb-28
 `
 
 const PeopleInner = tw.div`
@@ -444,14 +435,6 @@ const Intro = () => {
   return (
     <Page hiddenFooter={false}>
       <PageContainer>
-        {/* 1️⃣ Hero Section */}
-        <SectionIntro>
-          <IntroTextWrapper>
-            <IntroTitle>Pêche Introduction</IntroTitle>
-            <IntroSubtitle>페슈의원 소개</IntroSubtitle>
-          </IntroTextWrapper>
-        </SectionIntro>
-
         {/* 2️⃣ TRUST Section */}
         <SectionTrust>
           <TrustInner>
@@ -468,7 +451,7 @@ const Intro = () => {
                 <TrustParagraph>
                   페슈의원은 고객이 경험하는 모든 순간에서 신뢰를 만들기 위해 오랜 시간 깊은 고민과
                   노력을 쌓아 만들어졌습니다.
-                  {"\n"}
+                  {"\n"} {"\n"}
                   처음 만나는 순간부터 치료를 마치고 병원을 나서는 순간까지, 페슈의원에서의 모든
                   경험은 언제나 투명하고 정직합니다.
                 </TrustParagraph>
@@ -483,7 +466,9 @@ const Intro = () => {
         <SectionSymbolTrust>
           <SymbolInner>
             <SymbolTitle>SYMBOL × TRUST</SymbolTitle>
-            <SymbolSubTitle>복숭아 [pêche]</SymbolSubTitle>
+            <SymbolSubTitle>
+              복숭아 <span tw="font-normal">[pêche]</span>
+            </SymbolSubTitle>
             <SymbolDesc>
               페슈(Pêche)는 프랑스어로 ‘복숭아’를 뜻합니다.
               <br />
@@ -509,7 +494,8 @@ const Intro = () => {
                   <CoreImage src={beauty} alt="아름다움" />
                   <CoreTextTitle>아름다움</CoreTextTitle>
                   <CoreTextDesc>
-                    페슈의원의 심볼은 복숭아의 단면에서 시작되었습니다. 껍질을 넘어.
+                    복숭아 고유의 부드러운 곡선과 생기 있는 컬러는 건강하고 생기있는 피부를
+                    상징합니다.
                   </CoreTextDesc>
                 </CoreItem>
 
@@ -519,7 +505,8 @@ const Intro = () => {
                   <CoreImage src={trust} alt="신뢰" />
                   <CoreTextTitle>신뢰</CoreTextTitle>
                   <CoreTextDesc>
-                    페슈의원의 심볼은 복숭아의 단면에서 시작되었습니다. 껍질을 넘어.
+                    삼각형의 단단한 직선은 진정성 있는 진료와 일관된 기준을 지키는 신뢰를 담고
+                    있습니다.
                   </CoreTextDesc>
                 </CoreItem>
 
@@ -529,7 +516,7 @@ const Intro = () => {
                   <CoreImage src={transparency} alt="투명함" />
                   <CoreTextTitle>투명함</CoreTextTitle>
                   <CoreTextDesc>
-                    페슈의원의 심볼은 복숭아의 단면에서 시작되었습니다. 껍질을 넘어.
+                    복숭아의 뽀얀 단면처럼 진실되고 투명한 마음으로 고객을 대합니다.
                   </CoreTextDesc>
                 </CoreItem>
               </CoreGrid>
@@ -537,7 +524,7 @@ const Intro = () => {
           </SymbolInner>
         </SectionSymbolTrust>
         <SectionInterior>
-          <InteriorInner>
+          <InteriorTextWrapper>
             {/* 텍스트 */}
             <InteriorLabel>INTERIOR × TRUST</InteriorLabel>
             <InteriorTitle>모든 공간에 새겨 넣은, 신뢰의 가치</InteriorTitle>
@@ -550,29 +537,34 @@ const Intro = () => {
               모든 요소는 환자가 편안하게 머무르면서도 신뢰와 안정감을 느낄 수 있도록
               디자인되었습니다.
             </InteriorDesc>
-
+          </InteriorTextWrapper>
+          <FullWidthImageWrapper>
             {/* 이미지 2장 (1440px 안, gap 없음) */}
             <TopImageRow>
               <img src={interior1} alt="대기실 인테리어" />
               <img src={interior2} alt="진료실 인테리어" />
             </TopImageRow>
+          </FullWidthImageWrapper>
 
-            {/* 하단 이미지 */}
-            <BottomImageRow>
-              <LeftBlock>
-                <LeftText>
-                  특히 공간 곳곳에는 독창적인 소재 텍스처와 우리의 철학이 담긴 복숭아 심볼을
-                  <br />
-                  형상화한 포인트 요소를 담아냈습니다. 이 세심한 디테일을 통해 다른 곳에서는
-                  <br />
-                  경험할 수 없는 페슈만의 특별함이 완성됩니다.
-                </LeftText>
-                <LeftImage src={interior3} alt="복도 인테리어" />
-              </LeftBlock>
+          <FullWidthImageWrapper>
+            <InteriorImageContainer>
+              {/* 하단 이미지 */}
+              <BottomImageRow>
+                <LeftBlock>
+                  <LeftText>
+                    특히 공간 곳곳에는 독창적인 소재 텍스처와 우리의 철학이 담긴 복숭아 심볼을
+                    <br />
+                    형상화한 포인트 요소를 담아냈습니다. 이 세심한 디테일을 통해 다른 곳에서는
+                    <br />
+                    경험할 수 없는 페슈만의 특별함이 완성됩니다.
+                  </LeftText>
+                  <LeftImage src={interior3} alt="복도 인테리어" />
+                </LeftBlock>
 
-              <RightImage src={interior4} alt="리셉션 인테리어" />
-            </BottomImageRow>
-          </InteriorInner>
+                <RightImage src={interior4} alt="리셉션 인테리어" />
+              </BottomImageRow>
+            </InteriorImageContainer>
+          </FullWidthImageWrapper>
         </SectionInterior>
         <SectionCustomerTrust>
           <CustomerTrustInner>
@@ -586,8 +578,10 @@ const Intro = () => {
                 <CustomerTrustParagraph>
                   페슈의원은 가격을 통해서도 신뢰를 지켜갑니다. 누구에게나 다르게, 순간적인
                   이벤트로만 달라지는 가격은 없습니다. 언제나 어디서나 동일하게 적용되는 정찰제를
-                  고수하며, 불필요한 거품을 뺀 합리적인 가격만을 제시합니다. 최저가 경쟁은 아니지만,
-                  누구나 납득할 수 있는 수준에서 공정하고 투명하게 지켜갑니다.
+                  고수하며, 불필요한 거품을 뺀 합리적인 가격만을 제시합니다.
+                  <br /> <br />
+                  최저가 경쟁은 아니지만, 누구나 납득할 수 있는 수준에서 공정하고 투명하게
+                  지켜갑니다.
                 </CustomerTrustParagraph>
               </CustomerTrustText>
             </CustomerTrustCard>
@@ -606,6 +600,10 @@ const Intro = () => {
                   시술은 단순히 기계와 약물이 아니라, 효과를 극대화할 수 있는 정확한 방법에서
                   시작됩니다. 페슈의원은 환자 한 분 한 분의 피부 상태를 세심히 진단하고, 가장
                   효과적인 방법을 찾아 안내합니다.
+                  <br /> <br />
+                  충분한 설명을 통해 환자가 올바른 선택을 하도록 돕고, 그 선택이 최고의 결과로
+                  이어질 수 있도록 전문성과 정직함을 바탕으로 시술합니다. 결국 진료의 가치는 정직한
+                  설명과 정확한 실행에서 완성된다고 믿습니다.
                 </CustomerTrustParagraph>
               </CustomerTrustText>
             </CustomerTrustCard>
@@ -622,8 +620,12 @@ const Intro = () => {
                 </CustomerTrustHeading>
                 <CustomerTrustParagraph>
                   페슈의원의 상담은 환자를 설득하기 위한 과정이 아닙니다. 과장된 말이나 불필요한
-                  권유는 덜어내고, 꼭 필요한 정보와 진심 어린 설명을 전달합니다. 진정한 신뢰는
-                  친절함과 진심에서 비롯된다고 믿습니다.
+                  권유는 덜어내고, 꼭 필요한 정보와 진실된 설명만을 전달합니다. 의료진과 실장은
+                  환자의 이야기를 경청하며, 개인의 상황과 피부 상태에 맞는 가장 적절한 방법을 함께
+                  고민합니다.
+                  <br /> <br />
+                  친절함은 기본이지만, 그 안에 담긴 진심, 환자가 안심할 수 있는 신뢰로 이어진다고
+                  믿습니다.
                 </CustomerTrustParagraph>
               </CustomerTrustText>
             </CustomerTrustCard>
@@ -635,8 +637,11 @@ const Intro = () => {
                 <CustomerTrustHeading>숨기지 않고 투명하게 드러낸 자신감</CustomerTrustHeading>
                 <CustomerTrustParagraph>
                   페슈의원의 공간은 숨기기 위해 설계되지 않았습니다. 상담과 시술 준비 과정까지
-                  환자가 직접 확인할 수 있도록 오픈되어 있습니다. 이는 단순한 인테리어가 아니라,
+                  환자가 직접 확인할 수 있도록 오픈되어 있으며, 이 구조는 단순한 인테리어가 아닌
                   우리의 자신감을 보여주는 방식입니다.
+                  <br /> <br />
+                  투명한 공간은 곧 정직한 태도의 반영이며, 환자가 느끼는 모든 과정 속에서 신뢰를
+                  체감하게 합니다. 공간 하나하나가 곧 페슈의원의 철학을 증명합니다.
                 </CustomerTrustParagraph>
               </CustomerTrustText>
             </CustomerTrustCard>
@@ -648,9 +653,10 @@ const Intro = () => {
             <PeopleTitle>결국, 신뢰는 사람으로 완성됩니다</PeopleTitle>
             <PeopleParagraph>
               페슈의원의 의료진과 직원들은 정직한 설명으로 환자가 올바른 선택을 할 수 있도록
-              돕습니다. 개인에게 가장 효과적인 시술을 고민하고, 전문성을 바탕으로 신중하게
-              진료합니다. 또한 진심 어린 응대와 세심한 배려 속에서도, 때로는 단호하게 신뢰의 가치를
-              지켜나갑니다.
+              돕습니다.
+              <br /> <br />
+              개인에게 가장 효과적인 시술을 고민하고, 전문성을 바탕으로 신중하게 진료합니다. 또한
+              진심 어린 응대와 세심한 배려 속에서도, 때로는 단호하게 신뢰의 가치를 지켜나갑니다.
             </PeopleParagraph>
 
             <PeopleGrid>
