@@ -1,5 +1,8 @@
-import { ShoppingCartIcon } from "@/assets/icon"
+import { ShoppingCartIcon, ChevronDownIcon } from "@/assets/icon"
 import { Button, Chip, Icon } from "@/design-system/components"
+import bannerImg from "@/assets/images/events-banner.jpg"
+import mobileBannerImg from "@/assets/images/events-mobile-banner.jpg"
+import useResponsive from "@/lib/hooks/use-responsive"
 import CartView from "@/features/product/components/cart-view.component"
 import useCart from "@/features/product/hooks/use-cart"
 import AppMaxWidth from "@/lib/components/layout/app-max-width.component"
@@ -55,37 +58,39 @@ const ProductItem = ({
       {/* Chip 영역 */}
       <div tw="flex gap-1">
         {isPop && (
-          <Chip tw="h-[24px] px-2 text-[11px] leading-[1]" color="primary">
+          <Chip tw="h-[24px] px-2 text-[13px] md:text-[15px] leading-[1] px-[4px]" color="primary">
             {t("common.pop")}
           </Chip>
         )}
         {isNew && (
-          <Chip tw="h-[24px] px-2 text-[11px] leading-[1]" color="gray">
+          <Chip tw="h-[24px] px-2 text-[13px] md:text-[15px] leading-[1] px-[4px]" color="gray">
             {t("common.new")}
           </Chip>
         )}
         {isKakao && (
-          <Chip tw="h-[24px] px-2 text-[11px] leading-[1]" color="pink">
+          <Chip tw="h-[24px] px-2 text-[13px] md:text-[15px] leading-[1] px-[4px]" color="pink">
             {t("common.kakaoFriend")}
           </Chip>
         )}
         {isBest && (
-          <Chip tw="h-[24px] px-2 text-[11px] leading-[1]" color="darkgray">
+          <Chip tw="h-[24px] px-2 text-[13px] md:text-[15px] leading-[1] px-[4px]" color="darkgray">
             {t("common.best")}
           </Chip>
         )}
       </div>
 
       {/* 제목 */}
-      <div tw="text-neutralBlack text-[18px] md:text-[22px] font-semibold">{name}</div>
+      <div tw="text-neutralBlack text-[16px] md:text-[18px] font-semibold">{name}</div>
 
       {/* 설명 */}
       <div tw="text-[13px] md:text-[14px] text-neutral70 whitespace-pre-line">{description}</div>
 
       {/* 가격 */}
       <div tw="flex items-center gap-2 mb-2">
-        {originalPrice && <div tw="line-through text-[13px] text-neutral50">{originalPrice}</div>}
-        <div tw="text-[16px] md:text-[18px] text-neutralBlack font-bold">{price}</div>
+        {originalPrice && (
+          <div tw="line-through text-[13px] sm:text-[14px] text-neutral50">{originalPrice}</div>
+        )}
+        <div tw="text-[16px] md:text-[18px] text-secondary3 font-semibold">{price}</div>
       </div>
 
       {/* 버튼 */}
@@ -109,6 +114,7 @@ const ProductDetail = () => {
   const langQuery = useLanguageQuery()
   const tv = useLanguageValue()
   const [params, setParams] = useSearchParams()
+  const { isMobile } = useResponsive()
 
   const { data: productDetail } = useProductDetailPageControllerFindOne(id ?? "", {
     query: { enabled: !!id },
@@ -186,7 +192,7 @@ const ProductDetail = () => {
       },
     })) ?? []
 
-  // 🔥 이름이 같은 이벤트는 하나만 남기기
+  // 이름이 같은 이벤트는 하나만 남기기
   const dedupedEventList = eventList.filter(
     (item, idx, self) => idx === self.findIndex((e) => e.name === item.name),
   )
@@ -225,12 +231,32 @@ const ProductDetail = () => {
           <meta name="description" content={`${subTitle}`} />
         </Helmet>
 
-        <AppMaxWidth tw="bg-neutral pt-24 lg:pt-10 pb-20 font-pretendard">
+        <div tw="w-screen overflow-hidden relative">
+          <img
+            src={isMobile ? mobileBannerImg : bannerImg}
+            alt="banner"
+            tw="w-full max-h-[310px] h-[310px] object-cover block"
+          />
+          <div
+            tw="
+              absolute top-1/2 left-1/2 
+              -translate-x-1/2 -translate-y-1/2 
+              text-center text-neutralBlack
+              min-w-[300px]
+            ">
+            <div tw="text-[39px] lg:text-[50px] font-time font-normal tracking-tight">
+              Price & Events
+            </div>
+            <div tw="text-[18px] lg:text-[22px] font-pretendard">가격 및 이벤트</div>
+          </div>
+        </div>
+
+        <AppMaxWidth tw="bg-neutral pt-12 lg:pt-20 pb-20 font-pretendard">
           <CartView isHome={false}>
             {/* 제목 카드 */}
-            <div tw="bg-white p-6 mb-8 text-center">
-              <div tw="text-neutralBlack font-semibold text-[20px] md:text-[22px]">{name}</div>
-              <div tw="text-neutral70 text-[15px] md:text-[17px] mt-4">{subTitle}</div>
+            <div tw="bg-white p-[24px] mb-4 text-center border-b-[2px] border-b-tertiaryDark">
+              <div tw="text-tertiaryDark font-semibold text-[18px] md:text-[22px]">{name}</div>
+              {/* <div tw="text-neutral70 text-[15px] md:text-[17px] mt-4">{subTitle}</div> */}
             </div>
 
             {/* 상품 리스트 */}
@@ -278,7 +304,7 @@ const ProductDetail = () => {
                     "
                     onClick={() => setShowAllProducts(true)}>
                     {t("productDetail.moreProcedures")}
-                    <span tw="text-[18px] leading-none">⌄</span> {/* 캐럿 아이콘 */}
+                    <ChevronDownIcon width={20} height={20} />
                   </button>
                 </div>
               )}
@@ -286,7 +312,7 @@ const ProductDetail = () => {
 
             {/* 비디오 영역 */}
             {productDetail.referenceUrl && (
-              <div tw="bg-white p-6 md:p-10 mt-16">
+              <div tw="bg-white p-2 md:p-6 py-6 md:py-12 mt-16">
                 {/* 시술 소개 영상 텍스트 */}
                 <div tw="text-[18px] md:text-[22px] font-semibold text-neutralBlack mb-4">
                   {t("productDetail.treatmentVideo")}
@@ -296,7 +322,7 @@ const ProductDetail = () => {
                 <div tw="border-t border-neutralBlack mb-6" />
 
                 {/* 살색 비디오 컨테이너 */}
-                <div tw="bg-tertiary p-4 md:p-8">
+                <div tw="bg-white">
                   <iframe
                     width="100%"
                     height="100%"

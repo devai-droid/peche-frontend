@@ -13,6 +13,6 @@ export const menuLinks = [
   },
   {
     name: "header.blog",
-    href: "/",
+    href: "/blog",
   },
 ]
