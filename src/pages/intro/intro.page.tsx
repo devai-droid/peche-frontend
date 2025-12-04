@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import React from "react"
 import tw, { styled } from "twin.macro"
 import Page from "@/lib/components/layout/page.component"
@@ -5,13 +6,17 @@ import KakaoMap from "@/lib/components/kakao-map/kakao-map.component"
 import GoogleMapComponent from "@/lib/components/google-map/google-map.component"
 
 // 이미지 import
-import introBg from "@/assets/images/intro-object.jpg"
 import modelImg from "@/assets/images/intro-model.jpg"
-import peche1 from "@/assets/images/peche1.jpg"
-import peche2 from "@/assets/images/peche2.jpg"
-import peche3 from "@/assets/images/peche3.jpg"
+import peche1 from "@/assets/images/peche1-expand.jpg"
+import peche2 from "@/assets/images/peche2-expand.jpg"
+import peche3 from "@/assets/images/peche3-expand.jpg"
 import peche1Mobile from "@/assets/images/peche1-mobile.jpg"
 import peche2Mobile from "@/assets/images/peche2-mobile.jpg"
+import peche3Mobile from "@/assets/images/peche3-mobile.jpg"
+import { Swiper, SwiperSlide } from "swiper/react"
+import { Pagination } from "swiper/modules"
+import "swiper/css"
+
 import beauty from "@/assets/images/beauty.png"
 import trust from "@/assets/images/trust.png"
 import transparency from "@/assets/images/transparency.png"
@@ -86,6 +91,108 @@ const TrustImage = styled.img`
 /* ──────────────────────────────
  * 3️⃣ SYMBOL × TRUST Section
  * ────────────────────────────── */
+const HoverGrid = styled.div`
+  ${tw`w-full flex overflow-hidden gap-2`}
+  height: 438px;
+  max-width: 1200px;
+
+  @media (max-width: 767px) {
+    ${tw`hidden`}
+  }
+
+  /* Hover가 아닐 때 — 기본 상태 */
+  &:not(:hover) .item-0 {
+    flex: 2;
+  }
+
+  &:not(:hover) .item-1,
+  &:not(:hover) .item-2 {
+    flex: 1;
+  }
+`
+
+const HoverItem = styled.div`
+  ${tw`relative overflow-hidden`}
+  flex: 1;
+  transition: flex 0.4s ease;
+
+  &:hover {
+    flex: 2;
+  }
+
+  img {
+    ${tw`w-full h-full object-cover`}
+    transition: transform 0.4s ease;
+  }
+
+  &:hover img {
+    transform: scale(1.05);
+  }
+
+  /* 텍스트 오버레이 */
+  .label {
+    ${tw`absolute bottom-6 left-6 text-[#C17A5A] opacity-0 transition-opacity duration-300`}
+  }
+
+  &:hover .label {
+    opacity: 1;
+  }
+`
+
+const mobileImages = [
+  { src: peche1Mobile, title: "Pêche", desc: "생기있는 코랄빛" },
+  { src: peche2Mobile, title: "Pêche", desc: "영원한 젊음" },
+  { src: peche3Mobile, title: "Pêche", desc: "밝고 부드러운 속살" },
+]
+
+const MobileSwiperWrapper = styled.div`
+  ${tw`w-full block md:hidden`}
+`
+
+const StyledSwiperSlide = styled(SwiperSlide)`
+  width: 240px !important;
+  display: flex;
+  justify-content: center;
+`
+
+const MobileSlide = styled.div`
+  ${tw`relative w-full flex justify-center items-center tracking-tight leading-[150%]`}
+
+  /* 이미지 컨테이너 */
+  .img-wrapper {
+    position: relative;
+    width: 240px;
+    height: auto;
+  }
+
+  img {
+    width: 240px;
+    height: auto;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* 🔥 이미지 위 오버레이 텍스트 */
+  .label {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    text-align: right;
+    color: #da7f67;
+  }
+
+  .label p:first-child {
+    font-size: 24px;
+    font-weight: 400;
+  }
+
+  .label p:last-child {
+    font-size: 16px;
+    font-weight: 500;
+    margin-top: 8px;
+  }
+`
+
 const SectionSymbolTrust = tw.section`
   w-full bg-[#FFF7EE] py-20 md:py-24
 `
@@ -101,37 +208,6 @@ const SymbolSubTitle = tw.h2`
 `
 const SymbolDesc = tw.p`
   text-center text-neutral70 text-[14px] md:text-[16px] leading-[1.5] mb-10 max-w-[700px] tracking-tight
-`
-
-// ✅ 이미지 그리드 수정됨
-const ImageGrid = styled.div`
-  ${tw`flex justify-center items-center gap-4 w-full overflow-hidden`}
-  flex-wrap: nowrap; /* ✅ 줄바꿈 방지 */
-  @media (max-width: 767px) {
-    ${tw`grid grid-cols-2 gap-2`}
-    flex-wrap: initial;
-  }
-`
-
-// ✅ 개별 이미지
-const SymbolImage = styled.img<{ index?: number }>`
-  ${tw`object-cover`}
-  height: 438px;
-  flex-shrink: 0; /* ✅ 줄바꿈 방지 핵심 */
-
-  @media (min-width: 1024px) {
-    ${({ index }) => (index === 0 ? tw`w-[584px]` : tw`w-[300px]`)}
-  }
-
-  @media (min-width: 768px) and (max-width: 1023px) {
-    /* ✅ 태블릿 구간: 비율 맞추기 */
-    ${({ index }) => (index === 0 ? tw`w-[45%]` : tw`w-[27%]`)}
-    height: auto;
-  }
-
-  @media (max-width: 767px) {
-    ${tw`w-full h-auto`}
-  }
 `
 
 /* Core Value */
@@ -163,11 +239,6 @@ const InteriorTextWrapper = tw.div`
   w-full max-w-[1440px] mx-auto px-6 md:px-10
 `
 
-const InteriorBottomTextWrapper = tw.div`
-  flex flex-col
-  md:w-[48%]
-`
-
 const FullWidthImageWrapper = tw.div`
   w-full
 `
@@ -176,12 +247,7 @@ const InteriorImageContainer = tw.div`
   max-w-[1440px] mx-auto w-full px-0
 `
 
-const InteriorInner = tw.div`
-  max-w-[1440px] mx-auto px-6 md:px-10
-  flex flex-col items-center
-`
-
-// 🧡 텍스트 블록
+// 텍스트 블록
 const InteriorLabel = tw.h3`
   text-primary text-[18px] md:text-[22px] tracking-tight mb-3 font-medium self-start leading-[1.5]
 `
@@ -200,7 +266,7 @@ const TopImageRow = styled.div`
 
   img {
     ${tw`w-full object-cover`}
-    height: 351px; /* ✅ 최대 높이 고정 */
+    height: 351px;
   }
 
   @media (max-width: 767px) {
@@ -426,10 +492,6 @@ const Intro = () => {
     return () => window.removeEventListener("resize", handleResize)
   }, [])
 
-  const topImages = isMobile
-    ? [peche1Mobile, peche2Mobile] // ✅ 모바일에서는 2장만 표시
-    : [peche1, peche2, peche3] // ✅ 데스크탑에서는 3장
-
   const people = [person1, person2, person3, person4, person5, person6, person7, person8]
 
   return (
@@ -477,11 +539,49 @@ const Intro = () => {
               <br />이 의미는 브랜드 심볼로 이어지고 그 안에 페슈의원의 철학을 담았습니다.
             </SymbolDesc>
 
-            <ImageGrid>
-              {topImages.map((img, i) => (
-                <SymbolImage key={i} src={img} index={i} alt={`pêche ${i + 1}`} />
-              ))}
-            </ImageGrid>
+            <HoverGrid>
+              <HoverItem className="item-0">
+                <img src={peche1} alt="peche" />
+              </HoverItem>
+
+              <HoverItem className="item-1">
+                <img src={peche2} alt="model" />
+              </HoverItem>
+
+              <HoverItem className="item-2">
+                <img src={peche3} alt="texture" />
+              </HoverItem>
+            </HoverGrid>
+
+            <MobileSwiperWrapper>
+              <Swiper
+                modules={[Pagination]}
+                pagination={{ clickable: true }}
+                spaceBetween={5}
+                slidesPerView="auto"
+                onReachEnd={(swiper) => {
+                  swiper.allowSlideNext = false
+                }}
+                onFromEdge={(swiper) => {
+                  swiper.allowSlideNext = true
+                  swiper.allowSlidePrev = true
+                }}>
+                {mobileImages.map((img, i) => (
+                  <StyledSwiperSlide key={i}>
+                    <MobileSlide>
+                      <div className="img-wrapper">
+                        <img src={img.src} alt={`mobile-peche-${i}`} />
+
+                        <div className="label">
+                          <p tw="font-time">{img.title}</p>
+                          <p>{img.desc}</p>
+                        </div>
+                      </div>
+                    </MobileSlide>
+                  </StyledSwiperSlide>
+                ))}
+              </Swiper>
+            </MobileSwiperWrapper>
 
             {/* Core Value */}
             <CoreValueContainer>
