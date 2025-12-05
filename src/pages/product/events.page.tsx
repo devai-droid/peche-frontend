@@ -111,7 +111,13 @@ const Event = ({
       </div>
 
       {/* 버튼 영역 — 절대 위치 제거하고 자연스럽게 아래 배치 */}
-      <div tw="flex justify-end gap-3 md:-mt-10 -mt-2">
+      <div
+        tw="flex justify-end gap-3 -mt-[43px]"
+        css={`
+          @media (max-width: 395px) {
+            margin-top: -0.5rem; /* -mt-2 */
+          }
+        `}>
         <LinkButton style={{ variant: "outlined", size: "sm" }} to={`/products/${id}`}>
           {t("products.detail")}
         </LinkButton>
@@ -218,14 +224,6 @@ const Events = () => {
     })
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleBundle = (id: string) => {
-    setParams((prev) => {
-      prev.set("bundle", id.toString())
-      return prev
-    })
-  }
-
   useLayoutEffect(() => {
     if (
       visibleEvents?.length &&
@@ -258,6 +256,10 @@ const Events = () => {
     endDate: string | Date
     imageUrl: string
   }
+  interface NoPictureBannerProps {
+    name: string
+    description: string
+  }
   const selectedCategory = categories?.items?.find((c) => c.id === selectedCategoryId)
 
   // visibleEvents에 선택된 번들의 날짜 정보가 있음
@@ -288,6 +290,17 @@ const Events = () => {
     )
   }
 
+  const NoPictureCategoryBanner = ({ name, description }: NoPictureBannerProps) => {
+    return (
+      <div tw="w-full mb-6 px-4 md:px-0 font-pretendard tracking-tight leading-[150%]">
+        <div tw="bg-white px-4 py-4 md:py-6 md:px-4 border-b-[2px] border-b-secondary3">
+          <div tw="text-[18px] md:text-[22px] font-semibold text-neutralBlack mb-2">{name}</div>
+          <div tw="text-[16px] md:text-[18px] text-neutral70">{description}</div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <Page hiddenFooter={false} bottomCartExists>
       <div tw="w-screen overflow-hidden relative">
@@ -311,13 +324,10 @@ const Events = () => {
       </div>
 
       <div tw="bg-neutral min-h-screen pt-[1px] tracking-tight leading-[150%]">
-        <AppMaxWidth tw="max-lg:p-0">
+        <AppMaxWidth tw="max-lg:px-0 max-lg:pt-0 max-lg:pb-20 pb-32">
           <div tw="flex justify-center mt-8 lg:mt-16 mb-4 lg:mb-12 max-lg:p-4">
             <div tw="grid justify-center bg-neutral30 gap-px p-px grid-cols-3 lg:grid-cols-5 w-full">
               {categories?.items?.map((category, index) => {
-                // name 이 없으면 아예 셀을 렌더링하지 않음
-                if (!tv(category, "name")) return null
-
                 const isSelected = selectedCategoryId === category.id
                 // 모바일/데스크탑 구분
                 const isFirstRow = (isMobile && index < 6) || (!isMobile && index < 6)
@@ -343,24 +353,23 @@ const Events = () => {
                 )
               })}
               <div
-                tw="max-lg:hidden"
-                css={[
-                  item,
-                  {
-                    gridColumn: colSpan(5 - (categories.items.length % 5)),
-                    display: categories.items.length % 5 === 0 ? "none" : "block",
-                  },
-                ]}
+                tw="max-lg:hidden bg-[#f4f4f4]"
+                css={{
+                  gridColumn: colSpan(5 - (categories.items.length % 5)),
+                  display: categories.items.length % 5 === 0 ? "none" : "block",
+                  marginBottom: "-1px",
+                  marginRight: "-1px",
+                }}
               />
+
               <div
-                tw="lg:hidden"
-                css={[
-                  item,
-                  {
-                    gridColumn: colSpan(3 - (categories.items.length % 3)),
-                    display: categories.items.length % 3 === 0 ? "none" : "block",
-                  },
-                ]}
+                tw="lg:hidden bg-[#f4f4f4]"
+                css={{
+                  gridColumn: colSpan(3 - (categories.items.length % 3)),
+                  display: categories.items.length % 3 === 0 ? "none" : "block",
+                  marginBottom: "-1px",
+                  marginRight: "-1px",
+                }}
               />
             </div>
           </div>
@@ -371,6 +380,12 @@ const Events = () => {
                 startDate={selectedBundle.startDate}
                 endDate={selectedBundle.endDate}
                 imageUrl={selectedCategory.image.url}
+              />
+            )}
+            {selectedCategory?.description && !selectedCategory.image?.url && selectedBundle && (
+              <NoPictureCategoryBanner
+                name={tv(selectedCategory, "name")}
+                description={tv(selectedCategory, "description")}
               />
             )}
 
@@ -418,25 +433,25 @@ const Events = () => {
         open={showInquiryModal}
         width="max-w-[400px]"
         onClose={() => setShowInquiryModal(false)}>
-        <div tw="flex flex-col items-center justify-center h-full">
-          <div tw="text-center text-[16px] lg:text-[18px] font-semibold leading-snug">
+        <div tw="flex flex-col items-start justify-center h-full">
+          <div tw="text-left text-[16px] lg:text-[18px] font-semibold leading-snug">
             방문 상담이 담겨있는 상태에서는 시술 선택이 어렵습니다.
           </div>
 
-          <div tw="text-neutral70 text-[14px] lg:text-[16px] text-center mt-3">
+          <div tw="text-neutral70 text-[14px] lg:text-[16px] text-left mt-3">
             방문 상담을 비운 후 시술을 담아주세요.
           </div>
 
-          <div tw="flex justify-end gap-2 mt-8">
+          <div tw="flex w-full gap-2 mt-8">
             <Button
-              tw="min-w-[8rem]"
+              tw="w-[150px]"
               style={{ variant: "outlined", color: "point", size: "sm" }}
               onClick={() => setShowInquiryModal(false)}>
               취소하기
             </Button>
 
             <Button
-              tw="min-w-[8rem]"
+              tw="w-[150px]"
               style={{ variant: "filled", color: "point", size: "sm" }}
               onClick={() => {
                 setInquiry(false)

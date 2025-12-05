@@ -94,7 +94,7 @@ const ProductItem = ({
       </div>
 
       {/* 버튼 */}
-      <div tw="flex justify-end gap-3 md:-mt-10 -mt-2">
+      <div tw="flex justify-end gap-3 -mt-10">
         <Button
           onClick={addToCart}
           tw="flex items-center justify-center gap-1"
@@ -254,8 +254,8 @@ const ProductDetail = () => {
         <AppMaxWidth tw="bg-neutral pt-12 lg:pt-20 pb-20 font-pretendard">
           <CartView isHome={false}>
             {/* 제목 카드 */}
-            <div tw="bg-white p-[24px] mb-4 text-center border-b-[2px] border-b-tertiaryDark">
-              <div tw="text-tertiaryDark font-semibold text-[18px] md:text-[22px]">{name}</div>
+            <div tw="bg-white p-[24px] mb-4 text-center border-b-[2px] border-b-secondary3">
+              <div tw="text-secondary3 font-semibold text-[18px] md:text-[22px]">{name}</div>
               {/* <div tw="text-neutral70 text-[15px] md:text-[17px] mt-4">{subTitle}</div> */}
             </div>
 
@@ -312,9 +312,9 @@ const ProductDetail = () => {
 
             {/* 비디오 영역 */}
             {productDetail.referenceUrl && (
-              <div tw="bg-white p-2 md:p-6 py-6 md:py-12 mt-16">
+              <div tw="bg-white p-[8px] md:p-[16px] py-6 md:py-12 mt-16">
                 {/* 시술 소개 영상 텍스트 */}
-                <div tw="text-[18px] md:text-[22px] font-semibold text-neutralBlack mb-4">
+                <div tw="text-[18px] md:text-[22px] font-semibold text-neutralBlack mb-[8px] md:mb-[16px]">
                   {t("productDetail.treatmentVideo")}
                 </div>
 
@@ -346,26 +346,29 @@ const ProductDetail = () => {
           </CartView>
         </AppMaxWidth>
       </div>
-      <Modal open={showInquiryModal} onClose={() => setShowInquiryModal(false)}>
-        <div tw="flex flex-col items-center justify-center h-full">
-          <div tw="text-center text-[16px] lg:text-[18px] font-semibold leading-snug">
+      <Modal
+        open={showInquiryModal}
+        width="max-w-[400px]"
+        onClose={() => setShowInquiryModal(false)}>
+        <div tw="flex flex-col items-start justify-center h-full">
+          <div tw="text-left text-[16px] lg:text-[18px] font-semibold leading-snug">
             방문 상담이 담겨있는 상태에서는 시술 선택이 어렵습니다.
           </div>
 
-          <div tw="text-neutral70 text-[14px] lg:text-[16px] text-center mt-3">
+          <div tw="text-neutral70 text-[14px] lg:text-[16px] text-left mt-3">
             방문 상담을 비운 후 시술을 담아주세요.
           </div>
 
           <div tw="flex justify-end gap-2 mt-8">
             <Button
-              tw="min-w-[8rem]"
+              tw="w-[150px]"
               style={{ variant: "outlined", color: "point", size: "sm" }}
               onClick={() => setShowInquiryModal(false)}>
               취소하기
             </Button>
 
             <Button
-              tw="min-w-[8rem]"
+              tw="w-[150px]"
               style={{ variant: "filled", color: "point", size: "sm" }}
               onClick={() => {
                 setInquiry(false)

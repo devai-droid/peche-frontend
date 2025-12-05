@@ -253,19 +253,22 @@ const SurgeryList = ({
       </div>
 
       {/* 모달 (cart와 완전 동일) */}
-      <Modal open={showInquiryModal} title="안내" onClose={() => setShowInquiryModal(false)}>
-        <div tw="flex flex-col items-center justify-center h-full font-pretendard">
-          <div tw="text-center text-[16px] font-semibold leading-snug">
+      <Modal
+        open={showInquiryModal}
+        width="max-w-[400px]"
+        onClose={() => setShowInquiryModal(false)}>
+        <div tw="flex flex-col items-start justify-center h-full font-pretendard">
+          <div tw="text-left text-[16px] font-semibold leading-snug">
             시술이 담겨있는 상태에서는 방문 상담 선택이 어렵습니다.
           </div>
 
-          <div tw="text-neutral70 text-center mt-3">
+          <div tw="text-neutral70 text-left mt-3">
             선택한 시술을 모두 비운 후 상담을 예약해주세요.
           </div>
 
           <div tw="flex justify-end gap-2 mt-8">
             <Button
-              tw="min-w-[8rem]"
+              tw="w-[150px]"
               style={{ variant: "outlined", color: "point", size: "lg" }}
               onClick={() => {
                 setInquiryChecked(false) // UI 상태 끄기
@@ -276,7 +279,7 @@ const SurgeryList = ({
             </Button>
 
             <Button
-              tw="min-w-[8rem]"
+              tw="w-[150px]"
               style={{ variant: "filled", color: "point", size: "lg" }}
               onClick={() => {
                 resetCart() // 🔥 모든 시술 비우기

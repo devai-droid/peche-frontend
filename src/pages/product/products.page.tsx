@@ -166,24 +166,23 @@ const Products = () => {
                 </button>
               ))}
               <div
-                tw="max-lg:hidden"
-                css={[
-                  item,
-                  {
-                    gridColumn: colSpan(5 - (categories.items.length % 5)),
-                    display: categories.items.length % 5 === 0 ? "none" : "block",
-                  },
-                ]}
+                tw="max-lg:hidden bg-[#f4f4f4]"
+                css={{
+                  gridColumn: colSpan(5 - (categories.items.length % 5)),
+                  display: categories.items.length % 5 === 0 ? "none" : "block",
+                  marginBottom: "-1px",
+                  marginRight: "-1px",
+                }}
               />
+
               <div
-                tw="lg:hidden"
-                css={[
-                  item,
-                  {
-                    gridColumn: colSpan(3 - (categories.items.length % 3)),
-                    display: categories.items.length % 3 === 0 ? "none" : "block",
-                  },
-                ]}
+                tw="lg:hidden bg-[#f4f4f4]"
+                css={{
+                  gridColumn: colSpan(3 - (categories.items.length % 3)),
+                  display: categories.items.length % 3 === 0 ? "none" : "block",
+                  marginBottom: "-1px",
+                  marginRight: "-1px",
+                }}
               />
             </div>
           </div>

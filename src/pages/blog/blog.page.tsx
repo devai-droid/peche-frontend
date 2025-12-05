@@ -28,9 +28,9 @@ const Blog = () => {
         </div>
       </div>
 
-      <div tw="bg-white min-h-screen pt-[1px] font-pretendard tracking-tight leading-[150%]">
+      <div tw="bg-white min-h-screen font-pretendard tracking-tight leading-[150%]">
         <AppMaxWidth tw="max-lg:p-0">
-          <div tw="flex justify-center mt-8 lg:mt-20 mb-4 lg:mb-8 max-lg:p-4 text-[24px] lg:text-[30px]">
+          <div tw="flex justify-center mt-[64px] lg:mt-[160px] mb-4 lg:mb-8 max-lg:p-4 text-[24px] lg:text-[30px]">
             서비스 준비 중입니다.
           </div>
         </AppMaxWidth>

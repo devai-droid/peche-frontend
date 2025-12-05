@@ -154,7 +154,7 @@ const SurgeryList = () => {
   return (
     <>
       <div tw="pl-5 pr-4 py-6 bg-white font-pretendard tracking-tight leading-[150%]">
-        <div tw="flex justify-between items-center pb-4 border-b border-b-[0.5px] border-neutral50">
+        <div tw="flex justify-between items-center pb-4 border-b border-b-[0.5px] border-neutral30">
           <div tw="font-bold text-[18px] md:text-[22px] flex items-center gap-1">
             장바구니
             <span tw="text-primary text-[16px] md:text-[18px] font-semibold">
@@ -192,7 +192,7 @@ const SurgeryList = () => {
               updateCartItem={updateCartItem}
             />
           ))}
-          {/* 🔥 장바구니 비어있을 때 보여줄 메시지 */}
+          {/* 장바구니 비어있을 때 보여줄 메시지 */}
           {cart.length === 0 && !inquiryChecked && (
             <div tw="py-6 text-neutral50 text-[14px] md:text-[16px]">선택한 시술이 없습니다.</div>
           )}
@@ -282,19 +282,22 @@ const SurgeryList = () => {
         {t("productDetail.reserveDescription")}
       </div>
 
-      <Modal open={showInquiryModal} onClose={() => setShowInquiryModal(false)}>
-        <div tw="flex flex-col items-center justify-center h-full font-pretendard">
-          <div tw="text-center text-[16px] lg:text-[18px] font-semibold leading-snug">
+      <Modal
+        open={showInquiryModal}
+        width="max-w-[400px]"
+        onClose={() => setShowInquiryModal(false)}>
+        <div tw="flex flex-col items-start justify-center h-full font-pretendard">
+          <div tw="text-left text-[16px] lg:text-[18px] font-semibold leading-snug">
             시술이 담겨있는 상태에서는 방문 상담 선택이 어렵습니다.
           </div>
 
-          <div tw="text-neutral70 text-[14px] lg:text-[16px] text-center mt-3">
+          <div tw="text-neutral70 text-[14px] lg:text-[16px] text-left mt-3">
             선택한 시술을 모두 비운 후 상담을 예약해주세요.
           </div>
 
           <div tw="flex justify-end gap-2 mt-8">
             <Button
-              tw="min-w-[8rem]"
+              tw="w-[150px]"
               style={{ variant: "outlined", color: "point", size: "sm" }}
               onClick={() => {
                 setInquiryChecked(false) // 🔥 체크박스 끄기
@@ -306,7 +309,7 @@ const SurgeryList = () => {
             </Button>
 
             <Button
-              tw="min-w-[8rem]"
+              tw="w-[150px]"
               style={{ variant: "filled", color: "point", size: "sm" }}
               onClick={() => {
                 resetCart() // 장바구니 비우기
@@ -516,18 +519,18 @@ const BottomSheet = () => {
         open={showInquiryModal}
         width="max-w-[400px]"
         onClose={() => setShowInquiryModal(false)}>
-        <div tw="flex flex-col items-center justify-center h-full font-pretendard">
+        <div tw="flex flex-col items-start justify-center h-full font-pretendard">
           <div tw="text-left text-[16px] md:text-[18px] font-semibold leading-snug">
             시술이 담겨있는 상태에서는 방문 상담 선택이 어렵습니다.
           </div>
 
-          <div tw="text-neutral70 text-left text-[14px] md:text-[16px] mt-3 w-full">
+          <div tw="text-left text-neutral70 text-left text-[14px] md:text-[16px] mt-3 w-full">
             선택한 시술을 모두 비운 후 상담을 예약해주세요.
           </div>
 
           <div tw="flex justify-end gap-2 mt-4 md:mt-8">
             <Button
-              tw="min-w-[8rem]"
+              tw="w-[150px]"
               style={{ variant: "outlined", color: "point", size: "sm" }}
               onClick={() => {
                 setInquiryChecked(false)
@@ -538,7 +541,7 @@ const BottomSheet = () => {
             </Button>
 
             <Button
-              tw="min-w-[8rem]"
+              tw="w-[150px]"
               style={{ variant: "filled", color: "point", size: "sm" }}
               onClick={() => {
                 removeFromCart(checkedList) // 기존 상품 삭제
