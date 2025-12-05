@@ -30,7 +30,7 @@ const TitleBox = tw.div`
 `
 
 const NewBadge = tw.span`
-  bg-primary text-white text-[10px] md:text-[12px] px-2
+  bg-primary text-white text-[15px] md:text-[17px] px-[4px]
 `
 
 const Title = tw.h2`
@@ -38,7 +38,7 @@ const Title = tw.h2`
 `
 
 const MoreButton = tw.button`
-  border border-primary text-primary text-[13px] md:text-[15px] px-2 py-2 hover:bg-primary hover:text-white transition
+  border border-primary text-primary text-[13px] md:text-[15px] px-[8px] md:px-[24px] py-2 hover:bg-primary hover:text-white transition
 `
 
 const StyledSwiperWrapper = styled.div`
@@ -89,7 +89,7 @@ const Card = styled.div`
 `
 
 const ImageBox = styled.div`
-  ${tw`rounded overflow-hidden mb-2 bg-gray-100`}
+  ${tw`overflow-hidden mb-2 bg-gray-100`}
   width: 212px;
   height: 212px;
   @media (min-width: 768px) {

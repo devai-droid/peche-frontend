@@ -121,7 +121,7 @@
     "vatNotIncluded": "*부가세 10% 별도"
   },
   "button": {
-    "reserve": "시술 예약하기",
+    "reserve": "예약하기",
     "deleteSelection": "선택삭제",
     "deleteAll": "전체삭제",
     "selectAll": "전체선택",

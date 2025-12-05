@@ -288,11 +288,8 @@ const Events = () => {
     )
   }
 
-  // 날짜 포맷
-  const formatDate = (d?: string) => (d ? dayjs(d).format("YYYY.MM.DD") : "")
-
   return (
-    <Page hiddenFooter={false}>
+    <Page hiddenFooter={false} bottomCartExists>
       <div tw="w-screen overflow-hidden relative">
         <img
           src={isMobile ? mobileBannerImg : bannerImg}
@@ -315,17 +312,15 @@ const Events = () => {
 
       <div tw="bg-neutral min-h-screen pt-[1px] tracking-tight leading-[150%]">
         <AppMaxWidth tw="max-lg:p-0">
-          {/* <div tw="max-lg:hidden">
-              <img src={isMobile ? mobileBannerImg : bannerImg} alt="banner" tw="w-full" />
-            </div> */}
-
           <div tw="flex justify-center mt-8 lg:mt-16 mb-4 lg:mb-12 max-lg:p-4">
             <div tw="grid justify-center bg-neutral30 gap-px p-px grid-cols-3 lg:grid-cols-5 w-full">
               {categories?.items?.map((category, index) => {
-                const isSelected = selectedCategoryId === category.id
+                // name 이 없으면 아예 셀을 렌더링하지 않음
+                if (!tv(category, "name")) return null
 
+                const isSelected = selectedCategoryId === category.id
                 // 모바일/데스크탑 구분
-                const isFirstRow = (isMobile && index < 5) || (!isMobile && index < 5)
+                const isFirstRow = (isMobile && index < 6) || (!isMobile && index < 6)
 
                 return (
                   <button
@@ -333,10 +328,8 @@ const Events = () => {
                     onClick={() => handleCategory(category.id)}
                     css={[
                       item,
-
                       // 선택된 버튼 스타일 (공통)
                       isSelected && tw`bg-[#DA7F67] text-white`,
-
                       // 비선택 버튼: 첫줄 / 아니면 구분
                       !isSelected &&
                         (isFirstRow

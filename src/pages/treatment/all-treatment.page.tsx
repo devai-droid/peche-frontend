@@ -40,7 +40,7 @@ const AllTreatmentPage = () => {
   }, [type])
 
   return (
-    <Page hiddenFooter={false}>
+    <Page hiddenFooter={false} bottomCartExists={false}>
       <AppMaxWidth tw="max-lg:p-0">
         <PageWrapper>
           <Title>{selected?.name}</Title>

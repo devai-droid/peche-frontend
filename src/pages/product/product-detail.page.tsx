@@ -224,7 +224,7 @@ const ProductDetail = () => {
   const lastNormalIndex = normalProducts.length - 1
 
   return (
-    <Page hiddenFooter={false} tw="bg-neutral">
+    <Page hiddenFooter={false} bottomCartExists tw="bg-neutral">
       <div tw="bg-neutral min-h-screen">
         <Helmet>
           <title>{name} | 페슈의원</title>

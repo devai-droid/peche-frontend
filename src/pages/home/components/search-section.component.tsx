@@ -51,7 +51,7 @@ const Title = styled.h2`
 const SearchBar = styled.div`
   ${tw`
     flex items-center w-full bg-white border-b border-neutral20
-    rounded-none px-3 md:px-4 py-2 md:py-3 mb-3 md:mb-4 shadow-sm
+    rounded-none px-3 md:px-4 py-2 md:py-3 mb-3 md:mb-4 shadow-sm h-[50px]
   `}
   max-width: 500px;
 `
@@ -71,11 +71,11 @@ const SearchIcon = styled(SearchPrimaryIcon)`
 `
 
 const SuggestBox = tw.div`
-  flex flex-wrap gap-2 md:gap-3 text-[14px] md:text-[16px] text-neutral70
+  flex flex-wrap gap-2 md:gap-3 text-[13px] md:text-[14px] text-neutral70
 `
 
 const SuggestTitle = tw.span`
-  font-semibold text-black
+  font-semibold text-neutralBlack 
 `
 
 const SuggestKeyword = styled.span`

@@ -31,11 +31,11 @@ const Divider = tw.hr`
 `
 
 const PolicyLinks = tw.div`
-  flex gap-3 justify-start md:justify-start text-neutral50
+  flex gap-2 justify-start md:justify-start text-neutral50
 `
 
 const SNSIcons = tw.div`
-  flex gap-4 justify-start md:justify-end items-center text-neutral50
+  flex gap-[7px] justify-start md:justify-end items-center text-neutral50
 `
 
 const BottomRow = tw.div`
@@ -45,8 +45,15 @@ const BottomRow = tw.div`
 const IconLink = styled.a`
   ${tw`hover:opacity-60 transition flex items-center`}
 `
+const Spacer = styled.div`
+  ${tw`block lg:hidden`}
+`
 
-const Footer = () => {
+interface FooterProps {
+  bottomCartExists?: boolean
+}
+
+const Footer = ({ bottomCartExists = false }: FooterProps) => {
   const socialLinks = [
     { icon: NaverPlaceGrayIcon, url: "https://blog.naver.com/" },
     { icon: NaverBlogGrayIcon, url: "https://blog.naver.com/" },
@@ -84,12 +91,14 @@ const Footer = () => {
           <SNSIcons>
             {socialLinks.map(({ icon: IconComponent, url }, i) => (
               <IconLink key={i} href={url} target="_blank" rel="noopener noreferrer">
-                <IconComponent tw="w-5 h-5" />
+                <IconComponent tw="w-[24px] h-[24px]" />
               </IconLink>
             ))}
           </SNSIcons>
         </BottomRow>
       </FooterInner>
+      {/* 상담받기 버튼/카트 유무에 따라 height 조정 */}
+      <Spacer className={bottomCartExists ? "h-[90px]" : "h-[40px]"} />
     </FooterWrapper>
   )
 }

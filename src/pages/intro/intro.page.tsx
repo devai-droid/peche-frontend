@@ -495,7 +495,7 @@ const Intro = () => {
   const people = [person1, person2, person3, person4, person5, person6, person7, person8]
 
   return (
-    <Page hiddenFooter={false}>
+    <Page hiddenFooter={false} bottomCartExists={false}>
       <PageContainer>
         {/* 2️⃣ TRUST Section */}
         <SectionTrust>
@@ -747,7 +747,7 @@ const Intro = () => {
             </CustomerTrustCard>
           </CustomerTrustInner>
         </SectionCustomerTrust>
-        <PeopleSection>
+        {/* <PeopleSection>
           <PeopleInner>
             <PeopleTag>PEOPLE × TRUST</PeopleTag>
             <PeopleTitle>결국, 신뢰는 사람으로 완성됩니다</PeopleTitle>
@@ -767,7 +767,7 @@ const Intro = () => {
               ))}
             </PeopleGrid>
           </PeopleInner>
-        </PeopleSection>
+        </PeopleSection> */}
         <MapSection>
           <MapInner>
             {/* Left side */}

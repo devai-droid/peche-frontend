@@ -10,7 +10,7 @@ const Blog = () => {
   const { isMobile } = useResponsive()
 
   return (
-    <Page hiddenFooter={false}>
+    <Page hiddenFooter={false} bottomCartExists={false}>
       <div tw="w-screen overflow-hidden relative">
         <img
           src={isMobile ? mobileBannerImg : bannerImg}

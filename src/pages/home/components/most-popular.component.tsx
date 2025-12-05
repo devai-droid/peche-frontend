@@ -25,7 +25,7 @@ const Header = tw.div`
 `
 
 const BestBadge = tw.span`
-  bg-primary text-white text-[10px] md:text-[12px] px-2
+  bg-primary text-white text-[15px] md:text-[17px] px-[4px]
 `
 
 const Title = tw.h2`
@@ -87,18 +87,7 @@ const StyledSwiperWrapper = styled.div`
 `
 
 const StyledSwiperSlide = styled(SwiperSlide)`
-  width: 296px !important;
-`
-
-const ImageCard = styled.div`
-  ${tw`relative overflow-hidden bg-gray-100 cursor-pointer`}
-  width: 296px;
-  height: 296px;
-  margin: 0 auto;
-
-  img {
-    ${tw`w-full h-full object-cover`}
-  }
+  width: 321px !important;
 `
 
 const CardLabel = styled.div`
@@ -124,12 +113,17 @@ const MostPopular = () => {
 
   const ImageCardLink = styled(CustomLink)`
     ${tw`relative overflow-hidden bg-gray-100 cursor-pointer`}
-    width: 296px;
-    height: 296px;
+    width: 321px;
+    height: 321px;
     margin: 0 auto;
 
     img {
-      ${tw`w-full h-full object-cover`}
+      ${tw`w-full h-full object-cover transition-transform duration-500`}
+      transform: scale(1);
+    }
+
+    &:hover img {
+      transform: scale(1.5); /* 🔥 150% 확대 */
     }
   `
 

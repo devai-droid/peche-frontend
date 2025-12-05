@@ -75,17 +75,19 @@ const EventModal = ({ popup, onClose, isOpen, style, highestZIndexModalId }: Eve
   return (
     <div style={style} tw="fixed bg-black bg-opacity-30 z-[1200] max-md:inset-0">
       <div tw="absolute-center z-[1200] px-4" css={tw`fixed`} ref={modalRef}>
-        <div tw="drop-shadow-[0px_4px_24px_rgba(0,0,0,0.25)] bg-white w-[35rem] max-w-[calc(100vw-2rem)]">
-          <header tw="text-right px-4 py-2">
+        <div tw="drop-shadow-[0px_4px_24px_rgba(0,0,0,0.25)] bg-white w-[400px] max-w-[400px]">
+          <div tw="relative w-full aspect-[400/467] bg-[#d9d9d9] max-h-[467px] max-w-[400px] mx-auto">
+            {/* X 버튼을 이미지 위에 올림 */}
             <IconButton
               icon={CloseIcon}
+              tw="absolute top-2 right-2 z-10"
               css={{ "& g": { strokeWidth: 1 } }}
               onClick={handleClose}
             />
-          </header>
-          <div tw="w-full aspect-[6/7] bg-[#d9d9d9] max-h-[700px] max-w-[600px] mx-auto">
+
             <img src={imageUrl} alt="팝업 이미지" tw="w-full h-full object-cover" />
           </div>
+
           <footer tw="px-4 py-2 flex items-center">
             <Checkbox
               checked={checked}

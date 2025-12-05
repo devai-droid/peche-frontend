@@ -24,7 +24,7 @@ const ModalOuter = tw.div`
 
 // 내부 박스 (화이트 영역)
 const ModalInner = tw.div`
-  bg-white w-full rounded-none py-6 md:py-10 px-6 md:px-10 md:min-h-[400px] min-h-[250px]
+  bg-white w-full rounded-none py-2 px-[24px] md:px-10 md:min-h-[400px] min-h-[250px]
 `
 
 const HeaderArea = tw.div`
@@ -41,7 +41,7 @@ const Title = styled.h2`
 // 검색 UI
 const SearchBar = tw.div`
   flex items-center bg-white border-b-[1.6px] border-neutral20
-  rounded-none px-4 py-3 shadow-sm max-w-[600px] sm:mx-auto mb-4 mx-[15px]
+  rounded-none px-4 py-3 shadow-sm max-w-[600px] sm:mx-auto mb-4 mx-[24px]
 `
 
 const Input = tw.input`
@@ -51,18 +51,17 @@ const Input = tw.input`
 // 추천 검색어
 const SuggestBox = tw.div`
   flex flex-wrap gap-3 text-[14px] md:text-[16px] text-neutral70
-  max-w-[600px] sm:mx-auto mx-[15px]
+  max-w-[600px] sm:mx-auto mx-[24px]
   mb-6
 `
 
-const SuggestTitle = tw.span`font-semibold text-black mr-2`
+const SuggestTitle = tw.span`font-semibold text-neutralBlack mr-2`
 const SuggestKeyword = tw.span`cursor-pointer hover:text-primary transition`
 
 // 검색 결과
 const ResultContainer = tw.div`
   max-w-[900px] mx-auto bg-white
-  border-t border-gray-200
-  px-4 md:px-6 py-6
+  px-0 pt-0 pb-6
 `
 
 const ProductCard = tw.div`
@@ -74,7 +73,7 @@ const ProductTitle = tw.div`
 `
 
 const ProductDesc = tw.div`
-  text-[14px] text-neutral60 leading-[140%]
+  text-[14px] text-neutral70 leading-[140%]
 `
 
 const NoResult = tw.div`
@@ -134,8 +133,6 @@ const SearchModal = ({ open, onClose }: Props) => {
             <IconButton icon={CloseIcon} onClick={onClose} />
           </HeaderArea>
 
-          {/* 🔥 상단 부분은 #FEF5EA 영역 */}
-
           <Title>
             어떤 <span>시술</span>이 궁금하신가요?
           </Title>
@@ -158,7 +155,7 @@ const SearchModal = ({ open, onClose }: Props) => {
             ))}
           </SuggestBox>
 
-          {/* 🔥 아래는 흰색 검색결과 영역 */}
+          {/* 아래는 흰색 검색결과 영역 */}
           <ModalInner>
             <ResultContainer>
               {delayedSearchTerm && searchResults && (

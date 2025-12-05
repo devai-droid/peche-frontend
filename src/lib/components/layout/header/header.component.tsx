@@ -59,7 +59,7 @@ const LeftMenu = ({ isDesktop }: MenuProps) => {
   ]
 
   return (
-    <div tw="flex items-center gap-4">
+    <div tw="flex items-center gap-[7px]">
       {socialLinks.map(({ icon: Icon, url }) => (
         <a
           key={url}
@@ -67,7 +67,7 @@ const LeftMenu = ({ isDesktop }: MenuProps) => {
           target="_blank"
           rel="noopener noreferrer"
           tw="flex items-center justify-center hover:opacity-80 transition-opacity">
-          <Icon width={22} height={22} />
+          <Icon width={24} height={24} />
         </a>
       ))}
     </div>
@@ -83,7 +83,6 @@ const RightMenu = ({ isDesktop, setOpenSearch, isMenuOpen, setIsMenuOpen }: Menu
       {isDesktop ? (
         <>
           <button
-            disabled
             tw="ml-2 cursor-pointer flex items-center gap-1 text-[13px] md:text-[15px] leading-[150%] font-normal"
             onClick={() => navigate("/reservation/new")}>
             장바구니

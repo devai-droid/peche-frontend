@@ -556,101 +556,11 @@ const BottomSheet = () => {
   )
 }
 
-const BottomButtons = ({
-  showInquiryButtons,
-  setShowInquiryButtons,
-}: {
-  showInquiryButtons: boolean
-  setShowInquiryButtons: React.Dispatch<React.SetStateAction<boolean>>
-}) => {
+const BottomButtons = () => {
   const { t, i18n } = useTranslation()
   const { setInquiry } = useCart()
-  const language = i18n.language as Language
 
   const navigate = useCustomNavigate()
-  // // [TODO] XEN-64 상담하기 링크 연결
-
-  const inquiryButtons: {
-    id: number
-    name: string
-    icon: string
-    css: any
-    lang: Language[]
-    link: string
-  }[] = [
-    {
-      id: 1,
-      name: t("button.inquiryButton.call"),
-      icon: CallImg,
-      css: call,
-      lang: [Language.KOR],
-      link: "tel:1661-2365",
-    },
-    {
-      id: 2,
-      name: t("button.inquiryButton.kakao"),
-      icon: KakaoImg,
-      css: kakao,
-      lang: [Language.KOR],
-      link: "https://pf.kakao.com/_pmGVxj/chat",
-    },
-    {
-      id: 3,
-      name: t("button.inquiryButton.weChat"),
-      icon: WechatImg,
-      css: weChat,
-      lang: [Language.CHN],
-      link: "https://work.weixin.qq.com/kfid/kfc8dbe1152fad99e74",
-    },
-    {
-      id: 4,
-      name: t("button.inquiryButton.line"),
-      icon: LineImg,
-      css: line,
-      lang: [Language.JPN],
-      link: "https://lin.ee/efw7rbT",
-    },
-    {
-      id: 5,
-      name: t("button.inquiryButton.channelTalk"),
-      icon: KakaoImg,
-      css: kakao,
-      lang: [Language.ENG],
-      link: "https://pf.kakao.com/_pmGVxj/chat",
-    },
-    {
-      id: 6,
-      name: t("button.inquiryButton.whatsApp"),
-      icon: WhatsAppImg,
-      css: line,
-      lang: [Language.ENG],
-      link: "https://wa.me/+821027694410",
-    },
-    {
-      id: 7,
-      name: t("button.inquiryButton.instagram"),
-      icon: InstagramImg,
-      css: instagram,
-      lang: [Language.ENG],
-      link: "https://www.instagram.com/pecheclinic_eng",
-    },
-    {
-      id: 8,
-      name: t("button.inquiryButton.line"),
-      icon: LineImg,
-      css: line,
-      lang: [Language.CHN],
-      link: "https://lin.ee/DDK3D3JK",
-    },
-    {
-      id: 9,
-      name: t("button.inquiryButton.line"),
-      icon: LineImg,
-      css: line,
-      lang: [Language.THA],
-      link: "https://lin.ee/BNTlo0y",
-    },
-  ]
 
   return (
     <div tw="fixed lg:hidden bottom-0 inset-x-0 z-50">
@@ -671,22 +581,6 @@ const BottomButtons = ({
           {t("button.reserve")}
         </BottomButton>
       </div>
-      {/* {showInquiryButtons && (
-        <div tw="flex gap-3 absolute bottom-full px-4 py-2">
-          {inquiryButtons
-            .filter((button) => button.lang.includes(language))
-            .map((button) => (
-              <InquiryButton key={button.id} css={button.css}>
-                <a href={button.link} target="_blank" rel="noopener noreferrer">
-                  {button.icon && (
-                    <img src={button.icon} alt="snsIcon" style={{ display: "inline" }} />
-                  )}
-                  <p tw="text-xs font-bold">{button.name}</p>
-                </a>
-              </InquiryButton>
-            ))}
-        </div>
-      )} */}
     </div>
   )
 }
@@ -694,8 +588,6 @@ const BottomButtons = ({
 const CartView = ({ children, isHome }: { children?: React.ReactNode; isHome: boolean }) => {
   const [headerHeight, setHeaderHeight] = React.useState(0)
   const { inquiry, cart } = useCart()
-  // 상담 버튼이 보여야하는지 여부
-  const [showInquiryButtons, setShowInquiryButtons] = React.useState(false)
 
   useLayoutEffect(() => {
     const height = document.getElementById("header-height")?.clientHeight || 0
@@ -715,13 +607,10 @@ const CartView = ({ children, isHome }: { children?: React.ReactNode; isHome: bo
         )}
       </div>
       <div tw="relative">
-        <BottomButtons
-          showInquiryButtons={showInquiryButtons}
-          setShowInquiryButtons={setShowInquiryButtons}
-        />
+        <BottomButtons />
         {/* 목록이 추가되면 보이게 */}
         <div tw="absolute bottom-0 inset-x-0">
-          {!showInquiryButtons && (inquiry || cart.length > 0) ? <BottomSheet /> : null}
+          {!isHome && (inquiry || cart.length > 0) ? <BottomSheet /> : null}
         </div>
       </div>
     </>

@@ -591,7 +591,7 @@ C. クッキーの保存を拒否する場合、カスタマイズされたサ�
   }, [language])
 
   return (
-    <Page hiddenFooter={false}>
+    <Page hiddenFooter={false} bottomCartExists={false}>
       <div tw="flex justify-center mt-4 px-4 mb-9" style={{ whiteSpace: "pre-line" }}>
         {privacyPolicy}
       </div>

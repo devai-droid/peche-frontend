@@ -7,6 +7,7 @@ interface Props {
   children?: React.ReactNode
   header?: HeaderProps
   hiddenFooter?: boolean
+  bottomCartExists?: boolean
   clickedKeyword?: string
   setClickedKeyword?: (keyword: string) => void
 }
@@ -15,6 +16,7 @@ const Page = ({
   children,
   header,
   hiddenFooter = true,
+  bottomCartExists = false,
   clickedKeyword,
   setClickedKeyword,
 }: Props) => {
@@ -30,7 +32,7 @@ const Page = ({
         setClickedKeyword={setClickedKeyword}
       />
       <main tw="flex-1 md:min-h-[70rem]">{children}</main>
-      {!hiddenFooter && <Footer />}
+      {!hiddenFooter && <Footer bottomCartExists={bottomCartExists} />}
     </div>
   )
 }
