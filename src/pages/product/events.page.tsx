@@ -392,6 +392,11 @@ const Events = () => {
             <div tw="flex flex-col gap-4 max-lg:px-4">
               {events?.pages
                 .flatMap((page) => page.items)
+                // name 기준으로 중복 제거
+                .filter(
+                  (event, index, self) =>
+                    index === self.findIndex((e) => tv(e, "name") === tv(event, "name")),
+                )
                 .map((event, index) => (
                   <Event
                     addToCart={() => handleAddToCart({ event })}
