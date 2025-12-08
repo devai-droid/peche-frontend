@@ -131,13 +131,37 @@ const HoverItem = styled.div`
 
   /* 텍스트 오버레이 */
   .label {
-    ${tw`absolute bottom-6 left-6 text-[#C17A5A] opacity-0 transition-opacity duration-300`}
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    text-align: right;
+    color: #da7f67;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+
+    p:first-child {
+      font-size: 30px;
+      font-weight: 400;
+    }
+
+    p:last-child {
+      margin-top: 6px;
+      font-size: 22px;
+      font-weight: 500;
+    }
   }
 
+  /* hover 시 보여줌 */
   &:hover .label {
     opacity: 1;
   }
 `
+
+const desktopImages = [
+  { src: peche1, title: "Pêche", desc: "생기있는 코랄빛" },
+  { src: peche2, title: "Pêche", desc: "영원한 젊음" },
+  { src: peche3, title: "Pêche", desc: "밝고 부드러운 속살" },
+]
 
 const mobileImages = [
   { src: peche1Mobile, title: "Pêche", desc: "생기있는 코랄빛" },
@@ -172,7 +196,7 @@ const MobileSlide = styled.div`
     display: block;
   }
 
-  /* 🔥 이미지 위 오버레이 텍스트 */
+  /* 이미지 위 오버레이 텍스트 */
   .label {
     position: absolute;
     bottom: 12px;
@@ -540,17 +564,15 @@ const Intro = () => {
             </SymbolDesc>
 
             <HoverGrid>
-              <HoverItem className="item-0">
-                <img src={peche1} alt="peche" />
-              </HoverItem>
-
-              <HoverItem className="item-1">
-                <img src={peche2} alt="model" />
-              </HoverItem>
-
-              <HoverItem className="item-2">
-                <img src={peche3} alt="texture" />
-              </HoverItem>
+              {desktopImages.map((img, index) => (
+                <HoverItem key={index} className={`item-${index}`}>
+                  <img src={img.src} alt={`peche-${index}`} />
+                  <div className="label">
+                    <p tw="font-time">{img.title}</p>
+                    <p>{img.desc}</p>
+                  </div>
+                </HoverItem>
+              ))}
             </HoverGrid>
 
             <MobileSwiperWrapper>

@@ -72,7 +72,7 @@ const Footer = ({ bottomCartExists = false }: FooterProps) => {
             <img src={FooterLogoImg} alt="Peche Clinic" tw="w-[129px] h-auto" loading="lazy" />
             <div tw="mt-2">
               서울특별시 강남구 강남대로 364, 3층 전체(역삼동, 미왕빌딩) | 대표 : 안태언 |
-              사업자등록번호 219-05-28999 | 대표 번호 000-000-000
+              사업자등록번호 219-05-28999 | 대표 번호 02-533-8176
             </div>
             <div>© 2025 Peche. All Rights Reserved.</div>
           </LogoBlock>
