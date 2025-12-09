@@ -36,12 +36,13 @@ const Textarea = tw.textarea`h-10 py-1.5 px-2 border border-[#d0d0d0] rounded-lg
 const TimeButton = ({ selected, children, ...props }: { selected?: boolean } & any) => {
   return (
     <Button
-      tw="shrink-0 sm:h-[58px] h-[40px]"
+      tw="shrink-0 sm:h-[58px] h-[40px] text-[15px] md:text-[17px]"
       {...props}
       style={{
         size: "sm",
-        color: selected ? "point" : "black",
+        color: selected ? "point" : "gray",
         variant: selected ? "filled" : "outlined",
+        bold: !!selected,
       }}>
       {children}
     </Button>
@@ -353,13 +354,29 @@ const Reserve = () => {
   }
 
   /* -------- 캘린더 변경 시 조회 -------- */
+  // React.useEffect(() => {
+  //   if (getCheckedEventIds().length > 0 || getCheckedProductIds().length > 0 || inquiry) {
+  //     getAvailableReservations(today.year(), today.month() + 1, today.date()).then((res) =>
+  //       setTodaySlots(res),
+  //     )
+  //   }
+  // }, [today, inquiry, checkedList])
+  // 배포할때는 원상복구 해야함
   React.useEffect(() => {
     if (getCheckedEventIds().length > 0 || getCheckedProductIds().length > 0 || inquiry) {
-      getAvailableReservations(today.year(), today.month() + 1, today.date()).then((res) =>
-        setTodaySlots(res),
-      )
+      getAvailableReservations(today.year(), today.month() + 1, today.date()).then((res) => {
+        // 🔥 UTC → KST (+9h) 변환 패치
+        const patched = res.map((slot) => ({
+          ...slot,
+          datetime: dayjs(slot.datetime).add(9, "hour").toISOString(),
+        }))
+
+        console.log("patched res", patched)
+        setTodaySlots(patched)
+      })
     }
   }, [today, inquiry, checkedList])
+  //
 
   dayjs.extend(utc)
 

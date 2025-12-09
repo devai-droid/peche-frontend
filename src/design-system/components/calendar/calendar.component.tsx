@@ -99,7 +99,7 @@ const Calendar = ({ disabledDate, footer, ...props }: CalendarProp) => {
             ".MuiPickersDay-root.Mui-selected": {
               color: "white !important",
               backgroundColor: "transparent !important",
-              fontWeight: 400,
+              fontWeight: 600,
               position: "relative",
               zIndex: 1,
             },

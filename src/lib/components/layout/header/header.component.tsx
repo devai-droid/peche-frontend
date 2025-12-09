@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unused-prop-types */
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import tw from "twin.macro"
 import {
   CalendarIcon,
@@ -18,7 +18,7 @@ import { IconButton, Logo, MobileLogo } from "@/design-system/components"
 import AppMaxWidth from "../app-max-width.component"
 import useResponsive from "@/lib/hooks/use-responsive"
 import HeaderLanguage from "./header-language.component"
-import MobileAccordionMenu from "./mobile-accordion-menu.component"
+import SearchModal from "@/pages/home/components/search-modal.component"
 import MobileMenu from "./mobile-menu.component"
 import useCustomNavigate from "@/lib/hooks/use-custom-navigate"
 import { useTranslation } from "react-i18next"
@@ -76,6 +76,7 @@ const LeftMenu = ({ isDesktop }: MenuProps) => {
 
 const RightMenu = ({ isDesktop, setOpenSearch, isMenuOpen, setIsMenuOpen }: MenuProps) => {
   const navigate = useCustomNavigate()
+  const [openSearchModal, setOpenSearchModal] = React.useState(false)
 
   return (
     <div tw="flex items-center">
@@ -83,6 +84,13 @@ const RightMenu = ({ isDesktop, setOpenSearch, isMenuOpen, setIsMenuOpen }: Menu
       {isDesktop ? (
         <>
           <button
+            tw="cursor-pointer flex items-center gap-1 text-[13px] md:text-[15px] font-normal"
+            onClick={() => setOpenSearchModal(true)}>
+            시술검색
+          </button>
+          <div tw="ml-6" />
+          <button
+            disabled
             tw="ml-2 cursor-pointer flex items-center gap-1 text-[13px] md:text-[15px] leading-[150%] font-normal"
             onClick={() => navigate("/reservation/new")}>
             장바구니
@@ -98,6 +106,7 @@ const RightMenu = ({ isDesktop, setOpenSearch, isMenuOpen, setIsMenuOpen }: Menu
 
           <div tw="w-3 ml-8" />
           <HeaderLanguage />
+          <SearchModal open={openSearchModal} onClose={() => setOpenSearchModal(false)} />
         </>
       ) : (
         <>
@@ -114,13 +123,14 @@ const RightMenu = ({ isDesktop, setOpenSearch, isMenuOpen, setIsMenuOpen }: Menu
                   0
                 </span>
               </div>
-              <IconButton tw="p-2" icon={SearchIcon} onClick={() => setOpenSearch?.(true)} />
+              <IconButton tw="p-2" icon={SearchIcon} onClick={() => setOpenSearchModal(true)} />
               <IconButton
                 tw="p-2"
                 icon={HamburgerIcon}
                 iconSize={24}
                 onClick={() => setIsMenuOpen?.(true)}
               />
+              <SearchModal open={openSearchModal} onClose={() => setOpenSearchModal(false)} />
             </>
           )}
 

@@ -10,6 +10,7 @@ import CustomLink from "@/lib/components/custom-link.component"
 export const _ButtonColor = {
   BLACK: "black",
   POINT: "point",
+  GRAY: "gray",
 } as const
 
 export type ButtonColor = (typeof _ButtonColor)[keyof typeof _ButtonColor]
@@ -105,6 +106,10 @@ const getButtonStyle = (style: StyleOptions): TwStyle[] => {
     // 🔸 OUTLINED BLACK
     if (color === _ButtonColor.BLACK) {
       buttonStyle.push(tw`text-neutralBlack bg-white border border-neutralBlack`)
+    }
+    // OUTLINED GRAY
+    else if (color === _ButtonColor.GRAY) {
+      buttonStyle.push(tw`text-neutral80 bg-white border border-neutral50`)
     }
     // 🔸 OUTLINED PRIMARY
     else {

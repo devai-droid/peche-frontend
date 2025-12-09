@@ -301,7 +301,14 @@ const Reservations = () => {
       {/* <AppMaxWidth tw="my-8">
         <div tw="font-bold">{t("reservationCheckPage.reservationCheck")}</div>
         <hr tw="mt-4 mb-6" />
-        <Auth onAuth={() => setAuthenticated(true)} />
+        <Auth
+          onAuth={() => setAuthenticated(true)}
+          onAgreementChange={(agree) => {
+            // 필요한 경우 agree 값을 저장하거나 체크할 수 있음
+            console.log("약관 동의 변경:", agree)
+          }}
+        />
+
         {authenticated && (
           <div tw="mt-10 flex flex-col lg:flex-row gap-x-11 gap-y-14">
             <div tw="flex-1">
