@@ -17,6 +17,8 @@ import KakaoRedirectedOauthPage from "@/pages/auth/kakao-redirected-oauth/kakao-
 import TermsOfService from "@/pages/terms/term-of-service.page"
 import PrivacyPolicy from "@/pages/terms/privacy-policy.page"
 import Blog from "@/pages/blog/blog.page"
+import Signup from "@/pages/signup/signup.page"
+import SignupComplete from "@/pages/signup/signup-complete.page"
 
 const router = createBrowserRouter([
   {
@@ -75,6 +77,8 @@ const router = createBrowserRouter([
       { path: "blog", element: <Blog /> },
       { path: "termsofservice", element: <TermsOfService /> },
       { path: "privacypolicy", element: <PrivacyPolicy /> },
+      { path: "signup", element: <Signup /> },
+      { path: "signup/complete", element: <SignupComplete /> },
       {
         path: "*",
         element: (

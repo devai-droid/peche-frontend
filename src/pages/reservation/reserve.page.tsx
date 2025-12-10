@@ -487,6 +487,20 @@ const Reserve = () => {
     <Page>
       <div tw="bg-neutral w-screen min-h-screen">
         <AppMaxWidth tw="py-8 lg:py-12 overflow-x-hidden">
+          {/* ---------------- 회원가입 안내 배너 (임시) ---------------- */}
+          {/* <div tw="bg-white rounded-lg p-5 mt-20 mb-6 text-center shadow-sm">
+            <div tw="text-[15px] md:text-[17px] font-semibold mb-3">
+              예약 전에 회원가입을 진행해주세요
+            </div>
+
+            <Button
+              tw="w-[200px] h-[44px] font-bold mx-auto"
+              style={{ variant: "filled", color: "point" }}
+              onClick={() => navigate("/signup")}>
+              회원가입
+            </Button>
+          </div> */}
+
           <H1 tw="pt-16 md:pt-10 pb-10 text-[24px] lg:text-[30px] text-center">
             {t("reservePage.shoppingCart")}
           </H1>

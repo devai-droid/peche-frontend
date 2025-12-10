@@ -1,6 +1,6 @@
 /* eslint-disable no-alert */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Button, Calendar } from "@/design-system/components"
+import { Button, Calendar, Icon } from "@/design-system/components"
 import Auth from "@/features/auth/components/auth.component"
 import AppMaxWidth from "@/lib/components/layout/app-max-width.component"
 import Page from "@/lib/components/layout/page.component"
@@ -20,6 +20,12 @@ import { Language } from "@/lib/locales/i18n.config"
 import { isAfter } from "date-fns"
 import dayjs from "dayjs"
 import utc from "dayjs/plugin/utc"
+
+import logoText from "@/assets/images/peche-logo-text.png"
+import { KakaoLogoMini, EmailIcon } from "@/assets/icon"
+import { authService } from "@/lib/service/auth.service"
+import { useSearchParams } from "react-router-dom"
+import EmailAuthModal from "@/features/auth/components/email-auth-modal.component"
 
 const Card = tw.div`border border-[#d0d0d0] rounded-lg py-4 px-6 flex flex-col gap-1 relative`
 const Row = tw.div`flex gap-2`
@@ -88,6 +94,11 @@ const Reservations = () => {
   const [currentProducts, setCurrentProducts] = React.useState<any>([])
   const [currentEvents, setCurrentEvents] = React.useState<any>([])
   const [isLoading, setIsLoading] = React.useState(false)
+
+  const [params] = useSearchParams()
+  const pathVisit = params.get("path_visit")
+  const detailVisit = params.get("detail_visit")
+  const [openEmailModal, setOpenEmailModal] = React.useState(false)
 
   useEffect(() => {
     if (currentProducts.length > 0 || currentEvents.length > 0) {
@@ -297,189 +308,225 @@ const Reservations = () => {
   }
 
   return (
-    <Page>
-      {/* <AppMaxWidth tw="my-8">
-        <div tw="font-bold">{t("reservationCheckPage.reservationCheck")}</div>
-        <hr tw="mt-4 mb-6" />
-        <Auth
-          onAuth={() => setAuthenticated(true)}
-          onAgreementChange={(agree) => {
-            // 필요한 경우 agree 값을 저장하거나 체크할 수 있음
-            console.log("약관 동의 변경:", agree)
-          }}
-        />
+    <Page hiddenFooter={false}>
+      <div tw="bg-neutral w-screen min-h-[70rem]">
+        <AppMaxWidth tw="my-4 pt-24 md:pt-20">
+          {/* <div tw="font-semibold text-[24px] md:text-[30px] text-center pb-6">
+            {t("reservationCheckPage.reservationCheck")}
+          </div>
 
-        {authenticated && (
-          <div tw="mt-10 flex flex-col lg:flex-row gap-x-11 gap-y-14">
-            <div tw="flex-1">
-              <div tw="font-bold mb-4">{t("reservePage.customer")}</div>
-              <div>
-                <Card tw="gap-6">
-                  {userCard.map((item) => (
-                    <Row key={item.label}>
-                      <Label>{item.label}</Label>
-                      <div>{item.value}</div>
-                    </Row>
-                  ))}
-                </Card>
+          {!authenticated && (
+            <div tw="max-w-[360px] md:max-w-[580px] mx-auto flex flex-col items-center justify-center py-16 bg-white">
+              <img src={logoText} alt="" tw="w-[100px] mb-4" />
+
+              <div tw="text-[18px] md:text-[22px] font-semibold mb-8">
+                {t("reservePage.authTitle")}
               </div>
+
+              <div tw="flex justify-center gap-4 w-full max-w-[400px] mx-auto sm:px-2">
+                <button
+                  tw="h-[100px] w-[145px] md:w-[220px] flex flex-col items-center justify-center 
+                    bg-[#FFE812] font-semibold text-[15px] md:text-[17px]"
+                  onClick={() => authService.loginWithKakaoSDK(pathVisit, detailVisit)}>
+                  <Icon icon={KakaoLogoMini} size={25} />
+                  <span tw="pt-1">카카오 인증</span>
+                </button>
+
+                <button
+                  tw="h-[100px] w-[145px] md:w-[220px] flex flex-col items-center justify-center 
+                    bg-[#4DAA57] text-white font-semibold text-[15px] md:text-[17px]"
+                  onClick={() => setOpenEmailModal(true)}>
+                  <Icon icon={EmailIcon} size={25} />
+                  <span tw="pt-1">이메일 인증</span>
+                </button>
+              </div>
+
+              <EmailAuthModal
+                open={openEmailModal}
+                onClose={() => setOpenEmailModal(false)}
+                onComplete={(info) => {
+                  setOpenEmailModal(false)
+                  setAuthenticated(true)
+                }}
+              />
             </div>
-            <div tw="flex-1">
-              <div tw="font-bold mb-4">{t("common.reservation")}</div>
-              <div tw="flex flex-col gap-20">
-                {filteredReservations?.map((reservation, index) => {
-                  return (
-                    <Card key={index} tw="gap-6">
-                      {reservationCard(reservation).map((item) => (
-                        <Row key={item.label}>
-                          <Label>{item.label}</Label>
-                          <div tw="whitespace-pre-wrap">{item.value}</div>
-                        </Row>
-                      ))}
-                      <div tw="relative text-left">
-                        <div tw="left-0 bottom-0">
-                          {(() => {
-                            if (reservation.status === "DONE" || reservation.status === "WAITING") {
-                              return (
-                                <>
+          )}
+
+          {authenticated && (
+            <div tw="mt-10 flex flex-col lg:flex-row gap-x-11 gap-y-14">
+              <div tw="flex-1">
+                <div tw="font-bold mb-4">{t("reservePage.customer")}</div>
+                <div>
+                  <Card tw="gap-6">
+                    {userCard.map((item) => (
+                      <Row key={item.label}>
+                        <Label>{item.label}</Label>
+                        <div>{item.value}</div>
+                      </Row>
+                    ))}
+                  </Card>
+                </div>
+              </div>
+              <div tw="flex-1">
+                <div tw="font-bold mb-4">{t("common.reservation")}</div>
+                <div tw="flex flex-col gap-20">
+                  {filteredReservations?.map((reservation, index) => {
+                    return (
+                      <Card key={index} tw="gap-6">
+                        {reservationCard(reservation).map((item) => (
+                          <Row key={item.label}>
+                            <Label>{item.label}</Label>
+                            <div tw="whitespace-pre-wrap">{item.value}</div>
+                          </Row>
+                        ))}
+                        <div tw="relative text-left">
+                          <div tw="left-0 bottom-0">
+                            {(() => {
+                              if (
+                                reservation.status === "DONE" ||
+                                reservation.status === "WAITING"
+                              ) {
+                                return (
+                                  <>
+                                    <Button
+                                      style={{ variant: "filled" }}
+                                      tw="inline-flex items-center justify-center gap-1"
+                                      onClick={() => {
+                                        setCurrentProducts(
+                                          reservation.products.map((product) => product.product.id),
+                                        )
+                                        setCurrentEvents(
+                                          reservation.events.map((event) => event.event.id),
+                                        )
+                                        setChangeId(reservation.id)
+                                      }}>
+                                      {t("reservePage.reservationDateChange")}
+                                    </Button>
+                                    <Button
+                                      style={{ variant: "filled", color: "black" }}
+                                      tw="ml-4 inline-flex items-center justify-center gap-1"
+                                      onClick={() => {
+                                        setCancelId(reservation.id)
+                                      }}>
+                                      {t("reservePage.reservationCancel")}
+                                    </Button>
+                                  </>
+                                )
+                              }
+                              if (reservation.status === "CANCELED") {
+                                return (
                                   <Button
                                     style={{ variant: "filled" }}
                                     tw="inline-flex items-center justify-center gap-1"
-                                    onClick={() => {
-                                      setCurrentProducts(
-                                        reservation.products.map((product) => product.product.id),
-                                      )
-                                      setCurrentEvents(
-                                        reservation.events.map((event) => event.event.id),
-                                      )
-                                      setChangeId(reservation.id)
-                                    }}>
-                                    {t("reservePage.reservationDateChange")}
+                                    disabled>
+                                    {t("reservePage.reservationCanceled")}
                                   </Button>
-                                  <Button
-                                    style={{ variant: "filled", color: "black" }}
-                                    tw="ml-4 inline-flex items-center justify-center gap-1"
-                                    onClick={() => {
-                                      setCancelId(reservation.id)
-                                    }}>
-                                    {t("reservePage.reservationCancel")}
-                                  </Button>
-                                </>
-                              )
-                            }
-                            if (reservation.status === "CANCELED") {
-                              return (
-                                <Button
-                                  style={{ variant: "filled" }}
-                                  tw="inline-flex items-center justify-center gap-1"
-                                  disabled>
-                                  {t("reservePage.reservationCanceled")}
-                                </Button>
-                              )
-                            }
-                            return null
-                          })()}
+                                )
+                              }
+                              return null
+                            })()}
+                          </div>
                         </div>
-                      </div>
-                    </Card>
-                  )
-                })}
+                      </Card>
+                    )
+                  })}
+                </div>
               </div>
             </div>
+          )} */}
+        </AppMaxWidth>
+        <Modal open={!!cancelId} title="예약 취소" onClose={() => setCancelId(null)}>
+          <div tw="flex flex-col items-center justify-center h-full">
+            <div tw="">{t("reservePage.reservationCancelCheck")}</div>
+            <div tw="flex flex-col gap-2 my-4">
+              <Row>
+                <Label>{t("reservePage.reservationDateTime")}</Label>
+                <div>
+                  {selectedProduct?.datetime &&
+                    selectedProduct.datetime.split("T").join(" ").slice(0, 16)}
+                </div>
+              </Row>
+              <Row>
+                <Label>{t("reservePage.treatmentName")}</Label>
+                <div tw="whitespace-pre-wrap">
+                  {[
+                    ...(selectedProduct?.products.map((product) => product.product.name) || []),
+                    ...(selectedProduct?.events.map((event) => event.event.name) || []),
+                  ].join("\n")}
+                </div>
+              </Row>
+            </div>
+            <div tw="flex justify-end gap-2">
+              <Button
+                tw="min-w-[12rem]"
+                style={{ variant: "filled", color: "black", size: "lg" }}
+                onClick={() => {
+                  cancelReservation()
+                }}>
+                {t("reservePage.reservationCancel")}
+              </Button>
+              <Button
+                tw="min-w-[8rem]"
+                style={{ variant: "filled", size: "lg" }}
+                onClick={() => {
+                  setCancelId(null)
+                }}>
+                {t("reservePage.cancelButton")}
+              </Button>
+            </div>
           </div>
-        )}
-      </AppMaxWidth>
-      <Modal open={!!cancelId} title="예약 취소" onClose={() => setCancelId(null)}>
-        <div tw="flex flex-col items-center justify-center h-full">
-          <div tw="">{t("reservePage.reservationCancelCheck")}</div>
-          <div tw="flex flex-col gap-2 my-4">
-            <Row>
-              <Label>{t("reservePage.reservationDateTime")}</Label>
-              <div>
+        </Modal>
+
+        <Modal
+          open={!!changeId}
+          title={t("reservePage.reservationDateChangeTitle")}
+          onClose={() => setChangeId(null)}>
+          <div tw="flex flex-col items-center justify-center h-full">
+            <div tw="my-4 max-sm:hidden">
+              <span tw="font-bold">{t("reservePage.reservationPreviousDate")}</span>
+              <span tw="pl-1">
                 {selectedProduct?.datetime &&
                   selectedProduct.datetime.split("T").join(" ").slice(0, 16)}
-              </div>
-            </Row>
-            <Row>
-              <Label>{t("reservePage.treatmentName")}</Label>
-              <div tw="whitespace-pre-wrap">
-                {[
-                  ...(selectedProduct?.products.map((product) => product.product.name) || []),
-                  ...(selectedProduct?.events.map((event) => event.event.name) || []),
-                ].join("\n")}
-              </div>
-            </Row>
-          </div>
-          <div tw="flex justify-end gap-2">
-            <Button
-              tw="min-w-[12rem]"
-              style={{ variant: "filled", color: "black", size: "lg" }}
-              onClick={() => {
-                cancelReservation()
-              }}>
-              {t("reservePage.reservationCancel")}
-            </Button>
-            <Button
-              tw="min-w-[8rem]"
-              style={{ variant: "filled", size: "lg" }}
-              onClick={() => {
-                setCancelId(null)
-              }}>
-              {t("reservePage.cancelButton")}
-            </Button>
-          </div>
-        </div>
-      </Modal>
-
-      <Modal
-        open={!!changeId}
-        title={t("reservePage.reservationDateChangeTitle")}
-        onClose={() => setChangeId(null)}>
-        <div tw="flex flex-col items-center justify-center h-full">
-          <div tw="my-4 max-sm:hidden">
-            <span tw="font-bold">{t("reservePage.reservationPreviousDate")}</span>
-            <span tw="pl-1">
-              {selectedProduct?.datetime &&
-                selectedProduct.datetime.split("T").join(" ").slice(0, 16)}
-            </span>
-          </div>
-          <div tw="w-full">
-            <Calendar
-              value={today}
-              onChange={(value) => {
-                if (value) {
-                  setToday(value)
-                  setSelectedDatetime("")
+              </span>
+            </div>
+            <div tw="w-full">
+              <Calendar
+                value={today}
+                onChange={(value) => {
+                  if (value) {
+                    setToday(value)
+                    setSelectedDatetime("")
+                  }
+                }}
+                footer={
+                  <div tw="">
+                    <div tw="flex gap-4 overflow-auto p-4">{renderTimeSlots()}</div>
+                  </div>
                 }
-              }}
-              footer={
-                <div tw="">
-                  <div tw="flex gap-4 overflow-auto p-4">{renderTimeSlots()}</div>
-                </div>
-              }
-            />
+              />
+            </div>
+            <div tw="flex justify-end gap-2 mt-8">
+              <Button
+                tw="min-w-[8rem]"
+                style={{ variant: "filled", color: "black", size: "lg" }}
+                onClick={() => {
+                  setChangeId(null)
+                }}>
+                {t("reservePage.cancelButton")}
+              </Button>
+              <Button
+                tw="min-w-[12rem]"
+                style={{ variant: "filled", size: "lg" }}
+                disabled={!selectedDatetime}
+                onClick={() => {
+                  changeReservation(selectedDatetime.replaceAll("Z", ""))
+                }}>
+                {t("reservePage.reservationDateChange")}
+              </Button>
+            </div>
           </div>
-          <div tw="flex justify-end gap-2 mt-8">
-            <Button
-              tw="min-w-[8rem]"
-              style={{ variant: "filled", color: "black", size: "lg" }}
-              onClick={() => {
-                setChangeId(null)
-              }}>
-              {t("reservePage.cancelButton")}
-            </Button>
-            <Button
-              tw="min-w-[12rem]"
-              style={{ variant: "filled", size: "lg" }}
-              disabled={!selectedDatetime}
-              onClick={() => {
-                changeReservation(selectedDatetime.replaceAll("Z", ""))
-              }}>
-              {t("reservePage.reservationDateChange")}
-            </Button>
-          </div>
-        </div>
-      </Modal> */}
+        </Modal>
+      </div>
     </Page>
   )
 }
