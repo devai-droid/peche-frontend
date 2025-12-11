@@ -102,7 +102,9 @@ const Reservations = () => {
     const date = dayjs.utc(r.datetime).tz("Asia/Seoul")
     const nowKst = dayjs().tz("Asia/Seoul")
 
-    if (date.isSame(nowKst, "day") || date.isAfter(nowKst)) {
+    if (r.status === "CANCELED") {
+      pastReservations.push(r)
+    } else if (date.isSame(nowKst, "day") || date.isAfter(nowKst)) {
       activeReservations.push(r)
     } else {
       pastReservations.push(r)
@@ -388,19 +390,27 @@ const Reservations = () => {
       <div tw="bg-neutral min-h-screen w-full">
         <AppMaxWidth tw="pt-16 pb-20 flex flex-col items-center gap-6">
           {/* ---------------- 예약 중 박스 ---------------- */}
-          <div tw="bg-white w-full max-w-[600px] px-4 py-8">
-            <SectionTitle tw="text-primary">예약 중</SectionTitle>
-            {Object.keys(activeGroups).map((date) => renderAccordion(date, activeGroups[date]))}
-          </div>
+          {Object.keys(activeGroups).length > 0 && (
+            <div tw="bg-white w-full max-w-[600px] px-4 py-8">
+              <SectionTitle tw="text-primary">예약 중</SectionTitle>
+              {Object.keys(activeGroups)
+                .sort((a, b) => (dayjs(a).isBefore(dayjs(b)) ? 1 : -1))
+                .map((date) => renderAccordion(date, activeGroups[date]))}
+            </div>
+          )}
 
           {/* 여백 (bg-neutral 노출) */}
           <div tw="h-4" />
 
           {/* ---------------- 지난 예약 박스 ---------------- */}
-          <div tw="bg-white w-full max-w-[600px] px-4 py-8">
-            <SectionTitle>지난 예약</SectionTitle>
-            {Object.keys(pastGroups).map((date) => renderAccordion(date, pastGroups[date]))}
-          </div>
+          {Object.keys(pastGroups).length > 0 && (
+            <div tw="bg-white w-full max-w-[600px] px-4 py-8">
+              <SectionTitle>지난 예약</SectionTitle>
+              {Object.keys(pastGroups)
+                .sort((a, b) => (dayjs(a).isBefore(dayjs(b)) ? 1 : -1))
+                .map((date) => renderAccordion(date, pastGroups[date]))}
+            </div>
+          )}
         </AppMaxWidth>
       </div>
 
