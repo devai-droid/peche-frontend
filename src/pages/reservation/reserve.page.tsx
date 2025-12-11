@@ -166,6 +166,12 @@ const SurgeryList = ({
   const [showInquiryModal, setShowInquiryModal] = React.useState(false)
 
   React.useEffect(() => {
+    if (cart.length > 0 && inquiryChecked) {
+      setInquiryChecked(false)
+    }
+  }, [cart])
+
+  React.useEffect(() => {
     setInquiryChecked(inquiry)
   }, [inquiry])
 
@@ -546,6 +552,13 @@ const Reserve = () => {
       },
     )
   }
+
+  // 장바구니에 시술이 있으면 상담하기는 항상 false
+  React.useEffect(() => {
+    if (cart.length > 0 && inquiry) {
+      setInquiry(false)
+    }
+  }, [cart])
 
   /* -------- 예약 버튼 disabled -------- */
   const reservationDisabled = !authInfo || !agree.terms || !agree.privacy || !selectedDatetime

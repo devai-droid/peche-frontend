@@ -8,6 +8,7 @@ import { Checkbox, Icon, Button } from "@/design-system/components"
 import { authService } from "@/lib/service/auth.service"
 import { useSearchParams } from "react-router-dom"
 import EmailAuthModal from "./email-auth-modal.component"
+import { useMe } from "@/features/user/hooks/use-user"
 
 const H2 = tw.h2`text-lg font-extrabold`
 
@@ -26,6 +27,7 @@ interface Props {
 const Auth = ({ onAuth, onAgreementChange }: Props) => {
   const { t } = useTranslation()
   const { language } = i18n
+  const { user: me } = useMe()
   const isKorean = language === Language.KOR
 
   const [params] = useSearchParams()
@@ -54,18 +56,19 @@ const Auth = ({ onAuth, onAgreementChange }: Props) => {
 
   React.useEffect(() => {
     const token = localStorage.getItem("authToken")
-    const savedUser = localStorage.getItem("user")
 
-    if (token && savedUser) {
-      try {
-        const parsed = JSON.parse(savedUser)
-        setAuthInfo(parsed) // { name, phone?, email? }
-        onAuth(parsed) // 부모에도 전달
-      } catch (e) {
-        console.error("Failed to parse saved user", e)
+    // 이미 로그인 상태라면 useMe()의 me가 최신 정보
+    if (token && me) {
+      const info = {
+        name: me.name,
+        phone: me.phoneNumber,
+        email: me.email,
       }
+
+      setAuthInfo(info)
+      onAuth(info)
     }
-  }, [])
+  }, [me])
 
   /* 부모에 약관 전달 */
   React.useEffect(() => {

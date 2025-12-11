@@ -11,6 +11,8 @@ import tw, { styled } from "twin.macro"
 import dayjs from "dayjs"
 import { useTranslation } from "react-i18next"
 import { useMe } from "@/features/user/hooks/use-user"
+import utc from "dayjs/plugin/utc"
+import timezone from "dayjs/plugin/timezone"
 
 import {
   reservationControllerGetAvailableReservationByDay,
@@ -75,6 +77,8 @@ const Reservations = () => {
   const { t } = useTranslation()
   const { user } = useMe()
   const authenticated = !!user?.id
+  dayjs.extend(utc)
+  dayjs.extend(timezone)
 
   const { data: reservationData } = useReservationControllerFindMine(
     { statusIn: ["DONE", "WAITING", "CANCELED"] },
@@ -95,15 +99,20 @@ const Reservations = () => {
   const now = new Date()
 
   reservations.forEach((r) => {
-    const date = new Date(r.datetime)
-    if (isSameDay(date, now) || isAfter(date, now)) activeReservations.push(r)
-    else pastReservations.push(r)
+    const date = dayjs.utc(r.datetime).tz("Asia/Seoul")
+    const nowKst = dayjs().tz("Asia/Seoul")
+
+    if (date.isSame(nowKst, "day") || date.isAfter(nowKst)) {
+      activeReservations.push(r)
+    } else {
+      pastReservations.push(r)
+    }
   })
 
   const groupByDate = (list: Reservation[]) => {
     const groups: Record<string, Reservation[]> = {}
     list.forEach((r) => {
-      const key = r.datetime.slice(0, 10)
+      const key = dayjs(r.datetime).format("YYYY-MM-DD")
       if (!groups[key]) groups[key] = []
       groups[key].push(r)
     })
@@ -197,12 +206,6 @@ const Reservations = () => {
     setChangeId(null)
   }
 
-  // const cancelReservation = async () => {
-  //   await updateReservation({ id: cancelId!, data: { status: "CANCELED" } })
-  //   alert("예약이 취소되었습니다.")
-  //   setCancelId(null)
-  // }
-
   const cancelReservation = async () => {
     if (!cancelId) return
 
@@ -286,11 +289,10 @@ const Reservations = () => {
 
     const contact = user?.phoneNumber || user?.email || "-"
 
-    const dtKst = dayjs(r.datetime)
-    const datetimeDisplay = dtKst.format("YYYY-MM-DD HH:mm")
+    const datetimeDisplay = formatKstDatetime(r.datetime)
 
     // 지난 예약인지 계산
-    const isPast = dtKst.isBefore(dayjs())
+    const isPast = dayjs(r.datetime).isBefore(dayjs())
 
     return (
       <Card tw="bg-white px-6 pb-6 flex flex-col gap-6">
@@ -364,7 +366,7 @@ const Reservations = () => {
   const toggle = (id: string) => setOpenId(openId === id ? null : id)
 
   const formatKstDatetime = (dt: string) => {
-    const d = dayjs(dt)
+    const d = dayjs(dt.replace("Z", ""))
     const yoilMap = ["일", "월", "화", "수", "목", "금", "토"]
     const yoil = yoilMap[d.day()]
     return d.format(`YYYY/MM/DD(${yoil}) HH:mm`)
