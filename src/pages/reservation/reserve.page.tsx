@@ -17,6 +17,7 @@ import dayjs from "dayjs"
 import utc from "dayjs/plugin/utc"
 import {
   reservationControllerGetAvailableReservationByDay,
+  reservationControllerGetAvailableReservationByDayPublic,
   useReservationControllerCreate,
 } from "@/lib/orval/reservations/reservations"
 import { DEFAULT_CONSULTATION_PRODUCT_ID } from "@/lib/constants/reservation.constants"
@@ -346,6 +347,17 @@ const Reserve = () => {
     })
   }
 
+  /* -------- NEW 예약 가능 시간 조회 -------- */
+  const getAvailableReservationsPublic = async (y: number, m: number, d: number) => {
+    return reservationControllerGetAvailableReservationByDayPublic({
+      year: y,
+      month: m,
+      day: d,
+      productIds: getProductIdsWithInquiry(),
+      eventIds: getCheckedEventIds(),
+    })
+  }
+
   const getProductIdsWithInquiry = () => {
     const ids = [...(getCheckedProductIds() ?? [])]
     const inquiryId = DEFAULT_CONSULTATION_PRODUCT_ID[env.STAGE]
@@ -362,13 +374,28 @@ const Reserve = () => {
   //   }
   // }, [today, inquiry, checkedList])
   // 배포할때는 원상복구 해야함
+  // React.useEffect(() => {
+  //   if (getCheckedEventIds().length > 0 || getCheckedProductIds().length > 0 || inquiry) {
+  //     getAvailableReservations(today.year(), today.month() + 1, today.date()).then((res) => {
+  //       // 🔥 UTC → KST (+9h) 변환 패치
+  //       const patched = res.map((slot) => ({
+  //         ...slot,
+  //         datetime: dayjs(slot.datetime).add(9, "hour").toISOString(),
+  //       }))
+
+  //       console.log("patched res", patched)
+  //       setTodaySlots(patched)
+  //     })
+  //   }
+  // }, [today, inquiry, checkedList])
   React.useEffect(() => {
     if (getCheckedEventIds().length > 0 || getCheckedProductIds().length > 0 || inquiry) {
-      getAvailableReservations(today.year(), today.month() + 1, today.date()).then((res) => {
+      getAvailableReservationsPublic(today.year(), today.month() + 1, today.date()).then((res) => {
         // 🔥 UTC → KST (+9h) 변환 패치
         const patched = res.map((slot) => ({
           ...slot,
           datetime: dayjs(slot.datetime).add(9, "hour").toISOString(),
+          building: "BUILDING_1",
         }))
 
         console.log("patched res", patched)

@@ -311,7 +311,7 @@ const Reservations = () => {
     <Page hiddenFooter={false}>
       <div tw="bg-neutral w-screen min-h-[70rem]">
         <AppMaxWidth tw="my-4 pt-24 md:pt-20">
-          {/* <div tw="font-semibold text-[24px] md:text-[30px] text-center pb-6">
+          <div tw="font-semibold text-[24px] md:text-[30px] text-center pb-6">
             {t("reservationCheckPage.reservationCheck")}
           </div>
 
@@ -433,7 +433,7 @@ const Reservations = () => {
                 </div>
               </div>
             </div>
-          )} */}
+          )}
         </AppMaxWidth>
         <Modal open={!!cancelId} title="예약 취소" onClose={() => setCancelId(null)}>
           <div tw="flex flex-col items-center justify-center h-full">
