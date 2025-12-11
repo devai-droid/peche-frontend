@@ -7,7 +7,7 @@ import HeaderSearch from "./header-search.component"
 import { AppBar } from "@mui/material"
 import useResponsive from "@/lib/hooks/use-responsive"
 
-const DropShadow = tw.div`w-full h-full bg-white drop-shadow-[0px_4px_4px_rgba(0,0,0,0.15)] lg:drop-shadow-[0px_4px_8px_rgba(0,0,0,0.35)]`
+const DropShadow = tw.div`w-full h-full bg-white border-b border-neutral20`
 
 interface HeaderProps {
   hideNavigator?: boolean
@@ -53,7 +53,7 @@ const Header = ({
           />
         )}
       </AppBar>
-      {isDesktop && <div id="header-height" tw="h-32" />}
+      {isDesktop && <div id="header-height" tw="h-28" />}
     </>
   )
 }

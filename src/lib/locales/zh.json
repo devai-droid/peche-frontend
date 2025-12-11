@@ -2,6 +2,7 @@
   "header": {
     "home": "主页",
     "surgeryAndPrice": "价格",
+    "treatmentList": "전체 시술",
     "hospital": "医院介绍",
     "reservation": "立即预约",
     "event": "优惠活动",
@@ -9,7 +10,8 @@
     "recommendKeyword": "建议",
     "price": "价格",
     "introduction": "医院介绍",
-    "reservationCheck": "预订确认"
+    "reservationCheck": "预订确认",
+    "blog": "Blog"
   },
   "home": {
     "title": "Hydrating Moisture Peel",
@@ -102,7 +104,9 @@
     "target": "推荐治疗目标",
     "qAndA": "Q&A",
     "caution": "警告",
-    "noEvents": "没有活动产品"
+    "noEvents": "没有活动产品",
+    "moreProcedures": "시술 더보기",
+    "treatmentVideo": "시술 소개 영상"
   },
   "common": {
     "all": "All",
@@ -136,6 +140,8 @@
     "welcome": ", 欢迎光临",
     "nameFix": "*如果不是您本人的名字，请通过微信公众号与我们联系。(微信公众号：韩国江南诗丽雅皮肤科)\n*如果不是本人姓名，請通過LINE或WhatsApp聯繫。(LINE ID : @pecheclinic.tw) (whatsapp ID : +821059494410)",
     "reserve": "预约",
+    "shoppingCart": "预约",
+    "customerInfo": "고객정보 입력",
     "logout": "Logout",
     "logoutConfirm": "Are you sure you want to logout?",
     "bookConsultation": "预约商谈",
@@ -162,9 +168,13 @@
     "memo": "备忘录",
     "guardianConsentText": "* 为未成年人预约时，请在就诊前填写监护人治疗同意书。",
     "guardianConsent": "监护人同意书",
+    "authTitle": "본인인증",
+    "agreementTitle": "약관동의",
     "agreeToAll": "同意全部",
+    "termsOfService": "(필수) 서비스 이용약관에 동의합니다.",
     "privacyAgreement": "[必选]在使用服务和申请预约时同意提供个人信息",
     "marketingAgreement": "[可选] 我同意营销用途。",
+    "marketingNotice": "마케팅활용에 동의하시면 특가 이벤트 및 할인 정보를 받아보실 수 있습니다.",
     "detail": "查看详情",
     "reservationComplete": "预订完成",
     "reservationCompleteText": "您的预订已完成。",

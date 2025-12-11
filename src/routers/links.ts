@@ -5,14 +5,14 @@ export const menuLinks = [
   },
   {
     name: "header.surgeryAndPrice",
-    href: "/",
+    href: "/products",
   },
   {
     name: "header.event",
-    href: "/",
+    href: "/events",
   },
   {
     name: "header.blog",
-    href: "/",
+    href: "/blog",
   },
 ]

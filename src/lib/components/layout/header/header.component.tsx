@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unused-prop-types */
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import tw from "twin.macro"
 import {
   CalendarIcon,
@@ -11,12 +11,15 @@ import {
   InstaLogoIcon,
   YoutubeIcon,
   TiktokIcon,
+  NaverPlaceIcon,
+  KakaoFriendsIcon,
 } from "@/assets/icon"
 import { IconButton, Logo, MobileLogo } from "@/design-system/components"
 import AppMaxWidth from "../app-max-width.component"
 import useResponsive from "@/lib/hooks/use-responsive"
 import HeaderLanguage from "./header-language.component"
-import MobileAccordionMenu from "./mobile-accordion-menu.component"
+import SearchModal from "@/pages/home/components/search-modal.component"
+import MobileMenu from "./mobile-menu.component"
 import useCustomNavigate from "@/lib/hooks/use-custom-navigate"
 import { useTranslation } from "react-i18next"
 import useLanguageValue from "@/lib/hooks/use-language-key"
@@ -47,14 +50,16 @@ const LeftMenu = ({ isDesktop }: MenuProps) => {
 
   // 데스크탑일 때 아이콘들 나열
   const socialLinks = [
+    { icon: NaverPlaceIcon, url: "https://blog.naver.com/" },
     { icon: NaverBlogIcon, url: "https://blog.naver.com/" },
     { icon: InstaLogoIcon, url: "https://www.instagram.com/" },
+    { icon: KakaoFriendsIcon, url: "https://www.kakaocorp.com/" },
     { icon: YoutubeIcon, url: "https://www.youtube.com/" },
     { icon: TiktokIcon, url: "https://www.tiktok.com/" },
   ]
 
   return (
-    <div tw="flex items-center gap-4">
+    <div tw="flex items-center gap-[7px]">
       {socialLinks.map(({ icon: Icon, url }) => (
         <a
           key={url}
@@ -62,7 +67,7 @@ const LeftMenu = ({ isDesktop }: MenuProps) => {
           target="_blank"
           rel="noopener noreferrer"
           tw="flex items-center justify-center hover:opacity-80 transition-opacity">
-          <Icon width={22} height={22} />
+          <Icon width={24} height={24} />
         </a>
       ))}
     </div>
@@ -71,12 +76,19 @@ const LeftMenu = ({ isDesktop }: MenuProps) => {
 
 const RightMenu = ({ isDesktop, setOpenSearch, isMenuOpen, setIsMenuOpen }: MenuProps) => {
   const navigate = useCustomNavigate()
+  const [openSearchModal, setOpenSearchModal] = React.useState(false)
 
   return (
     <div tw="flex items-center">
       {/* 데스크탑 */}
       {isDesktop ? (
         <>
+          <button
+            tw="cursor-pointer flex items-center gap-1 text-[13px] md:text-[15px] font-normal"
+            onClick={() => setOpenSearchModal(true)}>
+            시술검색
+          </button>
+          <div tw="ml-6" />
           <button
             tw="ml-2 cursor-pointer flex items-center gap-1 text-[13px] md:text-[15px] leading-[150%] font-normal"
             onClick={() => navigate("/reservation/new")}>
@@ -87,12 +99,13 @@ const RightMenu = ({ isDesktop, setOpenSearch, isMenuOpen, setIsMenuOpen }: Menu
           </button>
 
           <div tw="ml-8" />
-          <button tw="cursor-pointer" onClick={() => navigate("/reservation")}>
+          <button tw="cursor-pointer" disabled onClick={() => navigate("/reservation")}>
             예약확인
           </button>
 
           <div tw="w-3 ml-8" />
           <HeaderLanguage />
+          <SearchModal open={openSearchModal} onClose={() => setOpenSearchModal(false)} />
         </>
       ) : (
         <>
@@ -109,13 +122,14 @@ const RightMenu = ({ isDesktop, setOpenSearch, isMenuOpen, setIsMenuOpen }: Menu
                   0
                 </span>
               </div>
-              <IconButton tw="p-2" icon={SearchIcon} onClick={() => setOpenSearch?.(true)} />
+              <IconButton tw="p-2" icon={SearchIcon} onClick={() => setOpenSearchModal(true)} />
               <IconButton
                 tw="p-2"
                 icon={HamburgerIcon}
                 iconSize={24}
                 onClick={() => setIsMenuOpen?.(true)}
               />
+              <SearchModal open={openSearchModal} onClose={() => setOpenSearchModal(false)} />
             </>
           )}
 
@@ -319,7 +333,7 @@ const HeaderComponent = ({ onClickDrawer, clickedKeyword, setClickedKeyword }: P
               setIsMenuOpen={setIsMenuOpen}
             />
           </AppMaxWidth>
-          {!isDesktop && isMenuOpen && <MobileAccordionMenu />}
+          {!isDesktop && isMenuOpen && <MobileMenu />}
         </>
       )}
     </HeaderContainer>

@@ -2,6 +2,7 @@
   "header": {
     "home": "홈",
     "surgeryAndPrice": "전체 시술",
+    "treatmentList": "전체 시술",
     "hospital": "소개",
     "reservation": "상담 예약하기",
     "event": "가격·이벤트",
@@ -18,7 +19,7 @@
     "onlineReserve": "예약하기",
     "onlineConsult": "상담문의",
     "todaysSurgery": "오늘 상담/예약 많은 시술",
-    "hospitalName": "세니아 의원",
+    "hospitalName": "페슈 의원",
     "location": "1관주소",
     "newLocation": "2관주소",
     "thirdLocation": "3관주소",
@@ -26,7 +27,7 @@
     "hospitalWay": "▶ 강남역 10번 출구에서 직진(도보 4분), 신논현역 7번출구에서 직진(도보 2분) ▶ 서산빌딩 건물 4층",
     "newHospitalLocation": "서울특별시 서초구 강남대로69길 8 KI타워 5층",
     "newHospitalWay": "▶ 신논현역 7번출구에서 직진 ▶ 두번째 골목(찰스앤키스 건물 옆)으로 우회전 ▶ KI타워 건물 5층",
-    "thirdHospitalLocation": "서울특별시 서초구 강남대로69길 10 5-6층 세니아의원 3관",
+    "thirdHospitalLocation": "서울특별시 서초구 강남대로69길 10 5-6층 페슈의원 3관",
     "parking": "주차장",
     "parkingDescription": "· 본원 건물 기계식 주차(SUV, K9이상 불가)\n· 외부주차장 ▶ 에이프로스퀘어\n(서울 서초구 서초대로77길 55 )",
     "openTime": "진료시간",
@@ -49,7 +50,7 @@
     "consultationKoreanKakao": "카카오톡"
   },
   "footer": {
-    "title": "아름다움을 감각하다 세니아 클리닉",
+    "title": " 페슈 클리닉",
     "nameOfCEO": "대표자명 : 민원준",
     "companyNumber": "사업자번호: 671-12-02176",
     "copyright": "Copyright 2023 PECHE Corporation. All Rights Reserved.",
@@ -63,7 +64,7 @@
     "thirdBuildingAddress": "3관주소",
     "hospitalAddress": "서울특별시 서초구 강남대로 441, 4층, 13층 (서초동 서산빌딩)",
     "hospitalNewBuildingAddress": "서울특별시 서초구 강남대로69길 8 KI타워, 5층",
-    "hospitalThirdBuildingAddress": "서울특별시 서초구 강남대로69길 10 5-6층 세니아의원 3관",
+    "hospitalThirdBuildingAddress": "서울특별시 서초구 강남대로69길 10 5-6층 페슈의원 3관",
     "privacyPolicy": "개인정보처리방침",
     "termsOfService": "이용약관"
   },
@@ -73,8 +74,8 @@
     "introMachine": "장비 소개",
     "introWorker": "직원 소개",
     "introDoctor": "의료진 소개",
-    "introduction1": "<bold>아름다움을 감각하다 세니아 클리닉에</bold> 오신 것을 진심으로 환영합니다.\n\n세니아는 ‘환대(hospitality)’를 뜻하는 그리스어인\n[크세니아, peche]에서 영감을 받아 지어졌습니다.\n\n병원이 고객분들을 최고로 환대해야하는 공간이라는\n세니아의 철학을 담았습니다.\n\n오랜 시간이 지남에도 선명하게 기억되는 순간들이 있습니다.\n바람에 스치듯 코끝에 여운을 남기는 그날의 향기와 온도,\n그리고 색감과 선율까지.",
-    "introduction2": "섬세한 무형의 감각들이 한 데 어우러져\n색다른 경험을 선사했기 때문일 것 입니다.\n\n세니아 클리닉에 머무르시는 동안\n외면의 아름다움은 물론, 내면의 아름다움까지\n온전히 감각할 수 있도록\n정성과 노력을 다하겠습니다."
+    "introduction1": "<bold> 페슈 클리닉에</bold> 오신 것을 진심으로 환영합니다.\n\n페슈는 ‘환대(hospitality)’를 뜻하는 그리스어인\n[크페슈, peche]에서 영감을 받아 지어졌습니다.\n\n병원이 고객분들을 최고로 환대해야하는 공간이라는\n페슈의 철학을 담았습니다.\n\n오랜 시간이 지남에도 선명하게 기억되는 순간들이 있습니다.\n바람에 스치듯 코끝에 여운을 남기는 그날의 향기와 온도,\n그리고 색감과 선율까지.",
+    "introduction2": "섬세한 무형의 감각들이 한 데 어우러져\n색다른 경험을 선사했기 때문일 것 입니다.\n\n페슈 클리닉에 머무르시는 동안\n외면의 아름다움은 물론, 내면의 아름다움까지\n온전히 감각할 수 있도록\n정성과 노력을 다하겠습니다."
   },
   "occupations": {
     "원장": "원장",
@@ -92,7 +93,7 @@
     "normalProducts": "일반시술",
     "productList": "시술 목록",
     "addProductYouWant": "원하시는 시술을\n선택해주세요.",
-    "reserveDescription": "※ 결제는 내원시 진행됩니다.\n※ 위 시술 비용은 예상 금액이고 실제 시술 금액과 상이할 수 있습니다.",
+    "reserveDescription": "모든 시술 VAT 10% 별도입니다.\n결제는 내원시 진행됩니다.",
     "reserveButtonActiveText1": "*예약 시간을 선택해주세요",
     "reserveButtonActiveText2": "*필수 동의사항을 체크해주세요",
     "totalPrice": "예상 시술 금액 (부가세 별도)",
@@ -103,16 +104,18 @@
     "target": "시술 추천대상",
     "qAndA": "Q&A",
     "caution": "주의사항",
-    "noEvents": "이벤트 상품이 없습니다"
+    "noEvents": "이벤트 상품이 없습니다",
+    "moreProcedures": "시술 더보기",
+    "treatmentVideo": "시술 소개 영상"
   },
   "common": {
     "all": "전체",
     "event": "이벤트",
     "normal": "일반",
-    "kakaoFriend": "카톡친구",
-    "new": "신규",
-    "best": "인기",
-    "pop": "이벤트",
+    "kakaoFriend": "kakao",
+    "new": "new",
+    "best": "best",
+    "pop": "event",
     "reservation": "예약",
     "save": "담기",
     "vatNotIncluded": "*부가세 10% 별도"
@@ -137,9 +140,11 @@
     "welcome": "님, 어서오세요",
     "nameFix": "*본인 이름이 아닌 경우 카카오톡으로 문의 바랍니다.",
     "reserve": "예약하기",
+    "shoppingCart": "장바구니",
+    "customerInfo": "고객정보 입력",
     "logout": "로그아웃",
     "logoutConfirm": "로그아웃 하시겠습니까?",
-    "bookConsultation": "상담 예약하기",
+    "bookConsultation": "방문 상담 후 시술 선택",
     "auth": "본인인증",
     "authDescription": "고객님의 내원 이력 확인을 위해 인증 서비스를 실시하고 있습니다.",
     "smsVerification": "문자 인증",
@@ -163,10 +168,14 @@
     "memo": "메모",
     "guardianConsentText": "* 미성년자 예약 시, 보호자 시술 동의서를 작성하여 내원해 주세요.",
     "guardianConsent": "보호자 시술 동의서",
-    "agreeToAll": "전체 동의",
+    "authTitle": "본인인증",
+    "agreementTitle": "약관동의",
+    "agreeToAll": "전체 동의하기",
+    "termsOfService": "(필수) 서비스 이용약관에 동의합니다.",
     "privacyAgreement": "[필수] 서비스 이용 및 예약을 위한 개인 정보 제공에 동의합니다.",
     "marketingAgreement": "[선택] 마케팅 활용에 동의합니다.",
-    "detail": "자세히 보기",
+    "marketingNotice": "마케팅활용에 동의하시면 특가 이벤트 및 할인 정보를 받아보실 수 있습니다.",
+    "detail": "약관보기",
     "reservationComplete": "예약 완료",
     "reservationCompleteText": "예약이 완료되었습니다.",
     "checkConfirmationText": "예약 확정 문자를 꼭 확인해주세요.",
@@ -195,7 +204,7 @@
     "reservationCancelConfirm": "예약이 취소되었습니다"
   },
   "reservationCheckPage": {
-    "reservationCheck": "예약 확인"
+    "reservationCheck": "예약 확인·변경"
   },
   "error": {
     "verificationNeeded": "본인인증이 필요합니다.",

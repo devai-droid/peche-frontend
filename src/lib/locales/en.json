@@ -2,6 +2,7 @@
   "header": {
     "home": "Main",
     "surgeryAndPrice": "Price",
+    "treatmentList": "전체 시술",
     "hospital": "About us",
     "reservation": "Book now",
     "event": "Event",
@@ -9,7 +10,8 @@
     "recommendKeyword": "Recommendation",
     "price": "Price",
     "introduction": "About us",
-    "reservationCheck": "Check Reservation"
+    "reservationCheck": "Check Reservation",
+    "blog": "Blog"
   },
   "home": {
     "title": "Hydrating Moisture Peel",
@@ -102,7 +104,9 @@
     "target": "Candidate for the Treatment",
     "qAndA": "Q&A",
     "caution": "Caution and Side Effects",
-    "noEvents": "No Event Products"
+    "noEvents": "No Event Products",
+    "moreProcedures": "시술 더보기",
+    "treatmentVideo": "시술 소개 영상"
   },
   "common": {
     "all": "All",
@@ -136,6 +140,8 @@
     "welcome": ", welcome to Peche Clinic.",
     "nameFix": "*If it is not your name, please contact through Whatsapp. (Whatsapp ID : +821027694410)",
     "reserve": "Reservation",
+    "shoppingCart": "Reservation",
+    "customerInfo": "고객정보 입력",
     "logout": "Logout",
     "logoutConfirm": "Are you sure you want to logout?",
     "bookConsultation": "Book a consultation",
@@ -162,9 +168,13 @@
     "memo": "Memo",
     "guardianConsentText": "* If a minor is making a reservation, please fill out the Guardian's Consent Form before visitation.",
     "guardianConsent": "Guardian's Consent Form",
+    "authTitle": "본인인증",
+    "agreementTitle": "약관동의",
     "agreeToAll": "Agree to all",
+    "termsOfService": "(필수) 서비스 이용약관에 동의합니다.",
     "privacyAgreement": "[Required] I agree to provide personal information for service use and reservation requests.",
     "marketingAgreement": "[Optional] I agree to the use of my information for marketing purposes.",
+    "marketingNotice": "마케팅활용에 동의하시면 특가 이벤트 및 할인 정보를 받아보실 수 있습니다.",
     "detail": "View Details",
     "reservationComplete": "Reservation Complete",
     "reservationCompleteText": "Your reservation is complete.",

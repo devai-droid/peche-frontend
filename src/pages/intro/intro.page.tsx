@@ -1,17 +1,23 @@
+/* eslint-disable no-param-reassign */
 import React from "react"
 import tw, { styled } from "twin.macro"
 import Page from "@/lib/components/layout/page.component"
 import KakaoMap from "@/lib/components/kakao-map/kakao-map.component"
 import GoogleMapComponent from "@/lib/components/google-map/google-map.component"
+import CartView from "@/features/product/components/cart-view.component"
 
 // 이미지 import
-import introBg from "@/assets/images/intro-object.jpg"
 import modelImg from "@/assets/images/intro-model.jpg"
-import peche1 from "@/assets/images/peche1.jpg"
-import peche2 from "@/assets/images/peche2.jpg"
-import peche3 from "@/assets/images/peche3.jpg"
+import peche1 from "@/assets/images/peche1-expand.jpg"
+import peche2 from "@/assets/images/peche2-expand.jpg"
+import peche3 from "@/assets/images/peche3-expand.jpg"
 import peche1Mobile from "@/assets/images/peche1-mobile.jpg"
 import peche2Mobile from "@/assets/images/peche2-mobile.jpg"
+import peche3Mobile from "@/assets/images/peche3-mobile.jpg"
+import { Swiper, SwiperSlide } from "swiper/react"
+import { Pagination } from "swiper/modules"
+import "swiper/css"
+
 import beauty from "@/assets/images/beauty.png"
 import trust from "@/assets/images/trust.png"
 import transparency from "@/assets/images/transparency.png"
@@ -35,27 +41,9 @@ import person8 from "@/assets/images/person8.png"
 
 const PageContainer = tw.div`w-full flex flex-col items-center bg-white`
 
-/* ──────────────────────────────
- * 1️⃣ Hero Section (배경 위 텍스트)
- * ────────────────────────────── */
-const SectionIntro = styled.section`
-  ${tw`relative w-full h-[500px] md:h-[650px] bg-center bg-cover flex items-center`}
-  background-image: url(${introBg});
-`
-const IntroTextWrapper = tw.div`
-  absolute left-[5vw] md:left-[8vw] top-[11vh] md:top-[8vh]
-  text-neutralBlack
-`
-const IntroTitle = tw.h1`
-  text-[40px] md:text-[52px] font-medium leading-tight mb-2 font-time
-`
-const IntroSubtitle = tw.p`
-  text-[18px] md:text-[22px] text-neutralBlack font-pretendard
-`
-
 /* 2️⃣ TRUST Section */
 const SectionTrust = tw.section`
-  w-full bg-white text-neutralBlack pt-20 pb-16 md:py-32
+  w-full bg-white text-neutralBlack pt-32 md:pt-20 pb-16 md:py-32
 `
 
 const TrustInner = tw.div`
@@ -66,7 +54,8 @@ const TrustInner = tw.div`
 
 // 왼쪽 전체 텍스트 블록
 const TrustTextBlock = tw.div`
-  w-full lg:w-1/2 flex flex-col justify-between
+  w-full lg:w-1/2 flex flex-col 
+  justify-center
   lg:h-[520px]
 `
 
@@ -83,8 +72,7 @@ const TrustHeading = styled.h2`
 
 // 작은 글씨 섹션
 const TrustParagraphBlock = tw.div`
-  flex items-end
-  mt-10 md:mt-0
+  mt-4
 `
 
 const TrustParagraph = tw.p`
@@ -104,6 +92,132 @@ const TrustImage = styled.img`
 /* ──────────────────────────────
  * 3️⃣ SYMBOL × TRUST Section
  * ────────────────────────────── */
+const HoverGrid = styled.div`
+  ${tw`w-full flex overflow-hidden gap-2`}
+  height: 438px;
+  max-width: 1200px;
+
+  @media (max-width: 767px) {
+    ${tw`hidden`}
+  }
+
+  /* Hover가 아닐 때 — 기본 상태 */
+  &:not(:hover) .item-0 {
+    flex: 2;
+  }
+
+  &:not(:hover) .item-1,
+  &:not(:hover) .item-2 {
+    flex: 1;
+  }
+`
+
+const HoverItem = styled.div`
+  ${tw`relative overflow-hidden`}
+  flex: 1;
+  transition: flex 0.4s ease;
+
+  &:hover {
+    flex: 2;
+  }
+
+  img {
+    ${tw`w-full h-full object-cover`}
+    transition: transform 0.4s ease;
+  }
+
+  &:hover img {
+    transform: scale(1.05);
+  }
+
+  /* 텍스트 오버레이 */
+  .label {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    text-align: right;
+    color: #da7f67;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+
+    p:first-child {
+      font-size: 30px;
+      font-weight: 400;
+    }
+
+    p:last-child {
+      margin-top: 6px;
+      font-size: 22px;
+      font-weight: 500;
+    }
+  }
+
+  /* hover 시 보여줌 */
+  &:hover .label {
+    opacity: 1;
+  }
+`
+
+const desktopImages = [
+  { src: peche1, title: "Pêche", desc: "생기있는 코랄빛" },
+  { src: peche2, title: "Pêche", desc: "영원한 젊음" },
+  { src: peche3, title: "Pêche", desc: "밝고 부드러운 속살" },
+]
+
+const mobileImages = [
+  { src: peche1Mobile, title: "Pêche", desc: "생기있는 코랄빛" },
+  { src: peche2Mobile, title: "Pêche", desc: "영원한 젊음" },
+  { src: peche3Mobile, title: "Pêche", desc: "밝고 부드러운 속살" },
+]
+
+const MobileSwiperWrapper = styled.div`
+  ${tw`w-full block md:hidden`}
+`
+
+const StyledSwiperSlide = styled(SwiperSlide)`
+  width: 240px !important;
+  display: flex;
+  justify-content: center;
+`
+
+const MobileSlide = styled.div`
+  ${tw`relative w-full flex justify-center items-center tracking-tight leading-[150%]`}
+
+  /* 이미지 컨테이너 */
+  .img-wrapper {
+    position: relative;
+    width: 240px;
+    height: auto;
+  }
+
+  img {
+    width: 240px;
+    height: auto;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* 이미지 위 오버레이 텍스트 */
+  .label {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    text-align: right;
+    color: #da7f67;
+  }
+
+  .label p:first-child {
+    font-size: 24px;
+    font-weight: 400;
+  }
+
+  .label p:last-child {
+    font-size: 16px;
+    font-weight: 500;
+    margin-top: 8px;
+  }
+`
+
 const SectionSymbolTrust = tw.section`
   w-full bg-[#FFF7EE] py-20 md:py-24
 `
@@ -121,37 +235,6 @@ const SymbolDesc = tw.p`
   text-center text-neutral70 text-[14px] md:text-[16px] leading-[1.5] mb-10 max-w-[700px] tracking-tight
 `
 
-// ✅ 이미지 그리드 수정됨
-const ImageGrid = styled.div`
-  ${tw`flex justify-center items-center gap-4 w-full overflow-hidden`}
-  flex-wrap: nowrap; /* ✅ 줄바꿈 방지 */
-  @media (max-width: 767px) {
-    ${tw`grid grid-cols-2 gap-2`}
-    flex-wrap: initial;
-  }
-`
-
-// ✅ 개별 이미지
-const SymbolImage = styled.img<{ index?: number }>`
-  ${tw`object-cover`}
-  height: 438px;
-  flex-shrink: 0; /* ✅ 줄바꿈 방지 핵심 */
-
-  @media (min-width: 1024px) {
-    ${({ index }) => (index === 0 ? tw`w-[584px]` : tw`w-[300px]`)}
-  }
-
-  @media (min-width: 768px) and (max-width: 1023px) {
-    /* ✅ 태블릿 구간: 비율 맞추기 */
-    ${({ index }) => (index === 0 ? tw`w-[45%]` : tw`w-[27%]`)}
-    height: auto;
-  }
-
-  @media (max-width: 767px) {
-    ${tw`w-full h-auto`}
-  }
-`
-
 /* Core Value */
 const CoreValueContainer = tw.div`
   w-full bg-white rounded-none mt-20 py-14 flex flex-col items-center
@@ -163,7 +246,7 @@ const Highlight = tw.span`text-primary ml-2 font-medium font-pretendard text-[16
 const CoreGrid = tw.div`
   flex flex-col md:flex-row items-center justify-center gap-12 md:gap-20
 `
-const CoreItem = tw.div`flex flex-col items-center text-center max-w-[250px]`
+const CoreItem = tw.div`flex flex-col items-center text-center max-w-[265px]`
 const CoreImage = styled.img`
   ${tw`w-[100px] h-[100px] object-contain mb-4`}
 `
@@ -177,12 +260,19 @@ const SectionInterior = tw.section`
   w-full bg-white pt-20 pb-0 md:pt-28 overflow-x-hidden
 `
 
-const InteriorInner = tw.div`
-  max-w-[1440px] mx-auto px-6 md:px-10
-  flex flex-col items-center
+const InteriorTextWrapper = tw.div`
+  w-full max-w-[1440px] mx-auto px-6 md:px-10
 `
 
-// 🧡 텍스트 블록
+const FullWidthImageWrapper = tw.div`
+  w-full
+`
+
+const InteriorImageContainer = tw.div`
+  max-w-[1440px] mx-auto w-full px-0
+`
+
+// 텍스트 블록
 const InteriorLabel = tw.h3`
   text-primary text-[18px] md:text-[22px] tracking-tight mb-3 font-medium self-start leading-[1.5]
 `
@@ -194,51 +284,41 @@ const InteriorDesc = tw.p`
   whitespace-pre-line
 `
 
-// ✅ 풀블리드 이미지 섹션 (뷰포트 기준 확장)
-const FullWidthImageRow = styled.div`
-  ${tw`w-screen flex flex-col md:flex-row gap-0`}
-  position: relative;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
-  overflow: hidden;
-
-  img {
-    ${tw`w-full object-cover`}
-    height: auto;
-    @media (min-width: 768px) {
-      height: 460px;
-    }
-  }
-`
-
 // 🧡 상단 이미지 (2장, 1440px 컨테이너 내부 / 높이 351px 고정)
 const TopImageRow = styled.div`
-  ${tw`w-full flex flex-col md:flex-row items-center justify-center mb-20 md:mb-28`} /* ✅ 여백 추가 */
+  ${tw`w-full flex flex-col md:flex-row items-center justify-center mb-16 md:mb-28`}
   gap: 0;
 
   img {
     ${tw`w-full object-cover`}
-    height: 351px; /* ✅ 최대 높이 고정 */
+    height: 351px;
   }
 
   @media (max-width: 767px) {
+    margin-left: -20px;
+    margin-right: -20px;
+    width: calc(100% + 40px);
     img {
-      height: auto; /* ✅ 모바일은 자동 높이 (비율 유지) */
+      height: auto;
     }
   }
 
-  img + img {
-    margin-left: 0;
-  }
+  // img + img {
+  //   margin-left: 0;
+  // }
 `
 
 // 🧡 하단 이미지 섹션
 const BottomImageRow = styled.div`
-  ${tw`flex flex-col md:flex-row w-full justify-between items-start`}
+  ${tw`flex flex-col md:flex-row w-full justify-between items-start md:items-end`}
   align-items: flex-start;
   gap: 0;
+
+  @media (max-width: 767px) {
+    margin-left: -20px;
+    margin-right: -20px;
+    width: calc(100% + 40px);
+  }
 `
 
 // ✅ 왼쪽 블록 전체 높이를 오른쪽과 맞춤
@@ -254,7 +334,8 @@ const LeftBlock = styled.div`
 
 const LeftText = styled.p`
   ${tw`text-[14px] md:text-[16px] tracking-tight text-neutral70 font-pretendard leading-[1.5]`}
-  margin-bottom: 12px; /* ✅ 모바일용 좁은 여백 */
+  margin-bottom: 25px; /* ✅ 모바일용 좁은 여백 */
+  padding-left: 25px;
 
   @media (min-width: 768px) {
     margin-bottom: 32px; /* ✅ 데스크탑 여유 */
@@ -264,13 +345,14 @@ const LeftText = styled.p`
 const LeftImage = styled.img`
   ${tw`w-full object-cover`}
   height: 292px; /* ✅ 고정 */
+  margin-top: auto;
   @media (max-width: 767px) {
     height: auto;
   }
 `
 
 const RightImage = styled.img`
-  ${tw`md:w-[48%] w-full object-cover`}
+  ${tw`md:w-[49%] w-full object-cover`}
   height: 584px; /* ✅ 오른쪽 기준 높이 */
   @media (max-width: 767px) {
     height: auto;
@@ -333,7 +415,7 @@ const CustomerTrustParagraph = tw.p`
  * PEOPLE × TRUST SECTION
  * ────────────────────────────── */
 const PeopleSection = tw.section`
-  w-full bg-[#FEF3E6] py-20 md:py-28
+  w-full bg-[#FEF3E6] pt-20 pb-12 md:pt-28 md:pb-28
 `
 
 const PeopleInner = tw.div`
@@ -393,7 +475,7 @@ const InfoBlock = tw.div`
 `
 
 const InfoTitle = tw.h3`
-  text-primary text-[16px] md:text-[18px] tracking-tight font-semibold mb-1
+  text-primary text-[16px] md:text-[18px] tracking-tight font-semibold mb-2 md:mb-3
 `
 
 const InfoText = tw.p`
@@ -402,7 +484,7 @@ const InfoText = tw.p`
 
 /* Buttons */
 const ButtonGroup = tw.div`
-  flex flex-row md:flex-col gap-3 mt-6
+  flex flex-row md:flex-col gap-3 mt-3
 `
 
 const SolidButton = tw.button`
@@ -435,222 +517,270 @@ const Intro = () => {
     return () => window.removeEventListener("resize", handleResize)
   }, [])
 
-  const topImages = isMobile
-    ? [peche1Mobile, peche2Mobile] // ✅ 모바일에서는 2장만 표시
-    : [peche1, peche2, peche3] // ✅ 데스크탑에서는 3장
-
   const people = [person1, person2, person3, person4, person5, person6, person7, person8]
 
   return (
-    <Page hiddenFooter={false}>
-      <PageContainer>
-        {/* 1️⃣ Hero Section */}
-        <SectionIntro>
-          <IntroTextWrapper>
-            <IntroTitle>Pêche Introduction</IntroTitle>
-            <IntroSubtitle>페슈의원 소개</IntroSubtitle>
-          </IntroTextWrapper>
-        </SectionIntro>
+    <Page hiddenFooter={false} bottomCartExists={false}>
+      <CartView isHome>
+        <PageContainer>
+          {/* 2️⃣ TRUST Section */}
+          <SectionTrust>
+            <TrustInner>
+              <TrustTextBlock>
+                <TrustHeadingBlock>
+                  <TrustHeading>
+                    아름다움의 시작과 <br />
+                    끝을 완성하는 <br />
+                    페슈의원의 <span>‘TRUST’</span>
+                  </TrustHeading>
+                </TrustHeadingBlock>
 
-        {/* 2️⃣ TRUST Section */}
-        <SectionTrust>
-          <TrustInner>
-            <TrustTextBlock>
-              <TrustHeadingBlock>
-                <TrustHeading>
-                  아름다움의 시작과 <br />
-                  끝을 완성하는 <br />
-                  페슈의원의 <span>‘TRUST’</span>
-                </TrustHeading>
-              </TrustHeadingBlock>
+                <TrustParagraphBlock>
+                  <TrustParagraph>
+                    페슈의원은 고객이 경험하는 모든 순간에서 신뢰를 만들기 위해 오랜 시간 깊은
+                    고민과 노력을 쌓아 만들어졌습니다.
+                    {"\n"} {"\n"}
+                    처음 만나는 순간부터 치료를 마치고 병원을 나서는 순간까지, 페슈의원에서의 모든
+                    경험은 언제나 투명하고 정직합니다.
+                  </TrustParagraph>
+                </TrustParagraphBlock>
+              </TrustTextBlock>
 
-              <TrustParagraphBlock>
-                <TrustParagraph>
-                  페슈의원은 고객이 경험하는 모든 순간에서 신뢰를 만들기 위해 오랜 시간 깊은 고민과
-                  노력을 쌓아 만들어졌습니다.
-                  {"\n"}
-                  처음 만나는 순간부터 치료를 마치고 병원을 나서는 순간까지, 페슈의원에서의 모든
-                  경험은 언제나 투명하고 정직합니다.
-                </TrustParagraph>
-              </TrustParagraphBlock>
-            </TrustTextBlock>
+              <TrustImage src={modelImg} alt="clinic model" />
+            </TrustInner>
+          </SectionTrust>
 
-            <TrustImage src={modelImg} alt="clinic model" />
-          </TrustInner>
-        </SectionTrust>
+          {/* 3️⃣ SYMBOL × TRUST Section */}
+          <SectionSymbolTrust>
+            <SymbolInner>
+              <SymbolTitle>SYMBOL × TRUST</SymbolTitle>
+              <SymbolSubTitle>
+                복숭아 <span tw="font-normal">[pêche]</span>
+              </SymbolSubTitle>
+              <SymbolDesc>
+                페슈(Pêche)는 프랑스어로 ‘복숭아’를 뜻합니다.
+                <br />
+                화사함과 생기를 불러일으키는 복숭아의 이미지는 피부과가 추구하는 아름다움의 본질과도
+                맞닿아 있습니다.
+                <br />이 의미는 브랜드 심볼로 이어지고 그 안에 페슈의원의 철학을 담았습니다.
+              </SymbolDesc>
 
-        {/* 3️⃣ SYMBOL × TRUST Section */}
-        <SectionSymbolTrust>
-          <SymbolInner>
-            <SymbolTitle>SYMBOL × TRUST</SymbolTitle>
-            <SymbolSubTitle>복숭아 [pêche]</SymbolSubTitle>
-            <SymbolDesc>
-              페슈(Pêche)는 프랑스어로 ‘복숭아’를 뜻합니다.
-              <br />
-              화사함과 생기를 불러일으키는 복숭아의 이미지는 피부과가 추구하는 아름다움의 본질과도
-              맞닿아 있습니다.
-              <br />이 의미는 브랜드 심볼로 이어지고 그 안에 페슈의원의 철학을 담았습니다.
-            </SymbolDesc>
+              <HoverGrid>
+                {desktopImages.map((img, index) => (
+                  <HoverItem key={index} className={`item-${index}`}>
+                    <img src={img.src} alt={`peche-${index}`} />
+                    <div className="label">
+                      <p tw="font-time">{img.title}</p>
+                      <p>{img.desc}</p>
+                    </div>
+                  </HoverItem>
+                ))}
+              </HoverGrid>
 
-            <ImageGrid>
-              {topImages.map((img, i) => (
-                <SymbolImage key={i} src={img} index={i} alt={`pêche ${i + 1}`} />
-              ))}
-            </ImageGrid>
+              <MobileSwiperWrapper>
+                <Swiper
+                  modules={[Pagination]}
+                  pagination={{ clickable: true }}
+                  spaceBetween={5}
+                  slidesPerView="auto"
+                  onReachEnd={(swiper) => {
+                    swiper.allowSlideNext = false
+                  }}
+                  onFromEdge={(swiper) => {
+                    swiper.allowSlideNext = true
+                    swiper.allowSlidePrev = true
+                  }}>
+                  {mobileImages.map((img, i) => (
+                    <StyledSwiperSlide key={i}>
+                      <MobileSlide>
+                        <div className="img-wrapper">
+                          <img src={img.src} alt={`mobile-peche-${i}`} />
 
-            {/* Core Value */}
-            <CoreValueContainer>
-              <CoreTitle>
-                Core Value <Highlight>페슈의원의 핵심가치</Highlight>
-              </CoreTitle>
+                          <div className="label">
+                            <p tw="font-time">{img.title}</p>
+                            <p>{img.desc}</p>
+                          </div>
+                        </div>
+                      </MobileSlide>
+                    </StyledSwiperSlide>
+                  ))}
+                </Swiper>
+              </MobileSwiperWrapper>
 
-              <CoreGrid>
-                <CoreItem>
-                  <CoreImage src={beauty} alt="아름다움" />
-                  <CoreTextTitle>아름다움</CoreTextTitle>
-                  <CoreTextDesc>
-                    페슈의원의 심볼은 복숭아의 단면에서 시작되었습니다. 껍질을 넘어.
-                  </CoreTextDesc>
-                </CoreItem>
+              {/* Core Value */}
+              <CoreValueContainer>
+                <CoreTitle>
+                  Core Value <Highlight>페슈의원의 핵심가치</Highlight>
+                </CoreTitle>
 
-                <GrayPlusIcon />
+                <CoreGrid>
+                  <CoreItem>
+                    <CoreImage src={beauty} alt="아름다움" />
+                    <CoreTextTitle>아름다움</CoreTextTitle>
+                    <CoreTextDesc>
+                      복숭아 고유의 부드러운 곡선과 생기 있는 컬러는 건강하고 생기있는 피부를
+                      상징합니다.
+                    </CoreTextDesc>
+                  </CoreItem>
 
-                <CoreItem>
-                  <CoreImage src={trust} alt="신뢰" />
-                  <CoreTextTitle>신뢰</CoreTextTitle>
-                  <CoreTextDesc>
-                    페슈의원의 심볼은 복숭아의 단면에서 시작되었습니다. 껍질을 넘어.
-                  </CoreTextDesc>
-                </CoreItem>
+                  <GrayPlusIcon />
 
-                <GrayPlusIcon />
+                  <CoreItem>
+                    <CoreImage src={trust} alt="신뢰" />
+                    <CoreTextTitle>신뢰</CoreTextTitle>
+                    <CoreTextDesc>
+                      삼각형의 단단한 직선은 진정성 있는 진료와 일관된 기준을 지키는 신뢰를 담고
+                      있습니다.
+                    </CoreTextDesc>
+                  </CoreItem>
 
-                <CoreItem>
-                  <CoreImage src={transparency} alt="투명함" />
-                  <CoreTextTitle>투명함</CoreTextTitle>
-                  <CoreTextDesc>
-                    페슈의원의 심볼은 복숭아의 단면에서 시작되었습니다. 껍질을 넘어.
-                  </CoreTextDesc>
-                </CoreItem>
-              </CoreGrid>
-            </CoreValueContainer>
-          </SymbolInner>
-        </SectionSymbolTrust>
-        <SectionInterior>
-          <InteriorInner>
-            {/* 텍스트 */}
-            <InteriorLabel>INTERIOR × TRUST</InteriorLabel>
-            <InteriorTitle>모든 공간에 새겨 넣은, 신뢰의 가치</InteriorTitle>
-            <InteriorDesc>
-              페슈의원은 고급스럽게 과시하기보다 신뢰감을 줄 수 있는 공간을 지향합니다.
-              <br />
-              개방감과 투명성이 느껴지는 구조, 남녀 모두에게 어울리는 중성적 분위기, 낮은 조도의
-              편안한 대기 공간까지
-              <br />
-              모든 요소는 환자가 편안하게 머무르면서도 신뢰와 안정감을 느낄 수 있도록
-              디자인되었습니다.
-            </InteriorDesc>
+                  <GrayPlusIcon />
 
-            {/* 이미지 2장 (1440px 안, gap 없음) */}
-            <TopImageRow>
-              <img src={interior1} alt="대기실 인테리어" />
-              <img src={interior2} alt="진료실 인테리어" />
-            </TopImageRow>
+                  <CoreItem>
+                    <CoreImage src={transparency} alt="투명함" />
+                    <CoreTextTitle>투명함</CoreTextTitle>
+                    <CoreTextDesc>
+                      복숭아의 뽀얀 단면처럼 진실되고 투명한 마음으로 고객을 대합니다.
+                    </CoreTextDesc>
+                  </CoreItem>
+                </CoreGrid>
+              </CoreValueContainer>
+            </SymbolInner>
+          </SectionSymbolTrust>
+          <SectionInterior>
+            <InteriorTextWrapper>
+              {/* 텍스트 */}
+              <InteriorLabel>INTERIOR × TRUST</InteriorLabel>
+              <InteriorTitle>모든 공간에 새겨 넣은, 신뢰의 가치</InteriorTitle>
+              <InteriorDesc>
+                페슈의원은 고급스럽게 과시하기보다 신뢰감을 줄 수 있는 공간을 지향합니다.
+                <br />
+                개방감과 투명성이 느껴지는 구조, 남녀 모두에게 어울리는 중성적 분위기, 낮은 조도의
+                편안한 대기 공간까지
+                <br />
+                모든 요소는 환자가 편안하게 머무르면서도 신뢰와 안정감을 느낄 수 있도록
+                디자인되었습니다.
+              </InteriorDesc>
+            </InteriorTextWrapper>
+            <FullWidthImageWrapper>
+              {/* 이미지 2장 (1440px 안, gap 없음) */}
+              <TopImageRow>
+                <img src={interior1} alt="대기실 인테리어" />
+                <img src={interior2} alt="진료실 인테리어" />
+              </TopImageRow>
+            </FullWidthImageWrapper>
 
-            {/* 하단 이미지 */}
-            <BottomImageRow>
-              <LeftBlock>
-                <LeftText>
-                  특히 공간 곳곳에는 독창적인 소재 텍스처와 우리의 철학이 담긴 복숭아 심볼을
-                  <br />
-                  형상화한 포인트 요소를 담아냈습니다. 이 세심한 디테일을 통해 다른 곳에서는
-                  <br />
-                  경험할 수 없는 페슈만의 특별함이 완성됩니다.
-                </LeftText>
-                <LeftImage src={interior3} alt="복도 인테리어" />
-              </LeftBlock>
+            <FullWidthImageWrapper>
+              <InteriorImageContainer>
+                {/* 하단 이미지 */}
+                <BottomImageRow>
+                  <LeftBlock>
+                    <LeftText>
+                      특히 공간 곳곳에는 독창적인 소재 텍스처와 우리의 철학이 담긴 복숭아 심볼을
+                      <br />
+                      형상화한 포인트 요소를 담아냈습니다. 이 세심한 디테일을 통해 다른 곳에서는
+                      <br />
+                      경험할 수 없는 페슈만의 특별함이 완성됩니다.
+                    </LeftText>
+                    <LeftImage src={interior3} alt="복도 인테리어" />
+                  </LeftBlock>
 
-              <RightImage src={interior4} alt="리셉션 인테리어" />
-            </BottomImageRow>
-          </InteriorInner>
-        </SectionInterior>
-        <SectionCustomerTrust>
-          <CustomerTrustInner>
-            <SectionTitle>고객이 마주하는 모든 곳에 담아낸 ‘신뢰의 가치’</SectionTitle>
+                  <RightImage src={interior4} alt="리셉션 인테리어" />
+                </BottomImageRow>
+              </InteriorImageContainer>
+            </FullWidthImageWrapper>
+          </SectionInterior>
+          <SectionCustomerTrust>
+            <CustomerTrustInner>
+              <SectionTitle>고객이 마주하는 모든 곳에 담아낸 ‘신뢰의 가치’</SectionTitle>
 
-            {/* 1️⃣ 카드 */}
-            <CustomerTrustCard>
-              <CustomerTrustImage src={trustPic1} alt="언제나 같은, 합리적이고 정직한 가격" />
-              <CustomerTrustText>
-                <CustomerTrustHeading>언제나 같은, 합리적이고 정직한 가격</CustomerTrustHeading>
-                <CustomerTrustParagraph>
-                  페슈의원은 가격을 통해서도 신뢰를 지켜갑니다. 누구에게나 다르게, 순간적인
-                  이벤트로만 달라지는 가격은 없습니다. 언제나 어디서나 동일하게 적용되는 정찰제를
-                  고수하며, 불필요한 거품을 뺀 합리적인 가격만을 제시합니다. 최저가 경쟁은 아니지만,
-                  누구나 납득할 수 있는 수준에서 공정하고 투명하게 지켜갑니다.
-                </CustomerTrustParagraph>
-              </CustomerTrustText>
-            </CustomerTrustCard>
+              {/* 1️⃣ 카드 */}
+              <CustomerTrustCard>
+                <CustomerTrustImage src={trustPic1} alt="언제나 같은, 합리적이고 정직한 가격" />
+                <CustomerTrustText>
+                  <CustomerTrustHeading>언제나 같은, 합리적이고 정직한 가격</CustomerTrustHeading>
+                  <CustomerTrustParagraph>
+                    페슈의원은 가격을 통해서도 신뢰를 지켜갑니다. 누구에게나 다르게, 순간적인
+                    이벤트로만 달라지는 가격은 없습니다. 언제나 어디서나 동일하게 적용되는 정찰제를
+                    고수하며, 불필요한 거품을 뺀 합리적인 가격만을 제시합니다.
+                    <br /> <br />
+                    최저가 경쟁은 아니지만, 누구나 납득할 수 있는 수준에서 공정하고 투명하게
+                    지켜갑니다.
+                  </CustomerTrustParagraph>
+                </CustomerTrustText>
+              </CustomerTrustCard>
 
-            {/* 2️⃣ 카드 */}
-            <CustomerTrustCard>
-              <CustomerTrustImage
-                src={trustPic2}
-                alt="가장 효과적인 방법으로, 정확하게 진행되는 시술"
-              />
-              <CustomerTrustText>
-                <CustomerTrustHeading>
-                  가장 효과적인 방법으로, 정확하게 진행되는 시술
-                </CustomerTrustHeading>
-                <CustomerTrustParagraph>
-                  시술은 단순히 기계와 약물이 아니라, 효과를 극대화할 수 있는 정확한 방법에서
-                  시작됩니다. 페슈의원은 환자 한 분 한 분의 피부 상태를 세심히 진단하고, 가장
-                  효과적인 방법을 찾아 안내합니다.
-                </CustomerTrustParagraph>
-              </CustomerTrustText>
-            </CustomerTrustCard>
+              {/* 2️⃣ 카드 */}
+              <CustomerTrustCard>
+                <CustomerTrustImage
+                  src={trustPic2}
+                  alt="가장 효과적인 방법으로, 정확하게 진행되는 시술"
+                />
+                <CustomerTrustText>
+                  <CustomerTrustHeading>
+                    가장 효과적인 방법으로, 정확하게 진행되는 시술
+                  </CustomerTrustHeading>
+                  <CustomerTrustParagraph>
+                    시술은 단순히 기계와 약물이 아니라, 효과를 극대화할 수 있는 정확한 방법에서
+                    시작됩니다. 페슈의원은 환자 한 분 한 분의 피부 상태를 세심히 진단하고, 가장
+                    효과적인 방법을 찾아 안내합니다.
+                    <br /> <br />
+                    충분한 설명을 통해 환자가 올바른 선택을 하도록 돕고, 그 선택이 최고의 결과로
+                    이어질 수 있도록 전문성과 정직함을 바탕으로 시술합니다. 결국 진료의 가치는
+                    정직한 설명과 정확한 실행에서 완성된다고 믿습니다.
+                  </CustomerTrustParagraph>
+                </CustomerTrustText>
+              </CustomerTrustCard>
 
-            {/* 3️⃣ 카드 */}
-            <CustomerTrustCard>
-              <CustomerTrustImage
-                src={trustPic3}
-                alt="불필요함을 덜어낸, 친절하고 진심 어린 상담"
-              />
-              <CustomerTrustText>
-                <CustomerTrustHeading>
-                  불필요함을 덜어낸, 친절하고 진심 어린 상담
-                </CustomerTrustHeading>
-                <CustomerTrustParagraph>
-                  페슈의원의 상담은 환자를 설득하기 위한 과정이 아닙니다. 과장된 말이나 불필요한
-                  권유는 덜어내고, 꼭 필요한 정보와 진심 어린 설명을 전달합니다. 진정한 신뢰는
-                  친절함과 진심에서 비롯된다고 믿습니다.
-                </CustomerTrustParagraph>
-              </CustomerTrustText>
-            </CustomerTrustCard>
+              {/* 3️⃣ 카드 */}
+              <CustomerTrustCard>
+                <CustomerTrustImage
+                  src={trustPic3}
+                  alt="불필요함을 덜어낸, 친절하고 진심 어린 상담"
+                />
+                <CustomerTrustText>
+                  <CustomerTrustHeading>
+                    불필요함을 덜어낸, 친절하고 진심 어린 상담
+                  </CustomerTrustHeading>
+                  <CustomerTrustParagraph>
+                    페슈의원의 상담은 환자를 설득하기 위한 과정이 아닙니다. 과장된 말이나 불필요한
+                    권유는 덜어내고, 꼭 필요한 정보와 진실된 설명만을 전달합니다. 의료진과 실장은
+                    환자의 이야기를 경청하며, 개인의 상황과 피부 상태에 맞는 가장 적절한 방법을 함께
+                    고민합니다.
+                    <br /> <br />
+                    친절함은 기본이지만, 그 안에 담긴 진심, 환자가 안심할 수 있는 신뢰로 이어진다고
+                    믿습니다.
+                  </CustomerTrustParagraph>
+                </CustomerTrustText>
+              </CustomerTrustCard>
 
-            {/* 4️⃣ 카드 */}
-            <CustomerTrustCard>
-              <CustomerTrustImage src={trustPic4} alt="숨기지 않고 투명하게 드러낸 자신감" />
-              <CustomerTrustText>
-                <CustomerTrustHeading>숨기지 않고 투명하게 드러낸 자신감</CustomerTrustHeading>
-                <CustomerTrustParagraph>
-                  페슈의원의 공간은 숨기기 위해 설계되지 않았습니다. 상담과 시술 준비 과정까지
-                  환자가 직접 확인할 수 있도록 오픈되어 있습니다. 이는 단순한 인테리어가 아니라,
-                  우리의 자신감을 보여주는 방식입니다.
-                </CustomerTrustParagraph>
-              </CustomerTrustText>
-            </CustomerTrustCard>
-          </CustomerTrustInner>
-        </SectionCustomerTrust>
-        <PeopleSection>
+              {/* 4️⃣ 카드 */}
+              <CustomerTrustCard>
+                <CustomerTrustImage src={trustPic4} alt="숨기지 않고 투명하게 드러낸 자신감" />
+                <CustomerTrustText>
+                  <CustomerTrustHeading>숨기지 않고 투명하게 드러낸 자신감</CustomerTrustHeading>
+                  <CustomerTrustParagraph>
+                    페슈의원의 공간은 숨기기 위해 설계되지 않았습니다. 상담과 시술 준비 과정까지
+                    환자가 직접 확인할 수 있도록 오픈되어 있으며, 이 구조는 단순한 인테리어가 아닌
+                    우리의 자신감을 보여주는 방식입니다.
+                    <br /> <br />
+                    투명한 공간은 곧 정직한 태도의 반영이며, 환자가 느끼는 모든 과정 속에서 신뢰를
+                    체감하게 합니다. 공간 하나하나가 곧 페슈의원의 철학을 증명합니다.
+                  </CustomerTrustParagraph>
+                </CustomerTrustText>
+              </CustomerTrustCard>
+            </CustomerTrustInner>
+          </SectionCustomerTrust>
+          {/* <PeopleSection>
           <PeopleInner>
             <PeopleTag>PEOPLE × TRUST</PeopleTag>
             <PeopleTitle>결국, 신뢰는 사람으로 완성됩니다</PeopleTitle>
             <PeopleParagraph>
               페슈의원의 의료진과 직원들은 정직한 설명으로 환자가 올바른 선택을 할 수 있도록
-              돕습니다. 개인에게 가장 효과적인 시술을 고민하고, 전문성을 바탕으로 신중하게
-              진료합니다. 또한 진심 어린 응대와 세심한 배려 속에서도, 때로는 단호하게 신뢰의 가치를
-              지켜나갑니다.
+              돕습니다.
+              <br /> <br />
+              개인에게 가장 효과적인 시술을 고민하고, 전문성을 바탕으로 신중하게 진료합니다. 또한
+              진심 어린 응대와 세심한 배려 속에서도, 때로는 단호하게 신뢰의 가치를 지켜나갑니다.
             </PeopleParagraph>
 
             <PeopleGrid>
@@ -661,50 +791,50 @@ const Intro = () => {
               ))}
             </PeopleGrid>
           </PeopleInner>
-        </PeopleSection>
-        <MapSection>
-          <MapInner>
-            {/* Left side */}
-            <InfoColumn>
-              <div tw="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* 진료시간 안내 */}
-                <InfoBlock>
-                  <InfoTitle>진료시간 안내</InfoTitle>
-                  <InfoText>평일 : AM 10:30 ~ PM 21:00</InfoText>
-                  <InfoText>토요일, 공휴일 : AM 10:00 ~ PM 18:00</InfoText>
-                  <InfoText>점심시간 : 00:00 ~ 00:00</InfoText>
-                  <InfoText tw="text-[14px] text-[#666]">※ 일요일은 휴무입니다.</InfoText>
+        </PeopleSection> */}
+          <MapSection>
+            <MapInner>
+              {/* Left side */}
+              <InfoColumn>
+                <div tw="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* 진료시간 안내 */}
+                  <InfoBlock>
+                    <InfoTitle>진료시간 안내</InfoTitle>
+                    <InfoText>평일 : AM 10:30 ~ PM 21:00</InfoText>
+                    <InfoText>주말·공휴일 : AM 10:00 ~ PM 18:00</InfoText>
+                    <InfoText tw="text-primary">※ 점심시간 없이 연중무휴 진료합니다.</InfoText>
 
-                  <ButtonGroup>
-                    <SolidButton>시술 예약하기</SolidButton>
-                    <SolidButton>카카오톡 상담하기</SolidButton>
-                  </ButtonGroup>
-                </InfoBlock>
+                    <ButtonGroup>
+                      <SolidButton>시술 예약하기</SolidButton>
+                      <SolidButton>카카오톡 상담하기</SolidButton>
+                    </ButtonGroup>
+                  </InfoBlock>
 
-                {/* 오시는 길 */}
-                <InfoBlock>
-                  <InfoTitle>오시는 길</InfoTitle>
-                  <InfoText>서울특별시 강남구 강남대로 364,</InfoText>
-                  <InfoText>3층 전체 (역삼동, 미왕빌딩)</InfoText>
-                  <InfoText>강남역 4번 출구 앞</InfoText>
+                  {/* 오시는 길 */}
+                  <InfoBlock>
+                    <InfoTitle>오시는 길</InfoTitle>
+                    <InfoText>서울특별시 강남구 강남대로 364,</InfoText>
+                    <InfoText>3층 전체 (역삼동, 미왕빌딩)</InfoText>
+                    <InfoText tw="text-primary">※ 강남역 4번 출구 앞</InfoText>
 
-                  <ButtonGroup>
-                    <OutlineButton>네이버 플레이스 보기</OutlineButton>
-                    <OutlineButton>카카오 지도 보기</OutlineButton>
-                  </ButtonGroup>
-                </InfoBlock>
-              </div>
-            </InfoColumn>
+                    <ButtonGroup>
+                      <OutlineButton>네이버 플레이스 보기</OutlineButton>
+                      <OutlineButton>카카오 지도 보기</OutlineButton>
+                    </ButtonGroup>
+                  </InfoBlock>
+                </div>
+              </InfoColumn>
 
-            {/* Right side */}
-            <MapColumn>
-              <GoogleMapWrapper>
-                <GoogleMapComponent />
-              </GoogleMapWrapper>
-            </MapColumn>
-          </MapInner>
-        </MapSection>
-      </PageContainer>
+              {/* Right side */}
+              <MapColumn>
+                <GoogleMapWrapper>
+                  <GoogleMapComponent />
+                </GoogleMapWrapper>
+              </MapColumn>
+            </MapInner>
+          </MapSection>
+        </PageContainer>
+      </CartView>
     </Page>
   )
 }

@@ -94,13 +94,13 @@ const Home = () => {
 
       <Page
         hiddenFooter={false}
+        bottomCartExists={false}
         clickedKeyword={clickedKeyword}
         setClickedKeyword={setClickedKeyword}>
         <CartView isHome>
           <Banner />
           <SpecialEventSection />
           <SearchSection />
-          {/* <TodayKeywords onKeywordClick={handleKeywordClick} /> */}
           <MostPopular />
           <IntroductionSection />
           <div tw="h-16" />

@@ -1,8 +1,13 @@
 import React from "react"
 import tw, { styled } from "twin.macro"
 import searchImage from "@/assets/images/search-image.png"
-import searchPrimaryIcon from "@/assets/images/search-primary.png"
+import { SearchPrimaryIcon } from "@/assets/icon"
+import SearchModal from "./search-modal.component"
+import { useSearchKeywordControllerFindMany } from "@/lib/orval/search-keywords/search-keywords"
+import { useTranslation } from "react-i18next"
+import { Language } from "@/lib/locales/i18n.config"
 
+// Layout
 const Section = tw.section`
   w-full bg-white py-12 md:py-20 font-pretendard tracking-tight
 `
@@ -11,7 +16,6 @@ const Inner = tw.div`
   max-w-[1440px] mx-auto flex flex-col md:flex-row items-stretch overflow-hidden rounded-none
 `
 
-// ✅ 반응형 height 적용 (모바일: 192px, 데스크탑: 350px)
 const ImageBox = styled.div`
   ${tw`w-full md:w-1/2 bg-gray-100`}
   height: 192px;
@@ -46,8 +50,8 @@ const Title = styled.h2`
 
 const SearchBar = styled.div`
   ${tw`
-    flex items-center w-full bg-white border border-gray-200
-    rounded-none px-3 md:px-4 py-2 md:py-3 mb-3 md:mb-4 shadow-sm
+    flex items-center w-full bg-white border-b border-neutral20
+    rounded-none px-3 md:px-4 py-2 md:py-3 mb-3 md:mb-4 shadow-sm h-[50px]
   `}
   max-width: 500px;
 `
@@ -59,25 +63,39 @@ const Input = styled.input`
   `}
 `
 
-const SearchIcon = tw.img`
-  w-4 h-4 md:w-5 md:h-5 ml-2 object-contain
+const SearchIcon = styled(SearchPrimaryIcon)`
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  margin-left: 8px; /* ml-2 동일 */
 `
 
 const SuggestBox = tw.div`
-  flex flex-wrap gap-2 md:gap-3 text-[12px] md:text-[15px] text-gray-600
+  flex flex-wrap gap-2 md:gap-3 text-[13px] md:text-[14px] text-neutral70
 `
 
 const SuggestTitle = tw.span`
-  font-semibold text-black
+  font-semibold text-neutralBlack 
 `
 
 const SuggestKeyword = styled.span`
   ${tw`cursor-pointer hover:text-primary transition`}
 `
 
-const keywords = ["볼뉴머", "써마지", "티타늄", "티타늄"]
-
 const SearchSection = () => {
+  const { i18n } = useTranslation()
+  const language = i18n.language as Language
+  const [openSearchModal, setOpenSearchModal] = React.useState(false)
+
+  // 추천 검색어 불러오기
+  const { data: keywordsList } = useSearchKeywordControllerFindMany({
+    page: 1,
+    limit: 10,
+    languageLocale: language,
+  })
+
+  const keywords = keywordsList?.items ?? []
+
   return (
     <Section>
       <Inner>
@@ -92,19 +110,20 @@ const SearchSection = () => {
             어떤 <span>시술</span>이 궁금하신가요?
           </Title>
 
-          <SearchBar>
+          <SearchBar onClick={() => setOpenSearchModal(true)}>
             <Input placeholder="시술명, 효과로 검색해보세요" />
-            <SearchIcon src={searchPrimaryIcon} alt="search icon" />
+            <SearchIcon />
           </SearchBar>
 
           <SuggestBox>
             <SuggestTitle>추천 검색어</SuggestTitle>
-            {keywords.map((kw, idx) => (
-              <SuggestKeyword key={idx}>{kw}</SuggestKeyword>
+            {keywords.map((kw) => (
+              <SuggestKeyword key={kw.id}>{kw.keyword}</SuggestKeyword>
             ))}
           </SuggestBox>
         </SearchBox>
       </Inner>
+      <SearchModal open={openSearchModal} onClose={() => setOpenSearchModal(false)} />
     </Section>
   )
 }

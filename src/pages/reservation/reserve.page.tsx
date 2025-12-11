@@ -1,13 +1,11 @@
+// reserve.page.tsx
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { CalendarSimpleIcon, CloseIcon, DownloadIcon } from "@/assets/icon"
+import React from "react"
+import { CalendarSimpleIcon, CloseIcon, PlusPrimaryIcon } from "@/assets/icon"
 import { Button, Calendar, Checkbox, Icon, LinkButton } from "@/design-system/components"
 import Auth from "@/features/auth/components/auth.component"
 import AppMaxWidth from "@/lib/components/layout/app-max-width.component"
 import Page from "@/lib/components/layout/page.component"
-import Modal from "@/lib/components/modal/modal.component"
-import { HTMLButtonProps } from "@/lib/types/html-element-type"
-import React, { useEffect } from "react"
-import { useTranslation } from "react-i18next"
 import CustomLink from "@/lib/components/custom-link.component"
 
 import tw from "twin.macro"
@@ -19,173 +17,138 @@ import dayjs from "dayjs"
 import utc from "dayjs/plugin/utc"
 import {
   reservationControllerGetAvailableReservationByDay,
+  reservationControllerGetAvailableReservationByDayPublic,
   useReservationControllerCreate,
 } from "@/lib/orval/reservations/reservations"
 import { DEFAULT_CONSULTATION_PRODUCT_ID } from "@/lib/constants/reservation.constants"
 import { env } from "@/lib/env"
-import { useParams, useSearchParams } from "react-router-dom"
+import { useSearchParams } from "react-router-dom"
 import { Language } from "@/lib/locales/i18n.config"
+import { useTranslation } from "react-i18next"
 import { userControllerUpdateMine } from "@/lib/orval/users/users"
 import { useMe } from "@/features/user/hooks/use-user"
+import Modal from "@/lib/components/modal/modal.component"
 
+/* ---------------- Small UI ---------------- */
 const H1 = tw.h1`text-xl font-bold`
 const H2 = tw.h2`text-lg font-extrabold`
 const Textarea = tw.textarea`h-10 py-1.5 px-2 border border-[#d0d0d0] rounded-lg flex-1 min-w-0 w-full`
 
-const allSlots = [
-  "10:00",
-  "10:30",
-  "11:00",
-  "11:30",
-  "12:00",
-  "12:30",
-  "13:00",
-  "13:30",
-  "14:00",
-  "14:30",
-  "15:00",
-  "15:30",
-  "16:00",
-  "16:30",
-  "17:00",
-  "17:30",
-  "18:00",
-  "18:30",
-  "19:00",
-  "19:30",
-  "20:00",
-  "20:30",
-]
-
-const TimeButton = ({ selected, children, ...props }: { selected?: boolean } & HTMLButtonProps) => {
+const TimeButton = ({ selected, children, ...props }: { selected?: boolean } & any) => {
   return (
     <Button
-      tw="shrink-0"
+      tw="shrink-0 sm:h-[58px] h-[40px] text-[15px] md:text-[17px]"
       {...props}
       style={{
         size: "sm",
-        color: selected ? "point" : "black",
+        color: selected ? "point" : "gray",
         variant: selected ? "filled" : "outlined",
+        bold: !!selected,
       }}>
-      <span>{children}</span>
+      {children}
     </Button>
   )
 }
-const SurgeryItem = ({
-  item,
-  updateCartItem,
-  checked,
-  onCheck,
-}: {
+
+interface SurgeryItemProps {
   item: CartItem
   updateCartItem: (item: CartItem) => void
   checked: boolean
   onCheck: (checked: boolean) => void
-}) => {
+}
+
+const SurgeryItem = ({ item, updateCartItem, checked, onCheck }: SurgeryItemProps) => {
   const tv = useLanguageValue()
   const { t, i18n } = useTranslation()
   const language = i18n.language as Language
 
-  const formatDate = (dateString: string | number | Date) => {
-    const date = new Date(dateString)
-    const year = date.getFullYear()
-    const month = (date.getMonth() + 1).toString().padStart(2, "0")
-    const day = date.getDate().toString().padStart(2, "0")
+  const name = tv(item.product ?? item.event!, "name")
+  const description = tv(item.product ?? item.event!, "description")
+  const discount = item.event?.discountPrice
+  const price = item.event?.price || item.product?.price
 
-    const monthNames = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ]
-    if (language === "ko") return `${month}월 ${day}일`
-    if (language === "en") {
-      const m = monthNames[date.getMonth()]
-      return `${m} ${day}`
-    }
-    return `${year}/${month}/${day}`
+  const formatDate = (value: string) => {
+    const d = new Date(value)
+    const m = `${d.getMonth() + 1}`.padStart(2, "0")
+    const day = `${d.getDate()}`.padStart(2, "0")
+    if (language === "ko") return `${m}월 ${day}일`
+    return `${m}/${day}`
   }
-  return (
-    <div tw="last-of-type:([&>hr]:hidden)">
-      <div tw="flex justify-between -ml-3">
-        <div tw="flex-1">
-          <Checkbox
-            checked={checked}
-            onChange={(event) => {
-              onCheck(event.target.checked)
-            }}
-            label={tv(item.product ?? (item.event as Event), "name")}
-          />
-          {item.event &&
-            item.event.category &&
-            item.event.category.startDate &&
-            item.event.category.endDate && (
-              <div tw="flex ml-12 text-[#999] text-sm">
-                <Icon icon={CalendarSimpleIcon} size={16} tw="mt-1 mr-1" />
-                <p>
-                  {formatDate(item.event.category.startDate)} ~{" "}
-                  {formatDate(item.event.category.endDate)}
-                  {item.event.category.startHour !== undefined &&
-                  item.event.category.startMinute !== undefined
-                    ? ` ${item.event.category.startHour}:${String(
-                        item.event.category.startMinute,
-                      ).padStart(2, "0")} ${item.event.category.startHour < 12 ? " am" : " pm"}`
-                    : ""}{" "}
-                  ~{" "}
-                  {item.event.category.endHour !== undefined &&
-                  item.event.category.endMinute !== undefined
-                    ? ` ${item.event.category.endHour}:${String(
-                        item.event.category.endMinute,
-                      ).padStart(2, "0")} ${item.event.category.endHour < 12 ? " am" : " pm"}`
-                    : ""}
-                </p>
-              </div>
-            )}
-        </div>
-        <div tw="shrink-0 flex gap-2 items-center h-fit mt-3.5">
-          <button
-            tw="w-6 h-6 flex justify-center items-center rounded-full text-point border border-point"
-            disabled={item.count === 1}
-            onClick={() => updateCartItem({ ...item, count: item.count - 1 })}>
-            -
-          </button>
-          <span>{item.count}</span>
-          <button
-            tw="w-6 h-6 flex justify-center items-center rounded-full text-white bg-point border border-point"
-            onClick={() => updateCartItem({ ...item, count: item.count + 1 })}>
-            +
-          </button>
-        </div>
-      </div>
 
-      <div tw="flex justify-end items-center gap-2">
-        {item.event && item.event.discountPrice && item.event.price && (
-          <p tw="text-[#717171] text-sm line-through">
-            {item.event.price} {t("reservePage.won")}
-          </p>
-        )}
-        <p tw="font-bold text-[#8d7b64]">
-          {(
-            item.event?.discountPrice ||
-            item.event?.price ||
-            item.product?.price ||
-            0
-          ).toLocaleString()}
-          {t("reservePage.won")}
-        </p>
+  return (
+    <div tw="py-2 font-pretendard tracking-tight leading-[150%] last-of-type:([&>hr]:hidden)">
+      <div tw="flex gap-3 -ml-3">
+        {/* 체크박스 */}
+        <Checkbox checked={checked} onChange={(e) => onCheck(e.target.checked)} />
+
+        <div tw="flex-1 flex flex-col gap-2">
+          {/* 이름 */}
+          <div tw="font-semibold text-[14px] md:text-[16px] leading-snug">{name}</div>
+
+          {/* 기간 (이벤트에만 존재) */}
+          {item.event?.category?.startDate && (
+            <div tw="flex text-[#999] text-sm items-center gap-1 ml-1">
+              <Icon icon={CalendarSimpleIcon} size={16} />
+              <p>
+                {formatDate(item.event.category.startDate)} ~{" "}
+                {formatDate(item.event.category.endDate)}
+              </p>
+            </div>
+          )}
+
+          {/* 설명 */}
+          {description && (
+            <div tw="text-neutral70 text-[13px] leading-snug whitespace-pre-wrap">
+              {description}
+            </div>
+          )}
+
+          {/* 가격 + 수량 */}
+          <div tw="flex justify-between items-start mt-1 flex-col gap-2 sm:flex-row sm:items-center">
+            {/* 가격 */}
+            <div tw="flex items-center gap-2">
+              {discount && (
+                <span tw="text-neutral50 line-through text-[13px]">
+                  {price?.toLocaleString()}원
+                </span>
+              )}
+              <span tw="text-[16px] font-bold text-neutralBlack">
+                {(discount || price || 0).toLocaleString()}원
+              </span>
+            </div>
+
+            {/* 수량 버튼 → 카트와 동일한 UI */}
+            <div tw="flex items-center gap-2 shrink-0">
+              <button
+                tw="w-6 h-6 flex justify-center items-center text-neutral50 bg-neutral"
+                disabled={item.count === 1}
+                onClick={() => updateCartItem({ ...item, count: item.count - 1 })}>
+                -
+              </button>
+
+              <span tw="w-4 text-center">{item.count}</span>
+
+              <button
+                tw="w-6 h-6 flex justify-center items-center text-neutral50 bg-neutral"
+                onClick={() => updateCartItem({ ...item, count: item.count + 1 })}>
+                +
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
       <hr tw="my-5" />
     </div>
   )
+}
+
+interface SurgeryListProps {
+  cart: CartItem[]
+  updateCartItem: (item: CartItem) => void
+  inquiry: boolean
+  setInquiry: (value: boolean) => void
+  removeFromCart: (ids: string[]) => void
 }
 
 const SurgeryList = ({
@@ -194,108 +157,148 @@ const SurgeryList = ({
   inquiry,
   setInquiry,
   removeFromCart,
-}: {
-  cart: CartItem[]
-  updateCartItem: (item: CartItem) => void
-  inquiry: boolean
-  setInquiry: (inquiry: boolean) => void
-  removeFromCart: (ids: string[]) => void
-}) => {
-  const [inquiryChecked, setInquiryChecked] = React.useState(inquiry)
-  const { checkedList, setCheckedList } = useCart()
+}: SurgeryListProps) => {
+  const { checkedList, setCheckedList, resetCart } = useCart()
   const { t } = useTranslation()
+
+  // cart와 동일한 모달 상태 추가
+  const [inquiryChecked, setInquiryChecked] = React.useState(inquiry)
+  const [showInquiryModal, setShowInquiryModal] = React.useState(false)
+
+  React.useEffect(() => {
+    setInquiryChecked(inquiry)
+  }, [inquiry])
+
+  // cart 페이지와 동일한 체크 로직
+  const handleInquiryCheckbox = (checked: boolean) => {
+    if (checked && cart.length > 0) {
+      // 장바구니에 시술이 있는데 방문 상담을 켜려는 경우 → 모달 띄움
+      setShowInquiryModal(true)
+      return
+    }
+
+    setInquiryChecked(checked)
+    setInquiry(checked)
+  }
 
   return (
     <>
-      <div tw="flex items-center justify-between mb-3 -ml-3">
+      <div tw="flex items-center justify-between mb-3 -ml-3 font-pretendard tracking-tight leading-[150%]">
         <Checkbox
-          checked={inquiryChecked}
-          onChange={(event) => {
-            if (event.target.checked) {
+          checked={checkedList.length === cart.length}
+          onChange={(e) => {
+            if (e.target.checked) {
               setCheckedList(cart.map((item) => item.event?.id || item.product?.id || ""))
-              setInquiryChecked(true)
-              setInquiry(true)
             } else {
               setCheckedList([])
-              setInquiryChecked(false)
-              setInquiry(false)
             }
           }}
-          label={<H2>{t("button.selectAll")} </H2>}
+          label={
+            <div tw="flex items-center gap-2">
+              <H2>{t("button.selectAll")}</H2>
+              <span tw="text-primary font-semibold text-[18px] lg:text-[22px]">
+                ({checkedList.length}/{cart.length})
+              </span>
+            </div>
+          }
         />
-        <div>
-          <Button
-            style={{ size: "lg" }}
-            onClick={() => {
-              removeFromCart(checkedList)
-              setCheckedList([])
-              setInquiryChecked(false)
-              setInquiry(!inquiryChecked)
-            }}>
-            {t("button.deleteSelection")}
-          </Button>
-        </div>
+        <Button
+          style={{ size: "sm", variant: "outlined" }}
+          onClick={() => {
+            removeFromCart(checkedList)
+            setCheckedList([])
+          }}>
+          {t("button.deleteSelection")}
+        </Button>
       </div>
-      <div tw="rounded-lg border border-[#d0d0d0] pl-5 pr-4">
-        <div tw="-ml-3 my-3">
-          <Checkbox
-            checked={inquiryChecked}
-            onChange={(event) => {
-              setInquiryChecked(event.target.checked)
-              setInquiry(event.target.checked)
-            }}
-            label={t("reservePage.bookConsultation")}
-          />
 
-          <hr tw="mt-3 mb-5" />
-        </div>
+      <hr tw="mt-3 mb-5" />
 
+      <div tw="pl-4 pr-4">
         <div>
-          <div tw="flex flex-col">
-            {cart.map((item) => (
-              <SurgeryItem
-                key={item.event?.id || item.product?.id}
-                checked={checkedList.includes(item.event?.id || item.product?.id || "")}
-                onCheck={(checked) => {
-                  const id = item.event?.id || item.product?.id || ""
-                  if (checked) {
-                    setCheckedList([...checkedList, id])
-                  } else {
-                    setCheckedList(checkedList.filter((checkedId) => id !== checkedId))
-                  }
-                }}
-                item={item}
-                updateCartItem={updateCartItem}
-              />
-            ))}
-          </div>
+          {cart.map((item) => (
+            <SurgeryItem
+              key={item.event?.id || item.product?.id}
+              item={item}
+              updateCartItem={updateCartItem}
+              checked={checkedList.includes(item.event?.id || item.product?.id || "")}
+              onCheck={(checked) => {
+                const id = item.event?.id || item.product?.id || ""
+                if (checked) {
+                  setCheckedList([...checkedList, id])
+                } else {
+                  setCheckedList(checkedList.filter((x) => x !== id))
+                }
+              }}
+            />
+          ))}
         </div>
-
+        <hr tw="border-t border-neutral20 my-4" />
         <div tw="flex gap-2 my-6 justify-center">
           <LinkButton
             to="/products"
-            tw="flex justify-center items-center gap-2 max-w-[15rem]"
-            style={{ flexible: true }}>
-            <div tw="transform rotate-45">
-              <Icon icon={CloseIcon} size={12} />
-            </div>
+            tw="flex justify-center items-center gap-2"
+            style={{ flexible: true, variant: "outlined" }}>
             {t("reservePage.addTreatments")}
-          </LinkButton>
-          <LinkButton
-            to="/events"
-            tw="flex justify-center items-center gap-2 max-w-[15rem]"
-            style={{ flexible: true }}>
-            <div tw="transform rotate-45">
-              <Icon icon={CloseIcon} size={12} />
-            </div>
-            {t("reservePage.addEventTreatments")}
+            <Icon icon={PlusPrimaryIcon} size={12} />
           </LinkButton>
         </div>
+
+        <div tw="-ml-3 my-3 text-[14px] md:text-[16px] font-semibold">
+          {/* cart와 동일한 체크박스 로직 */}
+          <Checkbox
+            checked={inquiryChecked}
+            onChange={(e) => handleInquiryCheckbox(e.target.checked)}
+            label={t("reservePage.bookConsultation")}
+          />
+        </div>
       </div>
+
+      {/* 모달 (cart와 완전 동일) */}
+      <Modal
+        open={showInquiryModal}
+        width="max-w-[400px]"
+        onClose={() => setShowInquiryModal(false)}>
+        <div tw="flex flex-col items-start justify-center h-full font-pretendard">
+          <div tw="text-left text-[16px] font-semibold leading-snug">
+            시술이 담겨있는 상태에서는 방문 상담 선택이 어렵습니다.
+          </div>
+
+          <div tw="text-neutral70 text-left mt-3">
+            선택한 시술을 모두 비운 후 상담을 예약해주세요.
+          </div>
+
+          <div tw="flex justify-end gap-2 mt-8">
+            <Button
+              tw="w-[150px]"
+              style={{ variant: "outlined", color: "point", size: "lg" }}
+              onClick={() => {
+                setInquiryChecked(false) // UI 상태 끄기
+                setInquiry(false) // 전역 상태 끄기
+                setShowInquiryModal(false) // 모달 닫기
+              }}>
+              취소하기
+            </Button>
+
+            <Button
+              tw="w-[150px]"
+              style={{ variant: "filled", color: "point", size: "lg" }}
+              onClick={() => {
+                resetCart() // 🔥 모든 시술 비우기
+                setInquiry(true) // 방문 상담 활성화
+                setInquiryChecked(true)
+                setShowInquiryModal(false)
+              }}>
+              모두 비우기
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </>
   )
 }
 
+/* ---------------- Reserve Main ---------------- */
 const Reserve = () => {
   const { t, i18n } = useTranslation()
   const navigate = useCustomNavigate()
@@ -313,128 +316,185 @@ const Reserve = () => {
     getCheckedEventIds,
     getCheckedProductIds,
   } = useCart()
-  const [todaySlots, setTodaySlots] = React.useState<AvailableReservationResultDto[]>([])
+
   const [today, setToday] = React.useState(dayjs())
-  const [selectedDatetime, setSelectedDatetime] = React.useState<string>("")
-  const [userMemo, setUserMemo] = React.useState("")
-  const [privacyAgreement, setPrivacyAgreement] = React.useState(false)
-  const [marketingAgreement, setMarketingAgreement] = React.useState(false)
-  const [params] = useSearchParams()
-  const pathVisit = params.get("path_visit")
-  const detailVisit = params.get("detail_visit")
-  const [currentSelectedDate, setCurrentSelectedDate] = React.useState(dayjs())
-  const [eventDateOutOfRange, setEventDateOutOfRange] = React.useState(false)
+  const [todaySlots, setTodaySlots] = React.useState<AvailableReservationResultDto[]>([])
+  const [selectedDatetime, setSelectedDatetime] = React.useState("")
 
-  const pdfUrls = {
-    ko: "https://peche-files.s3.us-east-1.amazonaws.com/peche_ko.pdf",
-    en: "https://peche-files.s3.us-east-1.amazonaws.com/peche_en.pdf",
-    ja: "https://peche-files.s3.us-east-1.amazonaws.com/peche_ja.pdf",
-    zh: "https://peche-files.s3.us-east-1.amazonaws.com/peche_zh.pdf",
-    th: "https://peche-files.s3.us-east-1.amazonaws.com/peche_th.pdf",
+  /* -------- Auth 상태 -------- */
+  interface AuthInfo {
+    name: string
+    phone?: string
+    email?: string
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  function normalizeDate(date: any) {
-    return new Date(date.getFullYear(), date.getMonth(), date.getDate())
+  const [authInfo, setAuthInfo] = React.useState<AuthInfo | null>(null)
+
+  const [agree, setAgree] = React.useState({
+    terms: false,
+    privacy: false,
+    marketing: false,
+  })
+
+  /* -------- 예약 가능 시간 조회 -------- */
+  const getAvailableReservations = async (y: number, m: number, d: number) => {
+    return reservationControllerGetAvailableReservationByDay({
+      year: y,
+      month: m,
+      day: d,
+      productIds: getProductIdsWithInquiry(),
+      eventIds: getCheckedEventIds(),
+    })
   }
 
-  useEffect(() => {
+  /* -------- NEW 예약 가능 시간 조회 -------- */
+  const getAvailableReservationsPublic = async (y: number, m: number, d: number) => {
+    return reservationControllerGetAvailableReservationByDayPublic({
+      year: y,
+      month: m,
+      day: d,
+      productIds: getProductIdsWithInquiry(),
+      eventIds: getCheckedEventIds(),
+    })
+  }
+
+  const getProductIdsWithInquiry = () => {
+    const ids = [...(getCheckedProductIds() ?? [])]
+    const inquiryId = DEFAULT_CONSULTATION_PRODUCT_ID[env.STAGE]
+    if (inquiry && !ids.includes(inquiryId)) ids.push(inquiryId)
+    return ids
+  }
+
+  /* -------- 캘린더 변경 시 조회 -------- */
+  // React.useEffect(() => {
+  //   if (getCheckedEventIds().length > 0 || getCheckedProductIds().length > 0 || inquiry) {
+  //     getAvailableReservations(today.year(), today.month() + 1, today.date()).then((res) =>
+  //       setTodaySlots(res),
+  //     )
+  //   }
+  // }, [today, inquiry, checkedList])
+  // 배포할때는 원상복구 해야함
+  // React.useEffect(() => {
+  //   if (getCheckedEventIds().length > 0 || getCheckedProductIds().length > 0 || inquiry) {
+  //     getAvailableReservations(today.year(), today.month() + 1, today.date()).then((res) => {
+  //       // 🔥 UTC → KST (+9h) 변환 패치
+  //       const patched = res.map((slot) => ({
+  //         ...slot,
+  //         datetime: dayjs(slot.datetime).add(9, "hour").toISOString(),
+  //       }))
+
+  //       console.log("patched res", patched)
+  //       setTodaySlots(patched)
+  //     })
+  //   }
+  // }, [today, inquiry, checkedList])
+  React.useEffect(() => {
     if (getCheckedEventIds().length > 0 || getCheckedProductIds().length > 0 || inquiry) {
-      getAvailableReservations(today.year(), today.month() + 1, today.date()).then((data) => {
-        setTodaySlots(data)
+      getAvailableReservationsPublic(today.year(), today.month() + 1, today.date()).then((res) => {
+        // 🔥 UTC → KST (+9h) 변환 패치
+        const patched = res.map((slot) => ({
+          ...slot,
+          datetime: dayjs(slot.datetime).add(9, "hour").toISOString(),
+          building: "BUILDING_1",
+        }))
+
+        console.log("patched res", patched)
+        setTodaySlots(patched)
       })
-    }
-
-    const storedData = localStorage.getItem("eventEndDates")
-
-    if (storedData) {
-      // Parse the stored data into an object
-      const eventEndDates = JSON.parse(storedData)
-
-      let isOutOfRange = false
-      const normalizedCurrentDate = normalizeDate(currentSelectedDate.toDate())
-
-      // Check each ID in checkList
-      checkedList.forEach((id) => {
-        // Check if the current id exists in eventEndDates
-        if (id in eventEndDates) {
-          const endDateStr = eventEndDates[id]
-          const endDate = new Date(endDateStr)
-          const normalizedEndDate = normalizeDate(endDate)
-          if (normalizedEndDate < normalizedCurrentDate) {
-            // Ensure both are Date objects for comparison
-            isOutOfRange = true
-          }
-        }
-      })
-      setEventDateOutOfRange(isOutOfRange)
     }
   }, [today, inquiry, checkedList])
+  //
 
-  const [isLoading, setIsLoading] = React.useState(false)
+  dayjs.extend(utc)
 
-  const getAvailableReservations = async (y: number, m: number, d: number) => {
-    try {
-      setIsLoading(true) // Set loading state to true before making the API call
-      const result = await reservationControllerGetAvailableReservationByDay({
-        year: y,
-        month: m,
-        day: d,
-        productIds: getProductIdWithInquiry(),
-        eventIds: getCheckedEventIds(),
-      })
-      return result
-    } catch (error) {
-      console.error(error) // Log the error to the console
-      throw error
-    } finally {
-      setIsLoading(false) // Set loading state to false after the API call is completed
-    }
+  const renderTimeSlots = () => {
+    const availableTimes = new Set(
+      todaySlots.map((slot) => dayjs(slot.datetime.replace("Z", "")).format("HH:mm")),
+    )
+
+    return (
+      <div tw="w-full p-4 font-pretendard">
+        <div
+          css={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(90px, 1fr))",
+            gap: "5px",
+            width: "100%",
+          }}>
+          {[
+            "10:00",
+            "10:30",
+            "11:00",
+            "11:30",
+            "12:00",
+            "12:30",
+            "13:00",
+            "13:30",
+            "14:00",
+            "14:30",
+            "15:00",
+            "15:30",
+            "16:00",
+            "16:30",
+            "17:00",
+            "17:30",
+            "18:00",
+            "18:30",
+            "19:00",
+            "19:30",
+            "20:00",
+            "20:30",
+          ].map((slot) => {
+            const available = availableTimes.has(slot)
+            const selected = selectedDatetime.includes(slot)
+
+            return (
+              <TimeButton
+                key={slot}
+                disabled={!available}
+                selected={selected}
+                onClick={() => {
+                  const base = todaySlots[0]?.datetime
+                  if (!base) return
+                  const [datePart] = base.split("T")
+                  setSelectedDatetime(`${datePart}T${slot}:00.000Z`)
+                }}>
+                {slot}
+              </TimeButton>
+            )
+          })}
+        </div>
+      </div>
+    )
   }
-  const { mutate, isLoading: createLoading } = useReservationControllerCreate()
 
-  const getProductIdWithInquiry = () => {
-    const productIds = getCheckedProductIds() ?? []
-    const inquiryProductId = DEFAULT_CONSULTATION_PRODUCT_ID[env.STAGE]
-    if (inquiry && !productIds.includes(inquiryProductId)) {
-      productIds.push(inquiryProductId)
-    }
-    return productIds
-  }
+  /* -------- 예약하기 -------- */
+  const { mutate } = useReservationControllerCreate()
 
   const reserve = () => {
-    // 예약자의 국적 정보 설정
+    if (!authInfo) {
+      alert("본인인증이 필요합니다.")
+      return
+    }
+
+    if (!agree.terms || !agree.privacy) {
+      alert("필수 약관을 동의해주세요.")
+      return
+    }
+
+    if (!selectedDatetime) {
+      alert("예약 시간을 선택해주세요.")
+      return
+    }
+
     userControllerUpdateMine({ languageLocale: language })
-
-    getProductIdWithInquiry()
-    // adminMemo 에 들어갈 상품명과 이벤트명을 가져옴
-    const eventAndProductNames = cart
-      .map((item) => {
-        const productName = getCheckedProductIds()?.includes(item.product?.id ?? "")
-          ? (item.product?.name || "").trim()
-          : ""
-        const eventName = getCheckedEventIds()?.includes(item.event?.id ?? "")
-          ? (item.event?.name || "").trim()
-          : ""
-        return `${eventName}${productName}`
-      })
-      .filter((memo) => memo !== "")
-      .join("\n")
-
-    // Concatenate "상담하기" to eventAndProductNames if inquiry is true
-    const finalEventAndProductNames = inquiry
-      ? `${eventAndProductNames}\n상담하기`
-      : eventAndProductNames
 
     mutate(
       {
         data: {
-          userMemo,
-          adminMemo: finalEventAndProductNames,
-          datetime: selectedDatetime.replaceAll("Z", ""),
-          productIds: getProductIdWithInquiry(),
+          datetime: selectedDatetime.replace("Z", ""),
+          productIds: getProductIdsWithInquiry(),
           eventIds: getCheckedEventIds(),
-          ...(pathVisit && detailVisit && { pathVisit, detailVisit }),
         },
       },
       {
@@ -446,253 +506,98 @@ const Reserve = () => {
     )
   }
 
-  const renderTimeSlots = () => {
-    if (isLoading) {
-      return <div tw="text-center w-full">{t("reservePage.loadingAvailableTime")}</div>
-    }
-    if (!me) {
-      return <div tw="text-center w-full">{t("reservePage.needAuth")}</div>
-    }
-    if (eventDateOutOfRange) {
-      return <div tw="text-center w-full">{t("reservePage.eventDateOutOfRange")}</div>
-    }
+  /* -------- 예약 버튼 disabled -------- */
+  const reservationDisabled = !authInfo || !agree.terms || !agree.privacy || !selectedDatetime
 
-    dayjs.extend(utc)
-
-    // 중국어일때 평일 마감시간이 19시, 토요일 15시인 부분 세팅. 공휴일에 16시 마감
-    const filteredTodaySlots = (() => {
-      if (i18n.language !== "zh") {
-        return todaySlots
-      }
-
-      // Step 1: 평일, 토요일 필터
-      const slots = todaySlots.filter((slot) => {
-        const koreaTime = dayjs.utc(slot.datetime)
-        const hour = koreaTime.hour()
-        const day = koreaTime.day()
-        if (day === 6) {
-          return hour < 15 // Saturday cutoff 15:00
-        }
-        return hour < 19 // Weekday cutoff 19:00
-      })
-
-      // Step 2: 공휴일 필터 (중국어면 16:00 마감, 나머지는 16:30 마감)
-      if (slots.length > 0) {
-        // Sort slots ascending
-        slots.sort((a, b) => new Date(a.datetime).getTime() - new Date(b.datetime).getTime())
-
-        const lastSlot = slots.at(-1)
-        if (lastSlot) {
-          const lastHour = new Date(lastSlot.datetime).getUTCHours()
-          if (lastHour === 16) {
-            slots.pop()
-          }
-        }
-      }
-
-      return slots
-    })()
-
-    const availableTimes = new Set(
-      filteredTodaySlots.map((slot) => dayjs(slot.datetime.replaceAll("Z", "")).format("HH:mm")),
-    )
-
-    return (
-      <div tw="flex gap-4 overflow-auto p-4">
-        {allSlots.map((slot, index) => {
-          const isAvailable = availableTimes.has(slot)
-          return (
-            <TimeButton
-              key={index}
-              onClick={() => {
-                if (isAvailable) {
-                  const baseDatetime = todaySlots[0].datetime // "2024-08-07T10:00:00.000Z"
-                  const newTime = slot // "11:00"
-                  // Split the base datetime string to extract the date part
-                  const [datePart] = baseDatetime.split("T")
-
-                  // Construct the new datetime string by combining the date part with the new time
-                  const newDatetime = `${datePart}T${newTime}:00.000Z`
-                  setSelectedDatetime(newDatetime)
-                }
-              }}
-              // selected={selectedDatetime === dayjs(slot, "HH:mm").toISOString()}
-              selected={selectedDatetime ? selectedDatetime.split("T")[1].startsWith(slot) : false}
-              disabled={!isAvailable}>
-              {slot}
-            </TimeButton>
-          )
-        })}
-      </div>
-    )
-  }
-
+  /* ---------------- Render ---------------- */
   return (
     <Page>
-      {/* <AppMaxWidth tw="font-nanumgothic py-8 lg:py-12">
-        <H1>{t("reservePage.reserve")}</H1>
-        <hr tw="mt-4 mb-6" />
-        <Auth
-          onAuth={() => {
-            navigate(".")
-          }}
-        />
+      <div tw="bg-neutral w-screen min-h-screen">
+        <AppMaxWidth tw="py-8 lg:py-12 overflow-x-hidden">
+          {/* ---------------- 회원가입 안내 배너 (임시) ---------------- */}
+          {/* <div tw="bg-white rounded-lg p-5 mt-20 mb-6 text-center shadow-sm">
+            <div tw="text-[15px] md:text-[17px] font-semibold mb-3">
+              예약 전에 회원가입을 진행해주세요
+            </div>
 
-        <div tw="flex flex-col lg:flex-row gap-x-6 gap-y-16 mt-20">
-          <div tw="flex-1">
-            <H2 tw="mb-6">
-              {t("reservePage.addedTreatments")} <span tw="text-point">{cart.length}</span>
-            </H2>
-            <SurgeryList
-              cart={cart}
-              updateCartItem={updateCartItem}
-              inquiry={inquiry}
-              setInquiry={setInquiry}
-              removeFromCart={removeFromCart}
-            />
-          </div>
+            <Button
+              tw="w-[200px] h-[44px] font-bold mx-auto"
+              style={{ variant: "filled", color: "point" }}
+              onClick={() => navigate("/signup")}>
+              회원가입
+            </Button>
+          </div> */}
 
-          <div tw="lg:w-[24rem]">
-            <H2 tw="mb-6">{t("reservePage.selectDateAndTime")}</H2>
-            <div tw="h-16 -mt-1" />
-            <Calendar
-              key={language}
-              disabled={isLoading}
-              value={today}
-              onChange={(value) => {
-                if (value) {
-                  setCurrentSelectedDate(value)
-                  setToday(value)
-                  setSelectedDatetime("")
-                }
-              }} // [TODO] 날짜 선택시 처리
-              footer={
-                <div tw="">
-                  <div tw="flex gap-4 overflow-auto p-4">{renderTimeSlots()}</div>
-                </div>
-              }
-            />
-          </div>
-        </div>
+          <H1 tw="pt-16 md:pt-10 pb-10 text-[24px] lg:text-[30px] text-center">
+            {t("reservePage.shoppingCart")}
+          </H1>
 
-        <div tw="mt-11 mb-16">
-          <div tw="flex items-center gap-9 lg:(max-w-xl items-start) mx-auto">
-            <p tw="text-sm">{t("reservePage.memo")}</p>
-            <Textarea
-              value={userMemo}
-              onChange={(event) => {
-                setUserMemo(event.target.value)
-              }}
-              tw="lg:h-24"
-            />
-          </div>
+          <div tw="flex flex-col lg:flex-row gap-12 w-full">
+            {/* ---------------- LEFT ---------------- */}
+            <div tw="flex-1 min-w-0 flex flex-col gap-10">
+              {/* --- 시술 리스트 섹션 --- */}
+              <div tw="bg-white p-6">
+                {/* <H2 tw="mb-6">
+                  {t("reservePage.addedTreatments")} <span tw="text-point">{cart.length}</span>
+                </H2> */}
 
-          <div tw="text-[#717171] text-center my-10">{t("reservePage.guardianConsentText")}</div>
-
-          <Button
-            tw="flex justify-center items-center gap-2 min-w-[15rem] mx-auto"
-            style={{
-              color: "black",
-              variant: "filled",
-              size: "lg",
-            }}
-            onClick={() => {
-              const pdfUrl = pdfUrls[language] || pdfUrls.en
-              window.open(pdfUrl, "_blank")
-            }}>
-            <Icon icon={DownloadIcon} size={30} />
-            {t("reservePage.guardianConsent")}
-          </Button>
-        </div>
-
-        <hr />
-        <div tw="py-4 text-[#333]">
-          <Checkbox
-            checked={privacyAgreement && marketingAgreement}
-            onChange={(event) => {
-              setPrivacyAgreement(event.target.checked)
-              setMarketingAgreement(event.target.checked)
-            }}
-            label={<div tw="font-bold">{t("reservePage.agreeToAll")}</div>}
-          />
-          <div tw="flex items-center">
-            <Checkbox
-              checked={privacyAgreement}
-              onChange={(event) => {
-                setPrivacyAgreement(event.target.checked)
-              }}
-              label={t("reservePage.privacyAgreement")}
-            />
-            <CustomLink
-              target="_blank"
-              to="/"
-              tw="text-point underline pl-2"
-              onClick={(e) => e.stopPropagation()}>
-              {t("reservePage.detail")}
-            </CustomLink>
-          </div>
-          <Checkbox
-            onChange={(event) => {
-              setMarketingAgreement(event.target.checked)
-            }}
-            checked={marketingAgreement}
-            label={t("reservePage.marketingAgreement")}
-          />
-        </div>
-        <hr />
-
-        <div tw="mx-auto lg:max-w-lg">
-          <div tw="flex justify-between mt-16">
-            <div tw="font-extrabold text-sm mt-1 lg:text-xl">{t("reservePage.estimatedPrice")}</div>
-            <div tw="text-right">
-              <div tw="mb-4 lg:mb-2 text-point font-extrabold text-lg lg:text-[1.5rem]">
-                {cart
-                  .filter(
-                    (item) =>
-                      (item.event || item.product) &&
-                      checkedList.includes(item.event?.id || item.product?.id || ""),
-                  )
-                  .reduce((acc, cur) => {
-                    return (
-                      acc +
-                      (cur.event?.discountPrice || cur.event?.price || cur.product?.price || 0) *
-                        cur.count
-                    )
-                  }, 0)
-                  .toLocaleString()}
-                {t("reservePage.won")}
+                <SurgeryList
+                  cart={cart}
+                  updateCartItem={updateCartItem}
+                  inquiry={inquiry}
+                  setInquiry={setInquiry}
+                  removeFromCart={removeFromCart}
+                />
               </div>
-              {t("reservePage.vatNotIncluded")}
+
+              {/* --- 캘린더 섹션 --- */}
+              <div tw="bg-white p-6">
+                <Calendar
+                  key={language}
+                  value={today}
+                  onChange={(value) => {
+                    if (value) {
+                      setToday(value)
+                      setSelectedDatetime("")
+                    }
+                  }}
+                  footer={<div>{renderTimeSlots()}</div>}
+                />
+
+                {/* 캘린더 바깥 여백에서 시간 선택 컴포넌트가 필요 없다면 제거 가능 */}
+                {/* <div tw="mt-6">{renderTimeSlots()}</div> */}
+              </div>
+            </div>
+
+            {/* ---------------- RIGHT: Auth + 예약 버튼 ---------------- */}
+            <div tw="hidden lg:block w-[390px] shrink-0">
+              <Auth onAuth={(info) => setAuthInfo(info)} onAgreementChange={(a) => setAgree(a)} />
+
+              {/* 예약 버튼 */}
+              <Button
+                tw="w-full h-[52px] mt-6 font-bold"
+                style={{ variant: "filled", color: "point" }}
+                disabled={reservationDisabled}
+                onClick={reserve}>
+                {t("button.reserve")}
+              </Button>
             </div>
           </div>
 
-          <div tw="mt-6 mb-14 text-sm text-[#999] whitespace-pre-wrap tracking-tight">
-            {t("productDetail.reserveDescription")}
-          </div>
+          {/* ---------------- MOBILE ---------------- */}
+          <div tw="block lg:hidden mt-10">
+            <Auth onAuth={(info) => setAuthInfo(info)} onAgreementChange={(a) => setAgree(a)} />
 
-          <Button
-            disabled={!selectedDatetime || !privacyAgreement || createLoading}
-            tw="mb-5"
-            style={{
-              flexible: true,
-              variant: "filled",
-              size: "lg",
-            }}
-            onClick={reserve}>
-            {t("button.reserve")}
-          </Button>
-          {!selectedDatetime && (
-            <div tw="text-xs text-[#F40000] whitespace-pre-wrap tracking-tight">
-              {t("productDetail.reserveButtonActiveText1")}
-            </div>
-          )}
-          {!privacyAgreement && (
-            <div tw="text-xs text-[#F40000] whitespace-pre-wrap tracking-tight">
-              {t("productDetail.reserveButtonActiveText2")}
-            </div>
-          )}
-        </div>
-      </AppMaxWidth> */}
+            <Button
+              tw="w-full h-[52px] mt-6 font-bold"
+              style={{ variant: "filled", color: "point" }}
+              disabled={reservationDisabled}
+              onClick={reserve}>
+              {t("button.reserve")}
+            </Button>
+          </div>
+        </AppMaxWidth>
+      </div>
     </Page>
   )
 }

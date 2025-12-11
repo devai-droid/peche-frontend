@@ -1,12 +1,4 @@
-<svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g id="shopping-cart" clip-path="url(#clip0_198_563)">
-<path id="Vector" d="M6.39605 15.3888C6.7604 15.3888 7.05577 15.0934 7.05577 14.7291C7.05577 14.3647 6.7604 14.0693 6.39605 14.0693C6.0317 14.0693 5.73633 14.3647 5.73633 14.7291C5.73633 15.0934 6.0317 15.3888 6.39605 15.3888Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path id="Vector_2" d="M13.6529 15.3888C14.0172 15.3888 14.3126 15.0934 14.3126 14.7291C14.3126 14.3647 14.0172 14.0693 13.6529 14.0693C13.2885 14.0693 12.9932 14.3647 12.9932 14.7291C12.9932 15.0934 13.2885 15.3888 13.6529 15.3888Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path id="Vector_3" d="M1.11816 1.53467H3.75705L5.52511 10.3683C5.58544 10.6721 5.75067 10.9449 5.99189 11.1391C6.23311 11.3333 6.53494 11.4364 6.84455 11.4305H13.2571C13.5667 11.4364 13.8685 11.3333 14.1097 11.1391C14.3509 10.9449 14.5162 10.6721 14.5765 10.3683L15.6321 4.83328H4.41678" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<defs>
-<clipPath id="clip0_198_563">
-<rect width="15.8333" height="15.8333" fill="white" transform="translate(0.458496 0.875)"/>
-</clipPath>
-</defs>
+<svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M0.699219 5.40625V20.7004H20.6992V5.40625H0.699219Z" stroke="white" stroke-width="1.4"/>
+<path d="M5.69922 8.93549V5.7002C5.69922 2.93877 7.9378 0.700195 10.6992 0.700195C13.4606 0.700195 15.6992 2.93877 15.6992 5.7002V8.93549" stroke="white" stroke-width="1.4"/>
 </svg>

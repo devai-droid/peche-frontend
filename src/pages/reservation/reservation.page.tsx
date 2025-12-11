@@ -1,472 +1,424 @@
 /* eslint-disable no-alert */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Button, Calendar } from "@/design-system/components"
-import Auth from "@/features/auth/components/auth.component"
+
+import { Button, Calendar, Icon } from "@/design-system/components"
 import AppMaxWidth from "@/lib/components/layout/app-max-width.component"
 import Page from "@/lib/components/layout/page.component"
 import Modal from "@/lib/components/modal/modal.component"
-import { HTMLButtonProps } from "@/lib/types/html-element-type"
+
 import React, { useEffect, useState } from "react"
-import tw from "twin.macro"
+import tw, { styled } from "twin.macro"
+import dayjs from "dayjs"
 import { useTranslation } from "react-i18next"
 import { useMe } from "@/features/user/hooks/use-user"
+
 import {
   reservationControllerGetAvailableReservationByDay,
   useReservationControllerFindMine,
   useReservationControllerUpdate,
 } from "@/lib/orval/reservations/reservations"
-import { AvailableReservationResultDto, Event, Product, Reservation } from "@/lib/orval/model"
-import { Language } from "@/lib/locales/i18n.config"
-import { isAfter } from "date-fns"
-import dayjs from "dayjs"
-import utc from "dayjs/plugin/utc"
 
-const Card = tw.div`border border-[#d0d0d0] rounded-lg py-4 px-6 flex flex-col gap-1 relative`
-const Row = tw.div`flex gap-2`
-const Label = tw.div`text-[#717171] w-28 shrink-0`
+import { Reservation, AvailableReservationResultDto } from "@/lib/orval/model"
+import { isAfter, isSameDay } from "date-fns"
 
-const TimeButton = ({ selected, ...props }: { selected?: boolean } & HTMLButtonProps) => {
+// ─────────────────────────────────
+// Accordion 스타일 (MostPopular 디자인 동일 적용)
+// ─────────────────────────────────
+const AccordionItem = tw.div`border-b border-[#ddd]`
+
+const AccordionHeader = styled.div<{ open: boolean }>`
+  ${tw`flex items-center justify-between py-4 cursor-pointer font-pretendard tracking-tight leading-[140%]`}
+  font-weight: 600;
+
+  svg {
+    ${tw`w-4 h-4 transition-transform`}
+    transform: ${({ open }) => (open ? "rotate(180deg)" : "rotate(0deg)")};
+    stroke: #9b9b9b;
+  }
+`
+
+const AccordionContent = styled.div<{ open: boolean }>`
+  ${tw`overflow-hidden transition-all duration-300 ease-in-out`}
+  max-height: ${({ open }) => (open ? "1000px" : "0")};
+`
+
+// ─────────────────────────────────
+// Styled 카드 요소
+// ─────────────────────────────────
+const Card = tw.div`py-4 px-6 flex flex-col gap-3 bg-white font-pretendard tracking-tight leading-[140%]`
+const Row = tw.div`flex gap-2 text-[16px] md:text-[18px] font-pretendard tracking-tight leading-[140%] py-1`
+const Label = tw.div`text-neutralBlack w-28 shrink-0 font-pretendard tracking-tight leading-[140%]`
+const SectionTitle = tw.div`font-bold text-[18px] md:text-[22px] mb-4 font-pretendard tracking-tight leading-[140%]`
+
+// 시간 버튼 스타일
+const TimeButton = ({ available, selected, children, ...props }: any) => {
   return (
     <Button
-      tw="shrink-0"
-      {...props}
+      tw="shrink-0 !h-[44px] text-[14px]"
+      disabled={!available}
       style={{
         size: "sm",
-        color: selected ? "point" : "black",
         variant: selected ? "filled" : "outlined",
+        color: selected ? "point" : "gray",
       }}
-    />
+      {...props}>
+      {children}
+    </Button>
   )
 }
-const allSlots = [
-  "10:00",
-  "10:30",
-  "11:00",
-  "11:30",
-  "12:00",
-  "12:30",
-  "13:00",
-  "13:30",
-  "14:00",
-  "14:30",
-  "15:00",
-  "15:30",
-  "16:00",
-  "16:30",
-  "17:00",
-  "17:30",
-  "18:00",
-  "18:30",
-  "19:00",
-  "19:30",
-  "20:00",
-  "20:30",
-]
 
-// [TODO] XEN-69 예약 확인 페이지
-
+// ─────────────────────────────────
+// 본문 시작
+// ─────────────────────────────────
 const Reservations = () => {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const { user } = useMe()
-  const [authenticated, setAuthenticated] = React.useState(!!user?.id)
-  const [changeId, setChangeId] = useState<string | null>(null)
-  const [cancelId, setCancelId] = useState<string | null>(null)
-  const { data: reservations } = useReservationControllerFindMine({
-    statusIn: ["DONE", "WAITING", "CANCELED"],
-  })
-  const language = i18n.language as Language
-  const [todaySlots, setTodaySlots] = React.useState<AvailableReservationResultDto[]>([])
-  const [today, setToday] = React.useState(dayjs())
-  const [selectedDatetime, setSelectedDatetime] = React.useState<string>("")
-  // IDs of products and events that user is trying to change the date of
-  const [currentProducts, setCurrentProducts] = React.useState<any>([])
-  const [currentEvents, setCurrentEvents] = React.useState<any>([])
-  const [isLoading, setIsLoading] = React.useState(false)
+  const authenticated = !!user?.id
 
-  useEffect(() => {
-    if (currentProducts.length > 0 || currentEvents.length > 0) {
-      getAvailableReservations(today.year(), today.month() + 1, today.date()).then((data) => {
-        setTodaySlots(data)
-      })
-    }
-  }, [today, changeId])
-  const getAvailableReservations = async (y: number, m: number, d: number) => {
-    try {
-      setIsLoading(true) // Set loading state to true before making the API call
-      const result = await reservationControllerGetAvailableReservationByDay({
-        year: y,
-        month: m,
-        day: d,
-        productIds: currentProducts,
-        eventIds: currentEvents,
-      })
-      return result
-    } finally {
-      setIsLoading(false) // Set loading state to false after the API call is completed
-    }
-  }
+  const { data: reservationData } = useReservationControllerFindMine(
+    { statusIn: ["DONE", "WAITING", "CANCELED"] },
+    { query: { enabled: authenticated, retry: false } },
+  )
 
   const { mutateAsync: updateReservation } = useReservationControllerUpdate()
 
-  const changeReservation = async (datetime?: string) => {
-    if (changeId && window.confirm(t("reservePage.reservationChangeCheck"))) {
-      await updateReservation({ id: changeId, data: { datetime } })
-      alert(t("reservePage.reservationChangeConfirm"))
-      setChangeId(null)
-    }
+  const reservations: Reservation[] = reservationData?.items ?? []
+
+  // ─────────────────────────────────
+  // 예약 그룹 분리
+  // ─────────────────────────────────
+  const activeReservations: Reservation[] = []
+  const pastReservations: Reservation[] = []
+
+  const now = new Date()
+
+  reservations.forEach((r) => {
+    const date = new Date(r.datetime)
+    if (isSameDay(date, now) || isAfter(date, now)) activeReservations.push(r)
+    else pastReservations.push(r)
+  })
+
+  const groupByDate = (list: Reservation[]) => {
+    const groups: Record<string, Reservation[]> = {}
+    list.forEach((r) => {
+      const key = r.datetime.slice(0, 10)
+      if (!groups[key]) groups[key] = []
+      groups[key].push(r)
+    })
+    return groups
+  }
+
+  const activeGroups = groupByDate(activeReservations)
+  const pastGroups = groupByDate(pastReservations)
+
+  // ─────────────────────────────────
+  // 변경/취소 모달
+  // ─────────────────────────────────
+  const [changeId, setChangeId] = useState<string | null>(null)
+  const [cancelId, setCancelId] = useState<string | null>(null)
+
+  const [currentProducts, setCurrentProducts] = useState<any[]>([])
+  const [currentEvents, setCurrentEvents] = useState<any[]>([])
+
+  // ─────────────────────────────────
+  // 날짜 / 시간 처리
+  // ─────────────────────────────────
+  const [today, setToday] = useState(dayjs())
+  const [todaySlots, setTodaySlots] = useState<AvailableReservationResultDto[]>([])
+  const [selectedDatetime, setSelectedDatetime] = useState("")
+
+  useEffect(() => {
+    if (!changeId) return
+    if (currentProducts.length === 0 && currentEvents.length === 0) return
+
+    reservationControllerGetAvailableReservationByDay({
+      year: today.year(),
+      month: today.month() + 1,
+      day: today.date(),
+      productIds: currentProducts,
+      eventIds: currentEvents,
+    }).then((res) => setTodaySlots(res))
+  }, [today, changeId])
+
+  const renderTimeSlots = () => {
+    const available = new Set(
+      todaySlots.map((slot) => dayjs(slot.datetime.replace("Z", "")).format("HH:mm")),
+    )
+
+    const times = [
+      "10:00",
+      "10:30",
+      "11:00",
+      "11:30",
+      "12:00",
+      "12:30",
+      "13:00",
+      "13:30",
+      "14:00",
+      "14:30",
+      "15:00",
+      "15:30",
+      "16:00",
+      "16:30",
+      "17:00",
+      "17:30",
+      "18:00",
+      "18:30",
+      "19:00",
+      "19:30",
+      "20:00",
+      "20:30",
+    ]
+
+    return (
+      <div tw="grid grid-cols-3 gap-2 p-4">
+        {times.map((time) => (
+          <TimeButton
+            key={time}
+            available={available.has(time)}
+            selected={selectedDatetime.includes(time)}
+            onClick={() => {
+              const base = today.format("YYYY-MM-DD")
+              setSelectedDatetime(`${base}T${time}:00`)
+            }}>
+            {t}
+          </TimeButton>
+        ))}
+      </div>
+    )
+  }
+
+  const changeReservation = async () => {
+    if (!selectedDatetime) return
+    await updateReservation({ id: changeId!, data: { datetime: selectedDatetime } })
+    alert("예약이 변경되었습니다.")
+    setChangeId(null)
   }
 
   const cancelReservation = async () => {
-    if (cancelId && window.confirm(t("reservePage.reservationCancelCheck"))) {
-      await updateReservation({ id: cancelId, data: { status: "CANCELED" } })
-      alert(t("reservePage.reservationCancelConfirm"))
-      setCancelId(null)
-    }
+    await updateReservation({ id: cancelId!, data: { status: "CANCELED" } })
+    alert("예약이 취소되었습니다.")
+    setCancelId(null)
   }
 
-  const userCard = [
-    {
-      label: t("reservePage.name"),
-      value: user?.name,
-    },
-    {
-      label: t("reservePage.phone"),
-      value: user?.phoneNumber,
-    },
-    {
-      label: t("reservePage.memo"),
-      value: user?.description || "-",
-    },
-  ]
-
-  const getProductLocalizedName = (product: Product, lang: string) => {
-    switch (lang) {
-      case "en":
-        return product.nameEN || product.name
-      case "ja":
-        return product.nameJA || product.name
-      case "th":
-        return product.nameTH || product.name
-      case "zh":
-        return product.nameZH || product.name
-      default:
-        return product.name
-    }
-  }
-
-  const getEventLocalizedName = (event: Event, lang: string) => {
-    switch (lang) {
-      case "en":
-        return event.nameEN || event.name
-      case "ja":
-        return event.nameJA || event.name
-      case "th":
-        return event.nameTH || event.name
-      case "zh":
-        return event.nameZH || event.name
-      default:
-        return event.name
-    }
-  }
-
-  const reservationCard = (reservation: Reservation) => {
-    const totalProductPrice = reservation.products.reduce((acc, cur) => {
-      const p = cur.product
-      return acc + p.price
-    }, 0)
-
-    const totalEventPrice = reservation.events.reduce((acc, cur) => {
-      const e = cur.event
-      return acc + (e.discountPrice && e.discountPrice > 0 ? e.discountPrice : e.price)
-    }, 0)
-
-    const withoutSeconds = reservation.datetime.slice(0, -8).replace("T", " ")
-
-    return [
-      {
-        label: t("reservePage.appointmentTime"),
-        value: withoutSeconds,
-      },
-      {
-        label: t("reservePage.treatmentName"),
-        value: reservation.products
-          .map((product) => getProductLocalizedName(product.product, language))
-          .concat(reservation.events.map((event) => getEventLocalizedName(event.event, language)))
-          .join("\n"),
-      },
-      {
-        label: t("reservePage.estimatedPrice"),
-        value: (
-          <div tw="text-[1.5rem] text-point font-extrabold leading-none">
-            {(totalProductPrice + totalEventPrice).toLocaleString()} {t("reservePage.won")}
-          </div>
-        ),
-      },
-    ]
-  }
-
-  const selectedProduct = reservations?.items.find(
-    (reservation) => reservation.id === (cancelId || changeId),
-  )
-
-  const filteredReservations = reservations?.items.filter((reservation) =>
-    isAfter(new Date(reservation.datetime), new Date()),
-  )
-
-  const renderTimeSlots = () => {
-    if (isLoading) {
-      return <div tw="text-center w-full">{t("reservePage.loadingAvailableTime")}</div>
+  const renderButtons = (r: Reservation, isPast: boolean) => {
+    // 1. 취소된 예약 → 비활성 버튼
+    if (r.status === "CANCELED") {
+      return (
+        <Button
+          disabled
+          tw="w-full mt-2 text-[13px] md:text-[15px]"
+          style={{ variant: "outlined", color: "point", size: "sm" }}>
+          예약 취소됨
+        </Button>
+      )
     }
 
-    dayjs.extend(utc)
+    // 2. 지난 예약 → 같은 정보로 재예약하기
+    if (isPast) {
+      return (
+        <Button
+          disabled
+          tw="w-full mt-2 text-[13px] md:text-[15px]"
+          style={{ variant: "filled", color: "point", size: "sm" }}
+          onClick={() => {
+            // setCurrentProducts(r.products.map((p) => p.product.id))
+            // setCurrentEvents(r.events.map((e) => e.event.id))
+            // setChangeId(r.id)
+          }}>
+          같은 정보로 재예약하기
+        </Button>
+      )
+    }
 
-    // 중국어일때 평일 마감시간이 19시, 토요일 15시인 부분 세팅. 공휴일에 16시 마감
-    const filteredTodaySlots = (() => {
-      if (i18n.language !== "zh") {
-        return todaySlots
-      }
+    // 3. 예약 중 → 취소 / 변경 버튼 2개
+    return (
+      <div tw="flex gap-3 pt-2">
+        <Button
+          tw="flex-1 text-[13px] md:text-[15px]"
+          style={{ variant: "outlined", color: "point", size: "sm" }}
+          onClick={() => setCancelId(r.id)}>
+          예약 취소
+        </Button>
 
-      // Step 1: 평일, 토요일 필터
-      const slots = todaySlots.filter((slot) => {
-        const koreaTime = dayjs.utc(slot.datetime)
-        const hour = koreaTime.hour()
-        const day = koreaTime.day()
-        if (day === 6) {
-          return hour < 15 // Saturday cutoff 15:00
-        }
-        return hour < 19 // Weekday cutoff 19:00
-      })
-
-      // Step 2: 공휴일 필터 (중국어면 16:00 마감, 나머지는 16:30 마감)
-      if (slots.length > 0) {
-        // Sort slots ascending
-        slots.sort((a, b) => new Date(a.datetime).getTime() - new Date(b.datetime).getTime())
-
-        const lastSlot = slots.at(-1)
-        if (lastSlot) {
-          const lastHour = new Date(lastSlot.datetime).getUTCHours()
-          if (lastHour === 16) {
-            slots.pop()
-          }
-        }
-      }
-
-      return slots
-    })()
-
-    const availableTimes = new Set(
-      filteredTodaySlots.map((slot) => dayjs(slot.datetime.replaceAll("Z", "")).format("HH:mm")),
+        <Button
+          disabled
+          tw="flex-1 text-[13px] md:text-[15px]"
+          style={{ variant: "filled", color: "point", size: "sm" }}
+          onClick={() => {
+            setCurrentProducts(r.products.map((p) => p.product.id))
+            setCurrentEvents(r.events.map((e) => e.event.id))
+            setChangeId(r.id)
+          }}>
+          예약 변경
+        </Button>
+      </div>
     )
+  }
+
+  // ─────────────────────────────────
+  // 카드 렌더링
+  // ─────────────────────────────────
+  const renderReservationCard = (r: Reservation) => {
+    const products = r.products.map((p) => p.product.name)
+    const events = r.events.map((e) => e.event.name)
+
+    const datetime = r.datetime.replace("T", " ").slice(0, 16)
+
+    const totalPrice =
+      r.products.reduce((a, p) => a + p.product.price, 0) +
+      r.events.reduce((a, e) => a + (e.event.discountPrice || e.event.price), 0)
+
+    const contact = user?.phoneNumber || user?.email || "-"
+
+    const dtKst = dayjs(r.datetime)
+    const datetimeDisplay = dtKst.format("YYYY-MM-DD HH:mm")
+
+    // 지난 예약인지 계산
+    const isPast = dtKst.isBefore(dayjs())
 
     return (
-      <div tw="flex gap-4 overflow-auto p-4">
-        {allSlots.map((slot, index) => {
-          const isAvailable = availableTimes.has(slot)
-          return (
-            <TimeButton
-              key={index}
-              onClick={() => {
-                if (isAvailable) {
-                  const baseDatetime = todaySlots[0].datetime // "2024-08-07T10:00:00.000Z"
-                  const newTime = slot // "11:00"
+      <Card tw="bg-white px-6 pb-6 flex flex-col gap-6">
+        {/* ---------------- 고객정보 ---------------- */}
+        <div>
+          <div tw="font-semibold text-[16px] md:text-[18px] mb-3 text-neutralBlack">고객정보</div>
 
-                  // Split the base datetime string to extract the date part
-                  const [datePart] = baseDatetime.split("T")
+          <Row>
+            <Label>이름</Label>
+            <div tw="text-neutral60">{user?.name ?? "-"}</div>
+          </Row>
 
-                  // Construct the new datetime string by combining the date part with the new time
-                  const newDatetime = `${datePart}T${newTime}:00.000Z`
+          <Row>
+            <Label>연락처</Label>
+            <div tw="text-neutral60">{user?.phoneNumber || user?.email || "-"}</div>
+          </Row>
+        </div>
 
-                  setSelectedDatetime(newDatetime)
-                }
-              }}
-              // selected={selectedDatetime === dayjs(slot, "HH:mm").toISOString()}
-              selected={selectedDatetime ? selectedDatetime.split("T")[1].startsWith(slot) : false}
-              disabled={!isAvailable}>
-              {slot}
-            </TimeButton>
-          )
-        })}
-      </div>
+        {/* ---------------- 예약정보 ---------------- */}
+        <div>
+          <div tw="font-semibold text-[16px] md:text-[18px] mb-3 text-neutralBlack">예약정보</div>
+
+          <Row>
+            <Label>예약번호</Label>
+            <div tw="text-neutral60">{r.palettePlanId}</div>
+          </Row>
+
+          <Row>
+            <Label>예약일시</Label>
+            <div tw="text-neutral60">{datetimeDisplay}</div>
+          </Row>
+
+          <Row>
+            <Label>예약시술명</Label>
+            <div tw="whitespace-pre-wrap text-neutral60">{[...products, ...events].join("\n")}</div>
+          </Row>
+
+          <Row>
+            <Label>총 금액</Label>
+            <div tw="text-neutral60">{totalPrice.toLocaleString()} 원(부가세별도)</div>
+          </Row>
+        </div>
+
+        {/* ---------------- 버튼 영역 ---------------- */}
+        {renderButtons(r, isPast)}
+      </Card>
+    )
+  }
+
+  const renderAccordion = (date: string, list: Reservation[]) => {
+    const isOpen = openId === date
+
+    return (
+      <AccordionItem key={date}>
+        <AccordionHeader open={isOpen} onClick={() => toggle(date)}>
+          <span tw="text-[16px] md:text-[18px]">{formatKstDatetime(list[0].datetime)}</span>
+
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+        </AccordionHeader>
+
+        <AccordionContent open={isOpen}>
+          <div tw="flex flex-col gap-4">{list.map((r) => renderReservationCard(r))}</div>
+        </AccordionContent>
+      </AccordionItem>
+    )
+  }
+
+  const [openId, setOpenId] = useState<string | null>(null)
+  const toggle = (id: string) => setOpenId(openId === id ? null : id)
+
+  const formatKstDatetime = (dt: string) => {
+    const d = dayjs(dt)
+    const yoilMap = ["일", "월", "화", "수", "목", "금", "토"]
+    const yoil = yoilMap[d.day()]
+    return d.format(`YYYY/MM/DD(${yoil}) HH:mm`)
+  }
+
+  // ─────────────────────────────────
+  // 렌더링
+  // ─────────────────────────────────
+  if (!authenticated) {
+    return (
+      <Page>
+        <AppMaxWidth tw="pt-20 text-center">로그인이 필요합니다.</AppMaxWidth>
+      </Page>
     )
   }
 
   return (
     <Page>
-      {/* <AppMaxWidth tw="my-8">
-        <div tw="font-bold">{t("reservationCheckPage.reservationCheck")}</div>
-        <hr tw="mt-4 mb-6" />
-        <Auth onAuth={() => setAuthenticated(true)} />
-        {authenticated && (
-          <div tw="mt-10 flex flex-col lg:flex-row gap-x-11 gap-y-14">
-            <div tw="flex-1">
-              <div tw="font-bold mb-4">{t("reservePage.customer")}</div>
-              <div>
-                <Card tw="gap-6">
-                  {userCard.map((item) => (
-                    <Row key={item.label}>
-                      <Label>{item.label}</Label>
-                      <div>{item.value}</div>
-                    </Row>
-                  ))}
-                </Card>
-              </div>
-            </div>
-            <div tw="flex-1">
-              <div tw="font-bold mb-4">{t("common.reservation")}</div>
-              <div tw="flex flex-col gap-20">
-                {filteredReservations?.map((reservation, index) => {
-                  return (
-                    <Card key={index} tw="gap-6">
-                      {reservationCard(reservation).map((item) => (
-                        <Row key={item.label}>
-                          <Label>{item.label}</Label>
-                          <div tw="whitespace-pre-wrap">{item.value}</div>
-                        </Row>
-                      ))}
-                      <div tw="relative text-left">
-                        <div tw="left-0 bottom-0">
-                          {(() => {
-                            if (reservation.status === "DONE" || reservation.status === "WAITING") {
-                              return (
-                                <>
-                                  <Button
-                                    style={{ variant: "filled" }}
-                                    tw="inline-flex items-center justify-center gap-1"
-                                    onClick={() => {
-                                      setCurrentProducts(
-                                        reservation.products.map((product) => product.product.id),
-                                      )
-                                      setCurrentEvents(
-                                        reservation.events.map((event) => event.event.id),
-                                      )
-                                      setChangeId(reservation.id)
-                                    }}>
-                                    {t("reservePage.reservationDateChange")}
-                                  </Button>
-                                  <Button
-                                    style={{ variant: "filled", color: "black" }}
-                                    tw="ml-4 inline-flex items-center justify-center gap-1"
-                                    onClick={() => {
-                                      setCancelId(reservation.id)
-                                    }}>
-                                    {t("reservePage.reservationCancel")}
-                                  </Button>
-                                </>
-                              )
-                            }
-                            if (reservation.status === "CANCELED") {
-                              return (
-                                <Button
-                                  style={{ variant: "filled" }}
-                                  tw="inline-flex items-center justify-center gap-1"
-                                  disabled>
-                                  {t("reservePage.reservationCanceled")}
-                                </Button>
-                              )
-                            }
-                            return null
-                          })()}
-                        </div>
-                      </div>
-                    </Card>
-                  )
-                })}
-              </div>
-            </div>
+      <div tw="bg-neutral min-h-screen w-full">
+        <AppMaxWidth tw="pt-16 pb-20 flex flex-col items-center gap-6">
+          {/* ---------------- 예약 중 박스 ---------------- */}
+          <div tw="bg-white w-full max-w-[600px] px-4 py-8">
+            <SectionTitle tw="text-primary">예약 중</SectionTitle>
+            {Object.keys(activeGroups).map((date) => renderAccordion(date, activeGroups[date]))}
           </div>
-        )}
-      </AppMaxWidth>
-      <Modal open={!!cancelId} title="예약 취소" onClose={() => setCancelId(null)}>
-        <div tw="flex flex-col items-center justify-center h-full">
-          <div tw="">{t("reservePage.reservationCancelCheck")}</div>
-          <div tw="flex flex-col gap-2 my-4">
-            <Row>
-              <Label>{t("reservePage.reservationDateTime")}</Label>
-              <div>
-                {selectedProduct?.datetime &&
-                  selectedProduct.datetime.split("T").join(" ").slice(0, 16)}
-              </div>
-            </Row>
-            <Row>
-              <Label>{t("reservePage.treatmentName")}</Label>
-              <div tw="whitespace-pre-wrap">
-                {[
-                  ...(selectedProduct?.products.map((product) => product.product.name) || []),
-                  ...(selectedProduct?.events.map((event) => event.event.name) || []),
-                ].join("\n")}
-              </div>
-            </Row>
+
+          {/* 여백 (bg-neutral 노출) */}
+          <div tw="h-4" />
+
+          {/* ---------------- 지난 예약 박스 ---------------- */}
+          <div tw="bg-white w-full max-w-[600px] px-4 py-8">
+            <SectionTitle>지난 예약</SectionTitle>
+            {Object.keys(pastGroups).map((date) => renderAccordion(date, pastGroups[date]))}
           </div>
-          <div tw="flex justify-end gap-2">
-            <Button
-              tw="min-w-[12rem]"
-              style={{ variant: "filled", color: "black", size: "lg" }}
-              onClick={() => {
-                cancelReservation()
-              }}>
-              {t("reservePage.reservationCancel")}
+        </AppMaxWidth>
+      </div>
+
+      {/* ---------------- 변경 모달 ---------------- */}
+      <Modal open={!!changeId} title="예약 변경" onClose={() => setChangeId(null)}>
+        <div tw="p-4">
+          <Calendar
+            value={today}
+            onChange={(v) => v && setToday(v)}
+            footer={<div>{renderTimeSlots()}</div>}
+          />
+
+          <div tw="flex justify-end gap-2 mt-6">
+            <Button style={{ color: "black" }} onClick={() => setChangeId(null)}>
+              취소
             </Button>
-            <Button
-              tw="min-w-[8rem]"
-              style={{ variant: "filled", size: "lg" }}
-              onClick={() => {
-                setCancelId(null)
-              }}>
-              {t("reservePage.cancelButton")}
+            <Button disabled={!selectedDatetime} onClick={changeReservation}>
+              변경하기
             </Button>
           </div>
         </div>
       </Modal>
 
-      <Modal
-        open={!!changeId}
-        title={t("reservePage.reservationDateChangeTitle")}
-        onClose={() => setChangeId(null)}>
-        <div tw="flex flex-col items-center justify-center h-full">
-          <div tw="my-4 max-sm:hidden">
-            <span tw="font-bold">{t("reservePage.reservationPreviousDate")}</span>
-            <span tw="pl-1">
-              {selectedProduct?.datetime &&
-                selectedProduct.datetime.split("T").join(" ").slice(0, 16)}
-            </span>
-          </div>
-          <div tw="w-full">
-            <Calendar
-              value={today}
-              onChange={(value) => {
-                if (value) {
-                  setToday(value)
-                  setSelectedDatetime("")
-                }
-              }}
-              footer={
-                <div tw="">
-                  <div tw="flex gap-4 overflow-auto p-4">{renderTimeSlots()}</div>
-                </div>
-              }
-            />
-          </div>
-          <div tw="flex justify-end gap-2 mt-8">
-            <Button
-              tw="min-w-[8rem]"
-              style={{ variant: "filled", color: "black", size: "lg" }}
-              onClick={() => {
-                setChangeId(null)
-              }}>
-              {t("reservePage.cancelButton")}
+      {/* ---------------- 취소 모달 ---------------- */}
+      <Modal open={!!cancelId} title="예약 취소" onClose={() => setCancelId(null)}>
+        <div tw="p-4 text-center">
+          정말 예약을 취소하시겠습니까?
+          <div tw="flex justify-end gap-2 mt-6">
+            <Button style={{ color: "black" }} onClick={() => setCancelId(null)}>
+              뒤로
             </Button>
-            <Button
-              tw="min-w-[12rem]"
-              style={{ variant: "filled", size: "lg" }}
-              disabled={!selectedDatetime}
-              onClick={() => {
-                changeReservation(selectedDatetime.replaceAll("Z", ""))
-              }}>
-              {t("reservePage.reservationDateChange")}
-            </Button>
+            <Button onClick={cancelReservation}>예약 취소</Button>
           </div>
         </div>
-      </Modal> */}
+      </Modal>
     </Page>
   )
 }

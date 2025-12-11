@@ -1,5 +1,8 @@
-import { ShoppingCartIcon } from "@/assets/icon"
+import { ShoppingCartIcon, ChevronDownIcon } from "@/assets/icon"
 import { Button, Chip, Icon } from "@/design-system/components"
+import bannerImg from "@/assets/images/events-banner.jpg"
+import mobileBannerImg from "@/assets/images/events-mobile-banner.jpg"
+import useResponsive from "@/lib/hooks/use-responsive"
 import CartView from "@/features/product/components/cart-view.component"
 import useCart from "@/features/product/hooks/use-cart"
 import AppMaxWidth from "@/lib/components/layout/app-max-width.component"
@@ -10,89 +13,95 @@ import { useEventBundleControllerFindVisible } from "@/lib/orval/event-bundle/ev
 import { useEventControllerFindMany } from "@/lib/orval/events/events"
 import { useProductDetailPageControllerFindOne } from "@/lib/orval/product-detail-pages/product-detail-pages"
 import { useProductControllerFindMany } from "@/lib/orval/products/products"
-import React, { useLayoutEffect } from "react"
+import React from "react"
 import { useTranslation } from "react-i18next"
 import { useParams, useSearchParams } from "react-router-dom"
 import tw from "twin.macro"
-import dayjs from "dayjs"
-import { getNextPageParam } from "@/lib/api/http-client.helper"
-import TypeFilter from "@/pages/product/components/type-filter.component"
 import { Helmet } from "react-helmet-async"
+import Modal from "@/lib/components/modal/modal.component"
 
 interface ProductProps {
+  // eslint-disable-next-line react/no-unused-prop-types
+  type: "event" | "normal"
   name: string
   description: string
   price: string | number
+  originalPrice?: string | number
   isNew?: boolean
   isKakao?: boolean
   isBest?: boolean
   isPop?: boolean
-  originalPrice?: string | number
   addToCart?: () => void
+  hideBorder?: boolean
 }
-
-type ProductType = "event" | "normal" | "all"
-
-const Separator = () => (
-  <>
-    <div tw="h-10" />
-    <div tw="-ml-4 w-[calc(100vw-1rem)] h-2 bg-[#efefef] lg:hidden" />
-    <div tw="h-10" />
-  </>
-)
 
 const ProductItem = ({
   name,
   description,
   price,
+  originalPrice,
   isNew,
   isKakao,
   isBest,
   isPop,
-  originalPrice,
   addToCart,
+  hideBorder,
 }: ProductProps) => {
   const { t } = useTranslation()
+
   return (
-    <div tw="p-4 lg:p-6 rounded-lg border border-[#D0D0D0] shadow-[0px_4px_12px_0px_rgba(0,0,0,0.25)] font-nanumgothic">
-      <div tw="flex gap-2">
-        {isNew && (
-          <Chip tw="mb-3" color="blue">
-            {t("common.new")}
-          </Chip>
-        )}
+    <div
+      css={[
+        tw`bg-white p-4 font-pretendard flex flex-col gap-2 tracking-tight leading-[150%]`,
+        !hideBorder && tw`border-b border-neutral30`,
+      ]}>
+      {/* Chip 영역 */}
+      <div tw="flex gap-1">
         {isPop && (
-          <Chip tw="mb-3" color="blue">
+          <Chip tw="h-[24px] px-2 text-[13px] md:text-[15px] leading-[1] px-[4px]" color="primary">
             {t("common.pop")}
           </Chip>
         )}
-        {isBest && <Chip tw="mb-3">{t("common.best")}</Chip>}
+        {isNew && (
+          <Chip tw="h-[24px] px-2 text-[13px] md:text-[15px] leading-[1] px-[4px]" color="gray">
+            {t("common.new")}
+          </Chip>
+        )}
         {isKakao && (
-          <Chip tw="mb-3" color="yellow">
+          <Chip tw="h-[24px] px-2 text-[13px] md:text-[15px] leading-[1] px-[4px]" color="pink">
             {t("common.kakaoFriend")}
           </Chip>
         )}
+        {isBest && (
+          <Chip tw="h-[24px] px-2 text-[13px] md:text-[15px] leading-[1] px-[4px]" color="darkgray">
+            {t("common.best")}
+          </Chip>
+        )}
       </div>
-      <div tw="text-[#333] text-lg font-bold">{name}</div>
-      <div tw="mt-5 mb-3" style={{ whiteSpace: "pre-line" }}>
-        {description}
+
+      {/* 제목 */}
+      <div tw="text-neutralBlack text-[16px] md:text-[18px] font-semibold">{name}</div>
+
+      {/* 설명 */}
+      <div tw="text-[13px] md:text-[14px] text-neutral70 whitespace-pre-line">{description}</div>
+
+      {/* 가격 */}
+      <div tw="flex items-center gap-2 mb-2">
+        {originalPrice && (
+          <div tw="line-through text-[13px] sm:text-[14px] text-neutral50">{originalPrice}</div>
+        )}
+        <div tw="text-[16px] md:text-[18px] text-secondary3 font-semibold">{price}</div>
       </div>
-      <div tw="flex items-center gap-2">
-        {originalPrice && <span tw="text-sm text-[#717171] line-through">{originalPrice}</span>}
-        <span tw="text-xl text-[#8d7b64] font-bold">{price}</span>
-      </div>
-      {name && !name.includes("가다실") && !name.includes("처방전") && (
-        <div tw="mt-2 text-[#F40000] text-sm">{t("common.vatNotIncluded")}</div>
-      )}
-      <div tw="relative text-right">
-        <div tw="md:absolute right-0 bottom-0">
-          <Button
-            style={{ variant: "filled" }}
-            tw="inline-flex items-center justify-center gap-1"
-            onClick={addToCart}>
-            <Icon icon={ShoppingCartIcon} size={16} /> {t("common.save")}
-          </Button>
-        </div>
+
+      {/* 버튼 */}
+      <div tw="flex justify-end gap-3 -mt-10">
+        <Button
+          onClick={addToCart}
+          tw="flex items-center justify-center gap-1"
+          style={{ size: "sm", variant: "filled" }}>
+          {t("common.save")}
+          <Icon tw="ml-[5px]" icon={ShoppingCartIcon} size={16} />
+        </Button>
       </div>
     </div>
   )
@@ -100,24 +109,23 @@ const ProductItem = ({
 
 const ProductDetail = () => {
   const { t } = useTranslation()
-  const { addToCart } = useCart()
+  const { addToCart, inquiry, setInquiry } = useCart()
   const { id } = useParams<{ id: string }>()
   const langQuery = useLanguageQuery()
   const tv = useLanguageValue()
-
-  const keyMatch = {
-    ko: "",
-    en: "EN",
-    ja: "JA",
-    th: "TH",
-    zh: "ZH",
-  }
-  const { i18n } = useTranslation()
-  const lang = i18n.language as keyof typeof keyMatch
+  const [params, setParams] = useSearchParams()
+  const { isMobile } = useResponsive()
 
   const { data: productDetail } = useProductDetailPageControllerFindOne(id ?? "", {
     query: { enabled: !!id },
   })
+
+  const { i18n } = useTranslation()
+  const keyMatch = { ko: "", en: "EN", ja: "JA", th: "TH", zh: "ZH" }
+  const lang = i18n.language as keyof typeof keyMatch
+
+  const selectedEventBundleId = params.get("bundle")
+
   const { data: products } = useProductControllerFindMany(
     {
       detailPageId: id,
@@ -129,10 +137,7 @@ const ProductDetail = () => {
     },
     { query: { enabled: !!id } },
   )
-  // 수정 필요: 이벤트 번들에 포함된 이벤트만 가져오도록 수정. 어떤 이벤트 번들이 선택되었는지도 확인
-  const [params, setParams] = useSearchParams()
-  const selectedEventBundleId = params.get("bundle")
-  const [productInfoClicked, setProductInfoClicked] = React.useState(false)
+
   const { data: visibleEvents } = useEventBundleControllerFindVisible()
   const { data: events } = useEventControllerFindMany(
     {
@@ -144,323 +149,236 @@ const ProductDetail = () => {
       limit: 500,
       ...langQuery,
     },
-    {
-      query: {
-        enabled: !!selectedEventBundleId,
-        getNextPageParam,
-      },
-    },
+    { query: { enabled: !!selectedEventBundleId } },
   )
-  const handleBundle = (bundleId: string) => {
-    setParams((prev) => {
-      prev.set("bundle", bundleId.toString())
-      return prev
-    })
-  }
 
-  const productRef = React.useRef<HTMLDivElement>(null)
-  const descriptionRef = React.useRef<HTMLDivElement>(null)
-  const [headerHeight, setHeaderHeight] = React.useState(0)
-  const [productType, setProductType] = React.useState<ProductType>("all")
-  const showEvents = productType === "event" || productType === "all"
-  const showNormal = productType === "normal" || productType === "all"
+  const [showAllProducts, setShowAllProducts] = React.useState(false)
+  const [showInquiryModal, setShowInquiryModal] = React.useState(false)
 
-  useLayoutEffect(() => {
-    const height = document.getElementById("header-height")?.clientHeight || 0
-    setHeaderHeight(height + 16)
-  }, [])
-
-  useLayoutEffect(() => {
+  // 최초 번들 자동 선택
+  React.useEffect(() => {
     if (visibleEvents?.length && !selectedEventBundleId) {
-      setParams(
-        (prev) => {
-          prev.set("bundle", visibleEvents[0].id)
-          return prev
-        },
-        { replace: true },
-      )
+      setParams((prev) => {
+        prev.set("bundle", visibleEvents[0].id)
+        return prev
+      })
     }
-  })
+  }, [visibleEvents])
 
-  if (!productDetail || !products) {
-    return <Page />
-  }
+  if (!productDetail || !products) return <Page />
 
-  const category = tv(productDetail.category, "name")
   const name = tv(productDetail, "name")
   const subTitle = tv(productDetail, "description")
-  const videoUrl = productDetail.referenceUrl?.split("/").pop()?.split("?")[0]
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleEventAddToCart = (event: any) => {
-    // Utility function to get event end dates from local storage
-    const getEventEndDates = () => {
-      const storedData = localStorage.getItem("eventEndDates")
-      return storedData ? JSON.parse(storedData) : {}
-    }
+  // 이벤트 상품 리스트
+  const eventList =
+    events?.items.map((event) => ({
+      type: "event" as const,
+      name: tv(event, "name"),
+      description: tv(event, "description"),
+      price: `${(event.discountPrice || event.price).toLocaleString()} ${t("reservePage.won")}`,
+      originalPrice: event.discountPrice
+        ? `${event.price.toLocaleString()} ${t("reservePage.won")}`
+        : undefined,
+      isKakao: event.label?.includes("KAKAO"),
+      isNew: event.label?.includes("NEW"),
+      isBest: event.label?.includes("BEST"),
+      isPop: event.label?.includes("POP"),
+      addToCart: () => {
+        const result = addToCart({ event })
+        if (result?.blockedByInquiry) {
+          setShowInquiryModal(true)
+        }
+      },
+    })) ?? []
 
-    // Utility function to set event end dates in local storage
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
-    const setEventEndDates = (data: any) => {
-      localStorage.setItem("eventEndDates", JSON.stringify(data))
-    }
-
-    // Retrieve existing end dates from local storage
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const endDates = getEventEndDates()
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const selectedEventBundle = visibleEvents?.find((ev) => ev.id === selectedEventBundleId)
-
-    if (selectedEventBundle) {
-      // update endDates
-      endDates[event.id] = selectedEventBundle.endDate
-      // Set the end date of the selected event
-
-      // Save the updated end dates back to local storage
-      setEventEndDates(endDates)
-    }
-    addToCart({ event })
-  }
-
-  // 같은 이름의 이벤트가 있을 수 있음
-  const eventListTemp = events?.items.map((event) => ({
-    name: tv(event, "name"),
-    description: tv(event, "description"),
-    originalPrice: event.discountPrice
-      ? `${event.price.toLocaleString()} ${t("reservePage.won")}`
-      : undefined,
-    price: `${(event.discountPrice || event.price).toLocaleString()} ${t("reservePage.won")}`,
-    isKakao: event.label?.some((label) => label === "KAKAO"),
-    isNew: event.label?.some((label) => label === "NEW"),
-    isBest: event.label?.some((label) => label === "BEST"),
-    isPop: event.label?.some((label) => label === "POP"),
-    addToCart: () => handleEventAddToCart(event),
-  }))
-
-  // 같은 이름의 이벤트가 여러개 있을 수 있으므로 중복 제거
-  const eventList = eventListTemp?.filter(
-    (event, index, self) => index === self.findIndex((e) => e.name === event.name),
+  // 이름이 같은 이벤트는 하나만 남기기
+  const dedupedEventList = eventList.filter(
+    (item, idx, self) => idx === self.findIndex((e) => e.name === item.name),
   )
 
-  const normalProducts = products?.items.map((product) => ({
+  // 일반 상품 리스트
+  const normalProducts = products.items.map((product) => ({
+    type: "normal" as const,
     name: tv(product, "name"),
     description: tv(product, "description"),
     price: `${product.price.toLocaleString()} ${t("reservePage.won")}`,
-    addToCart: () => addToCart({ product }),
+    addToCart: () => {
+      const result = addToCart({ product })
+      if (result?.blockedByInquiry) {
+        setShowInquiryModal(true)
+      }
+    },
   }))
 
-  const information: {
-    label: string
-    key: keyof typeof productDetail
-  }[] = [
-    {
-      label: t("productDetail.procedure"),
-      key: "procedure",
-    },
-    {
-      label: t("productDetail.productInformation"),
-      key: "information",
-    },
-    {
-      label: t("productDetail.advantages"),
-      key: "advantages",
-    },
-    {
-      label: t("productDetail.target"),
-      key: "target",
-    },
-    {
-      label: t("productDetail.qAndA"),
-      key: "qAndA",
-    },
-    {
-      label: t("productDetail.caution"),
-      key: "caution",
-    },
-  ]
+  // 합치기
+  const mergedList = [...dedupedEventList, ...normalProducts]
 
-  const productFilter = [
-    {
-      key: "all" as ProductType,
-      label: t("common.all"),
-    },
-    {
-      key: "event" as ProductType,
-      label: t("common.event"),
-    },
-    {
-      key: "normal" as ProductType,
-      label: t("common.normal"),
-    },
-  ]
+  const DISPLAY_LIMIT = 5
+  const displayedList = showAllProducts ? mergedList : mergedList.slice(0, DISPLAY_LIMIT)
 
-  const scrollTo = (ref: React.RefObject<HTMLDivElement>) => {
-    if (ref.current) {
-      window.scrollTo({
-        top: ref.current.offsetTop - (headerHeight || 0),
-        behavior: "smooth",
-      })
-    }
-  }
+  // 마지막 이벤트 index
+  const lastEventIndex = dedupedEventList.length - 1
+
+  // 마지막 일반 상품 index (mergedList 기준 X, normalProducts 기준)
+  const lastNormalIndex = normalProducts.length - 1
 
   return (
-    <Page hiddenFooter={false}>
-      <Helmet>
-        <title>{name} | 세니아클리닉</title>
-        <meta name="description" content={`${subTitle}`} />
-        {/* <meta name="keywords" content={`${category}, shopping, online store`} /> */}
-      </Helmet>
-      <AppMaxWidth tw="font-nanumgothic mt-4 lg:mt-10 relative mb-20">
-        <CartView isHome={false}>
-          <div tw="text-center mb-8 lg:mb-10">
-            <Chip>{category}</Chip>
-            <div tw="my-4 lg:mt-6 text-[#333] font-bold text-2xl">{name}</div>
-            <div tw="text-[#999]">{subTitle}</div>
+    <Page hiddenFooter={false} bottomCartExists tw="bg-neutral">
+      <div tw="bg-neutral min-h-screen">
+        <Helmet>
+          <title>{name} | 페슈의원</title>
+          <meta name="description" content={`${subTitle}`} />
+        </Helmet>
+
+        <div tw="w-screen overflow-hidden relative">
+          <img
+            src={isMobile ? mobileBannerImg : bannerImg}
+            alt="banner"
+            tw="w-full max-h-[310px] h-[310px] object-cover block"
+          />
+          <div
+            tw="
+              absolute top-1/2 left-1/2 
+              -translate-x-1/2 -translate-y-1/2 
+              text-center text-neutralBlack
+              min-w-[300px]
+            ">
+            <div tw="text-[39px] lg:text-[50px] font-time font-normal tracking-tight">
+              Price & Events
+            </div>
+            <div tw="text-[18px] lg:text-[22px] font-pretendard">가격 및 이벤트</div>
           </div>
+        </div>
 
-          {productDetail.referenceUrl && (
-            <div tw="w-full h-96 bg-[#EFEDED] rounded-lg mb-16">
-              <iframe
-                width="100%"
-                height="100%"
-                src={`https://www.youtube.com/embed/${videoUrl}`}
-                title="YouTube video player"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen></iframe>
-            </div>
-          )}
-
-          <div tw="mb-10 border-b border-[#888]">
-            <div tw="flex items-center justify-center">
-              <button
-                tw="px-5 py-5"
-                css={!productInfoClicked && tw`border-b-2 -mb-px text-point border-point`}
-                onClick={() => {
-                  setProductInfoClicked(false)
-                  scrollTo(productRef)
-                }}>
-                {t("productDetail.reserveAProduct")}
-              </button>
-              <button
-                tw="px-5 py-5"
-                css={productInfoClicked && tw`border-b-2 -mb-px text-point border-point`}
-                onClick={() => {
-                  setProductInfoClicked(true)
-                  scrollTo(descriptionRef)
-                }}>
-                {t("productDetail.productInformation")}
-              </button>
-            </div>
-          </div>
-
-          {/* <div ref={productRef} css={!eventList?.length && tw`hidden`}> */}
-          <div ref={productRef}>
-            <div tw="flex justify-between mb-6 lg:mb-11">
-              <div tw="font-bold text-xl" css={productType !== "all" && tw`hidden`}>
-                {t("productDetail.availableProduct")}{" "}
-                {(eventList?.length || 0) + (normalProducts?.length || 0)}
-              </div>
-              <div tw="font-bold text-xl" css={productType !== "event" && tw`hidden`}>
-                {t("productDetail.availableProduct")} {eventList?.length || 0}
-              </div>
-              <div tw="font-bold text-xl" css={productType !== "normal" && tw`hidden`}>
-                {t("productDetail.availableProduct")} {normalProducts?.length || 0}
-              </div>
-              <div>
-                <TypeFilter
-                  onSelected={(item) => setProductType(item.key as ProductType)}
-                  items={productFilter}
-                />
-              </div>
+        <AppMaxWidth tw="bg-neutral pt-12 lg:pt-20 pb-20 font-pretendard">
+          <CartView isHome={false}>
+            {/* 제목 카드 */}
+            <div tw="bg-white p-[24px] mb-4 text-center border-b-[2px] border-b-secondary3">
+              <div tw="text-secondary3 font-semibold text-[18px] md:text-[22px]">{name}</div>
+              {/* <div tw="text-neutral70 text-[15px] md:text-[17px] mt-4">{subTitle}</div> */}
             </div>
 
-            {/* 이벤트 번들 탭 여기에 */}
-            {showEvents && visibleEvents && visibleEvents.length > 1 && (
-              <div tw="border-b border-[#e5e5e5] my-10 bg-white pt-1">
-                <div tw="flex justify-center items-center">
-                  {visibleEvents.map((event) => (
-                    <button
-                      key={event.id}
-                      tw="px-5 -mb-px text-center text-[#888]"
-                      css={
-                        selectedEventBundleId === event.id && tw`border-b-2 border-point text-point`
-                      }
-                      onClick={() => handleBundle(event.id)}>
-                      <p tw="text-sm">{tv(event, "name")}</p>
-                      <p tw="text-xs">
-                        {dayjs(event.startDate).format("YYYY.MM.DD")}~
-                        {dayjs(event.endDate).format("YYYY.MM.DD")}
-                      </p>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
+            {/* 상품 리스트 */}
+            <div>
+              {displayedList.map((item, index) => {
+                const isEvent = item.type === "event"
+                const isNormal = item.type === "normal"
 
-            {showEvents && (
-              <div>
-                <div tw="flex flex-col gap-4 lg:gap-6">
-                  {eventList?.map((product, index) => <ProductItem key={index} {...product} />)}
-                </div>
-                {!eventList?.length && (
-                  <div tw="flex flex-col gap-4 lg:gap-6" style={{ textAlign: "center" }}>
-                    {t("productDetail.noEvents")}
-                  </div>
-                )}
-                <Separator />
-              </div>
-            )}
-          </div>
+                // 이벤트 상품 마지막인지?
+                const hideBorderEvent = isEvent && index === eventList.length - 1
 
-          {showNormal && (
-            <div css={!normalProducts?.length && tw`hidden`}>
-              <div tw="flex justify-between mb-5">
-                <div tw="font-bold text-xl">{t("productDetail.normalProducts")}</div>
-              </div>
+                // 일반 상품 마지막인지?
+                const hideBorderNormal =
+                  isNormal && index === eventList.length + normalProducts.length - 1
 
-              <div tw="flex flex-col gap-4 lg:gap-6">
-                {normalProducts.map((product, index) => (
-                  <ProductItem key={index} {...product} />
-                ))}
-              </div>
+                const hideBorder = hideBorderEvent || hideBorderNormal
 
-              <Separator />
-            </div>
-          )}
+                // 이벤트 → 일반 사이 공간
+                const showGap =
+                  index > 0 && displayedList[index - 1].type === "event" && item.type === "normal"
 
-          <div ref={descriptionRef}>
-            <div tw="flex justify-between mb-5">
-              <div tw="font-bold text-xl">{t("productDetail.productInformation")}</div>
-            </div>
-
-            <div tw="flex flex-col gap-6 lg:gap-8">
-              <div tw="aspect-video" css={!productDetail.referenceUrl && tw`hidden`}>
-                <iframe
-                  width="100%"
-                  height="100%"
-                  src={`https://www.youtube.com/embed/${
-                    productDetail.referenceUrl?.split("/").pop() ?? ""
-                  }`}
-                  title="YouTube video player"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowFullScreen></iframe>
-              </div>
-
-              {information.map((info, index) => {
-                const value = tv(productDetail, info.key).toString()
                 return (
-                  <div key={index} css={!value && tw`hidden`}>
-                    <div tw="font-bold text-lg">{info.label}</div>
-                    <hr tw="my-2" />
-                    <div tw="text-[#333] whitespace-pre-wrap">{value}</div>
-                  </div>
+                  <React.Fragment key={index}>
+                    {showGap && <div tw="h-6 bg-neutral" />}
+                    <ProductItem {...item} hideBorder={hideBorder} />
+                  </React.Fragment>
                 )
               })}
+
+              {/* 더보기 버튼 */}
+              {!showAllProducts && mergedList.length > DISPLAY_LIMIT && (
+                <div tw="flex justify-center mt-8">
+                  <button
+                    tw="
+                      w-full 
+                      max-w-[100%]
+                      bg-white
+                      border border-primary
+                      text-primary
+                      py-3
+                      flex items-center justify-center 
+                      text-[16px]
+                      font-medium
+                      gap-2
+                    "
+                    onClick={() => setShowAllProducts(true)}>
+                    {t("productDetail.moreProcedures")}
+                    <ChevronDownIcon width={20} height={20} />
+                  </button>
+                </div>
+              )}
             </div>
+
+            {/* 비디오 영역 */}
+            {productDetail.referenceUrl && (
+              <div tw="bg-white p-[8px] md:p-[16px] py-6 md:py-12 mt-16">
+                {/* 시술 소개 영상 텍스트 */}
+                <div tw="text-[18px] md:text-[22px] font-semibold text-neutralBlack mb-[8px] md:mb-[16px]">
+                  {t("productDetail.treatmentVideo")}
+                </div>
+
+                {/* 검은색 보더 */}
+                <div tw="border-t border-neutralBlack mb-6" />
+
+                {/* 살색 비디오 컨테이너 */}
+                <div tw="bg-white">
+                  <iframe
+                    width="100%"
+                    height="100%"
+                    tw="w-full h-[650px] md:h-[860px]"
+                    title="Youtube video"
+                    src={`https://www.youtube.com/embed/${
+                      productDetail.referenceUrl?.split("/").pop() ?? ""
+                    }`}
+                    allowFullScreen
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* 대표 이미지 영역 */}
+            {productDetail.image?.url && (
+              <div tw="bg-white p-6 md:p-10 mt-10">
+                <img src={productDetail.image.url} alt={name} tw="w-full rounded-lg" />
+              </div>
+            )}
+          </CartView>
+        </AppMaxWidth>
+      </div>
+      <Modal
+        open={showInquiryModal}
+        width="max-w-[400px]"
+        onClose={() => setShowInquiryModal(false)}>
+        <div tw="flex flex-col items-start justify-center h-full">
+          <div tw="text-left text-[16px] lg:text-[18px] font-semibold leading-snug">
+            방문 상담이 담겨있는 상태에서는 시술 선택이 어렵습니다.
           </div>
-        </CartView>
-      </AppMaxWidth>
+
+          <div tw="text-neutral70 text-[14px] lg:text-[16px] text-left mt-3">
+            방문 상담을 비운 후 시술을 담아주세요.
+          </div>
+
+          <div tw="flex justify-end gap-2 mt-8">
+            <Button
+              tw="w-[150px]"
+              style={{ variant: "outlined", color: "point", size: "sm" }}
+              onClick={() => setShowInquiryModal(false)}>
+              취소하기
+            </Button>
+
+            <Button
+              tw="w-[150px]"
+              style={{ variant: "filled", color: "point", size: "sm" }}
+              onClick={() => {
+                setInquiry(false)
+                setShowInquiryModal(false)
+              }}>
+              방문 상담 비우기
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </Page>
   )
 }

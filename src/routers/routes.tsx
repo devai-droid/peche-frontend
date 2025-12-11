@@ -6,6 +6,7 @@ import IntroDoctor from "@/pages/intro/tabs/intro-doctor.tab"
 import IntroWorker from "@/pages/intro/tabs/intro-worker.tab"
 import IntroMachine from "@/pages/intro/tabs/intro-machine.tab"
 import IntroMap from "@/pages/intro/tabs/intro-map.tab"
+import AllTreatmentPage from "@/pages/treatment/all-treatment.page"
 import Products from "@/pages/product/products.page"
 import ProductDetail from "@/pages/product/product-detail.page"
 import Events from "@/pages/product/events.page"
@@ -15,6 +16,9 @@ import ReservationComplete from "@/pages/reservation/reservation-complete.page"
 import KakaoRedirectedOauthPage from "@/pages/auth/kakao-redirected-oauth/kakao-redirected-oauth.page"
 import TermsOfService from "@/pages/terms/term-of-service.page"
 import PrivacyPolicy from "@/pages/terms/privacy-policy.page"
+import Blog from "@/pages/blog/blog.page"
+import Signup from "@/pages/signup/signup.page"
+import SignupComplete from "@/pages/signup/signup-complete.page"
 
 const router = createBrowserRouter([
   {
@@ -48,6 +52,8 @@ const router = createBrowserRouter([
     children: [
       { path: "", element: <Home /> },
 
+      { path: "treatment", element: <AllTreatmentPage /> },
+
       { path: "products", element: <Products /> },
       { path: "products/:id", element: <ProductDetail /> },
 
@@ -68,8 +74,11 @@ const router = createBrowserRouter([
           { path: "way", element: <IntroMap /> },
         ],
       },
+      { path: "blog", element: <Blog /> },
       { path: "termsofservice", element: <TermsOfService /> },
       { path: "privacypolicy", element: <PrivacyPolicy /> },
+      { path: "signup", element: <Signup /> },
+      { path: "signup/complete", element: <SignupComplete /> },
       {
         path: "*",
         element: (

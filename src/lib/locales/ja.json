@@ -2,6 +2,7 @@
   "header": {
     "home": "ホーム",
     "surgeryAndPrice": "金額",
+    "treatmentList": "전체 시술",
     "hospital": "クリニック紹介",
     "reservation": "ご予約はこちら",
     "event": "イベント",
@@ -9,7 +10,8 @@
     "recommendKeyword": "おすすめ",
     "price": "料金",
     "introduction": "クリニック紹介",
-    "reservationCheck": "予約確認"
+    "reservationCheck": "予約確認",
+    "blog": "Blog"
   },
   "home": {
     "title": "Hydrating Moisture Peel",
@@ -102,7 +104,9 @@
     "target": "施術推薦対象",
     "qAndA": "Q&A",
     "caution": "注意事項",
-    "noEvents": "イベント商品はありません"
+    "noEvents": "イベント商品はありません",
+    "moreProcedures": "시술 더보기",
+    "treatmentVideo": "시술 소개 영상"
   },
   "common": {
     "all": "All",
@@ -136,6 +140,8 @@
     "welcome": ", ようこそ",
     "nameFix": "*お名前が間違った場合、LINEにてお問い合わせお願いいたします。(LINE ID : @pecheclinic)",
     "reserve": "ご予約はこちら",
+    "shoppingCart": "ご予約はこちら",
+    "customerInfo": "고객정보 입력",
     "logout": "Logout",
     "logoutConfirm": "Are you sure you want to logout?",
     "bookConsultation": "カウンセリングを予約する",
@@ -162,9 +168,13 @@
     "memo": "メモ",
     "guardianConsentText": "* 未成年者の予約の際、保護者施術同意書を作成してご来院ください。",
     "guardianConsent": "保護者施術同意書",
+    "authTitle": "본인인증",
+    "agreementTitle": "약관동의",
     "agreeToAll": "一括同意",
+    "termsOfService": "(필수) 서비스 이용약관에 동의합니다.",
     "privacyAgreement": "[必須] サービス利用及び予約申請のための個人情報の譲渡に同意します。",
     "marketingAgreement": "[選択] マーケティングの活用に同意します。",
+    "marketingNotice": "마케팅활용에 동의하시면 특가 이벤트 및 할인 정보를 받아보실 수 있습니다.",
     "detail": "詳細を見る",
     "reservationComplete": "予約完了",
     "reservationCompleteText": "予約が完了しました。",

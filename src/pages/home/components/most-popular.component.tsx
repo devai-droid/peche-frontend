@@ -4,12 +4,10 @@ import { Swiper, SwiperSlide } from "swiper/react"
 import { Navigation } from "swiper/modules"
 import "swiper/css"
 import "swiper/css/navigation"
+import CustomLink from "@/lib/components/custom-link.component"
+import useLanguageValue from "@/lib/hooks/use-language-key"
 
-// example 이미지
-import example1 from "@/assets/images/example1.jpg"
-import example2 from "@/assets/images/example2.jpg"
-import example3 from "@/assets/images/example3.jpg"
-import example4 from "@/assets/images/example4.jpg"
+import { useMostPopularCategoryControllerFindAll } from "@/lib/orval/most-popular-categories/most-popular-categories"
 
 // ─────────────────────────────
 // Layout
@@ -27,7 +25,7 @@ const Header = tw.div`
 `
 
 const BestBadge = tw.span`
-  bg-primary text-white text-[10px] md:text-[12px] px-2
+  bg-primary text-white text-[15px] md:text-[17px] px-[4px]
 `
 
 const Title = tw.h2`
@@ -62,7 +60,7 @@ const AccordionContent = styled.div<{ open: boolean }>`
 `
 
 const KeywordList = tw.div`
-  flex flex-wrap gap-3 text-neutralBlack text-[13px] md:text-[14px] mb-[2px]
+  flex flex-wrap gap-3 text-neutralBlack text-[14px] md:text-[16px] mb-[2px] font-normal
 `
 
 const Keyword = tw.span`
@@ -81,12 +79,6 @@ const StyledSwiperWrapper = styled.div`
     ${tw`hidden md:flex items-center justify-center absolute top-1/2 transform -translate-y-1/2 w-[40px] h-[40px] bg-[#f5f5f5] rounded-none text-black shadow-sm hover:bg-[#eaeaea] transition`}
   }
 
-  .nav-button {
-    ${tw`
-      hidden
-    `}
-  }
-
   .swiper-button-prev::after,
   .swiper-button-next::after {
     font-size: 14px;
@@ -95,64 +87,51 @@ const StyledSwiperWrapper = styled.div`
 `
 
 const StyledSwiperSlide = styled(SwiperSlide)`
-  width: 296px !important; /* 모바일 기본 */
-`
-
-// ✅ 고정 크기 296x296
-const ImageCard = styled.div`
-  ${tw`relative overflow-hidden bg-gray-100 cursor-pointer`}
-  width: 296px;
-  height: 296px;
-  margin: 0 auto;
-
-  img {
-    ${tw`w-full h-full object-cover`}
-  }
+  width: 321px !important;
 `
 
 const CardLabel = styled.div`
   ${tw`absolute bottom-2 right-2 bg-white text-[13px] px-2 py-1`}
+  min-width: 40px; /* 또는 60~100px 사이로 네가 원하는 값 */
+  white-space: nowrap;
 `
-
-// ─────────────────────────────
-// 더미 데이터
-// ─────────────────────────────
-const categories = [
-  {
-    id: 1,
-    title: "탄력/리프팅",
-    keywords: ["동안피부", "주름완화", "콜라겐"],
-    items: [example1, example2, example3, example4],
-  },
-  {
-    id: 2,
-    title: "효과 카테고리",
-    keywords: ["키워드", "키워드", "키워드"],
-    items: [example1, example2, example3, example4],
-  },
-  {
-    id: 3,
-    title: "효과 카테고리",
-    keywords: ["키워드", "키워드", "키워드"],
-    items: [example1, example2, example3, example4],
-  },
-  {
-    id: 4,
-    title: "효과 카테고리",
-    keywords: ["키워드", "키워드", "키워드"],
-    items: [example1, example2, example3, example4],
-  },
-]
 
 // ─────────────────────────────
 // 컴포넌트 본체
 // ─────────────────────────────
 const MostPopular = () => {
-  const [openId, setOpenId] = useState<number | null>(1)
+  const [openId, setOpenId] = useState<string | null>(null)
+  const tv = useLanguageValue()
 
-  const toggleAccordion = (id: number) => {
+  const { data: categories } = useMostPopularCategoryControllerFindAll()
+
+  React.useEffect(() => {
+    if (categories && categories.length > 0 && !openId) {
+      setOpenId(categories[0].id)
+    }
+  }, [categories])
+
+  const ImageCardLink = styled(CustomLink)`
+    ${tw`relative overflow-hidden bg-gray-100 cursor-pointer`}
+    width: 321px;
+    height: 321px;
+    margin: 0 auto;
+
+    img {
+      ${tw`w-full h-full object-cover transition-transform duration-500`}
+      transform: scale(1);
+    }
+
+    &:hover img {
+      transform: scale(1.5); /* 🔥 150% 확대 */
+    }
+  `
+
+  const toggleAccordion = (id: string) => {
     setOpenId(openId === id ? null : id)
   }
+
+  if (!categories) return null
 
   return (
     <Section>
@@ -170,9 +149,10 @@ const MostPopular = () => {
               open={openId === category.id}
               onClick={() => toggleAccordion(category.id)}>
               <div tw="flex flex-wrap items-center gap-3 text-[15px] md:text-[18px]">
-                <span tw="font-semibold text-[15px] md:text-[17px]">{category.title}</span>
+                <span tw="font-semibold text-[16px] md:text-[18px]">{tv(category, "name")}</span>
+
                 <KeywordList>
-                  {category.keywords.map((kw, idx) => (
+                  {(category.keywords || []).map((kw, idx) => (
                     <Keyword key={idx}>#{kw}</Keyword>
                   ))}
                 </KeywordList>
@@ -192,19 +172,23 @@ const MostPopular = () => {
               <StyledSwiperWrapper>
                 <Swiper
                   modules={[Navigation]}
+                  navigation={false}
                   breakpoints={{
-                    0: { slidesPerView: 2, spaceBetween: 2 },
-                    768: { slidesPerView: 3, spaceBetween: 2 },
-                    1024: { slidesPerView: 4, spaceBetween: 4 },
+                    0: { slidesPerView: "auto", spaceBetween: 8 },
+                    768: { slidesPerView: 3, spaceBetween: 8 },
+                    1024: { slidesPerView: 4, spaceBetween: 20 },
                   }}>
-                  {category.items.map((img, idx) => (
-                    <StyledSwiperSlide key={idx}>
-                      <ImageCard>
-                        <img src={img} alt={`시술 ${idx + 1}`} />
-                        <CardLabel>시술명</CardLabel>
-                      </ImageCard>
-                    </StyledSwiperSlide>
-                  ))}
+                  {category.items
+                    ?.slice()
+                    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+                    .map((item) => (
+                      <StyledSwiperSlide key={item.id}>
+                        <ImageCardLink to={`/products/${item.productDetailPageId}`}>
+                          <img src={item.image?.url} alt="" />
+                          <CardLabel>{tv(item, "title")}</CardLabel>
+                        </ImageCardLink>
+                      </StyledSwiperSlide>
+                    ))}
                 </Swiper>
               </StyledSwiperWrapper>
             </AccordionContent>
