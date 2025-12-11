@@ -16,6 +16,7 @@ import {
   reservationControllerGetAvailableReservationByDay,
   useReservationControllerFindMine,
   useReservationControllerUpdate,
+  useReservationControllerRemove,
 } from "@/lib/orval/reservations/reservations"
 
 import { Reservation, AvailableReservationResultDto } from "@/lib/orval/model"
@@ -81,6 +82,7 @@ const Reservations = () => {
   )
 
   const { mutateAsync: updateReservation } = useReservationControllerUpdate()
+  const { mutateAsync: removeReservation } = useReservationControllerRemove()
 
   const reservations: Reservation[] = reservationData?.items ?? []
 
@@ -195,9 +197,22 @@ const Reservations = () => {
     setChangeId(null)
   }
 
+  // const cancelReservation = async () => {
+  //   await updateReservation({ id: cancelId!, data: { status: "CANCELED" } })
+  //   alert("예약이 취소되었습니다.")
+  //   setCancelId(null)
+  // }
+
   const cancelReservation = async () => {
-    await updateReservation({ id: cancelId!, data: { status: "CANCELED" } })
-    alert("예약이 취소되었습니다.")
+    if (!cancelId) return
+
+    try {
+      await removeReservation({ id: cancelId })
+      alert("예약이 취소되었습니다.")
+    } catch (e) {
+      alert("취소 중 오류가 발생했습니다.")
+    }
+
     setCancelId(null)
   }
 

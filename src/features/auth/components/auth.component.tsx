@@ -147,6 +147,7 @@ const Auth = ({ onAuth, onAgreementChange }: Props) => {
           )}
 
           <button
+            disabled
             tw="h-[80px] flex flex-col items-center justify-center gap-2 font-bold text-white"
             css={isKorean ? tw`flex-1 bg-[#4DAA57]` : tw`w-full bg-[#4DAA57]`}
             onClick={() => setOpenEmailModal(true)}>

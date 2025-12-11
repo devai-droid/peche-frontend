@@ -11,12 +11,12 @@ const ReservationComplete = () => {
     <Page>
       <div tw="flex flex-col items-center justify-center h-full text-center py-20">
         <div tw="text-lg mt-8 mb-3">{t("reservePage.reservationCompleteText")}</div>
-        <div tw="text-lg text-[#FF0000]">{t("reservePage.checkConfirmationText")}</div>
-        <div tw="mt-6 mb-10 whitespace-pre-wrap text-[#999]">{t("reservePage.contactMessage")}</div>
+        {/* <div tw="text-lg text-[#FF0000]">{t("reservePage.checkConfirmationText")}</div>
+        <div tw="mt-6 mb-10 whitespace-pre-wrap text-[#999]">{t("reservePage.contactMessage")}</div> */}
 
         <Button
-          tw="min-w-[12rem]"
-          style={{ variant: "filled", color: "black", size: "lg" }}
+          tw="min-w-[12rem] text-[16px] md:text-[18px]"
+          style={{ variant: "filled", color: "point", size: "md" }}
           onClick={() => navigate("/reservation")}>
           {t("reservePage.reservationCheck")}
         </Button>

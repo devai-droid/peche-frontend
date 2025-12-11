@@ -262,8 +262,7 @@ const SurgeryList = () => {
         </div>
       </div>
       <Button
-        disabled
-        // disabled={cart.length === 0 && !inquiryChecked}
+        disabled={cart.length === 0 && !inquiryChecked}
         onClick={() => {
           navigate("/reservation/new", {
             state: {
@@ -576,7 +575,6 @@ const BottomButtons = () => {
         </BottomButton>
         <div tw="w-px bg-neutral" />
         <BottomButton
-          disabled
           onClick={() => {
             navigate("/reservation/new")
             setInquiry(true)

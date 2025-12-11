@@ -320,6 +320,7 @@ const Reserve = () => {
   const [today, setToday] = React.useState(dayjs())
   const [todaySlots, setTodaySlots] = React.useState<AvailableReservationResultDto[]>([])
   const [selectedDatetime, setSelectedDatetime] = React.useState("")
+  const [confirmOpen, setConfirmOpen] = React.useState(false)
 
   /* -------- Auth 상태 -------- */
   interface AuthInfo {
@@ -363,6 +364,46 @@ const Reserve = () => {
     const inquiryId = DEFAULT_CONSULTATION_PRODUCT_ID[env.STAGE]
     if (inquiry && !ids.includes(inquiryId)) ids.push(inquiryId)
     return ids
+  }
+
+  // 예약 버튼 클릭 시 모달만 여는 함수
+  const openConfirmModal = () => {
+    if (!authInfo) {
+      alert("본인인증이 필요합니다.")
+      return
+    }
+
+    if (!agree.terms || !agree.privacy) {
+      alert("필수 약관을 동의해주세요.")
+      return
+    }
+
+    if (!selectedDatetime) {
+      alert("예약 시간을 선택해주세요.")
+      return
+    }
+
+    setConfirmOpen(true)
+  }
+
+  const reserveConfirm = () => {
+    userControllerUpdateMine({ languageLocale: language })
+
+    mutate(
+      {
+        data: {
+          datetime: selectedDatetime.replace("Z", ""),
+          productIds: getProductIdsWithInquiry(),
+          eventIds: getCheckedEventIds(),
+        },
+      },
+      {
+        onSuccess: () => {
+          resetCart()
+          navigate("/reservation/complete")
+        },
+      },
+    )
   }
 
   /* -------- 캘린더 변경 시 조회 -------- */
@@ -578,7 +619,7 @@ const Reserve = () => {
                 tw="w-full h-[52px] mt-6 font-bold"
                 style={{ variant: "filled", color: "point" }}
                 disabled={reservationDisabled}
-                onClick={reserve}>
+                onClick={openConfirmModal}>
                 {t("button.reserve")}
               </Button>
             </div>
@@ -592,12 +633,38 @@ const Reserve = () => {
               tw="w-full h-[52px] mt-6 font-bold"
               style={{ variant: "filled", color: "point" }}
               disabled={reservationDisabled}
-              onClick={reserve}>
+              onClick={openConfirmModal}>
               {t("button.reserve")}
             </Button>
           </div>
         </AppMaxWidth>
       </div>
+      <Modal open={confirmOpen} onClose={() => setConfirmOpen(false)} width="max-w-[480px]">
+        <div tw="font-pretendard">
+          <div tw="text-[16px] md:text-[18px] font-semibold mb-4">예약을 확정하시겠습니까?</div>
+
+          <div tw="text-neutral70 leading-[150%] text-[14px] md:text-[16px] mb-8">
+            - 미성년자인 경우 반드시 보호자와 동행해주세요.
+            <br />- 상담 후 당일 시술하지 않는 경우 별도 진료비가 발생할 수 있습니다.
+          </div>
+
+          <div tw="flex gap-2 justify-center">
+            <Button
+              tw="flex-1 h-[40px] text-[13px] md:text-[15px]"
+              style={{ variant: "outlined", color: "point", size: "sm" }}
+              onClick={() => setConfirmOpen(false)}>
+              취소하기
+            </Button>
+
+            <Button
+              tw="flex-1 h-[40px] text-[13px] md:text-[15px]"
+              style={{ variant: "filled", color: "point", size: "sm" }}
+              onClick={reserveConfirm}>
+              예약하기
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </Page>
   )
 }

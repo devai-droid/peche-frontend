@@ -99,7 +99,7 @@ const RightMenu = ({ isDesktop, setOpenSearch, isMenuOpen, setIsMenuOpen }: Menu
           </button>
 
           <div tw="ml-8" />
-          <button tw="cursor-pointer" disabled onClick={() => navigate("/reservation")}>
+          <button tw="cursor-pointer" onClick={() => navigate("/reservation")}>
             예약확인
           </button>
 
