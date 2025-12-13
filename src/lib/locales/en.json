@@ -1,17 +1,20 @@
 {
   "header": {
     "home": "Main",
-    "surgeryAndPrice": "Price",
+    "surgeryAndPrice": "All Treatments",
     "treatmentList": "전체 시술",
     "hospital": "About us",
     "reservation": "Book now",
-    "event": "Event",
+    "event": "Price & Events",
     "searchSurgery": "Search for the treatment you want!",
     "recommendKeyword": "Recommendation",
     "price": "Price",
-    "introduction": "About us",
+    "introduction": "Peche Clinic Introduction",
     "reservationCheck": "Check Reservation",
-    "blog": "Blog"
+    "blog": "Blog",
+    "search": "Search",
+    "shoppingCart": "Shopping Cart",
+    "checkReservation": "Reservation Confirmation"
   },
   "home": {
     "title": "Hydrating Moisture Peel",
@@ -49,6 +52,11 @@
     "consultationKoreanPhone": "전화",
     "consultationKoreanKakao": "카카오톡"
   },
+  "specialEvents": {
+    "title": "Latest Event News",
+    "allEventsButton": "View All Events",
+    "new": "NEW"
+  },
   "footer": {
     "title": "Peche Clinic",
     "nameOfCEO": "CEO : 민원준",
@@ -66,7 +74,8 @@
     "hospitalNewBuildingAddress": "5th floor, KI tower, 69 Road 8, Gangnam-daero, Seocho-gu, Seoul, Republic of Korea",
     "hospitalThirdBuildingAddress": "5-6 floor, Seoho Building, 10, Gangnam-daero 69-gil, Seocho-gu, Seoul, Republic of Korea",
     "privacyPolicy": "Privacy Policy",
-    "termsOfService": "Terms of Service"
+    "termsOfService": "Terms of Service",
+    "info": "3F, 364 Gangnam-daero, Gangnam-gu, Seoul (Yeoksam-dong, Miwang Building)  |  Representative: Taeon Ahn  |  Business Registration Number 219-05-28999  |  Main Number 02-533-8176"
   },
   "intro": {
     "introHospital": "About us",

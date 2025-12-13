@@ -19,6 +19,8 @@ const getLocalizedValue = <T extends object>(
       return (record as any)[`${base}EN`] || (record as any)[base]
     case "zh":
       return (record as any)[`${base}ZH`] || (record as any)[base]
+    case "zh-TW":
+      return (record as any)[`${base}ZHTW`] || (record as any)[base]
     case "ja":
       return (record as any)[`${base}JA`] || (record as any)[base]
     case "th":

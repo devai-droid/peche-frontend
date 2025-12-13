@@ -7,6 +7,7 @@ import { initReactI18next } from "react-i18next"
 import translationEN from "./en.json"
 import translationKO from "./ko.json"
 import translationZH from "./zh.json"
+import translationTW from "./tw.json"
 import translationJA from "./ja.json"
 import translationTH from "./th.json"
 import { LocalStorage } from "../service/local-storage.service"
@@ -18,6 +19,7 @@ export const Language = {
   KOR: "ko",
   ENG: "en",
   CHN: "zh",
+  TWN: "zh-TW",
   JPN: "ja",
   THA: "th",
 } as const
@@ -31,6 +33,9 @@ const resources = {
   },
   [Language.CHN]: {
     translation: translationZH,
+  },
+  [Language.TWN]: {
+    translation: translationTW,
   },
   [Language.JPN]: {
     translation: translationJA,

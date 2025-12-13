@@ -12,6 +12,8 @@ import { useEventCategoryControllerFindManyWithPaginationQuery } from "@/lib/orv
 import { useEventBundleControllerFindVisible } from "@/lib/orval/event-bundle/event-bundle"
 import useLanguageQuery from "@/lib/hooks/use-language-query"
 import useLanguageValue from "@/lib/hooks/use-language-key"
+import { useTranslation } from "react-i18next"
+import { Language } from "@/lib/locales/i18n.config"
 
 const Section = tw.section`
   w-full bg-white py-12 md:py-20 tracking-tight leading-[140%] font-pretendard
@@ -109,7 +111,7 @@ const EventTitle = tw.div`
 `
 
 const EventPrice = tw.div`
-  text-left text-[16px] md:text-[18px] font-semibold text-neutralBlack w-full ml-4
+  text-left text-[14px] md:text-[16px] font-semibold text-neutralBlack w-full ml-4
 `
 
 const Discount = tw.span`
@@ -120,6 +122,7 @@ const SpecialEventSection = () => {
   const nav = useNavigate()
   const langQuery = useLanguageQuery()
   const tv = useLanguageValue()
+  const { t, i18n } = useTranslation()
 
   const { data: categories } = useEventCategoryControllerFindManyWithPaginationQuery({
     status: "ACTIVE",
@@ -144,16 +147,65 @@ const SpecialEventSection = () => {
     nav(`/events?category=${categoryId}&bundle=${firstBundleId}`)
   }
 
+  const formatEventPrice = (lang: Language, discountPercent?: number, minPrice?: number) => {
+    const priceStr = minPrice?.toLocaleString()
+
+    switch (lang) {
+      case "ko":
+        return {
+          discount: discountPercent ? `~ ${discountPercent}%` : "",
+          price: minPrice ? `${priceStr}원부터` : "",
+        }
+
+      case "en":
+        return {
+          discount: discountPercent ? `~ ${discountPercent}%` : "",
+          price: minPrice ? `From ${priceStr} won` : "",
+        }
+
+      case "zh": // 중국어
+        return {
+          discount: discountPercent ? `约 ${discountPercent}%` : "",
+          price: minPrice ? `起价 ${priceStr} 韩元` : "",
+        }
+
+      case "zh-TW": // 대만어
+        return {
+          discount: discountPercent ? `约 ${discountPercent}%` : "",
+          price: minPrice ? `起价 ${priceStr} 韩元` : "",
+        }
+
+      case "ja":
+        return {
+          discount: discountPercent ? `~ ${discountPercent}%` : "",
+          price: minPrice ? `${priceStr}ウォンから` : "",
+        }
+
+      case "th":
+        return {
+          discount: discountPercent ? `~ ${discountPercent}%` : "",
+          price: minPrice ? `จาก ${priceStr} วอน` : "",
+        }
+
+      default:
+        // 기본값 → 영어 스타일
+        return {
+          discount: discountPercent ? `~ ${discountPercent}%` : "",
+          price: minPrice ? `From ${priceStr} won` : "",
+        }
+    }
+  }
+
   return (
     <Section>
       <Inner>
         <Header>
           <TitleBox>
-            <NewBadge>New</NewBadge>
-            <Title>최신 이벤트 소식</Title>
+            <NewBadge>{t("specialEvents.new")}</NewBadge>
+            <Title>{t("specialEvents.title")}</Title>
           </TitleBox>
           <CustomLink to="/events" style={{ textDecoration: "none" }}>
-            <MoreButton as="div">전체 이벤트 보기</MoreButton>
+            <MoreButton as="div">{t("specialEvents.allEventsButton")}</MoreButton>
           </CustomLink>
         </Header>
 
@@ -173,26 +225,34 @@ const SpecialEventSection = () => {
               768: { slidesPerView: "auto", spaceBetween: 8 },
               1024: { slidesPerView: "auto", spaceBetween: 20 },
             }}>
-            {imageCategories.map((cat) => (
-              <StyledSwiperSlide key={cat.id}>
-                <CustomLink
-                  to={`/events?category=${cat.id}&bundle=${firstBundleId}`}
-                  style={{ textDecoration: "none" }}>
-                  <Card>
-                    <ImageBox>
-                      <img src={cat.image.url} alt={tv(cat, "name")} />
-                    </ImageBox>
+            {imageCategories.map((cat) => {
+              const { discount, price } = formatEventPrice(
+                i18n.language as Language,
+                cat.discountPercent,
+                cat.minPrice,
+              )
 
-                    <EventTitle>{tv(cat, "name")}</EventTitle>
+              return (
+                <StyledSwiperSlide key={cat.id}>
+                  <CustomLink
+                    to={`/events?category=${cat.id}&bundle=${firstBundleId}`}
+                    style={{ textDecoration: "none" }}>
+                    <Card>
+                      <ImageBox>
+                        <img src={cat.image.url} alt={tv(cat, "name")} />
+                      </ImageBox>
 
-                    <EventPrice>
-                      {cat.discountPercent && <Discount>~ {cat.discountPercent}%</Discount>}
-                      {cat.minPrice ? `${cat.minPrice.toLocaleString()}원부터` : ""}
-                    </EventPrice>
-                  </Card>
-                </CustomLink>
-              </StyledSwiperSlide>
-            ))}
+                      <EventTitle>{tv(cat, "name")}</EventTitle>
+
+                      <EventPrice>
+                        {discount && <Discount>{discount}</Discount>}
+                        {price}
+                      </EventPrice>
+                    </Card>
+                  </CustomLink>
+                </StyledSwiperSlide>
+              )
+            })}
           </Swiper>
         </StyledSwiperWrapper>
       </Inner>

@@ -24,6 +24,8 @@ const getImageUrlByLanguage = (popup: MainPopup, language: Language): string => 
       return popup.imageTH?.url || popup.image.url || ""
     case "zh":
       return popup.imageZH?.url || popup.image.url || ""
+    case "zh-TW":
+      return popup.imageZHTW?.url || popup.image.url || ""
     default:
       return popup.image.url || ""
   }

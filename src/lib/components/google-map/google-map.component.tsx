@@ -16,29 +16,6 @@ const center = {
   lng: 127.0294,
 }
 
-// const getLocalizedValue = <T extends object>(
-//   base: keyof T & string,
-//   record: T | undefined,
-//   lang: string,
-// ): string => {
-//   if (!record) return ""
-
-//   switch (lang) {
-//     case "en":
-//       return (record as any)[`${base}EN`] || (record as any)[base]
-//     case "zh":
-//       return (record as any)[`${base}ZH`] || (record as any)[base]
-//     case "zh-TW":
-//       return (record as any)[`${base}ZHTW`] || (record as any)[base]
-//     case "ja":
-//       return (record as any)[`${base}JA`] || (record as any)[base]
-//     case "th":
-//       return (record as any)[`${base}TH`] || (record as any)[base]
-//     default:
-//       return (record as any)[base]
-//   }
-// }
-
 function GoogleMapComponent() {
   const { i18n, t } = useTranslation()
   const language = i18n.language as Language

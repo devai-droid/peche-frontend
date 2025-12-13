@@ -8,6 +8,7 @@ const keyMatch = {
   ja: "JA",
   th: "TH",
   zh: "ZH",
+  "zh-TW": "ZHTW",
 }
 
 const useLanguageValue = () => {

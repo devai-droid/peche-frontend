@@ -47,6 +47,8 @@ const IntroMachine = () => {
         return equipment.nameTH || equipment.name
       case "zh":
         return equipment.nameZH || equipment.name
+      case "zh-TW":
+        return equipment.nameZHTW || equipment.name
       default:
         return equipment.name
     }
@@ -62,6 +64,8 @@ const IntroMachine = () => {
         return equipment.descriptionFirstTH || equipment.descriptionFirst
       case "zh":
         return equipment.descriptionFirstZH || equipment.descriptionFirst
+      case "zh-TW":
+        return equipment.descriptionFirstZHTW || equipment.descriptionFirst
       default:
         return equipment.descriptionFirst
     }
@@ -77,6 +81,8 @@ const IntroMachine = () => {
         return equipment.descriptionSecondTH || equipment.descriptionSecond
       case "zh":
         return equipment.descriptionSecondZH || equipment.descriptionSecond
+      case "zh-TW":
+        return equipment.descriptionSecondZHTW || equipment.descriptionSecond
       default:
         return equipment.descriptionSecond
     }

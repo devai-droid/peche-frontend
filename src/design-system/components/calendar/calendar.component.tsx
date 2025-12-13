@@ -24,7 +24,7 @@ const Calendar = ({ disabledDate, footer, ...props }: CalendarProp) => {
 
   const { i18n } = useTranslation()
   const language = i18n.language as Language
-  const isChinese = language === "zh"
+  const isChinese = language === "zh" || language === "zh-TW"
 
   return (
     <div>

@@ -9,6 +9,7 @@ import {
   KakaoFriendsGrayIcon,
 } from "@/assets/icon"
 import FooterLogoImg from "@/assets/images/peche-footer-logo.png"
+import { useTranslation } from "react-i18next"
 
 const FooterWrapper = tw.footer`
   w-full bg-neutral20 text-[#444] text-sm
@@ -54,6 +55,8 @@ interface FooterProps {
 }
 
 const Footer = ({ bottomCartExists = false }: FooterProps) => {
+  const { t } = useTranslation()
+
   const socialLinks = [
     { icon: NaverPlaceGrayIcon, url: "https://blog.naver.com/" },
     { icon: NaverBlogGrayIcon, url: "https://blog.naver.com/" },
@@ -70,10 +73,7 @@ const Footer = ({ bottomCartExists = false }: FooterProps) => {
         <FooterTop>
           <LogoBlock>
             <img src={FooterLogoImg} alt="Peche Clinic" tw="w-[129px] h-auto" loading="lazy" />
-            <div tw="mt-2">
-              서울특별시 강남구 강남대로 364, 3층 전체(역삼동, 미왕빌딩) | 대표 : 안태언 |
-              사업자등록번호 219-05-28999 | 대표 번호 02-533-8176
-            </div>
+            <div tw="mt-2">{t("footer.info")}</div>
             <div>© 2025 Peche. All Rights Reserved.</div>
           </LogoBlock>
         </FooterTop>
@@ -83,9 +83,9 @@ const Footer = ({ bottomCartExists = false }: FooterProps) => {
         {/* Bottom */}
         <BottomRow>
           <PolicyLinks>
-            <CustomLink to="/termsofservice">이용약관</CustomLink>
+            <CustomLink to="/termsofservice">{t("footer.termsOfService")}</CustomLink>
             <span>|</span>
-            <CustomLink to="/privacypolicy">개인정보처리방침</CustomLink>
+            <CustomLink to="/privacypolicy">{t("footer.privacyPolicy")}</CustomLink>
           </PolicyLinks>
 
           <SNSIcons>

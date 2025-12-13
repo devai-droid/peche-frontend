@@ -1,20 +1,20 @@
 {
   "header": {
     "home": "主页",
-    "surgeryAndPrice": "所有治疗",
+    "surgeryAndPrice": "所有治療",
     "treatmentList": "전체 시술",
     "hospital": "医院介绍",
     "reservation": "立即预约",
-    "event": "价格与活动",
+    "event": "價格與活動",
     "searchSurgery": "搜索想要查询的项目",
     "recommendKeyword": "建议",
     "price": "价格",
-    "introduction": "佩切诊所简介",
+    "introduction": "佩切診所簡介",
     "reservationCheck": "预订确认",
-    "blog": "博客",
+    "blog": "部落格",
     "search": "Search",
-    "shoppingCart": "购物车",
-    "checkReservation": "预订确认"
+    "shoppingCart": "購物車",
+    "checkReservation": "預訂確認"
   },
   "home": {
     "title": "Hydrating Moisture Peel",
@@ -53,8 +53,8 @@
     "consultationKoreanKakao": "카카오톡"
   },
   "specialEvents": {
-    "title": "最新活动新闻",
-    "allEventsButton": "查看所有活动",
+    "title": "最新活動新聞",
+    "allEventsButton": "查看所有活動",
     "new": "新的"
   },
   "footer": {
@@ -73,9 +73,9 @@
     "hospitalAddress": "首尔特别市瑞草区江南大路441号（瑞草洞，瑞山大厦）4楼, 13楼",
     "hospitalNewBuildingAddress": "首尔特别市瑞草区江南大路69街8 KI大厦5楼",
     "hospitalThirdBuildingAddress": "首尔特别市瑞草区江南大路 69路10 西湖大厦 5-6 层 诗丽雅医院 3 馆",
-    "privacyPolicy": "隐私政策",
-    "termsOfService": "服务条款",
-    "info": "首尔市江南区江南大路364号3楼（驿三洞美王大厦）| 代表：安泰恩 | 营业执照号码：219-05-28999 | 总机：02-533-8176"
+    "privacyPolicy": "隱私權政策",
+    "termsOfService": "服務條款",
+    "info": "首爾市江南區江南大路364號3樓（驛三洞美王大廈）| 代表：安泰恩 | 營業執照號碼：219-05-28999 | 總機：02-533-8176"
   },
   "intro": {
     "introHospital": "医院介绍",

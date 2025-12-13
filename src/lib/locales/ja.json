@@ -1,17 +1,20 @@
 {
   "header": {
     "home": "ホーム",
-    "surgeryAndPrice": "金額",
+    "surgeryAndPrice": "すべての治療",
     "treatmentList": "전체 시술",
     "hospital": "クリニック紹介",
     "reservation": "ご予約はこちら",
-    "event": "イベント",
+    "event": "Price & Events",
     "searchSurgery": "ご希望の施術を検索してください！",
     "recommendKeyword": "おすすめ",
     "price": "料金",
-    "introduction": "クリニック紹介",
+    "introduction": "ペシェクリニックのご紹介",
     "reservationCheck": "予約確認",
-    "blog": "Blog"
+    "blog": "Blog",
+    "search": "Search",
+    "shoppingCart": "ショッピングカート",
+    "checkReservation": "予約確認"
   },
   "home": {
     "title": "Hydrating Moisture Peel",
@@ -49,6 +52,11 @@
     "consultationKoreanPhone": "전화",
     "consultationKoreanKakao": "카카오톡"
   },
+  "specialEvents": {
+    "title": "最新イベントニュース",
+    "allEventsButton": "View All Events",
+    "new": "新規"
+  },
   "footer": {
     "title": "美しさを感覚する、PECHEクリニック",
     "nameOfCEO": "代表者名:ミン·ウォンジュン",
@@ -65,8 +73,9 @@
     "hospitalAddress": "ソウル特別市瑞草区江南大路441、4階, 13階",
     "hospitalNewBuildingAddress": "ソウル特別市瑞草区江南大路69キル8、5階",
     "hospitalThirdBuildingAddress": "ソウル特別市瑞草区江南大路69キル10、5-6階、セニアクリニック3館",
-    "privacyPolicy": "個人情報処理方針",
-    "termsOfService": "利用規約"
+    "privacyPolicy": "プライバシーポリシー",
+    "termsOfService": "利用規約",
+    "info": "ソウル特別市江南区江南大路364番地3階（駅三洞、ミワンビル）｜代表者：アン・テオン｜事業者登録番号：219-05-28999｜代表電話番号：02-533-8176"
   },
   "intro": {
     "introHospital": "クリニック紹介",

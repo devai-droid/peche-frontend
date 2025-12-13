@@ -6,7 +6,7 @@ import { menuLinks } from "@/routers/links"
 
 const Container = tw.nav`w-full bg-white border-t border-[#EBECEF]`
 const MenuItem = tw.button`
-  w-full text-left px-6 py-4 text-[16px] font-semibold text-neutralBlack
+  w-full text-left px-6 py-4 text-[16px] font-semibold text-neutralBlack font-pretendard
   border-b border-[#EBECEF]
   transition-colors duration-200
   hover:(bg-gray-100)

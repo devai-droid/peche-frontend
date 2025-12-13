@@ -121,7 +121,7 @@ const ProductDetail = () => {
   })
 
   const { i18n } = useTranslation()
-  const keyMatch = { ko: "", en: "EN", ja: "JA", th: "TH", zh: "ZH" }
+  const keyMatch = { ko: "", en: "EN", ja: "JA", th: "TH", zh: "ZH", "zh-TW": "ZHTW" }
   const lang = i18n.language as keyof typeof keyMatch
 
   const selectedEventBundleId = params.get("bundle")

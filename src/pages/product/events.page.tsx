@@ -150,6 +150,7 @@ const Events = () => {
     ja: "JA",
     th: "TH",
     zh: "ZH",
+    "zh-TW": "ZHTW",
   }
   const { i18n } = useTranslation()
   const lang = i18n.language as keyof typeof keyMatch

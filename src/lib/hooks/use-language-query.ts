@@ -7,6 +7,7 @@ const keyMatch = {
   ja: "JA",
   th: "TH",
   zh: "ZH",
+  "zh-TW": "ZHTW",
 }
 
 interface LanguageQuery {
@@ -15,6 +16,7 @@ interface LanguageQuery {
   visibleJA?: boolean
   visibleTH?: boolean
   visibleZH?: boolean
+  visibleZHTW?: boolean
 }
 
 const useLanguageQuery = () => {

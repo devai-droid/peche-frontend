@@ -172,6 +172,7 @@ const SearchModal = ({ open, onClose }: Props) => {
                             (language === "en" && event.visibleEN) ||
                             (language === "ja" && event.visibleJA) ||
                             (language === "zh" && event.visibleZH) ||
+                            (language === "zh-TW" && event.visibleZHTW) ||
                             (language === "th" && event.visibleTH)
                           )
                         })

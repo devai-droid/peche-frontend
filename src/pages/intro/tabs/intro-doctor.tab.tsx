@@ -61,6 +61,8 @@ const IntroDoctor = () => {
         return member.nameTH || member.name
       case "zh":
         return member.nameZH || member.name
+      case "zh-TW":
+        return member.nameZHTW || member.name
       default:
         return member.name
     }

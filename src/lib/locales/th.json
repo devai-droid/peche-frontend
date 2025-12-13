@@ -1,17 +1,20 @@
 {
   "header": {
     "home": "หน้าหลัก",
-    "surgeryAndPrice": "ราคา",
+    "surgeryAndPrice": "การรักษาทั้งหมด",
     "treatmentList": "전체 시술",
     "hospital": "เกี่ยวกับเรา",
     "reservation": "จองเลย",
-    "event": "โปรโมชั่น",
+    "event": "ราคาและกิจกรรม",
     "searchSurgery": "ค้นหาหัตถการที่ต้องการ",
     "recommendKeyword": "คำแนะนำ",
     "price": "ราคา",
-    "introduction": "เกี่ยวกับเรา",
+    "introduction": "แนะนำคลินิก Peche",
     "reservationCheck": "ยืนยันการจอง",
-    "blog": "Blog"
+    "blog": "บล็อก",
+    "search": "Search",
+    "shoppingCart": "รถเข็นสินค้า",
+    "checkReservation": "การยืนยันการจอง"
   },
   "home": {
     "title": "Hydrating Moisture Peel",
@@ -49,6 +52,11 @@
     "consultationKoreanPhone": "전화",
     "consultationKoreanKakao": "카카오톡"
   },
+  "specialEvents": {
+    "title": "ข่าวสารกิจกรรมล่าสุด",
+    "allEventsButton": "ดูเหตุการณ์ทั้งหมด",
+    "new": "ใหม่"
+  },
   "footer": {
     "title": "ซีเนียร์คลีนิก คังนัม",
     "nameOfCEO": "ประธาน : มินวอนจุน",
@@ -65,8 +73,9 @@
     "hospitalAddress": "ชั้น 4, ชั้น 13 ของตึก Seosan ถนน  441 คังนัมแดโร เขตซอโช กรุงโซล",
     "hospitalNewBuildingAddress": "ชั้น 5 ของตึก  KI Tower ถนน 69 ถนนคังนัมแดโร เขตซอโช กรุงโซล",
     "hospitalThirdBuildingAddress": "ถนน 69 สายคังนัม-โร เขตซอโช กรุงโซล ตึก Seoho ชั้น 5-6",
-    "privacyPolicy": "นโยบายข้อมูลส่วนบุคคล",
-    "termsOfService": "ข้อกำหนดการใช้งาน"
+    "privacyPolicy": "นโยบายความเป็นส่วนตัว",
+    "termsOfService": "เงื่อนไขการให้บริการ",
+    "info": "ชั้น 3, 364 ถนนกังนัมแดโร, เขตกังนัม, โซล (อาคารมิวัง ยอกซัมดง) | ผู้แทน: แทออน อัน | เลขทะเบียนธุรกิจ 219-05-28999 | เบอร์โทรศัพท์หลัก 02-533-8176"
   },
   "intro": {
     "introHospital": "เกี่ยวกับเรา",

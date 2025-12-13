@@ -11,7 +11,10 @@
     "price": "가격",
     "introduction": "페슈의원 소개",
     "reservationCheck": "예약 확인",
-    "blog": "블로그"
+    "blog": "블로그",
+    "search": "시술검색",
+    "shoppingCart": "장바구니",
+    "checkReservation": "예약확인"
   },
   "home": {
     "title": "Pêche Introduction",
@@ -49,6 +52,11 @@
     "consultationKoreanPhone": "전화",
     "consultationKoreanKakao": "카카오톡"
   },
+  "specialEvents": {
+    "title": "최신 이벤트 소식",
+    "allEventsButton": "전체 이벤트 보기",
+    "new": "NEW"
+  },
   "footer": {
     "title": " 페슈 클리닉",
     "nameOfCEO": "대표자명 : 민원준",
@@ -66,7 +74,8 @@
     "hospitalNewBuildingAddress": "서울특별시 서초구 강남대로69길 8 KI타워, 5층",
     "hospitalThirdBuildingAddress": "서울특별시 서초구 강남대로69길 10 5-6층 페슈의원 3관",
     "privacyPolicy": "개인정보처리방침",
-    "termsOfService": "이용약관"
+    "termsOfService": "이용약관",
+    "info": "서울특별시 강남구 강남대로 364, 3층 전체(역삼동, 미왕빌딩) | 대표 : 안태언 | 사업자등록번호 219-05-28999 | 대표 번호 02-533-8176"
   },
   "intro": {
     "introHospital": "병원 소개",

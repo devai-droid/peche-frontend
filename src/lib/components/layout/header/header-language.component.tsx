@@ -24,6 +24,11 @@ const displayLanguages = [
     mobileValue: "CHN",
   },
   {
+    key: Language.TWN,
+    value: "TWN",
+    mobileValue: "TW",
+  },
+  {
     key: Language.JPN,
     value: "JPN",
     mobileValue: "JPN",

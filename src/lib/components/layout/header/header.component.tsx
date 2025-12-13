@@ -17,6 +17,7 @@ import {
   WechatIcon,
   XIcon,
   FacebookIcon,
+  LineIcon,
 } from "@/assets/icon"
 import wechatQrImg from "@/assets/images/wechat-qr.png"
 import { IconButton, Logo, MobileLogo } from "@/design-system/components"
@@ -78,6 +79,11 @@ const SOCIAL_LINKS: Record<Language, SocialItem[]> = {
     // { icon: XiaoIcon, url: "" },
     { icon: WechatIcon, type: "modal", modalKey: "wechat" }, // QR 모달 표시
   ],
+  "zh-TW": [
+    { icon: InstaLogoIcon, url: "https://www.instagram.com/pecheclinic_tw/" },
+    { icon: FacebookIcon, url: "https://www.facebook.com/profile.php?id=61582363886175" },
+    { icon: LineIcon, url: "https://line.me/R/ti/p/@683jgqmd" },
+  ],
   ja: [
     { icon: InstaLogoIcon, url: "https://www.instagram.com/pecheclinic.jp/" },
     {
@@ -85,12 +91,12 @@ const SOCIAL_LINKS: Record<Language, SocialItem[]> = {
       url: "https://www.tiktok.com/@pecheclinic_jp?is_from_webapp=1&sender_device=pc",
     },
     { icon: XIcon, url: "https://x.com/pecheclinic_jp" },
-    { icon: KakaoFriendsIcon, url: "https://line.me/R/ti/p/@235wfyao" }, // Line 아이콘 자리에 LineIcon 넣는 게 더 정확
+    { icon: LineIcon, url: "https://line.me/R/ti/p/@235wfyao" },
   ],
   th: [
     { icon: InstaLogoIcon, url: "https://www.instagram.com/pecheclinic_th/" },
     { icon: FacebookIcon, url: "https://www.facebook.com/profile.php?id=61582230961269" },
-    { icon: KakaoFriendsIcon, url: "https://line.me/R/ti/p/@892druai" }, // Line 아이콘 설정 시 변경
+    { icon: LineIcon, url: "https://line.me/R/ti/p/@892druai" },
     {
       icon: TiktokIcon,
       url: "https://www.tiktok.com/@pecheclinic_th?is_from_webapp=1&sender_device=pc",
@@ -149,42 +155,8 @@ const LeftMenu = ({
   )
 }
 
-// const LeftMenu = ({ isDesktop }: MenuProps) => {
-//   if (!isDesktop) {
-//     return (
-//       <div tw="flex items-center gap-4">
-//         <MobileLogo />
-//       </div>
-//     )
-//   }
-
-//   // 데스크탑일 때 아이콘들 나열
-//   const socialLinks = [
-//     { icon: NaverPlaceIcon, url: "https://blog.naver.com/" },
-//     { icon: NaverBlogIcon, url: "https://blog.naver.com/" },
-//     { icon: InstaLogoIcon, url: "https://www.instagram.com/" },
-//     { icon: KakaoFriendsIcon, url: "https://www.kakaocorp.com/" },
-//     { icon: YoutubeIcon, url: "https://www.youtube.com/" },
-//     { icon: TiktokIcon, url: "https://www.tiktok.com/" },
-//   ]
-
-//   return (
-//     <div tw="flex items-center gap-[7px]">
-//       {socialLinks.map(({ icon: Icon, url }) => (
-//         <a
-//           key={url}
-//           href={url}
-//           target="_blank"
-//           rel="noopener noreferrer"
-//           tw="flex items-center justify-center hover:opacity-80 transition-opacity">
-//           <Icon width={24} height={24} />
-//         </a>
-//       ))}
-//     </div>
-//   )
-// }
-
 const RightMenu = ({ isDesktop, setOpenSearch, isMenuOpen, setIsMenuOpen }: MenuProps) => {
+  const { t } = useTranslation()
   const navigate = useCustomNavigate()
   const [openSearchModal, setOpenSearchModal] = React.useState(false)
 
@@ -196,13 +168,13 @@ const RightMenu = ({ isDesktop, setOpenSearch, isMenuOpen, setIsMenuOpen }: Menu
           <button
             tw="cursor-pointer flex items-center gap-1 text-[13px] md:text-[15px] font-normal"
             onClick={() => setOpenSearchModal(true)}>
-            시술검색
+            {t("header.search")}
           </button>
           <div tw="ml-6" />
           <button
             tw="ml-2 cursor-pointer flex items-center gap-1 text-[13px] md:text-[15px] leading-[150%] font-normal"
             onClick={() => navigate("/reservation/new")}>
-            장바구니
+            {t("header.shoppingCart")}
             <span tw="inline-flex items-center justify-center w-[18px] h-[18px] rounded-full bg-[#BD7B60] text-white text-[11px] font-medium">
               0
             </span>
@@ -210,7 +182,7 @@ const RightMenu = ({ isDesktop, setOpenSearch, isMenuOpen, setIsMenuOpen }: Menu
 
           <div tw="ml-8" />
           <button tw="cursor-pointer" onClick={() => navigate("/reservation")}>
-            예약확인
+            {t("header.checkReservation")}
           </button>
 
           <div tw="w-3 ml-8" />
@@ -249,7 +221,7 @@ const RightMenu = ({ isDesktop, setOpenSearch, isMenuOpen, setIsMenuOpen }: Menu
               <button
                 tw="text-[14px] text-primary font-semibold mr-4 border-b border-primary"
                 onClick={() => navigate("/reservation")}>
-                예약확인
+                {t("header.checkReservation")}
               </button>
               <HeaderLanguage />
               <IconButton
@@ -371,6 +343,7 @@ const Search = ({ setOpenSearch, clickedKeyword, setClickedKeyword }: MenuProps)
                 (language === "en" && event.visibleEN) ||
                 (language === "ja" && event.visibleJA) ||
                 (language === "zh" && event.visibleZH) ||
+                (language === "zh-TW" && event.visibleZHTW) ||
                 (language === "th" && event.visibleTH)
               return isVisible
             })
