@@ -70,6 +70,15 @@
     "title": "最受歡迎的治療方案",
     "best": "最好的"
   },
+  "introduction": {
+    "title": "佩切診所",
+    "intro": "Peche Clinic經過多年深思熟慮且不懈地努力 ，力求在患者就診的每一個環節都贏得他們的信任。 從初次諮詢到療程結束後離開診所， Peche Clinic始終秉持透明、誠實的原則，為您提供全方位的醫療服務。",
+    "goTo": "查看簡介"
+  },
+  "location": {
+    "hours": "診所開放時間",
+    "directions": "方向"
+  },
   "footer": {
     "title": "可感知美丽的诗丽雅皮肤科",
     "nameOfCEO": "代表人姓名：민원준",

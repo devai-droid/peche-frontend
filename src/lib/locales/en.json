@@ -70,6 +70,15 @@
     "title": "Most Popular Treatments",
     "best": "Best"
   },
+  "introduction": {
+    "title": "Peche Clinic",
+    "intro": "Peche Clinic was built through years of deep reflection and dedicated effort to earn trust at every moment of our patients' experience. From the first consultation to the moment you walk out after treatment, every experience at Peche Clinic is always transparent and honest.",
+    "goTo": "View Introduction"
+  },
+  "location": {
+    "hours": "Clinic Hours",
+    "directions": "Directions"
+  },
   "footer": {
     "title": "Peche Clinic",
     "nameOfCEO": "CEO : 민원준",

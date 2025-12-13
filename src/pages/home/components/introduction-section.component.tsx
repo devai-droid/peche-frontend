@@ -3,6 +3,8 @@ import tw, { styled } from "twin.macro"
 import introImg from "@/assets/images/introduction.png"
 import { ChevronRightIcon } from "@/assets/icon"
 import CustomLink from "@/lib/components/custom-link.component"
+import useLanguageValue from "@/lib/hooks/use-language-key"
+import { useTranslation } from "react-i18next"
 
 const Section = styled.section`
   ${tw`relative w-full font-pretendard`}
@@ -63,19 +65,18 @@ const LinkButton = styled.button`
 `
 
 const IntroductionSection = () => {
+  const tv = useLanguageValue()
+  const { t, i18n } = useTranslation()
+
   return (
     <Section>
       <Inner>
         <TextBox>
-          <Title>페슈의원</Title>
-          <Description>
-            페슈의원은 고객이 경험하는 모든 순간에서 신뢰를 만들기 위해 오랜 시간 깊은 고민과 노력을
-            쌓아 만들어졌습니다. 처음 만나는 순간부터 치료를 마치고 병원을 나서는 순간까지,
-            페슈의원에서의 모든 경험은 언제나 투명하고 정직합니다.
-          </Description>
+          <Title>{t("introduction.title")}</Title>
+          <Description>{t("introduction.intro")}</Description>
           <CustomLink to="/intro">
             <LinkButton>
-              소개 보러가기
+              {t("introduction.goTo")}
               <ChevronRightIcon width={16} height={16} />
             </LinkButton>
           </CustomLink>

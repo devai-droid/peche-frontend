@@ -1,6 +1,8 @@
 import React from "react"
 import tw, { styled } from "twin.macro"
 import GoogleMapComponent from "@/lib/components/google-map/google-map.component"
+import useLanguageValue from "@/lib/hooks/use-language-key"
+import { useTranslation } from "react-i18next"
 
 const MapSection = tw.section`
   w-full bg-neutral overflow-hidden
@@ -17,7 +19,7 @@ const InfoColumn = tw.div`
 `
 
 const InfoBlock = tw.div`
-  flex flex-col justify-between h-full
+  flex flex-col justify-between h-full font-pretendard
 `
 
 const InfoTitle = tw.h3`
@@ -51,6 +53,9 @@ const GoogleMapWrapper = tw.div`
 `
 
 const Location = () => {
+  const tv = useLanguageValue()
+  const { t, i18n } = useTranslation()
+
   return (
     <MapSection>
       <MapInner>
@@ -59,7 +64,7 @@ const Location = () => {
           <div tw="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* 진료시간 안내 */}
             <InfoBlock>
-              <InfoTitle>진료시간 안내</InfoTitle>
+              <InfoTitle>{t("location.hours")}</InfoTitle>
               <InfoText>평일 : AM 10:30 ~ PM 21:00</InfoText>
               <InfoText>주말·공휴일 : AM 10:00 ~ PM 18:00</InfoText>
               <InfoText tw="text-primary">※ 점심시간 없이 연중무휴 진료합니다.</InfoText>
@@ -72,7 +77,7 @@ const Location = () => {
 
             {/* 오시는 길 */}
             <InfoBlock>
-              <InfoTitle>오시는 길</InfoTitle>
+              <InfoTitle>{t("location.directions")}</InfoTitle>
               <InfoText>서울특별시 강남구 강남대로 364,</InfoText>
               <InfoText>3층 전체 (역삼동, 미왕빌딩)</InfoText>
               <InfoText tw="text-primary">※ 강남역 4번 출구 앞</InfoText>

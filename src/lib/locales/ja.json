@@ -70,6 +70,15 @@
     "title": "人気の治療法",
     "best": "Best"
   },
+  "introduction": {
+    "title": "Pêche Clinic",
+    "intro": "ペシェクリニックは、患者様の体験における一瞬一瞬で信頼を得るため、長年にわたる深い思索と献身的な努力を重ねて築き上げられました。初回のカウンセリングから治療後にお帰りになる瞬間まで、ペシェクリニックでのすべての体験は、常に透明性と誠実さに満ちています。",
+    "goTo": "View Introduction"
+  },
+  "location": {
+    "hours": "診療時間",
+    "directions": "道順"
+  },
   "footer": {
     "title": "美しさを感覚する、PECHEクリニック",
     "nameOfCEO": "代表者名:ミン·ウォンジュン",
