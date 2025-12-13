@@ -103,7 +103,7 @@ const Home = () => {
           <SearchSection />
           <MostPopular />
           <IntroductionSection />
-          <div tw="h-16" />
+          <div tw="h-16 md:h-28" />
           <Location />
         </CartView>
       </Page>

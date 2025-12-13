@@ -30,14 +30,7 @@ import trustPic1 from "@/assets/images/trust-pic1.jpg"
 import trustPic2 from "@/assets/images/trust-pic2.jpg"
 import trustPic3 from "@/assets/images/trust-pic3.jpg"
 import trustPic4 from "@/assets/images/trust-pic4.jpg"
-import person1 from "@/assets/images/person1.png"
-import person2 from "@/assets/images/person2.png"
-import person3 from "@/assets/images/person3.png"
-import person4 from "@/assets/images/person4.png"
-import person5 from "@/assets/images/person5.png"
-import person6 from "@/assets/images/person6.png"
-import person7 from "@/assets/images/person7.png"
-import person8 from "@/assets/images/person8.png"
+import crewPicture from "@/assets/images/crew-picture.jpg"
 
 const PageContainer = tw.div`w-full flex flex-col items-center bg-white`
 
@@ -433,29 +426,6 @@ const PeopleParagraph = tw.p`
   text-[14px] md:text-[16px] text-neutral70 tracking-tight leading-[1.4] max-w-[700px] mx-auto mb-14
 `
 
-// 🧡 인물 그리드
-const PeopleGrid = styled.div`
-  ${tw`grid gap-6 md:gap-8`}
-  grid-template-columns: repeat(2, 1fr);
-  justify-items: center;
-
-  @media (min-width: 768px) {
-    grid-template-columns: repeat(4, 1fr);
-  }
-`
-
-const PersonCard = styled.div`
-  ${tw`w-full h-auto overflow-hidden rounded-none`}
-  background-color: #FDE9D9; /* ✅ 이미지 배경 */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`
-const PersonImage = styled.img`
-  ${tw`object-cover w-full h-full block`}
-  display: block;
-`
-
 const MapSection = tw.section`
   w-full bg-[#F5F5F5] overflow-hidden
 `
@@ -516,8 +486,6 @@ const Intro = () => {
     window.addEventListener("resize", handleResize)
     return () => window.removeEventListener("resize", handleResize)
   }, [])
-
-  const people = [person1, person2, person3, person4, person5, person6, person7, person8]
 
   return (
     <Page hiddenFooter={false} bottomCartExists={false}>
@@ -771,27 +739,38 @@ const Intro = () => {
               </CustomerTrustCard>
             </CustomerTrustInner>
           </SectionCustomerTrust>
-          {/* <PeopleSection>
-          <PeopleInner>
-            <PeopleTag>PEOPLE × TRUST</PeopleTag>
-            <PeopleTitle>결국, 신뢰는 사람으로 완성됩니다</PeopleTitle>
-            <PeopleParagraph>
-              페슈의원의 의료진과 직원들은 정직한 설명으로 환자가 올바른 선택을 할 수 있도록
-              돕습니다.
-              <br /> <br />
-              개인에게 가장 효과적인 시술을 고민하고, 전문성을 바탕으로 신중하게 진료합니다. 또한
-              진심 어린 응대와 세심한 배려 속에서도, 때로는 단호하게 신뢰의 가치를 지켜나갑니다.
-            </PeopleParagraph>
+          <PeopleSection>
+            <PeopleInner>
+              <PeopleTag>PEOPLE × TRUST</PeopleTag>
+              <PeopleTitle>결국, 신뢰는 사람으로 완성됩니다</PeopleTitle>
+              <PeopleParagraph>
+                페슈의원의 의료진과 직원들은 정직한 설명으로 환자가 올바른 선택을 할 수 있도록
+                돕습니다.
+                <br /> <br />
+                개인에게 가장 효과적인 시술을 고민하고, 전문성을 바탕으로 신중하게 진료합니다. 또한
+                진심 어린 응대와 세심한 배려 속에서도, 때로는 단호하게 신뢰의 가치를 지켜나갑니다.
+              </PeopleParagraph>
 
-            <PeopleGrid>
-              {people.map((src, i) => (
-                <PersonCard key={i}>
-                  <PersonImage src={src} alt={`person${i + 1}`} />
-                </PersonCard>
-              ))}
-            </PeopleGrid>
-          </PeopleInner>
-        </PeopleSection> */}
+              {/* PEOPLE IMAGE (대체) */}
+              <div
+                tw="
+    w-full 
+    flex justify-center
+    px-0
+  ">
+                <img
+                  src={crewPicture}
+                  alt="Peche Clinic Crew"
+                  tw="
+      w-full 
+      max-w-[600px]
+      h-auto 
+      object-cover
+    "
+                />
+              </div>
+            </PeopleInner>
+          </PeopleSection>
           <MapSection>
             <MapInner>
               {/* Left side */}
