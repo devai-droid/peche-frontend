@@ -13,7 +13,12 @@ import {
   TiktokIcon,
   NaverPlaceIcon,
   KakaoFriendsIcon,
+  XiaoIcon,
+  WechatIcon,
+  XIcon,
+  FacebookIcon,
 } from "@/assets/icon"
+import wechatQrImg from "@/assets/images/wechat-qr.png"
 import { IconButton, Logo, MobileLogo } from "@/design-system/components"
 import AppMaxWidth from "../app-max-width.component"
 import useResponsive from "@/lib/hooks/use-responsive"
@@ -26,6 +31,7 @@ import useLanguageValue from "@/lib/hooks/use-language-key"
 import { Language } from "@/lib/locales/i18n.config"
 import { useSearchControllerFindMany } from "@/lib/orval/search/search"
 import CustomLink from "../../custom-link.component"
+import Modal from "@/lib/components/modal/modal.component"
 
 const HeaderContainer = tw.header`h-16 lg:h-20 relative bg-neutral`
 
@@ -39,7 +45,69 @@ interface MenuProps {
   setIsMenuOpen?: (open: boolean) => void
 }
 
-const LeftMenu = ({ isDesktop }: MenuProps) => {
+interface SocialLinkItem {
+  icon: React.FC<React.SVGProps<SVGSVGElement>>
+  url: string
+  type?: undefined
+  modalKey?: undefined
+}
+
+interface SocialModalItem {
+  icon: React.FC<React.SVGProps<SVGSVGElement>>
+  type: "modal"
+  modalKey: string
+  url?: undefined
+}
+
+type SocialItem = SocialLinkItem | SocialModalItem
+
+// 언어별 소셜 링크 & 아이콘 매핑
+const SOCIAL_LINKS: Record<Language, SocialItem[]> = {
+  ko: [
+    { icon: NaverPlaceIcon, url: "https://naver.me/FLe0V59M" },
+    { icon: NaverBlogIcon, url: "https://blog.naver.com/pecheclinic" },
+    { icon: KakaoFriendsIcon, url: "http://pf.kakao.com/_dxoiLn" },
+    { icon: InstaLogoIcon, url: "https://www.instagram.com/peche_clinic/" },
+  ],
+  en: [
+    { icon: InstaLogoIcon, url: "https://www.instagram.com/pecheclinic.en/" },
+    { icon: TiktokIcon, url: "https://www.tiktok.com/@pecheclinic_eng?lang=ko-KR" },
+  ],
+  zh: [
+    { icon: InstaLogoIcon, url: "https://www.instagram.com/pecheclinic.cn/" },
+    // { icon: XiaoIcon, url: "" },
+    { icon: WechatIcon, type: "modal", modalKey: "wechat" }, // QR 모달 표시
+  ],
+  ja: [
+    { icon: InstaLogoIcon, url: "https://www.instagram.com/pecheclinic.jp/" },
+    {
+      icon: TiktokIcon,
+      url: "https://www.tiktok.com/@pecheclinic_jp?is_from_webapp=1&sender_device=pc",
+    },
+    { icon: XIcon, url: "https://x.com/pecheclinic_jp" },
+    { icon: KakaoFriendsIcon, url: "https://line.me/R/ti/p/@235wfyao" }, // Line 아이콘 자리에 LineIcon 넣는 게 더 정확
+  ],
+  th: [
+    { icon: InstaLogoIcon, url: "https://www.instagram.com/pecheclinic_th/" },
+    { icon: FacebookIcon, url: "https://www.facebook.com/profile.php?id=61582230961269" },
+    { icon: KakaoFriendsIcon, url: "https://line.me/R/ti/p/@892druai" }, // Line 아이콘 설정 시 변경
+    {
+      icon: TiktokIcon,
+      url: "https://www.tiktok.com/@pecheclinic_th?is_from_webapp=1&sender_device=pc",
+    },
+  ],
+}
+
+const LeftMenu = ({
+  isDesktop,
+  openWeChatModal,
+}: {
+  isDesktop?: boolean
+  openWeChatModal?: () => void
+}) => {
+  const { i18n } = useTranslation()
+  const language = i18n.language as Language
+
   if (!isDesktop) {
     return (
       <div tw="flex items-center gap-4">
@@ -48,31 +116,73 @@ const LeftMenu = ({ isDesktop }: MenuProps) => {
     )
   }
 
-  // 데스크탑일 때 아이콘들 나열
-  const socialLinks = [
-    { icon: NaverPlaceIcon, url: "https://blog.naver.com/" },
-    { icon: NaverBlogIcon, url: "https://blog.naver.com/" },
-    { icon: InstaLogoIcon, url: "https://www.instagram.com/" },
-    { icon: KakaoFriendsIcon, url: "https://www.kakaocorp.com/" },
-    { icon: YoutubeIcon, url: "https://www.youtube.com/" },
-    { icon: TiktokIcon, url: "https://www.tiktok.com/" },
-  ]
+  const socialLinks = SOCIAL_LINKS[language] ?? SOCIAL_LINKS.ko
 
   return (
     <div tw="flex items-center gap-[7px]">
-      {socialLinks.map(({ icon: Icon, url }) => (
-        <a
-          key={url}
-          href={url}
-          target="_blank"
-          rel="noopener noreferrer"
-          tw="flex items-center justify-center hover:opacity-80 transition-opacity">
-          <Icon width={24} height={24} />
-        </a>
-      ))}
+      {socialLinks.map((item, idx) => {
+        const Icon = item.icon
+
+        if (item.type === "modal") {
+          return (
+            <button
+              key={idx}
+              onClick={openWeChatModal}
+              tw="flex items-center justify-center hover:opacity-80">
+              <Icon width={24} height={24} />
+            </button>
+          )
+        }
+
+        return (
+          <a
+            key={idx}
+            href={item.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            tw="flex items-center justify-center hover:opacity-80">
+            <Icon width={24} height={24} />
+          </a>
+        )
+      })}
     </div>
   )
 }
+
+// const LeftMenu = ({ isDesktop }: MenuProps) => {
+//   if (!isDesktop) {
+//     return (
+//       <div tw="flex items-center gap-4">
+//         <MobileLogo />
+//       </div>
+//     )
+//   }
+
+//   // 데스크탑일 때 아이콘들 나열
+//   const socialLinks = [
+//     { icon: NaverPlaceIcon, url: "https://blog.naver.com/" },
+//     { icon: NaverBlogIcon, url: "https://blog.naver.com/" },
+//     { icon: InstaLogoIcon, url: "https://www.instagram.com/" },
+//     { icon: KakaoFriendsIcon, url: "https://www.kakaocorp.com/" },
+//     { icon: YoutubeIcon, url: "https://www.youtube.com/" },
+//     { icon: TiktokIcon, url: "https://www.tiktok.com/" },
+//   ]
+
+//   return (
+//     <div tw="flex items-center gap-[7px]">
+//       {socialLinks.map(({ icon: Icon, url }) => (
+//         <a
+//           key={url}
+//           href={url}
+//           target="_blank"
+//           rel="noopener noreferrer"
+//           tw="flex items-center justify-center hover:opacity-80 transition-opacity">
+//           <Icon width={24} height={24} />
+//         </a>
+//       ))}
+//     </div>
+//   )
+// }
 
 const RightMenu = ({ isDesktop, setOpenSearch, isMenuOpen, setIsMenuOpen }: MenuProps) => {
   const navigate = useCustomNavigate()
@@ -305,6 +415,7 @@ const HeaderComponent = ({ onClickDrawer, clickedKeyword, setClickedKeyword }: P
   const { isDesktop } = useResponsive()
   const [openSearch, setOpenSearch] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [openWeChatModal, setOpenWeChatModal] = useState(false)
 
   useEffect(() => {
     if (clickedKeyword && !isDesktop) {
@@ -324,7 +435,7 @@ const HeaderComponent = ({ onClickDrawer, clickedKeyword, setClickedKeyword }: P
         <>
           <div tw="absolute-center">{isDesktop && <Logo />}</div>
           <AppMaxWidth tw="h-full flex justify-between items-center font-pretendard md:text-[15px] text-[13px]">
-            <LeftMenu isDesktop={isDesktop} />
+            <LeftMenu isDesktop={isDesktop} openWeChatModal={() => setOpenWeChatModal(true)} />
             <RightMenu
               isDesktop={isDesktop}
               setOpenSearch={setOpenSearch}
@@ -334,6 +445,25 @@ const HeaderComponent = ({ onClickDrawer, clickedKeyword, setClickedKeyword }: P
             />
           </AppMaxWidth>
           {!isDesktop && isMenuOpen && <MobileMenu />}
+          <Modal open={openWeChatModal} onClose={() => setOpenWeChatModal(false)} width="max-w-md">
+            <div tw="-mx-10 -my-8">
+              {/* 상단 회색 영역 */}
+              <div tw="bg-[#F3F3F3] w-full relative">
+                <div tw="px-4 pb-3 pt-12">
+                  <div tw="text-[24px] font-time text-neutral90">Peche clinic</div>
+                </div>
+
+                <button tw="absolute top-3 right-4" onClick={() => setOpenWeChatModal(false)}>
+                  <CloseIcon width={22} height={22} />
+                </button>
+              </div>
+
+              {/* QR 영역 */}
+              <div tw="p-6 flex justify-center bg-white">
+                <img src={wechatQrImg} alt="" tw="w-[240px] h-[240px] object-contain" />
+              </div>
+            </div>
+          </Modal>
         </>
       )}
     </HeaderContainer>
