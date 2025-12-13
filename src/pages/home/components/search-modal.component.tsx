@@ -125,6 +125,19 @@ const SearchModal = ({ open, onClose }: Props) => {
     return text.replace(regex, `<span style="color:#DA7F67;">$1</span>`)
   }
 
+  const renderTitle = () => {
+    if (language === "ko") {
+      return (
+        <>
+          {t("search.titlePrefix")} <span tw="text-primary">{t("search.highlight")}</span>
+          {t("search.titleSuffix")}
+        </>
+      )
+    }
+    // 나머지 언어는 색상 강조 없이 전체 문장 그대로
+    return <>{t("search.full")}</>
+  }
+
   return (
     <CSSTransition in={open} timeout={200} classNames="fade" unmountOnExit>
       <Overlay>
@@ -133,13 +146,11 @@ const SearchModal = ({ open, onClose }: Props) => {
             <IconButton icon={CloseIcon} onClick={onClose} />
           </HeaderArea>
 
-          <Title>
-            어떤 <span>시술</span>이 궁금하신가요?
-          </Title>
+          <Title>{renderTitle()}</Title>
 
           <SearchBar>
             <Input
-              placeholder="시술명, 효과로 검색해보세요"
+              placeholder={t("search.placeholder")}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -147,7 +158,7 @@ const SearchModal = ({ open, onClose }: Props) => {
           </SearchBar>
 
           <SuggestBox>
-            <SuggestTitle>추천 검색어</SuggestTitle>
+            <SuggestTitle>{t("search.suggestion")}</SuggestTitle>
             {keywordsList?.items.map((kw) => (
               <SuggestKeyword key={kw.id} onClick={() => setSearchTerm(kw.keyword)}>
                 {kw.keyword}
@@ -161,7 +172,7 @@ const SearchModal = ({ open, onClose }: Props) => {
               {delayedSearchTerm && searchResults && (
                 <>
                   {searchResults.events.length === 0 && searchResults.products.length === 0 ? (
-                    <NoResult>검색 결과가 없습니다</NoResult>
+                    <NoResult>{t("search.noResult")}</NoResult>
                   ) : (
                     <>
                       {/* 이벤트 검색결과 */}

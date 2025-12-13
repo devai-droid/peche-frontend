@@ -57,6 +57,19 @@
     "allEventsButton": "查看所有活動",
     "new": "新的"
   },
+  "search": {
+    "titlePrefix": "",
+    "highlight": "",
+    "titleSuffix": "",
+    "full": "您對哪項手術流程有興趣？",
+    "placeholder": "按治療名稱或療效搜尋",
+    "suggestion": "建議搜尋",
+    "noResult": "검색 결과가 없습니다"
+  },
+  "mostPopular": {
+    "title": "最受歡迎的治療方案",
+    "best": "最好的"
+  },
   "footer": {
     "title": "可感知美丽的诗丽雅皮肤科",
     "nameOfCEO": "代表人姓名：민원준",

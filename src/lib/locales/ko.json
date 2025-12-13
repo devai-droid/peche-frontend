@@ -57,6 +57,19 @@
     "allEventsButton": "전체 이벤트 보기",
     "new": "NEW"
   },
+  "search": {
+    "titlePrefix": "어떤",
+    "highlight": "시술",
+    "titleSuffix": "이 궁금하신가요?",
+    "full": "",
+    "placeholder": "시술명, 효과로 검색해보세요",
+    "suggestion": "추천 검색어",
+    "noResult": "검색 결과가 없습니다"
+  },
+  "mostPopular": {
+    "title": "가장 많이 찾는 시술",
+    "best": "Best"
+  },
   "footer": {
     "title": " 페슈 클리닉",
     "nameOfCEO": "대표자명 : 민원준",

@@ -57,6 +57,19 @@
     "allEventsButton": "View All Events",
     "new": "NEW"
   },
+  "search": {
+    "titlePrefix": "",
+    "highlight": "",
+    "titleSuffix": "",
+    "full": "What procedure are you interested in learning about?",
+    "placeholder": "Search by treatment name or effect",
+    "suggestion": "Suggested searches",
+    "noResult": "검색 결과가 없습니다"
+  },
+  "mostPopular": {
+    "title": "Most Popular Treatments",
+    "best": "Best"
+  },
   "footer": {
     "title": "Peche Clinic",
     "nameOfCEO": "CEO : 민원준",

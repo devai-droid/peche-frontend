@@ -57,6 +57,19 @@
     "allEventsButton": "View All Events",
     "new": "新規"
   },
+  "search": {
+    "titlePrefix": "",
+    "highlight": "",
+    "titleSuffix": "",
+    "full": "どのような施術について知りたいですか?",
+    "placeholder": "治療名または効果で検索",
+    "suggestion": "Suggested searches",
+    "noResult": "검색 결과가 없습니다"
+  },
+  "mostPopular": {
+    "title": "人気の治療法",
+    "best": "Best"
+  },
   "footer": {
     "title": "美しさを感覚する、PECHEクリニック",
     "nameOfCEO": "代表者名:ミン·ウォンジュン",

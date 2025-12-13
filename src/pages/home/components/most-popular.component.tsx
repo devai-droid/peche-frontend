@@ -6,7 +6,7 @@ import "swiper/css"
 import "swiper/css/navigation"
 import CustomLink from "@/lib/components/custom-link.component"
 import useLanguageValue from "@/lib/hooks/use-language-key"
-
+import { useTranslation } from "react-i18next"
 import { useMostPopularCategoryControllerFindAll } from "@/lib/orval/most-popular-categories/most-popular-categories"
 
 // ─────────────────────────────
@@ -102,6 +102,7 @@ const CardLabel = styled.div`
 const MostPopular = () => {
   const [openId, setOpenId] = useState<string | null>(null)
   const tv = useLanguageValue()
+  const { t, i18n } = useTranslation()
 
   const { data: categories } = useMostPopularCategoryControllerFindAll()
 
@@ -137,8 +138,8 @@ const MostPopular = () => {
     <Section>
       <Inner>
         <Header>
-          <BestBadge>Best</BestBadge>
-          <Title>가장 많이 찾는 시술</Title>
+          <BestBadge>{t("mostPopular.best")}</BestBadge>
+          <Title>{t("mostPopular.title")}</Title>
         </Header>
 
         <Divider />

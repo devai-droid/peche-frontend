@@ -83,7 +83,7 @@ const SuggestKeyword = styled.span`
 `
 
 const SearchSection = () => {
-  const { i18n } = useTranslation()
+  const { t, i18n } = useTranslation()
   const language = i18n.language as Language
   const [openSearchModal, setOpenSearchModal] = React.useState(false)
 
@@ -96,6 +96,19 @@ const SearchSection = () => {
 
   const keywords = keywordsList?.items ?? []
 
+  const renderTitle = () => {
+    if (language === "ko") {
+      return (
+        <>
+          {t("search.titlePrefix")} <span tw="text-primary">{t("search.highlight")}</span>
+          {t("search.titleSuffix")}
+        </>
+      )
+    }
+    // 나머지 언어는 색상 강조 없이 전체 문장 그대로
+    return <>{t("search.full")}</>
+  }
+
   return (
     <Section>
       <Inner>
@@ -106,17 +119,14 @@ const SearchSection = () => {
 
         {/* 오른쪽 검색 박스 */}
         <SearchBox>
-          <Title>
-            어떤 <span>시술</span>이 궁금하신가요?
-          </Title>
-
+          <Title>{renderTitle()}</Title>
           <SearchBar onClick={() => setOpenSearchModal(true)}>
-            <Input placeholder="시술명, 효과로 검색해보세요" />
+            <Input placeholder={t("search.placeholder")} />
             <SearchIcon />
           </SearchBar>
 
           <SuggestBox>
-            <SuggestTitle>추천 검색어</SuggestTitle>
+            <SuggestTitle>{t("search.suggestion")}</SuggestTitle>
             {keywords.map((kw) => (
               <SuggestKeyword key={kw.id}>{kw.keyword}</SuggestKeyword>
             ))}
