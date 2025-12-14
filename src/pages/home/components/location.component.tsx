@@ -19,7 +19,7 @@ const InfoColumn = tw.div`
 `
 
 const InfoBlock = tw.div`
-  flex flex-col justify-between h-full font-pretendard
+  flex flex-col h-full font-pretendard
 `
 
 const InfoTitle = tw.h3`
@@ -32,7 +32,7 @@ const InfoText = tw.p`
 
 /* Buttons */
 const ButtonGroup = tw.div`
-  flex flex-row md:flex-col gap-3 mt-3
+  flex flex-row md:flex-col gap-3 mt-auto
 `
 
 const SolidButton = tw.button`
@@ -52,39 +52,50 @@ const GoogleMapWrapper = tw.div`
   w-full h-full
 `
 
+const InfoTextWrapper = tw.div`
+  flex flex-col
+  justify-start
+  lg:min-h-[140px]
+  md:min-h-[200px]
+  min-h-[120px]
+`
+
 const Location = () => {
   const tv = useLanguageValue()
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
 
   return (
     <MapSection>
       <MapInner>
         {/* Left side */}
         <InfoColumn>
-          <div tw="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div tw="grid grid-cols-1 md:grid-cols-2 gap-6 md:auto-rows-fr">
             {/* 진료시간 안내 */}
             <InfoBlock>
-              <InfoTitle>{t("location.hours")}</InfoTitle>
-              <InfoText>평일 : AM 10:30 ~ PM 21:00</InfoText>
-              <InfoText>주말·공휴일 : AM 10:00 ~ PM 18:00</InfoText>
-              <InfoText tw="text-primary">※ 점심시간 없이 연중무휴 진료합니다.</InfoText>
+              <InfoTextWrapper>
+                <InfoTitle>{t("location.hours")}</InfoTitle>
+                <InfoText>{t("location.weekdayHours")}</InfoText>
+                <InfoText>{t("location.weekendHours")}</InfoText>
+                <InfoText tw="text-primary">{t("location.lunch")}</InfoText>
+              </InfoTextWrapper>
 
-              <ButtonGroup>
-                <SolidButton>시술 예약하기</SolidButton>
-                <SolidButton>카카오톡 상담하기</SolidButton>
+              <ButtonGroup tw="mt-[1px]">
+                <SolidButton>{t("location.leftButton1")}</SolidButton>
+                <SolidButton>{t("location.leftButton2")}</SolidButton>
               </ButtonGroup>
             </InfoBlock>
 
-            {/* 오시는 길 */}
             <InfoBlock>
-              <InfoTitle>{t("location.directions")}</InfoTitle>
-              <InfoText>서울특별시 강남구 강남대로 364,</InfoText>
-              <InfoText>3층 전체 (역삼동, 미왕빌딩)</InfoText>
-              <InfoText tw="text-primary">※ 강남역 4번 출구 앞</InfoText>
+              <InfoTextWrapper>
+                <InfoTitle>{t("location.directions")}</InfoTitle>
+                <InfoText>{t("location.address1")}</InfoText>
+                <InfoText>{t("location.address2")}</InfoText>
+                <InfoText tw="text-primary">{t("location.subway")}</InfoText>
+              </InfoTextWrapper>
 
               <ButtonGroup>
-                <OutlineButton>네이버 플레이스 보기</OutlineButton>
-                <OutlineButton>카카오 지도 보기</OutlineButton>
+                <OutlineButton>{t("location.rightButton1")}</OutlineButton>
+                <OutlineButton>{t("location.rightButton2")}</OutlineButton>
               </ButtonGroup>
             </InfoBlock>
           </div>

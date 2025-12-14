@@ -77,7 +77,17 @@
   },
   "location": {
     "hours": "诊所开放时间",
-    "directions": "方向"
+    "directions": "方向",
+    "weekdayHours": "工作日：上午 10:30 – 晚上 9:00",
+    "weekendHours": "周末及节假日：上午 10:00 – 下午 6:00",
+    "lunch": "※ 全年无休，不设午休。",
+    "address1": "首尔市江南区江南大路364号3楼",
+    "address2": "（驿三洞美王大厦）",
+    "subway": "※江南站4号出口对面",
+    "leftButton1": "预约",
+    "leftButton2": "在微信上聊天",
+    "rightButton1": "纳弗广场景观",
+    "rightButton2": "在Kakao地图上查看"
   },
   "footer": {
     "title": "可感知美丽的诗丽雅皮肤科",

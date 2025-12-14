@@ -77,7 +77,17 @@
   },
   "location": {
     "hours": "진료시간 안내",
-    "directions": "오시는 길"
+    "directions": "오시는 길",
+    "weekdayHours": "평일 : AM 10:30 ~ PM 21:00",
+    "weekendHours": "주말·공휴일 : AM 10:00 ~ PM 18:00",
+    "lunch": "※ 점심시간 없이 연중무휴 진료합니다.",
+    "address1": "서울특별시 강남구 강남대로 364,",
+    "address2": "3층 전체 (역삼동, 미왕빌딩)",
+    "subway": "※ 강남역 4번 출구 앞",
+    "leftButton1": "시술 예약하기",
+    "leftButton2": "카카오톡 상담하기",
+    "rightButton1": "네이버 플레이스 보기",
+    "rightButton2": "카카오 지도 보기"
   },
   "footer": {
     "title": " 페슈 클리닉",

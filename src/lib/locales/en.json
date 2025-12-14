@@ -77,7 +77,17 @@
   },
   "location": {
     "hours": "Clinic Hours",
-    "directions": "Directions"
+    "directions": "Directions",
+    "weekdayHours": "Weekdays: 10:30 – 21:00",
+    "weekendHours": "Weekends & Holidays: 10:00 – 18:00",
+    "lunch": "※ Open year-round with no lunch break.",
+    "address1": "364 Gangnam-daero, 3F, Gangnam-gu, Seoul",
+    "address2": "(Yeoksam-dong, Miwang Building)",
+    "subway": "※ In front of Gangnam Station Exit 4",
+    "leftButton1": "Book an Appointment",
+    "leftButton2": "Chat on KakaoTalk",
+    "rightButton1": "View on Naver Place",
+    "rightButton2": "View on Kakao Map"
   },
   "footer": {
     "title": "Peche Clinic",
