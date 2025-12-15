@@ -21,7 +21,7 @@ import "swiper/css"
 import beauty from "@/assets/images/beauty.png"
 import trust from "@/assets/images/trust.png"
 import transparency from "@/assets/images/transparency.png"
-import { GrayPlusIcon } from "@/assets/icon"
+import { GrayPlusIcon, CloseIcon } from "@/assets/icon"
 import interior1 from "@/assets/images/interior1.png"
 import interior2 from "@/assets/images/interior2.png"
 import interior3 from "@/assets/images/interior3.png"
@@ -31,8 +31,11 @@ import trustPic2 from "@/assets/images/trust-pic2.jpg"
 import trustPic3 from "@/assets/images/trust-pic3.jpg"
 import trustPic4 from "@/assets/images/trust-pic4.jpg"
 import crewPicture from "@/assets/images/crew-picture.jpg"
+import wechatQrImg from "@/assets/images/wechat-qr.png"
 import { useTranslation } from "react-i18next"
+import useCustomNavigate from "@/lib/hooks/use-custom-navigate"
 import { Language } from "@/lib/locales/i18n.config"
+import Modal from "@/lib/components/modal/modal.component"
 
 const PageContainer = tw.div`w-full flex flex-col items-center bg-white`
 
@@ -446,8 +449,16 @@ const InfoColumn = tw.div`
   text-[15px] text-[#333] py-10 md:py-0
 `
 
+const InfoTextWrapper = tw.div`
+  flex flex-col
+  justify-start
+  lg:min-h-[140px]
+  md:min-h-[200px]
+  min-h-[120px]
+`
+
 const InfoBlock = tw.div`
-  flex flex-col justify-between h-full
+  flex flex-col h-full font-pretendard
 `
 
 const InfoTitle = tw.h3`
@@ -486,6 +497,7 @@ const GoogleMapWrapper = tw.div`
 const Intro = () => {
   const { t, i18n } = useTranslation()
   const language = i18n.language as Language
+  const navigate = useCustomNavigate()
   const [isMobile, setIsMobile] = React.useState(false)
 
   React.useEffect(() => {
@@ -494,6 +506,38 @@ const Intro = () => {
     window.addEventListener("resize", handleResize)
     return () => window.removeEventListener("resize", handleResize)
   }, [])
+
+  const [openWeChatModal, setOpenWeChatModal] = React.useState(false)
+
+  const handleChatClick = () => {
+    if (language === "ko" || language === "en") {
+      window.open("https://pf.kakao.com/_dxoiLn", "_blank")
+      return
+    }
+
+    if (language === "zh") {
+      // 중국어 → 위챗 모달 표시
+      setOpenWeChatModal(true)
+      return
+    }
+
+    if (language === "ja") {
+      window.open("https://line.me/R/ti/p/@235wfyao", "_blank")
+      return
+    }
+
+    if (language === "th") {
+      window.open(
+        "https://www.tiktok.com/@pecheclinic_th?is_from_webapp=1&sender_device=pc",
+        "_blank",
+      )
+      return
+    }
+
+    if (language === "zh-TW") {
+      window.open("https://line.me/R/ti/p/@683jgqmd", "_blank")
+    }
+  }
 
   return (
     <Page hiddenFooter={false} bottomCartExists={false}>
@@ -755,30 +799,47 @@ const Intro = () => {
             <MapInner>
               {/* Left side */}
               <InfoColumn>
-                <div tw="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div tw="grid grid-cols-1 md:grid-cols-2 gap-6 md:auto-rows-fr">
                   {/* 진료시간 안내 */}
                   <InfoBlock>
-                    <InfoTitle>진료시간 안내</InfoTitle>
-                    <InfoText>평일 : AM 10:30 ~ PM 21:00</InfoText>
-                    <InfoText>주말·공휴일 : AM 10:00 ~ PM 18:00</InfoText>
-                    <InfoText tw="text-primary">※ 점심시간 없이 연중무휴 진료합니다.</InfoText>
+                    <InfoTextWrapper>
+                      <InfoTitle>{t("location.hours")}</InfoTitle>
+                      <InfoText>{t("location.weekdayHours")}</InfoText>
+                      <InfoText>{t("location.weekendHours")}</InfoText>
+                      <InfoText tw="text-primary">{t("location.lunch")}</InfoText>
+                    </InfoTextWrapper>
 
                     <ButtonGroup>
-                      <SolidButton>시술 예약하기</SolidButton>
-                      <SolidButton>카카오톡 상담하기</SolidButton>
+                      <SolidButton
+                        onClick={() => {
+                          navigate("/reservation/new")
+                        }}>
+                        {t("location.leftButton1")}
+                      </SolidButton>
+                      <SolidButton onClick={handleChatClick}>
+                        {t("location.leftButton2")}
+                      </SolidButton>
                     </ButtonGroup>
                   </InfoBlock>
 
                   {/* 오시는 길 */}
                   <InfoBlock>
-                    <InfoTitle>오시는 길</InfoTitle>
-                    <InfoText>서울특별시 강남구 강남대로 364,</InfoText>
-                    <InfoText>3층 전체 (역삼동, 미왕빌딩)</InfoText>
-                    <InfoText tw="text-primary">※ 강남역 4번 출구 앞</InfoText>
+                    <InfoTextWrapper>
+                      <InfoTitle>{t("location.directions")}</InfoTitle>
+                      <InfoText>{t("location.address1")}</InfoText>
+                      <InfoText>{t("location.address2")}</InfoText>
+                      <InfoText tw="text-primary">{t("location.subway")}</InfoText>
+                    </InfoTextWrapper>
 
                     <ButtonGroup>
-                      <OutlineButton>네이버 플레이스 보기</OutlineButton>
-                      <OutlineButton>카카오 지도 보기</OutlineButton>
+                      <OutlineButton
+                        onClick={() => window.open("https://naver.me/FLe0V59M", "_blank")}>
+                        {t("location.rightButton1")}
+                      </OutlineButton>
+                      <OutlineButton
+                        onClick={() => window.open("https://kko.kakao.com/LK40uI5cBA", "_blank")}>
+                        {t("location.rightButton2")}
+                      </OutlineButton>
                     </ButtonGroup>
                   </InfoBlock>
                 </div>
