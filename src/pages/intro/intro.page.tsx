@@ -31,6 +31,8 @@ import trustPic2 from "@/assets/images/trust-pic2.jpg"
 import trustPic3 from "@/assets/images/trust-pic3.jpg"
 import trustPic4 from "@/assets/images/trust-pic4.jpg"
 import crewPicture from "@/assets/images/crew-picture.jpg"
+import { useTranslation } from "react-i18next"
+import { Language } from "@/lib/locales/i18n.config"
 
 const PageContainer = tw.div`w-full flex flex-col items-center bg-white`
 
@@ -56,10 +58,14 @@ const TrustHeadingBlock = tw.div`
   flex items-start
 `
 
-const TrustHeading = styled.h2`
+const TrustHeading = styled.h2<{ language: string }>`
   ${tw`text-[32px] md:text-[40px] font-semibold leading-[1.4] font-pretendard tracking-tight`}
+
   span {
-    ${tw`text-primary font-time font-normal tracking-tight`}
+    ${({ language }) =>
+      language === "ko"
+        ? tw`text-primary font-time font-normal tracking-tight`
+        : tw`text-primary font-semibold tracking-tight`}/* 한국어가 아닐 때 font-time 제거 */
   }
 `
 
@@ -222,10 +228,10 @@ const SymbolTitle = tw.h3`
   text-center text-primary text-[18px] md:text-[22px] tracking-[0.1em] mb-3 font-medium tracking-tight
 `
 const SymbolSubTitle = tw.h2`
-  text-center text-neutralBlack text-[24px] md:text-[30px] font-bold mb-4 tracking-tight
+  text-center text-neutralBlack text-[24px] md:text-[30px] font-bold mb-4 tracking-tight font-pretendard
 `
 const SymbolDesc = tw.p`
-  text-center text-neutral70 text-[14px] md:text-[16px] leading-[1.5] mb-10 max-w-[700px] tracking-tight
+  text-center text-neutral70 text-[14px] md:text-[16px] leading-[1.5] mb-10 max-w-[700px] tracking-tight font-pretendard
 `
 
 /* Core Value */
@@ -239,7 +245,7 @@ const Highlight = tw.span`text-primary ml-2 font-medium font-pretendard text-[16
 const CoreGrid = tw.div`
   flex flex-col md:flex-row items-center justify-center gap-12 md:gap-20
 `
-const CoreItem = tw.div`flex flex-col items-center text-center max-w-[265px]`
+const CoreItem = tw.div`flex flex-col items-center text-center max-w-[265px] font-pretendard`
 const CoreImage = styled.img`
   ${tw`w-[100px] h-[100px] object-contain mb-4`}
 `
@@ -254,7 +260,7 @@ const SectionInterior = tw.section`
 `
 
 const InteriorTextWrapper = tw.div`
-  w-full max-w-[1440px] mx-auto px-6 md:px-10
+  w-full max-w-[1440px] mx-auto px-6 md:px-10 font-pretendard
 `
 
 const FullWidthImageWrapper = tw.div`
@@ -365,14 +371,14 @@ const CustomerTrustInner = tw.div`
 
 // 🧡 섹션 제목
 const SectionTitle = tw.h2`
-  text-[24px] md:text-[30px] font-bold text-neutralBlack tracking-tight mb-12 
+  text-[24px] md:text-[30px] font-bold text-neutralBlack tracking-tight mb-12 font-pretendard
 `
 
 // 🧡 카드 래퍼
 const CustomerTrustCard = styled.div`
   ${tw`
     flex flex-col md:flex-row 
-    items-center md:items-start justify-between 
+    items-center md:items-start justify-between font-pretendard
     gap-10 md:gap-10 mb-8
   `}/* ✅ 항상 이미지 왼쪽 / 텍스트 오른쪽 */
 `
@@ -408,7 +414,7 @@ const CustomerTrustParagraph = tw.p`
  * PEOPLE × TRUST SECTION
  * ────────────────────────────── */
 const PeopleSection = tw.section`
-  w-full bg-[#FEF3E6] pt-20 pb-12 md:pt-28 md:pb-28
+  w-full bg-[#FEF3E6] pt-20 pb-12 md:pt-28 md:pb-28 font-pretendard
 `
 
 const PeopleInner = tw.div`
@@ -478,6 +484,8 @@ const GoogleMapWrapper = tw.div`
  *  MAIN PAGE
  * ────────────────────────────── */
 const Intro = () => {
+  const { t, i18n } = useTranslation()
+  const language = i18n.language as Language
   const [isMobile, setIsMobile] = React.useState(false)
 
   React.useEffect(() => {
@@ -496,20 +504,18 @@ const Intro = () => {
             <TrustInner>
               <TrustTextBlock>
                 <TrustHeadingBlock>
-                  <TrustHeading>
-                    아름다움의 시작과 <br />
-                    끝을 완성하는 <br />
-                    페슈의원의 <span>‘TRUST’</span>
+                  <TrustHeading language={language}>
+                    {t("intro.trustHeading1")} <br />
+                    {t("intro.trustHeading2")} <br />
+                    {t("intro.trustHeading3")} <span>{t("intro.trustHeading4")}</span>
                   </TrustHeading>
                 </TrustHeadingBlock>
 
                 <TrustParagraphBlock>
                   <TrustParagraph>
-                    페슈의원은 고객이 경험하는 모든 순간에서 신뢰를 만들기 위해 오랜 시간 깊은
-                    고민과 노력을 쌓아 만들어졌습니다.
+                    {t("intro.trustParagraph1")}
                     {"\n"} {"\n"}
-                    처음 만나는 순간부터 치료를 마치고 병원을 나서는 순간까지, 페슈의원에서의 모든
-                    경험은 언제나 투명하고 정직합니다.
+                    {t("intro.trustParagraph2")}
                   </TrustParagraph>
                 </TrustParagraphBlock>
               </TrustTextBlock>
@@ -521,16 +527,16 @@ const Intro = () => {
           {/* 3️⃣ SYMBOL × TRUST Section */}
           <SectionSymbolTrust>
             <SymbolInner>
-              <SymbolTitle>SYMBOL × TRUST</SymbolTitle>
+              <SymbolTitle>{t("intro.symbolTitle")}</SymbolTitle>
               <SymbolSubTitle>
-                복숭아 <span tw="font-normal">[pêche]</span>
+                {t("intro.symbolSubtitle1")}
+                <span tw="font-normal font-time"> {t("intro.symbolSubtitle2")}</span>
               </SymbolSubTitle>
               <SymbolDesc>
-                페슈(Pêche)는 프랑스어로 ‘복숭아’를 뜻합니다.
+                {t("intro.symbolDesc1")}
                 <br />
-                화사함과 생기를 불러일으키는 복숭아의 이미지는 피부과가 추구하는 아름다움의 본질과도
-                맞닿아 있습니다.
-                <br />이 의미는 브랜드 심볼로 이어지고 그 안에 페슈의원의 철학을 담았습니다.
+                {t("intro.symbolDesc2")}
+                <br /> {t("intro.symbolDesc3")}
               </SymbolDesc>
 
               <HoverGrid>
@@ -578,38 +584,30 @@ const Intro = () => {
               {/* Core Value */}
               <CoreValueContainer>
                 <CoreTitle>
-                  Core Value <Highlight>페슈의원의 핵심가치</Highlight>
+                  {t("intro.coreTitle1")} <Highlight>{t("intro.coreTitle2")}</Highlight>
                 </CoreTitle>
 
                 <CoreGrid>
                   <CoreItem>
                     <CoreImage src={beauty} alt="아름다움" />
-                    <CoreTextTitle>아름다움</CoreTextTitle>
-                    <CoreTextDesc>
-                      복숭아 고유의 부드러운 곡선과 생기 있는 컬러는 건강하고 생기있는 피부를
-                      상징합니다.
-                    </CoreTextDesc>
+                    <CoreTextTitle>{t("intro.coreTextTitle1")}</CoreTextTitle>
+                    <CoreTextDesc>{t("intro.coreTextDesc1")}</CoreTextDesc>
                   </CoreItem>
 
                   <GrayPlusIcon />
 
                   <CoreItem>
                     <CoreImage src={trust} alt="신뢰" />
-                    <CoreTextTitle>신뢰</CoreTextTitle>
-                    <CoreTextDesc>
-                      삼각형의 단단한 직선은 진정성 있는 진료와 일관된 기준을 지키는 신뢰를 담고
-                      있습니다.
-                    </CoreTextDesc>
+                    <CoreTextTitle>{t("intro.coreTextTitle2")}</CoreTextTitle>
+                    <CoreTextDesc>{t("intro.coreTextDesc2")}</CoreTextDesc>
                   </CoreItem>
 
                   <GrayPlusIcon />
 
                   <CoreItem>
                     <CoreImage src={transparency} alt="투명함" />
-                    <CoreTextTitle>투명함</CoreTextTitle>
-                    <CoreTextDesc>
-                      복숭아의 뽀얀 단면처럼 진실되고 투명한 마음으로 고객을 대합니다.
-                    </CoreTextDesc>
+                    <CoreTextTitle>{t("intro.coreTextTitle3")}</CoreTextTitle>
+                    <CoreTextDesc>{t("intro.coreTextDesc3")}</CoreTextDesc>
                   </CoreItem>
                 </CoreGrid>
               </CoreValueContainer>
@@ -618,16 +616,16 @@ const Intro = () => {
           <SectionInterior>
             <InteriorTextWrapper>
               {/* 텍스트 */}
-              <InteriorLabel>INTERIOR × TRUST</InteriorLabel>
-              <InteriorTitle>모든 공간에 새겨 넣은, 신뢰의 가치</InteriorTitle>
+              <InteriorLabel tw="font-time">{t("intro.interiorLabel")}</InteriorLabel>
+              <InteriorTitle>{t("intro.interiorTitle")}</InteriorTitle>
               <InteriorDesc>
-                페슈의원은 고급스럽게 과시하기보다 신뢰감을 줄 수 있는 공간을 지향합니다.
+                {t("intro.interiorDesc1")}
                 <br />
-                개방감과 투명성이 느껴지는 구조, 남녀 모두에게 어울리는 중성적 분위기, 낮은 조도의
-                편안한 대기 공간까지
+                {t("intro.interiorDesc2")}
                 <br />
-                모든 요소는 환자가 편안하게 머무르면서도 신뢰와 안정감을 느낄 수 있도록
-                디자인되었습니다.
+                {t("intro.interiorDesc3")}
+                <br />
+                {t("intro.interiorDesc4")}
               </InteriorDesc>
             </InteriorTextWrapper>
             <FullWidthImageWrapper>
@@ -644,11 +642,13 @@ const Intro = () => {
                 <BottomImageRow>
                   <LeftBlock>
                     <LeftText>
-                      특히 공간 곳곳에는 독창적인 소재 텍스처와 우리의 철학이 담긴 복숭아 심볼을
+                      {t("intro.interiorLeft1")}
                       <br />
-                      형상화한 포인트 요소를 담아냈습니다. 이 세심한 디테일을 통해 다른 곳에서는
+                      {t("intro.interiorLeft2")}
                       <br />
-                      경험할 수 없는 페슈만의 특별함이 완성됩니다.
+                      {t("intro.interiorLeft3")}
+                      <br />
+                      {t("intro.interiorLeft4")}
                     </LeftText>
                     <LeftImage src={interior3} alt="복도 인테리어" />
                   </LeftBlock>
@@ -660,20 +660,17 @@ const Intro = () => {
           </SectionInterior>
           <SectionCustomerTrust>
             <CustomerTrustInner>
-              <SectionTitle>고객이 마주하는 모든 곳에 담아낸 ‘신뢰의 가치’</SectionTitle>
+              <SectionTitle>{t("intro.customerTrustSection")}</SectionTitle>
 
               {/* 1️⃣ 카드 */}
               <CustomerTrustCard>
                 <CustomerTrustImage src={trustPic1} alt="언제나 같은, 합리적이고 정직한 가격" />
                 <CustomerTrustText>
-                  <CustomerTrustHeading>언제나 같은, 합리적이고 정직한 가격</CustomerTrustHeading>
+                  <CustomerTrustHeading>{t("intro.customerTrust1Title")}</CustomerTrustHeading>
                   <CustomerTrustParagraph>
-                    페슈의원은 가격을 통해서도 신뢰를 지켜갑니다. 누구에게나 다르게, 순간적인
-                    이벤트로만 달라지는 가격은 없습니다. 언제나 어디서나 동일하게 적용되는 정찰제를
-                    고수하며, 불필요한 거품을 뺀 합리적인 가격만을 제시합니다.
+                    {t("intro.customerTrust1Desc1")}
                     <br /> <br />
-                    최저가 경쟁은 아니지만, 누구나 납득할 수 있는 수준에서 공정하고 투명하게
-                    지켜갑니다.
+                    {t("intro.customerTrust1Desc2")}
                   </CustomerTrustParagraph>
                 </CustomerTrustText>
               </CustomerTrustCard>
@@ -685,17 +682,11 @@ const Intro = () => {
                   alt="가장 효과적인 방법으로, 정확하게 진행되는 시술"
                 />
                 <CustomerTrustText>
-                  <CustomerTrustHeading>
-                    가장 효과적인 방법으로, 정확하게 진행되는 시술
-                  </CustomerTrustHeading>
+                  <CustomerTrustHeading>{t("intro.customerTrust2Title")}</CustomerTrustHeading>
                   <CustomerTrustParagraph>
-                    시술은 단순히 기계와 약물이 아니라, 효과를 극대화할 수 있는 정확한 방법에서
-                    시작됩니다. 페슈의원은 환자 한 분 한 분의 피부 상태를 세심히 진단하고, 가장
-                    효과적인 방법을 찾아 안내합니다.
+                    {t("intro.customerTrust2Desc1")}
                     <br /> <br />
-                    충분한 설명을 통해 환자가 올바른 선택을 하도록 돕고, 그 선택이 최고의 결과로
-                    이어질 수 있도록 전문성과 정직함을 바탕으로 시술합니다. 결국 진료의 가치는
-                    정직한 설명과 정확한 실행에서 완성된다고 믿습니다.
+                    {t("intro.customerTrust2Desc2")}
                   </CustomerTrustParagraph>
                 </CustomerTrustText>
               </CustomerTrustCard>
@@ -707,17 +698,11 @@ const Intro = () => {
                   alt="불필요함을 덜어낸, 친절하고 진심 어린 상담"
                 />
                 <CustomerTrustText>
-                  <CustomerTrustHeading>
-                    불필요함을 덜어낸, 친절하고 진심 어린 상담
-                  </CustomerTrustHeading>
+                  <CustomerTrustHeading>{t("intro.customerTrust3Title")}</CustomerTrustHeading>
                   <CustomerTrustParagraph>
-                    페슈의원의 상담은 환자를 설득하기 위한 과정이 아닙니다. 과장된 말이나 불필요한
-                    권유는 덜어내고, 꼭 필요한 정보와 진실된 설명만을 전달합니다. 의료진과 실장은
-                    환자의 이야기를 경청하며, 개인의 상황과 피부 상태에 맞는 가장 적절한 방법을 함께
-                    고민합니다.
+                    {t("intro.customerTrust3Desc1")}
                     <br /> <br />
-                    친절함은 기본이지만, 그 안에 담긴 진심, 환자가 안심할 수 있는 신뢰로 이어진다고
-                    믿습니다.
+                    {t("intro.customerTrust3Desc2")}
                   </CustomerTrustParagraph>
                 </CustomerTrustText>
               </CustomerTrustCard>
@@ -726,14 +711,11 @@ const Intro = () => {
               <CustomerTrustCard>
                 <CustomerTrustImage src={trustPic4} alt="숨기지 않고 투명하게 드러낸 자신감" />
                 <CustomerTrustText>
-                  <CustomerTrustHeading>숨기지 않고 투명하게 드러낸 자신감</CustomerTrustHeading>
+                  <CustomerTrustHeading>{t("intro.customerTrust4Title")}</CustomerTrustHeading>
                   <CustomerTrustParagraph>
-                    페슈의원의 공간은 숨기기 위해 설계되지 않았습니다. 상담과 시술 준비 과정까지
-                    환자가 직접 확인할 수 있도록 오픈되어 있으며, 이 구조는 단순한 인테리어가 아닌
-                    우리의 자신감을 보여주는 방식입니다.
+                    {t("intro.customerTrust4Desc1")}
                     <br /> <br />
-                    투명한 공간은 곧 정직한 태도의 반영이며, 환자가 느끼는 모든 과정 속에서 신뢰를
-                    체감하게 합니다. 공간 하나하나가 곧 페슈의원의 철학을 증명합니다.
+                    {t("intro.customerTrust4Desc2")}
                   </CustomerTrustParagraph>
                 </CustomerTrustText>
               </CustomerTrustCard>
@@ -741,14 +723,12 @@ const Intro = () => {
           </SectionCustomerTrust>
           <PeopleSection>
             <PeopleInner>
-              <PeopleTag>PEOPLE × TRUST</PeopleTag>
-              <PeopleTitle>결국, 신뢰는 사람으로 완성됩니다</PeopleTitle>
+              <PeopleTag tw="font-time">{t("intro.peopleSection")}</PeopleTag>
+              <PeopleTitle>{t("intro.peopleTitle")}</PeopleTitle>
               <PeopleParagraph>
-                페슈의원의 의료진과 직원들은 정직한 설명으로 환자가 올바른 선택을 할 수 있도록
-                돕습니다.
+                {t("intro.peopleParagraph1")}
                 <br /> <br />
-                개인에게 가장 효과적인 시술을 고민하고, 전문성을 바탕으로 신중하게 진료합니다. 또한
-                진심 어린 응대와 세심한 배려 속에서도, 때로는 단호하게 신뢰의 가치를 지켜나갑니다.
+                {t("intro.peopleParagraph2")}
               </PeopleParagraph>
 
               {/* PEOPLE IMAGE (대체) */}
