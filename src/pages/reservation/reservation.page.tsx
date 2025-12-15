@@ -5,10 +5,19 @@ import { Button, Calendar, Icon } from "@/design-system/components"
 import AppMaxWidth from "@/lib/components/layout/app-max-width.component"
 import Page from "@/lib/components/layout/page.component"
 import Modal from "@/lib/components/modal/modal.component"
+import { authService } from "@/lib/service/auth.service"
+import { useSearchParams } from "react-router-dom"
+import { KakaoLogoMini, EmailIcon } from "@/assets/icon"
+import LogoText from "@/assets/images/peche-logo-text.png"
+import KakaoHelp from "@/assets/images/sns/icon_kakao_help.png"
+import WhatsAppHelp from "@/assets/images/sns/icon_WhatsApp_help.png"
+import LineHelp from "@/assets/images/sns/icon_LINE_help.png"
+import EmailAuthModal from "@/features/auth/components/email-auth-modal.component"
 
 import React, { useEffect, useState } from "react"
 import tw, { styled } from "twin.macro"
 import dayjs from "dayjs"
+import { Language } from "@/lib/locales/i18n.config"
 import { useTranslation } from "react-i18next"
 import { useMe } from "@/features/user/hooks/use-user"
 import utc from "dayjs/plugin/utc"
@@ -364,6 +373,122 @@ const Reservations = () => {
     )
   }
 
+  const AuthButtons = () => {
+    const { i18n } = useTranslation()
+    const { language } = i18n
+    const isKorean = language === "ko"
+
+    const [params] = useSearchParams()
+    const pathVisit = params.get("path_visit")
+    const detailVisit = params.get("detail_visit")
+
+    const [openEmailModal, setOpenEmailModal] = React.useState(false)
+
+    /* ---------- 상담채널 이미지 매핑 ---------- */
+    const helpImageMap: Record<string, string | null> = {
+      ko: KakaoHelp,
+      en: WhatsAppHelp,
+      zh: null, // 중국 간체 없음
+      ja: LineHelp,
+      "zh-TW": LineHelp,
+      th: LineHelp,
+    }
+
+    const helpIcon = helpImageMap[language]
+
+    const HELP_LINKS: Record<Language, string> = {
+      ko: "https://pf.kakao.com/_dxoiLn",
+      en: "https://wa.me/821025326285",
+      ja: "https://line.me/R/ti/p/@235wfyao",
+      th: "https://line.me/R/ti/p/@892druai",
+      "zh-TW": "https://line.me/R/ti/p/@683jgqmd",
+
+      // 중국 간체는 상담채널 없음 → 빈 문자열 또는 undefined
+      zh: "",
+    }
+
+    const handleHelpClick = () => {
+      const url = HELP_LINKS[language as Language]
+      if (!url) return // 중국어(zh)는 링크 없음
+
+      window.open(url, "_blank")
+    }
+
+    return (
+      <>
+        {/* 로고 영역 */}
+        <div tw="flex flex-col items-center mb-8">
+          <img tw="w-[97px] mx-auto mb-4" src={LogoText} alt="Logo" />
+
+          <div tw="text-center text-[18px] md:text-[22px] font-semibold">
+            {t("reservePage.loginRequiredMessage", "본인 인증")}
+          </div>
+        </div>
+
+        {/* ===================== 인증 버튼 그룹 ===================== */}
+        <div tw="flex justify-center gap-4 mb-10" css={tw`flex-row`}>
+          {/* ---- 카카오 인증 (한국어 전용) ---- */}
+          {isKorean && (
+            <button
+              tw="flex flex-col items-center justify-center gap-2 font-bold text-[15px] md:text-[17px]"
+              css={tw`bg-[#FFE812]`}
+              style={{
+                width: "220px",
+                height: "100px",
+              }}
+              onClick={() => {
+                authService.loginWithKakaoSDK(pathVisit, detailVisit)
+              }}>
+              <Icon icon={KakaoLogoMini} size={26} />
+              카카오 인증
+            </button>
+          )}
+
+          {/* ---- 이메일 인증 ---- */}
+          <button
+            tw="flex flex-col items-center justify-center gap-2 font-bold text-white text-[15px] md:text-[17px]"
+            css={tw`bg-[#4DAA57]`}
+            style={{
+              width: isKorean ? "220px" : "220px",
+              height: "100px",
+            }}
+            onClick={() => setOpenEmailModal(true)}>
+            <Icon icon={EmailIcon} size={26} />
+            {t("reservePage.emailVerification")}
+          </button>
+        </div>
+
+        {/* ================= 상담채널 영역 ================= */}
+        {helpIcon && (
+          <div tw="w-full flex flex-col items-start px-4 md:px-0 max-w-[460px] mx-auto">
+            <div tw="text-[14px] md:text-[16px] mb-3 font-semibold">
+              <span tw="text-[15px] font-semibold whitespace-nowrap">
+                {t("reservePage.helpChannelTitle", "상담채널")}
+              </span>
+
+              <span tw="text-[13px] md:text-[14px] text-neutral60 mt-1 md:mt-0 pl-2">
+                {t("reservePage.helpChannelDesc", "SNS 채널을 통해 빠르게 상담받아보세요.")}
+              </span>
+            </div>
+
+            <button tw="flex items-center gap-2" onClick={handleHelpClick}>
+              <img src={helpIcon} alt="help" tw="h-[36px]" />
+            </button>
+          </div>
+        )}
+
+        {/* ================= 이메일 인증 모달 ================= */}
+        <EmailAuthModal
+          open={openEmailModal}
+          onClose={() => setOpenEmailModal(false)}
+          onComplete={(info) => {
+            setOpenEmailModal(false)
+          }}
+        />
+      </>
+    )
+  }
+
   const [openId, setOpenId] = useState<string | null>(null)
   const toggle = (id: string) => setOpenId(openId === id ? null : id)
 
@@ -380,7 +505,13 @@ const Reservations = () => {
   if (!authenticated) {
     return (
       <Page>
-        <AppMaxWidth tw="pt-20 text-center">로그인이 필요합니다.</AppMaxWidth>
+        <div tw="bg-neutral min-h-screen w-full">
+          <AppMaxWidth tw="pt-20 pb-20 flex justify-center">
+            <div tw="bg-white w-full max-w-[580px] md:h-[470px] px-4 py-10 rounded-none font-pretendard">
+              <AuthButtons />
+            </div>
+          </AppMaxWidth>
+        </div>
       </Page>
     )
   }

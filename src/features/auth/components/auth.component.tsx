@@ -5,6 +5,9 @@ import i18n from "i18next"
 import { Language } from "@/lib/locales/i18n.config"
 import { KakaoLogoMini, EmailIcon } from "@/assets/icon"
 import { Checkbox, Icon, Button } from "@/design-system/components"
+import KakaoHelp from "@/assets/images/sns/icon_kakao_help.png"
+import WhatsAppHelp from "@/assets/images/sns/icon_WhatsApp_help.png"
+import LineHelp from "@/assets/images/sns/icon_LINE_help.png"
 import { authService } from "@/lib/service/auth.service"
 import { useSearchParams } from "react-router-dom"
 import EmailAuthModal from "./email-auth-modal.component"
@@ -79,6 +82,36 @@ const Auth = ({ onAuth, onAgreementChange }: Props) => {
     })
   }, [agreeTerms, agreePrivacy, agreeMarketing])
 
+  /* ---------- 상담채널 이미지 매핑 ---------- */
+  const helpImageMap: Record<string, string | null> = {
+    ko: KakaoHelp,
+    en: WhatsAppHelp,
+    zh: null, // 중국 간체 없음
+    ja: LineHelp,
+    "zh-TW": LineHelp,
+    th: LineHelp,
+  }
+
+  const helpIcon = helpImageMap[language]
+
+  const HELP_LINKS: Record<Language, string> = {
+    ko: "https://pf.kakao.com/_dxoiLn",
+    en: "https://wa.me/821025326285",
+    ja: "https://line.me/R/ti/p/@235wfyao",
+    th: "https://line.me/R/ti/p/@892druai",
+    "zh-TW": "https://line.me/R/ti/p/@683jgqmd",
+
+    // 중국 간체는 상담채널 없음 → 빈 문자열 또는 undefined
+    zh: "",
+  }
+
+  const handleHelpClick = () => {
+    const url = HELP_LINKS[language as Language]
+    if (!url) return // 중국어(zh)는 링크 없음
+
+    window.open(url, "_blank")
+  }
+
   return (
     <div tw="w-full bg-white p-6 font-pretendard tracking-tight leading-[150%] text-[13px] lg:text-[15px]">
       {/* ================= 본인인증 ================= */}
@@ -135,29 +168,49 @@ const Auth = ({ onAuth, onAgreementChange }: Props) => {
           </div>
         </div>
       ) : (
-        /* ================= 인증 버튼 ================= */
-        <div tw="flex gap-3 justify-center items-center mb-10">
-          {isKorean && (
-            <button
-              tw="h-[80px] flex flex-col items-center justify-center gap-2 font-bold"
-              css={tw`flex-1 bg-[#FFE812]`}
-              onClick={() => {
-                authService.loginWithKakaoSDK(pathVisit, detailVisit)
-              }}>
-              <Icon icon={KakaoLogoMini} size={25} />
-              카카오 인증
-            </button>
-          )}
+        <>
+          {/* ================= 인증 버튼 ================= */}
+          <div tw="flex gap-3 justify-center items-center mb-6">
+            {isKorean && (
+              <button
+                tw="h-[80px] flex flex-col items-center justify-center gap-2 font-bold"
+                css={tw`flex-1 bg-[#FFE812]`}
+                onClick={() => {
+                  authService.loginWithKakaoSDK(pathVisit, detailVisit)
+                }}>
+                <Icon icon={KakaoLogoMini} size={25} />
+                카카오 인증
+              </button>
+            )}
 
-          <button
-            disabled
-            tw="h-[80px] flex flex-col items-center justify-center gap-2 font-bold text-white"
-            css={isKorean ? tw`flex-1 bg-[#4DAA57]` : tw`w-full bg-[#4DAA57]`}
-            onClick={() => setOpenEmailModal(true)}>
-            <Icon icon={EmailIcon} size={25} />
-            {t("reservePage.emailVerification")}
-          </button>
-        </div>
+            <button
+              tw="h-[80px] flex flex-col items-center justify-center gap-2 font-bold text-white"
+              css={isKorean ? tw`flex-1 bg-[#4DAA57]` : tw`w-full bg-[#4DAA57]`}
+              onClick={() => setOpenEmailModal(true)}>
+              <Icon icon={EmailIcon} size={25} />
+              {t("reservePage.emailVerification")}
+            </button>
+          </div>
+
+          {helpIcon && (
+            <div tw="w-full max-w-[580px] mb-6">
+              {/* 제목 + 설명문구 */}
+              <div tw="flex flex-col md:flex-row md:items-center gap-1 mb-3">
+                <span tw="text-[15px] font-semibold whitespace-nowrap">
+                  {t("reservePage.helpChannelTitle", "상담채널")}
+                </span>
+                <span tw="text-[14px] text-neutral60">
+                  {t("reservePage.helpChannelDesc", "SNS 채널을 통해 빠르게 상담받아보세요.")}
+                </span>
+              </div>
+
+              {/* 버튼 */}
+              <button tw="flex items-center gap-2" onClick={handleHelpClick}>
+                <img src={helpIcon} alt="help" tw="h-[38px]" />
+              </button>
+            </div>
+          )}
+        </>
       )}
 
       {/* ================= 약관동의 ================= */}
