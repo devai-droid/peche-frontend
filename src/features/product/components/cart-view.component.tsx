@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ArrowRight, CalendarIcon, ChatIcon } from "@/assets/icon"
-import { Button, Checkbox, Icon, IconButton } from "@/design-system/components"
+import { ArrowRight } from "@/assets/icon"
+import { Button, Checkbox, IconButton } from "@/design-system/components"
 import React, { useEffect, useLayoutEffect } from "react"
 import { useTranslation } from "react-i18next"
 import tw from "twin.macro"
@@ -10,22 +10,15 @@ import { Event } from "@/lib/orval/model"
 import { Language } from "@/lib/locales/i18n.config"
 import KakaoImg from "@/assets/images/sns/kakao.png"
 import LineImg from "@/assets/images/sns/line.png"
-import CallImg from "@/assets/images/sns/call.svg"
-import WechatImg from "@/assets/images/sns/wechat.png"
 import WhatsAppImg from "@/assets/images/sns/whatsapp.png"
-import InstagramImg from "@/assets/images/sns/instagram.png"
 import useCustomNavigate from "@/lib/hooks/use-custom-navigate"
 import Modal from "@/lib/components/modal/modal.component"
 
 const BottomButton = tw.button`flex-1 h-16 flex justify-center items-center gap-2 text-white bg-secondary`
-const InquiryButton = tw.button`rounded-lg border border-[#d0d0d0] w-16 h-16 flex justify-center items-center flex-col`
+const InquiryButton = tw.button`rounded-lg w-16 h-16 flex justify-center items-center flex-col`
 
-const call = tw`bg-[#F8EEEA]`
 const kakao = tw`bg-[#FFE812]`
 const line = tw`bg-[#00CF2E] text-white`
-const weChat = tw`bg-[#45B035] text-white`
-const instagram = tw`bg-[#F5F5F5]`
-// const channelTalk = tw`bg-[#4A27FF] text-white`
 
 const SurgeryItem = ({
   item,
@@ -558,18 +551,75 @@ const BottomSheet = () => {
   )
 }
 
-const BottomButtons = () => {
+const BottomButtons = ({
+  showInquiryButtons,
+  setShowInquiryButtons,
+}: {
+  showInquiryButtons: boolean
+  setShowInquiryButtons: React.Dispatch<React.SetStateAction<boolean>>
+}) => {
   const { t, i18n } = useTranslation()
   const { setInquiry } = useCart()
+  const language = i18n.language as Language
 
   const navigate = useCustomNavigate()
 
+  const inquiryButtons: {
+    id: number
+    name: string
+    icon: string
+    css: any
+    lang: Language[]
+    link: string
+  }[] = [
+    {
+      id: 1,
+      name: t("button.inquiryButton.kakao"),
+      icon: KakaoImg,
+      css: kakao,
+      lang: [Language.KOR],
+      link: "http://pf.kakao.com/_dxoiLn",
+    },
+    {
+      id: 2,
+      name: t("button.inquiryButton.line"),
+      icon: LineImg,
+      css: line,
+      lang: [Language.JPN],
+      link: "https://line.me/R/ti/p/@235wfyao",
+    },
+    {
+      id: 3,
+      name: t("button.inquiryButton.whatsApp"),
+      icon: WhatsAppImg,
+      css: line,
+      lang: [Language.ENG],
+      link: "https://wa.me/821025326285",
+    },
+    {
+      id: 4,
+      name: t("button.inquiryButton.line"),
+      icon: LineImg,
+      css: line,
+      lang: [Language.THA],
+      link: "https://line.me/R/ti/p/@892druai",
+    },
+    {
+      id: 5,
+      name: t("button.inquiryButton.line"),
+      icon: LineImg,
+      css: line,
+      lang: [Language.TWN],
+      link: "https://line.me/R/ti/p/@683jgqmd",
+    },
+  ]
+
   return (
-    <div tw="fixed lg:hidden bottom-0 inset-x-0 z-50">
+    <div tw="fixed lg:hidden bottom-0 inset-x-0 z-50 font-pretendard">
       <div tw="bg-secondary gap-px flex">
         <BottomButton
           onClick={() => {
-            console.log("clicked")
+            setShowInquiryButtons(!showInquiryButtons)
           }}>
           {t("button.inquiry")}
         </BottomButton>
@@ -582,6 +632,21 @@ const BottomButtons = () => {
           {t("button.reserve")}
         </BottomButton>
       </div>
+      {showInquiryButtons && (
+        <div tw="flex gap-3 absolute bottom-full px-4 py-2">
+          {inquiryButtons
+            .filter((button) => button.lang.includes(language))
+            .map((button) => (
+              <InquiryButton key={button.id} css={button.css}>
+                <a href={button.link} target="_blank" rel="noopener noreferrer">
+                  {button.icon && (
+                    <img src={button.icon} alt="snsIcon" style={{ display: "inline" }} />
+                  )}
+                </a>
+              </InquiryButton>
+            ))}
+        </div>
+      )}
     </div>
   )
 }
@@ -589,6 +654,8 @@ const BottomButtons = () => {
 const CartView = ({ children, isHome }: { children?: React.ReactNode; isHome: boolean }) => {
   const [headerHeight, setHeaderHeight] = React.useState(0)
   const { inquiry, cart } = useCart()
+  // 상담 버튼이 보여야하는지 여부
+  const [showInquiryButtons, setShowInquiryButtons] = React.useState(false)
 
   useLayoutEffect(() => {
     const height = document.getElementById("header-height")?.clientHeight || 0
@@ -608,7 +675,10 @@ const CartView = ({ children, isHome }: { children?: React.ReactNode; isHome: bo
         )}
       </div>
       <div tw="relative">
-        <BottomButtons />
+        <BottomButtons
+          showInquiryButtons={showInquiryButtons}
+          setShowInquiryButtons={setShowInquiryButtons}
+        />
         {/* 목록이 추가되면 보이게 */}
         <div tw="absolute bottom-0 inset-x-0">
           {!isHome && (inquiry || cart.length > 0) ? <BottomSheet /> : null}
