@@ -390,25 +390,44 @@ const Reserve = () => {
     setConfirmOpen(true)
   }
 
-  const reserveConfirm = () => {
-    userControllerUpdateMine({ languageLocale: language })
+  const reserveConfirm = async () => {
+    if (!authInfo) return
 
-    mutate(
-      {
-        data: {
-          datetime: selectedDatetime.replace("Z", ""),
-          productIds: getProductIdsWithInquiry(),
-          eventIds: getCheckedEventIds(),
+    try {
+      await userControllerUpdateMine({ languageLocale: language })
+
+      mutate(
+        {
+          data: {
+            datetime: selectedDatetime.replace("Z", ""),
+            productIds: getProductIdsWithInquiry(),
+            eventIds: getCheckedEventIds(),
+          },
         },
-      },
-      {
-        onSuccess: () => {
-          resetCart()
-          navigate("/reservation/complete")
+        {
+          onSuccess: () => {
+            resetCart()
+            navigate("/reservation/complete")
+          },
         },
-      },
-    )
+      )
+    } catch (e) {
+      console.error(e)
+    }
   }
+
+  React.useEffect(() => {
+    const token = localStorage.getItem("authToken")
+
+    if (token && me) {
+      const info = {
+        name: me.name,
+        phone: me.phoneNumber,
+        email: me.email,
+      }
+      setAuthInfo(info)
+    }
+  }, [me])
 
   /* -------- 캘린더 변경 시 조회 -------- */
   React.useEffect(() => {

@@ -10,6 +10,8 @@ import {
   useAuthControllerAuthenticateByEmail,
 } from "@/lib/orval/auth/auth"
 import { ToastType } from "@/design-system/components/toast/toast.component.type"
+import { useQueryClient } from "@tanstack/react-query"
+import { useToken } from "@/lib/hooks/use-token"
 
 interface Props {
   open: boolean
@@ -19,6 +21,8 @@ interface Props {
 
 const EmailAuthModal = ({ open, onClose, onComplete }: Props) => {
   const { t } = useTranslation()
+  const queryClient = useQueryClient()
+  const { setToken } = useToken()
 
   const [email, setEmail] = React.useState("")
   const [emailTouched, setEmailTouched] = React.useState(false)
@@ -66,6 +70,11 @@ const EmailAuthModal = ({ open, onClose, onComplete }: Props) => {
       onSuccess: (data) => {
         setCodeError(false)
         localStorage.setItem("authToken", data.token)
+        // IMPORTANT: Axios Authorization 헤더 적용
+        setToken(data.token)
+
+        // 로그인 상태 갱신
+        queryClient.invalidateQueries({ queryKey: ["me"] })
 
         // 부모 컴포넌트로 인증된 정보 전달
         onComplete({
@@ -152,7 +161,8 @@ const EmailAuthModal = ({ open, onClose, onComplete }: Props) => {
                   placeholder="이메일을 입력해주세요."
                   value={email}
                   onChange={(e) => {
-                    setEmail(e.target.value)
+                    const lower = e.target.value.toLowerCase()
+                    setEmail(lower)
                     if (!emailTouched) setEmailTouched(true)
                   }}
                   tw="flex-1 h-[40px] pl-2 text-[15px] lg:text-[17px] border focus:(outline-none ring-0)"
