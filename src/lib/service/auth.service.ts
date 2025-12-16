@@ -8,10 +8,12 @@ const KAKAO_OAUTH_HOST = "https://kauth.kakao.com/oauth"
 
 const authService = {
   loginWithKakaoSDK: (pathVisit: string | null, detailVisit: string | null) => {
-    const encodedStates =
-      pathVisit && detailVisit
-        ? encodeURIComponent(`?path_visit=${pathVisit}&detail_visit=${detailVisit}`)
-        : ""
+    // const encodedStates =
+    //   pathVisit && detailVisit
+    //     ? encodeURIComponent(`?path_visit=${pathVisit}&detail_visit=${detailVisit}`)
+    //     : ""
+    const currentPath = window.location.pathname + window.location.search
+    const encodedState = encodeURIComponent(currentPath)
 
     const redirectUri = `${env.DISTRIBUTION_URL + KAKAO_OAUTH_REDIRECT_PATH}`
 
@@ -19,7 +21,7 @@ const authService = {
     // @ts-ignore
     Kakao.Auth.authorize({
       redirectUri,
-      state: encodedStates,
+      state: encodedState,
     })
   },
   loginWithKakao: async (authCode: string) => {

@@ -20,7 +20,9 @@ const KakaoRedirectedOauthPage = () => {
       login(authCode, {
         onSuccess: (data) => {
           setToken(data.token)
-          navigate(`/ko/reservation/new${visit}`, { replace: true })
+          // navigate(`/ko/reservation/new${visit}`, { replace: true })
+          const target = visit || "/ko"
+          navigate(target, { replace: true })
         },
         onError: () => {
           navigate(`/login${visit}`, { replace: true })

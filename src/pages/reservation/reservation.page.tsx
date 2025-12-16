@@ -520,8 +520,8 @@ const Reservations = () => {
     return (
       <Page>
         <div tw="bg-neutral min-h-screen w-full font-pretendard">
-          <AppMaxWidth tw="pt-20 pb-20 flex justify-center">
-            <H1 tw="pt-4 md:pt-0 pb-0 text-[24px] lg:text-[30px] text-center">
+          <AppMaxWidth tw="pt-20 pb-20 flex flex-col items-center">
+            <H1 tw="pt-4 md:pt-0 pb-8 text-[24px] lg:text-[30px] text-center">
               {t("reservationCheckPage.reservationCheck")}
             </H1>
             <div tw="bg-white w-full max-w-[580px] md:h-[470px] px-4 py-10 rounded-none font-pretendard">
