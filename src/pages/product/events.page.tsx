@@ -318,9 +318,11 @@ const Events = () => {
               min-w-[300px]
             ">
           <div tw="text-[39px] lg:text-[50px] font-time font-normal tracking-tight">
-            Price & Events
+            {t("productDetail.eventsTitle")}
           </div>
-          <div tw="text-[18px] lg:text-[22px] font-pretendard">가격 및 이벤트</div>
+          <div tw="text-[18px] lg:text-[22px] font-pretendard">
+            {t("productDetail.eventsSubtitle")}
+          </div>
         </div>
       </div>
 

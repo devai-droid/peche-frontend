@@ -173,7 +173,9 @@
     "어시스트": "ผู้ช่วย"
   },
   "products": {
-    "detail": "ดูรายละเอียดทั้งหมด"
+    "detail": "ดูรายละเอียดทั้งหมด",
+    "treatmentsTitle": "ราคาและกิจกรรม",
+    "treatmentsSubtitle": "ราคาและกิจกรรม"
   },
   "productDetail": {
     "eventProduct": "กิจกรรมที่สามารถจองได้",
@@ -181,7 +183,7 @@
     "normalProducts": "ขั้นตอนทั่วไป",
     "productList": "รายการหัตถการ",
     "addProductYouWant": "เลือกรายกา\nรหัตถการที่ต้องการทำ ",
-    "reserveDescription": "※ ชำระเงินที่คลีนิค\n※ ค่าใช้จ่ายในการทำหัตถการข้างต้นเป็นจำนวนเงินโดยประมาณ และอาจมีความแตกต่างเล็กน้อยในวันที่เข้ามาทำหัตถการจริง",
+    "reserveDescription": "ทุกขั้นตอนมีภาษีมูลค่าเพิ่มเพิ่มเติม 10%\nการชำระเงินจะดำเนินการเมื่อคุณเข้ารับบริการ",
     "reserveButtonActiveText1": "*กรุณาเลือกเวลาจอง",
     "reserveButtonActiveText2": "*โปรดตรวจสอบความยินยอมที่จำเป็น",
     "totalPrice": "ค่าใช้จ่ายโดยประมาณ (ราคาไม่รวม Vat)",
@@ -194,7 +196,9 @@
     "caution": "คำเตือน",
     "noEvents": "ไม่มีสินค้ากิจกรรม",
     "moreProcedures": "시술 더보기",
-    "treatmentVideo": "시술 소개 영상"
+    "treatmentVideo": "วิดีโอแนะนำขั้นตอน",
+    "eventsTitle": "ราคาและกิจกรรม",
+    "eventsSubtitle": "ราคาและกิจกรรม"
   },
   "common": {
     "all": "All",
@@ -291,6 +295,23 @@
     "reservationChangeConfirm": "ระบบได้ทำการปลี่ยนแปลงการจองของคุณเรียบร้อยแล้ว",
     "reservationCancelConfirm": "การจองของคุณถูกยกเลิกแล้ว"
   },
+  "cart": {
+    "shoppingCart": "รถเข็นสินค้า",
+    "deleteSelection": "ลบรายการที่เลือก",
+    "noSelection": "No selection yet",
+    "freePrice": "0วอน",
+    "visitThenSelect": "นัดหมายปรึกษาก่อนเลือกการรักษา",
+    "request": "Memo (optional)",
+    "writeRequest": "Write here...",
+    "totalPrice": "ยอดรวม",
+    "vatNotIncluded": "(ไม่รวมภาษีมูลค่าเพิ่ม)",
+    "won": "วอน",
+    "selectAll": "Select all",
+    "emptyCartTitle": "คุณไม่สามารถเลือกการปรึกษาแบบตัวต่อตัวได้เมื่อขั้นตอนต่างๆ รวมอยู่ในรถเข็นของคุณแล้ว",
+    "emptyCartText": "กรุณาเคลียร์การรักษาที่เลือกทั้งหมดก่อนจองการปรึกษา",
+    "cancel": "ยกเลิก",
+    "emptyCart": "ล้างทั้งหมด"
+  },
   "reservationCheckPage": {
     "reservationCheck": "ยืนยันการจอง"
   },
@@ -303,5 +324,10 @@
   "auth": {
     "authSent": "หมายเลขยืนยันได้ถูกส่งไปแล้ว",
     "authSuccess": "การยืนยันตัวตนของคุณเสร็จสมบูรณ์แล้ว"
+  },
+  "blog": {
+    "title": "บล็อก",
+    "subtitle": "บล็อก",
+    "notAvailable": "ขณะนี้อยู่ระหว่างการจัดเตรียมบริการ"
   }
 }

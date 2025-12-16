@@ -173,7 +173,9 @@
     "어시스트": "Assistant"
   },
   "products": {
-    "detail": "View Details"
+    "detail": "View Details",
+    "treatmentsTitle": "Treatments",
+    "treatmentsSubtitle": "All Treatments"
   },
   "productDetail": {
     "eventProduct": "Available Events",
@@ -181,7 +183,7 @@
     "normalProducts": "Treatments",
     "productList": "Treatment list",
     "addProductYouWant": "Select treatment\nof your choice.",
-    "reserveDescription": "※ Payment will be made upon visit.\nThe above treatment cost are estimates and may differ from the actual costs.",
+    "reserveDescription": "All procedures are subject to an additional 10% VAT.\nPayment is processed at the time of your visit.",
     "reserveButtonActiveText1": "*Please select a reservation time",
     "reserveButtonActiveText2": "*Please check the required consents",
     "totalPrice": "Estimated Treatment Price (*VAT not included)",
@@ -194,7 +196,9 @@
     "caution": "Caution and Side Effects",
     "noEvents": "No Event Products",
     "moreProcedures": "시술 더보기",
-    "treatmentVideo": "시술 소개 영상"
+    "treatmentVideo": "Procedure Introduction Video",
+    "eventsTitle": "Price & Events",
+    "eventsSubtitle": "Pricing & Events"
   },
   "common": {
     "all": "All",
@@ -291,6 +295,23 @@
     "reservationChangeConfirm": "Your reservation change has been completed.",
     "reservationCancelConfirm": "Your reservation has been canceled"
   },
+  "cart": {
+    "shoppingCart": "Shopping Cart",
+    "deleteSelection": "Delete Selected",
+    "noSelection": "No selection yet",
+    "freePrice": "0KRW",
+    "visitThenSelect": "Schedule a consultation before choosing your treatment",
+    "request": "Memo (optional)",
+    "writeRequest": "Write here...",
+    "totalPrice": "Total Amount",
+    "vatNotIncluded": "(VAT excluded)",
+    "won": "KRW",
+    "selectAll": "Select all",
+    "emptyCartTitle": "You cannot select an in-person consultation when procedures are included in your cart.",
+    "emptyCartText": "Please clear all selected treatments before booking a consultation.",
+    "cancel": "Cancel",
+    "emptyCart": "Clear all"
+  },
   "reservationCheckPage": {
     "reservationCheck": "Check Reservation"
   },
@@ -303,5 +324,10 @@
   "auth": {
     "authSent": "Verification number has been sent.",
     "authSuccess": "Your identity verification has been completed."
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Blog",
+    "notAvailable": "The service is currently under preparation."
   }
 }

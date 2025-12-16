@@ -108,7 +108,7 @@ const ProductItem = ({
 }
 
 const ProductDetail = () => {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { addToCart, inquiry, setInquiry } = useCart()
   const { id } = useParams<{ id: string }>()
   const langQuery = useLanguageQuery()
@@ -120,7 +120,6 @@ const ProductDetail = () => {
     query: { enabled: !!id },
   })
 
-  const { i18n } = useTranslation()
   const keyMatch = { ko: "", en: "EN", ja: "JA", th: "TH", zh: "ZH", "zh-TW": "ZHTW" }
   const lang = i18n.language as keyof typeof keyMatch
 
@@ -245,9 +244,11 @@ const ProductDetail = () => {
               min-w-[300px]
             ">
             <div tw="text-[39px] lg:text-[50px] font-time font-normal tracking-tight">
-              Price & Events
+              {t("productDetail.eventsTitle")}
             </div>
-            <div tw="text-[18px] lg:text-[22px] font-pretendard">가격 및 이벤트</div>
+            <div tw="text-[18px] lg:text-[22px] font-pretendard">
+              {t("productDetail.eventsSubtitle")}
+            </div>
           </div>
         </div>
 

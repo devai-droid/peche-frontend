@@ -173,7 +173,9 @@
     "어시스트": "助理"
   },
   "products": {
-    "detail": "查看详情"
+    "detail": "查看详情",
+    "treatmentsTitle": "治疗",
+    "treatmentsSubtitle": "所有治疗"
   },
   "productDetail": {
     "eventProduct": "活动可预约",
@@ -181,7 +183,7 @@
     "normalProducts": "一般程序",
     "productList": "施术目录",
     "addProductYouWant": "请选择想\n要预约的项目",
-    "reserveDescription": "※ 本人到院进行付款\n※ 预计金额到院后可能有所变化",
+    "reserveDescription": "所有项目均需加收10%的增值税。\n费用将在您就诊时收取。",
     "reserveButtonActiveText1": "*请选择预约时间",
     "reserveButtonActiveText2": "*请检查所需的同意",
     "totalPrice": "预计金额 (*附加税另算)",
@@ -194,7 +196,9 @@
     "caution": "警告",
     "noEvents": "没有活动产品",
     "moreProcedures": "시술 더보기",
-    "treatmentVideo": "시술 소개 영상"
+    "treatmentVideo": "流程介绍视频",
+    "eventsTitle": "价格与活动",
+    "eventsSubtitle": "定价及活动"
   },
   "common": {
     "all": "All",
@@ -291,6 +295,23 @@
     "reservationChangeConfirm": "顾客的预约变更已完成。",
     "reservationCancelConfirm": "您的预订已被取消"
   },
+  "cart": {
+    "shoppingCart": "购物车",
+    "deleteSelection": "删除所选内容",
+    "noSelection": "No selection yet",
+    "freePrice": "0韩元",
+    "visitThenSelect": "在选择治疗方案前，请先预约咨询。",
+    "request": "Memo (optional)",
+    "writeRequest": "Write here...",
+    "totalPrice": "总金额",
+    "vatNotIncluded": "（不含增值税）",
+    "won": "韩元",
+    "selectAll": "Select all",
+    "emptyCartTitle": "如果您的购物车中包含手术项目，则无法选择现场咨询。",
+    "emptyCartText": "请在预约咨询前取消勾选所有已选疗程。",
+    "cancel": "取消",
+    "emptyCart": "全部清除"
+  },
   "reservationCheckPage": {
     "reservationCheck": "预订确认"
   },
@@ -303,5 +324,10 @@
   "auth": {
     "authSent": "验证码已发送。",
     "authSuccess": "您的身份验证已完成。"
+  },
+  "blog": {
+    "title": "博客",
+    "subtitle": "博客",
+    "notAvailable": "该服务目前正在筹备中。"
   }
 }

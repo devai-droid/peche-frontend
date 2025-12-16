@@ -267,12 +267,10 @@ const SurgeryList = ({
         onClose={() => setShowInquiryModal(false)}>
         <div tw="flex flex-col items-start justify-center h-full font-pretendard">
           <div tw="text-left text-[16px] font-semibold leading-snug">
-            시술이 담겨있는 상태에서는 방문 상담 선택이 어렵습니다.
+            {t("cart.emptyCartTitle")}
           </div>
 
-          <div tw="text-neutral70 text-left mt-3">
-            선택한 시술을 모두 비운 후 상담을 예약해주세요.
-          </div>
+          <div tw="text-neutral70 text-left mt-3">{t("cart.emptyCartText")}</div>
 
           <div tw="flex justify-end gap-2 mt-8">
             <Button
@@ -283,7 +281,7 @@ const SurgeryList = ({
                 setInquiry(false) // 전역 상태 끄기
                 setShowInquiryModal(false) // 모달 닫기
               }}>
-              취소하기
+              {t("cart.cancel")}
             </Button>
 
             <Button
@@ -295,7 +293,7 @@ const SurgeryList = ({
                 setInquiryChecked(true)
                 setShowInquiryModal(false)
               }}>
-              모두 비우기
+              {t("cart.emptyCart")}
             </Button>
           </div>
         </div>

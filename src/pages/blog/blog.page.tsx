@@ -5,8 +5,10 @@ import Page from "@/lib/components/layout/page.component"
 import bannerImg from "@/assets/images/products-banner.jpg"
 import mobileBannerImg from "@/assets/images/products-mobile-banner.jpg"
 import useResponsive from "@/lib/hooks/use-responsive"
+import { useTranslation } from "react-i18next"
 
 const Blog = () => {
+  const { t } = useTranslation()
   const { isMobile } = useResponsive()
 
   return (
@@ -23,15 +25,19 @@ const Blog = () => {
       -translate-x-1/2 -translate-y-1/2 
       text-center text-neutralBlack
     ">
-          <div tw="text-[39px] lg:text-[50px] font-time font-normal tracking-tight">Blog</div>
-          <div tw="text-[18px] lg:text-[22px] font-pretendard text-center">블로그</div>
+          <div tw="text-[39px] lg:text-[50px] font-time font-normal tracking-tight">
+            {t("blog.title")}
+          </div>
+          <div tw="text-[18px] lg:text-[22px] font-pretendard text-center">
+            {t("blog.subtitle")}
+          </div>
         </div>
       </div>
 
       <div tw="bg-white min-h-screen font-pretendard tracking-tight leading-[150%]">
         <AppMaxWidth tw="max-lg:p-0">
           <div tw="flex justify-center mt-[64px] lg:mt-[160px] mb-4 lg:mb-8 max-lg:p-4 text-[24px] lg:text-[30px]">
-            서비스 준비 중입니다.
+            {t("blog.notAvailable")}
           </div>
         </AppMaxWidth>
       </div>

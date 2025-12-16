@@ -139,8 +139,12 @@ const Products = () => {
       -translate-x-1/2 -translate-y-1/2 
       text-center text-neutralBlack
     ">
-          <div tw="text-[39px] lg:text-[50px] font-time font-normal tracking-tight">Treatments</div>
-          <div tw="text-[18px] lg:text-[22px] font-pretendard text-center">전체 시술</div>
+          <div tw="text-[39px] lg:text-[50px] font-time font-normal tracking-tight">
+            {t("products.treatmentsTitle")}
+          </div>
+          <div tw="text-[18px] lg:text-[22px] font-pretendard text-center">
+            {t("products.treatmentsSubtitle")}
+          </div>
         </div>
       </div>
 

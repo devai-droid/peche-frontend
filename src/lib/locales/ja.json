@@ -173,7 +173,9 @@
     "어시스트": "アシスタント"
   },
   "products": {
-    "detail": "詳細を見る"
+    "detail": "詳細を見る",
+    "treatmentsTitle": "治療法",
+    "treatmentsSubtitle": "すべての治療"
   },
   "productDetail": {
     "eventProduct": "予約可能なイベント",
@@ -181,7 +183,7 @@
     "normalProducts": "一般手術",
     "productList": "施術リスト",
     "addProductYouWant": "ご希望の施術を\nお選びください。",
-    "reserveDescription": "*お支払いはご来院の際にいただきます。\n*上記の施術料金は予想料金であり、実際の施術料金と異なる場合があります。",
+    "reserveDescription": "すべての施術には別途10%の消費税が加算されます。\nお支払いはご来店時に承ります。",
     "reserveButtonActiveText1": "*予約時間を選択してください",
     "reserveButtonActiveText2": "*必須同意事項を確認してください",
     "totalPrice": "予想施術種類 (*付加価値税別途)",
@@ -194,7 +196,9 @@
     "caution": "注意事項",
     "noEvents": "イベント商品はありません",
     "moreProcedures": "시술 더보기",
-    "treatmentVideo": "시술 소개 영상"
+    "treatmentVideo": "施術紹介動画",
+    "eventsTitle": "価格とイベント",
+    "eventsSubtitle": "料金・イベント"
   },
   "common": {
     "all": "All",
@@ -291,6 +295,23 @@
     "reservationChangeConfirm": "お客様のご予約が変更されました。",
     "reservationCancelConfirm": "予約がキャンセルされました"
   },
+  "cart": {
+    "shoppingCart": "ショッピングカート",
+    "deleteSelection": "選択項目を削除",
+    "noSelection": "No selection yet",
+    "freePrice": "0KRW",
+    "visitThenSelect": "治療を選ぶ前にカウンセリングを予約する",
+    "request": "Memo (optional)",
+    "writeRequest": "Write here...",
+    "totalPrice": "合計金額",
+    "vatNotIncluded": "（税抜）",
+    "won": "KRW",
+    "selectAll": "Select all",
+    "emptyCartTitle": "施術がカート内に含まれている場合、対面相談を選択することはできません。",
+    "emptyCartText": "相談予約をする前に、選択中のトリートメントをすべて解除してください。",
+    "cancel": "キャンセル",
+    "emptyCart": "すべてクリア"
+  },
   "reservationCheckPage": {
     "reservationCheck": "予約確認"
   },
@@ -303,5 +324,10 @@
   "auth": {
     "authSent": "認証番号が送信されました。",
     "authSuccess": "本人認証が完了しました。"
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Blog",
+    "notAvailable": "サービスは現在準備中です。"
   }
 }

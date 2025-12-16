@@ -14,7 +14,7 @@ import WhatsAppImg from "@/assets/images/sns/whatsapp.png"
 import useCustomNavigate from "@/lib/hooks/use-custom-navigate"
 import Modal from "@/lib/components/modal/modal.component"
 
-const BottomButton = tw.button`flex-1 h-16 flex justify-center items-center gap-2 text-white bg-secondary`
+const BottomButton = tw.button`flex-1 h-16 flex justify-center items-center gap-2 text-white bg-secondary font-semibold`
 const InquiryButton = tw.button`rounded-lg w-16 h-16 flex justify-center items-center flex-col`
 
 const kakao = tw`bg-[#FFE812]`
@@ -33,6 +33,7 @@ const SurgeryItem = ({
   onCheck: (checked: boolean) => void
   hideDescription?: boolean
 }) => {
+  const { t } = useTranslation()
   const tv = useLanguageValue()
   const name = tv(item.product ?? (item.event as Event), "name")
   const description = tv(item.product ?? (item.event as Event), "description")
@@ -61,11 +62,11 @@ const SurgeryItem = ({
             <div tw="flex items-center gap-2">
               {discount && (
                 <span tw="text-neutral50 line-through text-[13px] md:text-[14px]">
-                  {price?.toLocaleString()}원
+                  {price?.toLocaleString()} {t("reservePage.won")}
                 </span>
               )}
               <span tw="text-[16px] md:text-[18px] font-semibold text-secondary3">
-                {(discount || price || 0).toLocaleString()}원
+                {(discount || price || 0).toLocaleString()} {t("reservePage.won")}
               </span>
             </div>
 
@@ -149,7 +150,7 @@ const SurgeryList = () => {
       <div tw="pl-5 pr-4 py-6 bg-white font-pretendard tracking-tight leading-[150%]">
         <div tw="flex justify-between items-center pb-4 border-b border-b-[0.5px] border-neutral30">
           <div tw="font-bold text-[18px] md:text-[22px] flex items-center gap-1">
-            장바구니
+            {t("cart.shoppingCart")}
             <span tw="text-primary text-[16px] md:text-[18px] font-semibold">
               ({checkedList.length}/{cart.length})
             </span>
@@ -164,7 +165,7 @@ const SurgeryList = () => {
               setInquiryMemo("")
             }}
             style={{ variant: "outlined", color: "point", size: "sm" }}>
-            선택삭제
+            {t("cart.deleteSelection")}
           </Button>
         </div>
 
@@ -187,7 +188,7 @@ const SurgeryList = () => {
           ))}
           {/* 장바구니 비어있을 때 보여줄 메시지 */}
           {cart.length === 0 && !inquiryChecked && (
-            <div tw="py-6 text-neutral50 text-[14px] md:text-[16px]">선택한 시술이 없습니다.</div>
+            <div tw="py-6 text-neutral50 text-[14px] md:text-[16px]">{t("cart.noSelection")}</div>
           )}
         </div>
 
@@ -198,21 +199,25 @@ const SurgeryList = () => {
                 <Checkbox
                   checked={inquiryChecked}
                   onChange={(event) => handleInquiryCheckbox(event.target.checked)}
-                  label="방문 상담 후 시술 선택"
+                  label={t("cart.visitThenSelect")}
                 />
               </div>
               <div tw="flex items-center gap-2 mt-1 ml-8">
-                <span tw="text-neutral50 line-through text-[13px] md:text-[14px]">0원</span>
-                <span tw="text-[16px] md:text-[18px] font-bold text-neutralBlack">0원</span>
+                <span tw="text-neutral50 line-through text-[13px] md:text-[14px]">
+                  {t("cart.freePrice")}
+                </span>
+                <span tw="text-[16px] md:text-[18px] font-bold text-neutralBlack">
+                  {t("cart.freePrice")}
+                </span>
               </div>
             </div>
             <div tw="text-primary text-[10px] md:text-[12px] font-semibold">
-              상담 요청사항 (선택)
+              {t("cart.request")}
             </div>
 
             <textarea
               tw="w-full mt-2 p-3 border border-neutral20 rounded-[1px] text-[14px] h-32"
-              placeholder="내용을 적어주세요"
+              placeholder={t("cart.writeRequest")}
               value={inquiryMemo}
               maxLength={200}
               onChange={(e) => setInquiryMemo(e.target.value)}
@@ -226,16 +231,16 @@ const SurgeryList = () => {
           <Checkbox
             checked={inquiryChecked}
             onChange={(event) => handleInquiryCheckbox(event.target.checked)}
-            label="방문 상담 후 시술 선택"
+            label={t("cart.visitThenSelect")}
           />
         </div>
 
         <div tw="pt-4">
           <div tw="flex justify-between items-center">
             <div tw="text-[18px] md:text-[22px] font-semibold text-primary">
-              총 금액{" "}
+              {t("cart.totalPrice")}{" "}
               <span tw="text-[13px] md:text-[14px] font-normal relative" css={{ top: "-2px" }}>
-                (부가세 별도)
+                {t("cart.vatNotIncluded")}
               </span>
             </div>
 
@@ -249,7 +254,7 @@ const SurgeryList = () => {
                   0,
                 )
                 .toLocaleString()}
-              원
+              {t("cart.won")}
             </div>
           </div>
         </div>
@@ -280,11 +285,11 @@ const SurgeryList = () => {
         onClose={() => setShowInquiryModal(false)}>
         <div tw="flex flex-col items-start justify-center h-full font-pretendard">
           <div tw="text-left text-[16px] lg:text-[18px] font-semibold leading-snug">
-            시술이 담겨있는 상태에서는 방문 상담 선택이 어렵습니다.
+            {t("cart.emptyCartTitle")}
           </div>
 
           <div tw="text-neutral70 text-[14px] lg:text-[16px] text-left mt-3">
-            선택한 시술을 모두 비운 후 상담을 예약해주세요.
+            {t("cart.emptyCartText")}
           </div>
 
           <div tw="flex justify-end gap-2 mt-8">
@@ -297,7 +302,7 @@ const SurgeryList = () => {
                 setInquiry(false) // 🔥 전역 상태 끄기
                 setShowInquiryModal(false) // 모달 닫기
               }}>
-              취소하기
+              {t("cart.cancel")}
             </Button>
 
             <Button
@@ -309,7 +314,7 @@ const SurgeryList = () => {
                 setInquiryChecked(true)
                 setShowInquiryModal(false)
               }}>
-              모두 비우기
+              {t("cart.emptyCart")}
             </Button>
           </div>
         </div>
@@ -380,7 +385,7 @@ const BottomSheet = () => {
         {/* 헤더 */}
         <div tw="flex justify-between items-center">
           <div tw="font-semibold text-[18px] md:text-[22px]">
-            장바구니{" "}
+            {t("cart.shoppingCart")}{" "}
             <span tw="text-primary font-semibold">
               ({checkedList.length}/{cart.length})
             </span>
@@ -403,7 +408,11 @@ const BottomSheet = () => {
             <div tw="rounded-[1px] bg-white border border-neutral30 p-4 flex-1 flex flex-col">
               {/* 전체 선택 */}
               <div tw="flex justify-between items-center flex-none font-semibold text-[16px] md:text-[18px]">
-                <Checkbox checked={allSelected} onChange={toggleSelectAll} label="전체 선택" />
+                <Checkbox
+                  checked={allSelected}
+                  onChange={toggleSelectAll}
+                  label={t("cart.selectAll")}
+                />
 
                 <Button
                   style={{ variant: "outlined", color: "point", size: "sm" }}
@@ -414,7 +423,7 @@ const BottomSheet = () => {
                     setInquiry(false)
                     setInquiryMemo("")
                   }}>
-                  선택 삭제
+                  {t("cart.deleteSelection")}
                 </Button>
               </div>
 
@@ -427,25 +436,25 @@ const BottomSheet = () => {
                     <Checkbox
                       checked={inquiryChecked}
                       onChange={(e) => handleInquiryCheckbox(e.target.checked)}
-                      label="방문 상담 후 시술 선택"
+                      label={t("cart.visitThenSelect")}
                     />
                   </div>
 
                   {/* 가격 (0원) */}
                   <div tw="flex items-center gap-2 mb-4 ml-7">
-                    <span tw="text-neutral50 line-through text-[13px]">0원</span>
-                    <span tw="text-[16px] font-bold text-neutralBlack">0원</span>
+                    <span tw="text-neutral50 line-through text-[13px]">{t("cart.freePrice")}</span>
+                    <span tw="text-[16px] font-bold text-neutralBlack">{t("cart.freePrice")}</span>
                   </div>
 
                   {/* 상담 요청사항 */}
                   <div tw="text-primary text-[12px] font-semibold mb-1 ml-1">
-                    상담 요청사항 (선택)
+                    {t("cart.request")}
                   </div>
 
                   {/* textarea */}
                   <textarea
                     tw="w-full mt-1 p-3 border border-neutral20 rounded-[1px] text-[14px] h-16"
-                    placeholder="내용을 적어주세요"
+                    placeholder={t("cart.writeRequest")}
                     value={inquiryMemo}
                     maxLength={200}
                     onChange={(e) => setInquiryMemo(e.target.value)}
@@ -490,7 +499,7 @@ const BottomSheet = () => {
                 <Checkbox
                   checked={inquiryChecked}
                   onChange={(e) => handleInquiryCheckbox(e.target.checked)}
-                  label="방문 상담 후 시술 선택"
+                  label={t("cart.visitThenSelect")}
                 />
               </div>
             </div>
@@ -499,9 +508,13 @@ const BottomSheet = () => {
           {/* 총 금액 */}
           <div tw="py-3 flex justify-between items-center border-t border-neutral20 bg-neutral flex-none">
             <div tw="text-[18px] font-semibold text-primary">
-              총 금액 <span tw="text-[13px] font-normal">(부가세 별도)</span>
+              {t("cart.totalPrice")}{" "}
+              <span tw="text-[13px] font-normal">{t("cart.vatNotIncluded")}</span>
             </div>
-            <div tw="text-[20px] font-semibold text-primary">{totalPrice.toLocaleString()}원</div>
+            <div tw="text-[20px] font-semibold text-primary">
+              {totalPrice.toLocaleString()}
+              {t("cart.won")}
+            </div>
           </div>
         </div>
       </div>
@@ -513,11 +526,11 @@ const BottomSheet = () => {
         onClose={() => setShowInquiryModal(false)}>
         <div tw="flex flex-col items-start justify-center h-full font-pretendard">
           <div tw="text-left text-[16px] md:text-[18px] font-semibold leading-snug">
-            시술이 담겨있는 상태에서는 방문 상담 선택이 어렵습니다.
+            {t("cart.emptyCartTitle")}
           </div>
 
           <div tw="text-left text-neutral70 text-left text-[14px] md:text-[16px] mt-3 w-full">
-            선택한 시술을 모두 비운 후 상담을 예약해주세요.
+            {t("cart.emptyCartText")}
           </div>
 
           <div tw="flex justify-end gap-2 mt-4 md:mt-8">
@@ -529,7 +542,7 @@ const BottomSheet = () => {
                 setInquiry(false)
                 setShowInquiryModal(false)
               }}>
-              취소하기
+              {t("cart.cancel")}
             </Button>
 
             <Button
@@ -542,7 +555,7 @@ const BottomSheet = () => {
                 setInquiryChecked(true)
                 setShowInquiryModal(false)
               }}>
-              모두 비우기
+              {t("cart.emptyCart")}
             </Button>
           </div>
         </div>
