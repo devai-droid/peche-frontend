@@ -16,7 +16,7 @@ import { useTranslation } from "react-i18next"
 import { Language } from "@/lib/locales/i18n.config"
 
 const Section = tw.section`
-  w-full bg-white py-12 md:py-20 tracking-tight leading-[140%] font-pretendard
+  w-full bg-white pt-12 pb-4 md:pt-20 tracking-tight leading-[140%] font-pretendard
 `
 
 const Inner = tw.div`
@@ -24,7 +24,7 @@ const Inner = tw.div`
 `
 
 const Header = tw.div`
-  flex items-center justify-between mb-8 md:mb-12
+  flex items-center justify-between mb-6 md:mb-8
 `
 
 const TitleBox = tw.div`
@@ -73,30 +73,30 @@ const StyledSwiperWrapper = styled.div`
 `
 
 const StyledSwiperSlide = styled(SwiperSlide)`
-  width: 215px !important;
+  width: 378px !important;
   @media (min-width: 768px) {
-    width: 295px !important;
+    width: 378px !important;
   }
 `
 
 const Card = styled.div`
   ${tw`bg-white flex flex-col items-center justify-start cursor-pointer`}
-  width: 215px;
-  height: 285px;
+  width: 376px;
+  height: 240px;
 
   @media (min-width: 768px) {
-    width: 295px;
-    height: 390px;
+    width: 376px;
+    height: 260px;
   }
 `
 
 const ImageBox = styled.div`
   ${tw`overflow-hidden mb-2 bg-gray-100`}
-  width: 212px;
-  height: 212px;
+  width: 376px;
+  height: 163px;
   @media (min-width: 768px) {
-    width: 292px;
-    height: 292px;
+    width: 376px;
+    height: 163px;
   }
 
   img {
