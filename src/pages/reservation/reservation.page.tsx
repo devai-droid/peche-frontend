@@ -313,41 +313,47 @@ const Reservations = () => {
       <Card tw="bg-white px-6 pb-6 flex flex-col gap-6">
         {/* ---------------- 고객정보 ---------------- */}
         <div>
-          <div tw="font-semibold text-[16px] md:text-[18px] mb-3 text-neutralBlack">고객정보</div>
+          <div tw="font-semibold text-[16px] md:text-[18px] mb-3 text-neutralBlack">
+            {t("reservationCheckPage.customerInfo")}
+          </div>
 
           <Row>
-            <Label>이름</Label>
+            <Label>{t("reservationCheckPage.name")}</Label>
             <div tw="text-neutral60">{user?.name ?? "-"}</div>
           </Row>
 
           <Row>
-            <Label>연락처</Label>
+            <Label>{t("reservationCheckPage.contact")}</Label>
             <div tw="text-neutral60">{user?.phoneNumber || user?.email || "-"}</div>
           </Row>
         </div>
 
         {/* ---------------- 예약정보 ---------------- */}
         <div>
-          <div tw="font-semibold text-[16px] md:text-[18px] mb-3 text-neutralBlack">예약정보</div>
+          <div tw="font-semibold text-[16px] md:text-[18px] mb-3 text-neutralBlack">
+            {t("reservationCheckPage.reservationInfo")}
+          </div>
 
           <Row>
-            <Label>예약번호</Label>
+            <Label>{t("reservationCheckPage.reservationNumber")}</Label>
             <div tw="text-neutral60">{r.palettePlanId}</div>
           </Row>
 
           <Row>
-            <Label>예약일시</Label>
+            <Label>{t("reservationCheckPage.reservationDate")}</Label>
             <div tw="text-neutral60">{datetimeDisplay}</div>
           </Row>
 
           <Row>
-            <Label>예약시술명</Label>
+            <Label>{t("reservationCheckPage.treatmentList")}</Label>
             <div tw="whitespace-pre-wrap text-neutral60">{[...products, ...events].join("\n")}</div>
           </Row>
 
           <Row>
-            <Label>총 금액</Label>
-            <div tw="text-neutral60">{totalPrice.toLocaleString()} 원(부가세별도)</div>
+            <Label>{t("reservationCheckPage.totalPrice")}</Label>
+            <div tw="text-neutral60">
+              {totalPrice.toLocaleString()} {t("reservationCheckPage.vatNotIncluded")}
+            </div>
           </Row>
         </div>
 
@@ -505,14 +511,19 @@ const Reservations = () => {
     return d.format(`YYYY/MM/DD(${yoil}) HH:mm`)
   }
 
+  const H1 = tw.h1`text-xl font-bold`
+
   // ─────────────────────────────────
   // 렌더링
   // ─────────────────────────────────
   if (!authenticated) {
     return (
       <Page>
-        <div tw="bg-neutral min-h-screen w-full">
+        <div tw="bg-neutral min-h-screen w-full font-pretendard">
           <AppMaxWidth tw="pt-20 pb-20 flex justify-center">
+            <H1 tw="pt-4 md:pt-0 pb-0 text-[24px] lg:text-[30px] text-center">
+              {t("reservationCheckPage.reservationCheck")}
+            </H1>
             <div tw="bg-white w-full max-w-[580px] md:h-[470px] px-4 py-10 rounded-none font-pretendard">
               <AuthButtons />
             </div>
@@ -524,12 +535,15 @@ const Reservations = () => {
 
   return (
     <Page>
-      <div tw="bg-neutral min-h-screen w-full">
+      <div tw="bg-neutral min-h-screen w-full font-pretendard">
         <AppMaxWidth tw="pt-16 pb-20 flex flex-col items-center gap-6">
+          <H1 tw="pt-4 md:pt-0 pb-0 text-[24px] lg:text-[30px] text-center">
+            {t("reservationCheckPage.reservationCheck")}
+          </H1>
           {/* ---------------- 예약 중 박스 ---------------- */}
           {Object.keys(activeGroups).length > 0 && (
             <div tw="bg-white w-full max-w-[600px] px-4 py-8">
-              <SectionTitle tw="text-primary">예약 중</SectionTitle>
+              <SectionTitle tw="text-primary">{t("reservationCheckPage.upcoming")}</SectionTitle>
               {Object.keys(activeGroups)
                 .sort((a, b) => (dayjs(a).isBefore(dayjs(b)) ? 1 : -1))
                 .map((date) => renderAccordion(date, activeGroups[date]))}
@@ -542,7 +556,7 @@ const Reservations = () => {
           {/* ---------------- 지난 예약 박스 ---------------- */}
           {Object.keys(pastGroups).length > 0 && (
             <div tw="bg-white w-full max-w-[600px] px-4 py-8">
-              <SectionTitle>지난 예약</SectionTitle>
+              <SectionTitle>{t("reservationCheckPage.past")}</SectionTitle>
               {Object.keys(pastGroups)
                 .sort((a, b) => (dayjs(a).isBefore(dayjs(b)) ? 1 : -1))
                 .map((date) => renderAccordion(date, pastGroups[date]))}

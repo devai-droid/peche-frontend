@@ -129,20 +129,20 @@ const Auth = ({ onAuth, onAgreementChange }: Props) => {
       {authInfo ? (
         <div tw="mb-6 text-[13px] lg:text-[14px]">
           <div tw="flex mb-2">
-            <span tw="w-[70px] text-neutral50">이름</span>
+            <span tw="w-[70px] text-neutral50">{t("auth.name")}</span>
             <span tw="text-neutral50">{authInfo.name}</span>
           </div>
 
           {authInfo.phone && (
             <div tw="flex mb-2">
-              <span tw="w-[70px] text-neutral50">연락처</span>
+              <span tw="w-[70px] text-neutral50">{t("auth.phone")}</span>
               <span tw="text-neutral50">{authInfo.phone}</span>
             </div>
           )}
 
           {authInfo.email && (
             <div tw="flex mb-2">
-              <span tw="w-[70px] text-neutral50">이메일</span>
+              <span tw="w-[70px] text-neutral50">{t("auth.email")}</span>
               <span tw="text-neutral50">{authInfo.email}</span>
             </div>
           )}

@@ -542,7 +542,7 @@ const Reserve = () => {
   return (
     <Page>
       <div tw="bg-neutral w-screen min-h-screen">
-        <AppMaxWidth tw="py-8 lg:py-12 overflow-x-hidden">
+        <AppMaxWidth tw="py-8 lg:py-12 overflow-x-hidden font-pretendard">
           {/* ---------------- 회원가입 안내 배너 (임시) ---------------- */}
           {/* <div tw="bg-white rounded-lg p-5 mt-20 mb-6 text-center shadow-sm">
             <div tw="text-[15px] md:text-[17px] font-semibold mb-3">

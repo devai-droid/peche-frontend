@@ -313,7 +313,18 @@
     "emptyCart": "Clear all"
   },
   "reservationCheckPage": {
-    "reservationCheck": "Check Reservation"
+    "reservationCheck": "Check Reservation",
+    "upcoming": "Upcoming Reservations",
+    "past": "Past Reservations",
+    "customerInfo": "고객정보",
+    "name": "이름",
+    "contact": "연락처",
+    "reservationInfo": "예약정보",
+    "reservationNumber": "예약번호",
+    "reservationDate": "예약일시",
+    "treatmentList": "예약시술명",
+    "totalPrice": "총 금액",
+    "vatNotIncluded": "원(부가세별도)"
   },
   "error": {
     "verificationNeeded": "Identity verification is required.",
@@ -323,7 +334,10 @@
   },
   "auth": {
     "authSent": "Verification number has been sent.",
-    "authSuccess": "Your identity verification has been completed."
+    "authSuccess": "Your identity verification has been completed.",
+    "name": "이름",
+    "phone": "연락처",
+    "email": "이메일"
   },
   "blog": {
     "title": "Blog",
