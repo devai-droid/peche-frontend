@@ -107,7 +107,7 @@ const ImageBox = styled.div`
 `
 
 const EventTitle = tw.div`
-  text-left font-semibold text-neutralBlack text-[16px] md:text-[18px] ml-4 mb-1 w-full
+  text-left font-semibold text-neutralBlack text-[16px] md:text-[18px] ml-4 mb-[4px] w-full
 `
 
 const EventPrice = tw.div`
