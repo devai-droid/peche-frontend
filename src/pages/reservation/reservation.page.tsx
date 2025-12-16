@@ -85,7 +85,7 @@ const TimeButton = ({ available, selected, children, ...props }: any) => {
 const Reservations = () => {
   const { t } = useTranslation()
   const { user } = useMe()
-  const authenticated = !!user?.id
+  const [authenticated, setAuthenticated] = React.useState(!!user?.id)
   dayjs.extend(utc)
   dayjs.extend(timezone)
 
@@ -106,6 +106,10 @@ const Reservations = () => {
   const pastReservations: Reservation[] = []
 
   const now = new Date()
+
+  React.useEffect(() => {
+    setAuthenticated(!!user?.id)
+  }, [user])
 
   reservations.forEach((r) => {
     const date = dayjs.utc(r.datetime).tz("Asia/Seoul")
@@ -377,6 +381,7 @@ const Reservations = () => {
     const { i18n } = useTranslation()
     const { language } = i18n
     const isKorean = language === "ko"
+    const { user: me } = useMe()
 
     const [params] = useSearchParams()
     const pathVisit = params.get("path_visit")
@@ -483,6 +488,7 @@ const Reservations = () => {
           onClose={() => setOpenEmailModal(false)}
           onComplete={(info) => {
             setOpenEmailModal(false)
+            window.location.reload()
           }}
         />
       </>
