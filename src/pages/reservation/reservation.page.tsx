@@ -63,17 +63,17 @@ const Label = tw.div`text-neutralBlack w-28 shrink-0 font-pretendard tracking-ti
 const SectionTitle = tw.div`font-bold text-[18px] md:text-[22px] mb-4 font-pretendard tracking-tight leading-[140%]`
 
 // 시간 버튼 스타일
-const TimeButton = ({ available, selected, children, ...props }: any) => {
+const TimeButton = ({ selected, children, ...props }: { selected?: boolean } & any) => {
   return (
     <Button
-      tw="shrink-0 !h-[44px] text-[14px]"
-      disabled={!available}
+      tw="shrink-0 sm:h-[58px] h-[40px] text-[15px] md:text-[17px]"
+      {...props}
       style={{
         size: "sm",
-        variant: selected ? "filled" : "outlined",
         color: selected ? "point" : "gray",
-      }}
-      {...props}>
+        variant: selected ? "filled" : "outlined",
+        bold: !!selected,
+      }}>
       {children}
     </Button>
   )
@@ -167,49 +167,62 @@ const Reservations = () => {
   }, [today, changeId])
 
   const renderTimeSlots = () => {
-    const available = new Set(
+    const availableTimes = new Set(
       todaySlots.map((slot) => dayjs(slot.datetime.replace("Z", "")).format("HH:mm")),
     )
 
-    const times = [
-      "10:00",
-      "10:30",
-      "11:00",
-      "11:30",
-      "12:00",
-      "12:30",
-      "13:00",
-      "13:30",
-      "14:00",
-      "14:30",
-      "15:00",
-      "15:30",
-      "16:00",
-      "16:30",
-      "17:00",
-      "17:30",
-      "18:00",
-      "18:30",
-      "19:00",
-      "19:30",
-      "20:00",
-      "20:30",
-    ]
-
     return (
-      <div tw="grid grid-cols-3 gap-2 p-4">
-        {times.map((time) => (
-          <TimeButton
-            key={time}
-            available={available.has(time)}
-            selected={selectedDatetime.includes(time)}
-            onClick={() => {
-              const base = today.format("YYYY-MM-DD")
-              setSelectedDatetime(`${base}T${time}:00`)
-            }}>
-            {t}
-          </TimeButton>
-        ))}
+      <div tw="w-full p-4 font-pretendard">
+        <div
+          css={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(90px, 1fr))",
+            gap: "5px",
+            width: "100%",
+          }}>
+          {[
+            "10:00",
+            "10:30",
+            "11:00",
+            "11:30",
+            "12:00",
+            "12:30",
+            "13:00",
+            "13:30",
+            "14:00",
+            "14:30",
+            "15:00",
+            "15:30",
+            "16:00",
+            "16:30",
+            "17:00",
+            "17:30",
+            "18:00",
+            "18:30",
+            "19:00",
+            "19:30",
+            "20:00",
+            "20:30",
+          ].map((slot) => {
+            const available = availableTimes.has(slot)
+            const selected = selectedDatetime.includes(slot)
+
+            return (
+              <TimeButton
+                key={slot}
+                disabled={!available}
+                selected={selected}
+                onClick={() => {
+                  const base = todaySlots[0]?.datetime
+                  if (!base) return
+                  const [datePart] = base.split("T")
+                  setSelectedDatetime(`${datePart}T${slot}:00.000Z`)
+                }}>
+                {slot}
+              </TimeButton>
+            )
+          })}
+        </div>
       </div>
     )
   }
@@ -275,7 +288,6 @@ const Reservations = () => {
         </Button>
 
         <Button
-          disabled
           tw="flex-1 text-[13px] md:text-[15px]"
           style={{ variant: "filled", color: "point", size: "sm" }}
           onClick={() => {
