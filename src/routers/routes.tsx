@@ -26,6 +26,11 @@ const router = createBrowserRouter([
     element: null, // Let the server handle this route
   },
   {
+    path: "/favicon.ico",
+    element: null, // Let the server handle favicon
+  },
+
+  {
     path: "/",
     element: (
       <Navigate
