@@ -22,14 +22,13 @@ import SignupComplete from "@/pages/signup/signup-complete.page"
 
 const router = createBrowserRouter([
   {
-    path: "/sitemap.xml",
-    element: null, // Let the server handle this route
-  },
-  {
     path: "/favicon.ico",
     element: null, // Let the server handle favicon
   },
-
+  {
+    path: "/sitemap.xml",
+    element: null, // Let the server handle this route
+  },
   {
     path: "/",
     element: (
