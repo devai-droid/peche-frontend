@@ -124,7 +124,9 @@ const Location = () => {
                   }}>
                   {t("location.leftButton1")}
                 </SolidButton>
-                <SolidButton onClick={handleChatClick}>{t("location.leftButton2")}</SolidButton>
+                <SolidButton className="sns-btn-conversion" onClick={handleChatClick}>
+                  {t("location.leftButton2")}
+                </SolidButton>
               </ButtonGroup>
             </InfoBlock>
 

@@ -816,7 +816,7 @@ const Intro = () => {
                         }}>
                         {t("location.leftButton1")}
                       </SolidButton>
-                      <SolidButton onClick={handleChatClick}>
+                      <SolidButton className="sns-btn-conversion" onClick={handleChatClick}>
                         {t("location.leftButton2")}
                       </SolidButton>
                     </ButtonGroup>

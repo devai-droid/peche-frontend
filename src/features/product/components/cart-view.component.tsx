@@ -650,7 +650,7 @@ const BottomButtons = ({
           {inquiryButtons
             .filter((button) => button.lang.includes(language))
             .map((button) => (
-              <InquiryButton key={button.id} css={button.css}>
+              <InquiryButton className="sns-btn-conversion" key={button.id} css={button.css}>
                 <a href={button.link} target="_blank" rel="noopener noreferrer">
                   {button.icon && (
                     <img src={button.icon} alt="snsIcon" style={{ display: "inline" }} />

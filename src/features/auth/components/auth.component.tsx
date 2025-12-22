@@ -205,7 +205,10 @@ const Auth = ({ onAuth, onAgreementChange }: Props) => {
               </div>
 
               {/* 버튼 */}
-              <button tw="flex items-center gap-2" onClick={handleHelpClick}>
+              <button
+                tw="flex items-center gap-2"
+                className="sns-btn-conversion"
+                onClick={handleHelpClick}>
                 <img src={helpIcon} alt="help" tw="h-[38px]" />
               </button>
             </div>

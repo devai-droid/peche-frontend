@@ -134,6 +134,7 @@ const LeftMenu = ({
             <button
               key={idx}
               onClick={openWeChatModal}
+              className="sns-btn-conversion"
               tw="flex items-center justify-center hover:opacity-80">
               <Icon width={24} height={24} />
             </button>
