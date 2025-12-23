@@ -12,6 +12,8 @@ import LogoText from "@/assets/images/peche-logo-text.png"
 import KakaoHelp from "@/assets/images/sns/icon_kakao_help.png"
 import WhatsAppHelp from "@/assets/images/sns/icon_WhatsApp_help.png"
 import LineHelp from "@/assets/images/sns/icon_LINE_help.png"
+import WeChatHelp from "@/assets/images/sns/icon_WeChat_help.png"
+import wechatQrImg from "@/assets/images/wechat-qr.png"
 import EmailAuthModal from "@/features/auth/components/email-auth-modal.component"
 
 import React, { useEffect, useState } from "react"
@@ -406,12 +408,13 @@ const Reservations = () => {
     const detailVisit = params.get("detail_visit")
 
     const [openEmailModal, setOpenEmailModal] = React.useState(false)
+    const [openWeChatModal, setOpenWeChatModal] = React.useState(false)
 
     /* ---------- 상담채널 이미지 매핑 ---------- */
     const helpImageMap: Record<string, string | null> = {
       ko: KakaoHelp,
       en: WhatsAppHelp,
-      zh: null, // 중국 간체 없음
+      zh: WeChatHelp,
       ja: LineHelp,
       "zh-TW": LineHelp,
       th: LineHelp,
@@ -431,8 +434,13 @@ const Reservations = () => {
     }
 
     const handleHelpClick = () => {
+      if (language === Language.CHN) {
+        setOpenWeChatModal(true)
+        return
+      }
+
       const url = HELP_LINKS[language as Language]
-      if (!url) return // 중국어(zh)는 링크 없음
+      if (!url) return
 
       window.open(url, "_blank")
     }
@@ -509,6 +517,25 @@ const Reservations = () => {
             window.location.reload()
           }}
         />
+        <Modal open={openWeChatModal} onClose={() => setOpenWeChatModal(false)} width="max-w-md">
+          <div tw="-mx-10 -my-8">
+            {/* 상단 영역 */}
+            <div tw="bg-[#F3F3F3] w-full relative">
+              <div tw="px-4 pb-3 pt-12">
+                <div tw="text-[24px] font-time text-neutral90">Peche clinic</div>
+              </div>
+
+              <button tw="absolute top-3 right-4" onClick={() => setOpenWeChatModal(false)}>
+                ✕
+              </button>
+            </div>
+
+            {/* QR 영역 */}
+            <div tw="p-6 flex justify-center bg-white">
+              <img src={wechatQrImg} alt="wechat qr" tw="w-[240px] h-[240px] object-contain" />
+            </div>
+          </div>
+        </Modal>
       </>
     )
   }

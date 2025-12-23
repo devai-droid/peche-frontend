@@ -11,6 +11,8 @@ import { Language } from "@/lib/locales/i18n.config"
 import KakaoImg from "@/assets/images/sns/kakao.png"
 import LineImg from "@/assets/images/sns/line.png"
 import WhatsAppImg from "@/assets/images/sns/whatsapp.png"
+import WeChatImg from "@/assets/images/sns/wechat.png"
+import wechatQrImg from "@/assets/images/wechat-qr.png"
 import useCustomNavigate from "@/lib/hooks/use-custom-navigate"
 import Modal from "@/lib/components/modal/modal.component"
 
@@ -576,6 +578,7 @@ const BottomButtons = ({
   const language = i18n.language as Language
 
   const navigate = useCustomNavigate()
+  const [openWeChatModal, setOpenWeChatModal] = React.useState(false)
 
   const inquiryButtons: {
     id: number
@@ -583,7 +586,8 @@ const BottomButtons = ({
     icon: string
     css: any
     lang: Language[]
-    link: string
+    link?: string
+    type?: "modal"
   }[] = [
     {
       id: 1,
@@ -625,6 +629,14 @@ const BottomButtons = ({
       lang: [Language.TWN],
       link: "https://line.me/R/ti/p/@683jgqmd",
     },
+    {
+      id: 6,
+      name: "WeChat",
+      icon: WeChatImg,
+      css: line,
+      lang: [Language.CHN],
+      type: "modal",
+    },
   ]
 
   return (
@@ -650,16 +662,43 @@ const BottomButtons = ({
           {inquiryButtons
             .filter((button) => button.lang.includes(language))
             .map((button) => (
-              <InquiryButton className="sns-btn-conversion" key={button.id} css={button.css}>
-                <a href={button.link} target="_blank" rel="noopener noreferrer">
-                  {button.icon && (
-                    <img src={button.icon} alt="snsIcon" style={{ display: "inline" }} />
-                  )}
-                </a>
+              <InquiryButton
+                key={button.id}
+                className="sns-btn-conversion"
+                css={button.css}
+                onClick={() => {
+                  if (button.type === "modal") {
+                    setOpenWeChatModal(true)
+                  }
+                }}>
+                {button.type === "modal" ? (
+                  <img src={button.icon} alt="snsIcon" />
+                ) : (
+                  <a href={button.link} target="_blank" rel="noopener noreferrer">
+                    <img src={button.icon} alt="snsIcon" />
+                  </a>
+                )}
               </InquiryButton>
             ))}
         </div>
       )}
+      <Modal open={openWeChatModal} onClose={() => setOpenWeChatModal(false)} width="max-w-md">
+        <div tw="-mx-10 -my-8">
+          <div tw="bg-[#F3F3F3] w-full relative">
+            <div tw="px-4 pb-3 pt-12">
+              <div tw="text-[24px] font-time text-neutral90">Peche clinic</div>
+            </div>
+
+            <button tw="absolute top-3 right-4" onClick={() => setOpenWeChatModal(false)}>
+              ✕
+            </button>
+          </div>
+
+          <div tw="p-6 flex justify-center bg-white">
+            <img src={wechatQrImg} alt="wechat qr" tw="w-[240px] h-[240px] object-contain" />
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

@@ -3,15 +3,18 @@ import tw from "twin.macro"
 import { useTranslation } from "react-i18next"
 import i18n from "i18next"
 import { Language } from "@/lib/locales/i18n.config"
-import { KakaoLogoMini, EmailIcon } from "@/assets/icon"
+import { KakaoLogoMini, EmailIcon, CloseIcon } from "@/assets/icon"
+import wechatQrImg from "@/assets/images/wechat-qr.png"
 import { Checkbox, Icon, Button } from "@/design-system/components"
 import KakaoHelp from "@/assets/images/sns/icon_kakao_help.png"
 import WhatsAppHelp from "@/assets/images/sns/icon_WhatsApp_help.png"
 import LineHelp from "@/assets/images/sns/icon_LINE_help.png"
+import WeChatHelp from "@/assets/images/sns/icon_WeChat_help.png"
 import { authService } from "@/lib/service/auth.service"
 import { useSearchParams } from "react-router-dom"
 import EmailAuthModal from "./email-auth-modal.component"
 import { useMe } from "@/features/user/hooks/use-user"
+import Modal from "@/lib/components/modal/modal.component"
 
 const H2 = tw.h2`text-lg font-extrabold`
 
@@ -47,6 +50,7 @@ const Auth = ({ onAuth, onAgreementChange }: Props) => {
   const [agreeMarketing, setAgreeMarketing] = React.useState(false)
 
   const [openEmailModal, setOpenEmailModal] = React.useState(false)
+  const [openWeChatModal, setOpenWeChatModal] = React.useState(false)
 
   /* 전체동의 동기화 */
   React.useEffect(() => {
@@ -86,7 +90,7 @@ const Auth = ({ onAuth, onAgreementChange }: Props) => {
   const helpImageMap: Record<string, string | null> = {
     ko: KakaoHelp,
     en: WhatsAppHelp,
-    zh: null, // 중국 간체 없음
+    zh: WeChatHelp,
     ja: LineHelp,
     "zh-TW": LineHelp,
     th: LineHelp,
@@ -106,8 +110,13 @@ const Auth = ({ onAuth, onAgreementChange }: Props) => {
   }
 
   const handleHelpClick = () => {
+    if (language === Language.CHN) {
+      setOpenWeChatModal(true)
+      return
+    }
+
     const url = HELP_LINKS[language as Language]
-    if (!url) return // 중국어(zh)는 링크 없음
+    if (!url) return
 
     window.open(url, "_blank")
   }
@@ -290,6 +299,25 @@ const Auth = ({ onAuth, onAgreementChange }: Props) => {
           onAuth(info)
         }}
       />
+      <Modal open={openWeChatModal} onClose={() => setOpenWeChatModal(false)} width="max-w-md">
+        <div tw="-mx-10 -my-8">
+          {/* 상단 회색 영역 */}
+          <div tw="bg-[#F3F3F3] w-full relative">
+            <div tw="px-4 pb-3 pt-12">
+              <div tw="text-[24px] font-time text-neutral90">Peche clinic</div>
+            </div>
+
+            <button tw="absolute top-3 right-4" onClick={() => setOpenWeChatModal(false)}>
+              <CloseIcon width={22} height={22} />
+            </button>
+          </div>
+
+          {/* QR 영역 */}
+          <div tw="p-6 flex justify-center bg-white">
+            <img src={wechatQrImg} alt="wechat qr" tw="w-[240px] h-[240px] object-contain" />
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }
