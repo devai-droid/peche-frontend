@@ -209,8 +209,10 @@ const Products = () => {
 
                     price =
                       minDiscountPrice === Infinity
-                        ? `0 ${t("reservePage.won")}`
-                        : `${minDiscountPrice.toLocaleString()} ${t("reservePage.won")}`
+                        ? `<span style="color:#AB6655">0 ${t("reservePage.won")}</span>`
+                        : `<span style="color:#AB6655">
+           ${minDiscountPrice.toLocaleString()} ${t("reservePage.won")} ~
+         </span>`
                   } else {
                     // Calculate the minimum price from product.products if available
                     const minPrice = product.products.reduce((acc, cur) => {

@@ -13,7 +13,7 @@ import { useEventBundleControllerFindVisible } from "@/lib/orval/event-bundle/ev
 import { useEventControllerFindMany } from "@/lib/orval/events/events"
 import { useProductDetailPageControllerFindOne } from "@/lib/orval/product-detail-pages/product-detail-pages"
 import { useProductControllerFindMany } from "@/lib/orval/products/products"
-import React from "react"
+import React, { useLayoutEffect } from "react"
 import { useTranslation } from "react-i18next"
 import { useParams, useSearchParams } from "react-router-dom"
 import tw from "twin.macro"
@@ -155,14 +155,17 @@ const ProductDetail = () => {
   const [showInquiryModal, setShowInquiryModal] = React.useState(false)
 
   // 최초 번들 자동 선택
-  React.useEffect(() => {
+  useLayoutEffect(() => {
     if (visibleEvents?.length && !selectedEventBundleId) {
-      setParams((prev) => {
-        prev.set("bundle", visibleEvents[0].id)
-        return prev
-      })
+      setParams(
+        (prev) => {
+          prev.set("bundle", visibleEvents[0].id)
+          return prev
+        },
+        { replace: true },
+      )
     }
-  }, [visibleEvents])
+  })
 
   if (!productDetail || !products) return <Page />
 
