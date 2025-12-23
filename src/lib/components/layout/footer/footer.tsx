@@ -1,3 +1,4 @@
+import React from "react"
 import tw, { styled } from "twin.macro"
 import CustomLink from "@/lib/components/custom-link.component"
 import {
@@ -7,9 +8,19 @@ import {
   TiktokGrayIcon,
   NaverPlaceGrayIcon,
   KakaoFriendsGrayIcon,
+  WhatsappGrayIcon,
+  WechatGrayIcon,
+  XGrayIcon,
+  LineGrayIcon,
+  LineIcon,
+  FacebookIcon,
+  CloseIcon,
 } from "@/assets/icon"
 import FooterLogoImg from "@/assets/images/peche-footer-logo.png"
 import { useTranslation } from "react-i18next"
+import { Language } from "@/lib/locales/i18n.config"
+import Modal from "@/lib/components/modal/modal.component"
+import wechatQrImg from "@/assets/images/wechat-qr.png"
 
 const FooterWrapper = tw.footer`
   w-full bg-neutral20 text-[#444] text-sm
@@ -50,21 +61,76 @@ const Spacer = styled.div`
   ${tw`block lg:hidden`}
 `
 
+type FooterSocialItem =
+  | {
+      icon: React.FC<React.SVGProps<SVGSVGElement>>
+      url: string
+      type?: undefined
+    }
+  | {
+      icon: React.FC<React.SVGProps<SVGSVGElement>>
+      type: "modal"
+      modalKey: "wechat"
+      url?: undefined
+    }
+
+const FOOTER_SOCIAL_LINKS: Record<Language, FooterSocialItem[]> = {
+  ko: [
+    { icon: NaverPlaceGrayIcon, url: "https://naver.me/FLe0V59M" },
+    { icon: NaverBlogGrayIcon, url: "https://blog.naver.com/pecheclinic" },
+    { icon: KakaoFriendsGrayIcon, url: "http://pf.kakao.com/_dxoiLn" },
+    { icon: InstaLogoGrayIcon, url: "https://www.instagram.com/peche_clinic/" },
+  ],
+  en: [
+    { icon: WhatsappGrayIcon, url: "https://wa.me/821025326285" },
+    { icon: InstaLogoGrayIcon, url: "https://www.instagram.com/pecheclinic.en/" },
+    { icon: TiktokGrayIcon, url: "https://www.tiktok.com/@pecheclinic_eng" },
+  ],
+  zh: [
+    { icon: InstaLogoGrayIcon, url: "https://www.instagram.com/pecheclinic.cn/" },
+    { icon: WechatGrayIcon, type: "modal", modalKey: "wechat" },
+  ],
+  "zh-TW": [
+    { icon: InstaLogoGrayIcon, url: "https://www.instagram.com/pecheclinic_tw/" },
+    // { icon: FacebookIcon, url: "https://www.facebook.com/profile.php?id=61582363886175" },
+    // { icon: LineGrayIcon, url: "https://line.me/R/ti/p/@683jgqmd" },
+  ],
+  ja: [
+    { icon: InstaLogoGrayIcon, url: "https://www.instagram.com/pecheclinic.jp/" },
+    // { icon: LineGrayIcon, url: "https://line.me/R/ti/p/@235wfyao" },
+    {
+      icon: TiktokGrayIcon,
+      url: "https://www.tiktok.com/@pecheclinic_jp?is_from_webapp=1&sender_device=pc",
+    },
+    { icon: XGrayIcon, url: "https://x.com/pecheclinic_jp" },
+  ],
+  th: [
+    { icon: InstaLogoGrayIcon, url: "https://www.instagram.com/pecheclinic_th/" },
+    { icon: FacebookIcon, url: "https://www.facebook.com/profile.php?id=61582230961269" },
+    // { icon: LineGrayIcon, url: "https://line.me/R/ti/p/@892druai" },
+    { icon: TiktokGrayIcon, url: "https://www.tiktok.com/@pecheclinic_th" },
+  ],
+}
+
 interface FooterProps {
   bottomCartExists?: boolean
 }
 
 const Footer = ({ bottomCartExists = false }: FooterProps) => {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const language = i18n.language as Language
+  const [openWeChatModal, setOpenWeChatModal] = React.useState(false)
 
-  const socialLinks = [
-    { icon: NaverPlaceGrayIcon, url: "https://blog.naver.com/" },
-    { icon: NaverBlogGrayIcon, url: "https://blog.naver.com/" },
-    { icon: InstaLogoGrayIcon, url: "https://www.instagram.com/" },
-    { icon: KakaoFriendsGrayIcon, url: "https://www.kakaocorp.com/" },
-    { icon: YoutubeGrayIcon, url: "https://www.youtube.com/" },
-    { icon: TiktokGrayIcon, url: "https://www.tiktok.com/" },
-  ]
+  const socialLinks = FOOTER_SOCIAL_LINKS[language] ?? FOOTER_SOCIAL_LINKS.ko
+
+  // const socialLinks = [
+  //   { icon: NaverPlaceGrayIcon, url: "https://blog.naver.com/" },
+  //   { icon: NaverBlogGrayIcon, url: "https://blog.naver.com/" },
+  //   { icon: InstaLogoGrayIcon, url: "https://www.instagram.com/" },
+  //   { icon: KakaoFriendsGrayIcon, url: "https://www.kakaocorp.com/" },
+  //   { icon: YoutubeGrayIcon, url: "https://www.youtube.com/" },
+  //   { icon: TiktokGrayIcon, url: "https://www.tiktok.com/" },
+  // ]
 
   return (
     <FooterWrapper>
@@ -89,16 +155,49 @@ const Footer = ({ bottomCartExists = false }: FooterProps) => {
           </PolicyLinks>
 
           <SNSIcons>
-            {socialLinks.map(({ icon: IconComponent, url }, i) => (
-              <IconLink key={i} href={url} target="_blank" rel="noopener noreferrer">
-                <IconComponent tw="w-[24px] h-[24px]" />
-              </IconLink>
-            ))}
+            {socialLinks.map((item, i) => {
+              const Icon = item.icon
+
+              if (item.type === "modal") {
+                return (
+                  <button
+                    key={i}
+                    onClick={() => setOpenWeChatModal(true)}
+                    className="sns-btn-conversion"
+                    tw="flex items-center hover:opacity-60 transition">
+                    <Icon width={24} height={24} />
+                  </button>
+                )
+              }
+
+              return (
+                <IconLink key={i} href={item.url} target="_blank" rel="noopener noreferrer">
+                  <Icon width={24} height={24} />
+                </IconLink>
+              )
+            })}
           </SNSIcons>
         </BottomRow>
       </FooterInner>
       {/* 상담받기 버튼/카트 유무에 따라 height 조정 */}
       <Spacer className={bottomCartExists ? "h-[90px]" : "h-[40px]"} />
+      <Modal open={openWeChatModal} onClose={() => setOpenWeChatModal(false)} width="max-w-md">
+        <div tw="-mx-10 -my-8">
+          <div tw="bg-[#F3F3F3] w-full relative">
+            <div tw="px-4 pb-3 pt-12">
+              <div tw="text-[24px] font-time text-neutral90">Peche clinic</div>
+            </div>
+
+            <button tw="absolute top-3 right-4" onClick={() => setOpenWeChatModal(false)}>
+              <CloseIcon width={22} height={22} />
+            </button>
+          </div>
+
+          <div tw="p-6 flex justify-center bg-white">
+            <img src={wechatQrImg} alt="" tw="w-[240px] h-[240px] object-contain" />
+          </div>
+        </div>
+      </Modal>
     </FooterWrapper>
   )
 }

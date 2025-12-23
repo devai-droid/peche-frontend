@@ -285,7 +285,7 @@ const Events = () => {
         </div>
 
         <div tw="w-full bg-gray-100 overflow-hidden">
-          <img src={imageUrl} alt={name} tw="w-full object-cover md:h-[380px] h-[250px]" />
+          <img src={imageUrl} alt={name} tw="w-full object-cover md:h-[380px]" />
         </div>
       </div>
     )

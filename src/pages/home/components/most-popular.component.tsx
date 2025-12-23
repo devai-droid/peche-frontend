@@ -88,6 +88,7 @@ const StyledSwiperWrapper = styled.div`
 
 const StyledSwiperSlide = styled(SwiperSlide)`
   width: 321px !important;
+  flex-shrink: 0;
 `
 
 const CardLabel = styled.div`
@@ -117,14 +118,19 @@ const MostPopular = () => {
     width: 321px;
     height: 321px;
     margin: 0 auto;
+    transform: translateZ(0); /* 레이어 고정 */
 
+    .img-wrap {
+      ${tw`w-full h-full overflow-hidden`}
+    }
     img {
       ${tw`w-full h-full object-cover transition-transform duration-500`}
       transform: scale(1);
+      will-change: transform;
     }
 
     &:hover img {
-      transform: scale(1.5); /* 🔥 150% 확대 */
+      transform: scale(1.05); /* 105% 확대 */
     }
   `
 
@@ -185,7 +191,9 @@ const MostPopular = () => {
                     .map((item) => (
                       <StyledSwiperSlide key={item.id}>
                         <ImageCardLink to={`/products/${item.productDetailPageId}`}>
-                          <img src={item.image?.url} alt="" />
+                          <div className="img-wrap">
+                            <img src={item.image?.url} alt="" />
+                          </div>
                           <CardLabel>{tv(item, "title")}</CardLabel>
                         </ImageCardLink>
                       </StyledSwiperSlide>

@@ -57,12 +57,12 @@ const StyledSwiperWrapper = styled.div`
   }
 
   .nav-prev {
-    top: 39%;
+    top: 46%;
     left: 0px;
   }
 
   .nav-next {
-    top: 39%;
+    top: 46%;
     right: 0px;
   }
 

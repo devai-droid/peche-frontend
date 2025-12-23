@@ -41,7 +41,7 @@ const ButtonGroup = tw.div`
 `
 
 const SolidButton = tw.button`
-  flex-1 bg-primary text-white py-2 md:py-2 text-[15px] font-medium hover:opacity-90 transition
+  flex-1 bg-primary text-white py-2 md:py-2 text-[15px] font-medium hover:bg-secondary3 transition
 `
 
 const OutlineButton = tw.button`
@@ -74,7 +74,7 @@ const Location = () => {
   const [openWeChatModal, setOpenWeChatModal] = React.useState(false)
 
   const handleChatClick = () => {
-    if (language === "ko" || language === "en") {
+    if (language === "ko") {
       window.open("https://pf.kakao.com/_dxoiLn", "_blank")
       return
     }
@@ -90,11 +90,13 @@ const Location = () => {
       return
     }
 
+    if (language === "en") {
+      window.open("https://wa.me/821025326285", "_blank")
+      return
+    }
+
     if (language === "th") {
-      window.open(
-        "https://www.tiktok.com/@pecheclinic_th?is_from_webapp=1&sender_device=pc",
-        "_blank",
-      )
+      window.open("https://line.me/R/ti/p/@892druai", "_blank")
       return
     }
 

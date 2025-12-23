@@ -18,13 +18,21 @@ const Overlay = tw.div`
 `
 
 const ModalOuter = tw.div`
-  w-full md:w-[900px] mt-[4rem] md:mt-[9rem]
-  bg-[#FEF5EA] rounded-t-none shadow-xl
+  w-full md:w-[900px]
+  mt-[4rem] md:mt-[9rem]
+  bg-[#FEF5EA]
+  rounded-t-none shadow-xl
+  h-[700px]
+  flex flex-col
 `
 
 // 내부 박스 (화이트 영역)
 const ModalInner = tw.div`
-  bg-white w-full rounded-none py-2 px-[24px] md:px-10 md:min-h-[400px] min-h-[250px]
+  bg-white w-full rounded-none
+  py-2 px-[24px] md:px-10
+  flex-1
+  overflow-y-auto
+  min-h-0
 `
 
 const HeaderArea = tw.div`
@@ -41,7 +49,7 @@ const Title = styled.h2`
 // 검색 UI
 const SearchBar = tw.div`
   flex items-center bg-white border-b-[1.6px] border-neutral20
-  rounded-none px-4 py-3 shadow-sm max-w-[600px] sm:mx-auto mb-4 mx-[24px]
+  rounded-none px-4 py-3 shadow-sm w-auto md:w-[750px] sm:mx-auto mb-4 mx-[24px]
 `
 
 const Input = tw.input`
@@ -51,7 +59,7 @@ const Input = tw.input`
 // 추천 검색어
 const SuggestBox = tw.div`
   flex flex-wrap gap-3 text-[14px] md:text-[16px] text-neutral70
-  max-w-[600px] sm:mx-auto mx-[24px]
+  w-auto md:w-[750px] sm:mx-auto mx-[24px]
   mb-6
 `
 

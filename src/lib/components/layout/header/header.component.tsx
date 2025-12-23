@@ -2,22 +2,20 @@
 import React, { useEffect, useState } from "react"
 import tw from "twin.macro"
 import {
-  CalendarIcon,
   CloseIcon,
   HamburgerIcon,
   SearchIcon,
   ShoppingIcon,
   NaverBlogIcon,
   InstaLogoIcon,
-  YoutubeIcon,
   TiktokIcon,
   NaverPlaceIcon,
   KakaoFriendsIcon,
-  XiaoIcon,
   WechatIcon,
   XIcon,
   FacebookIcon,
   LineIcon,
+  WhatsappIcon,
 } from "@/assets/icon"
 import wechatQrImg from "@/assets/images/wechat-qr.png"
 import { IconButton, Logo, MobileLogo } from "@/design-system/components"
@@ -71,6 +69,7 @@ const SOCIAL_LINKS: Record<Language, SocialItem[]> = {
     { icon: InstaLogoIcon, url: "https://www.instagram.com/peche_clinic/" },
   ],
   en: [
+    { icon: WhatsappIcon, url: "https://wa.me/821025326285" },
     { icon: InstaLogoIcon, url: "https://www.instagram.com/pecheclinic.en/" },
     { icon: TiktokIcon, url: "https://www.tiktok.com/@pecheclinic_eng?lang=ko-KR" },
   ],

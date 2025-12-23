@@ -78,14 +78,14 @@
   "location": {
     "hours": "เวลาทำการคลินิก",
     "directions": "ทิศทาง",
-    "weekdayHours": "วันธรรมดา: 10.30 - 21.00 น.",
-    "weekendHours": "วันหยุดสุดสัปดาห์และวันหยุดนักขัตฤกษ์: 10.00 - 18.00 น.",
+    "weekdayHours": "วันธรรมดา: 10:30 - 21:00 น.",
+    "weekendHours": "วันหยุดสุดสัปดาห์และวันหยุดนักขัตฤกษ์: 10:00 - 18:00 น.",
     "lunch": "※ เปิดตลอดทั้งปี โดยไม่มีช่วงพักกลางวัน",
     "address1": "364 Gangnam-daero, 3F, Gangnam-gu, Seoul",
     "address2": "(Yeoksam-dong, Miwang Building)",
     "subway": "※ ด้านหน้าทางออกที่ 4 ของสถานี Gangnam",
     "leftButton1": "จองนัดหมาย",
-    "leftButton2": "ไปที่ TikTok",
+    "leftButton2": "แชทบน LINE",
     "rightButton1": "ดูบน Naver Place",
     "rightButton2": "ดูบนแผนที่ Kakao"
   },

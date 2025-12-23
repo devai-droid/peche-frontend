@@ -54,19 +54,19 @@ const LinkButton = styled.button`
   background: none;
   border: none;
   cursor: pointer;
+  transition: color 0.2s ease; /* 텍스트 색상만 부드럽게 */
 
-  svg {
-    transition: transform 0.2s ease;
+  &:hover {
+    color: #ab6655;
   }
 
-  &:hover svg {
-    transform: translateX(3px);
+  svg {
+    transition: none;
   }
 `
 
 const IntroductionSection = () => {
-  const tv = useLanguageValue()
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
 
   return (
     <Section>
@@ -77,7 +77,7 @@ const IntroductionSection = () => {
           <CustomLink to="/intro">
             <LinkButton>
               {t("introduction.goTo")}
-              <ChevronRightIcon width={16} height={16} />
+              <ChevronRightIcon width={16} height={16} stroke="currentColor" />
             </LinkButton>
           </CustomLink>
         </TextBox>
