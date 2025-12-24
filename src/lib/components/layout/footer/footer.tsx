@@ -4,7 +4,6 @@ import CustomLink from "@/lib/components/custom-link.component"
 import {
   NaverBlogGrayIcon,
   InstaLogoGrayIcon,
-  YoutubeGrayIcon,
   TiktokGrayIcon,
   NaverPlaceGrayIcon,
   KakaoFriendsGrayIcon,
@@ -12,8 +11,7 @@ import {
   WechatGrayIcon,
   XGrayIcon,
   LineGrayIcon,
-  LineIcon,
-  FacebookIcon,
+  FacebookGrayIcon,
   CloseIcon,
 } from "@/assets/icon"
 import FooterLogoImg from "@/assets/images/peche-footer-logo.png"
@@ -92,12 +90,12 @@ const FOOTER_SOCIAL_LINKS: Record<Language, FooterSocialItem[]> = {
   ],
   "zh-TW": [
     { icon: InstaLogoGrayIcon, url: "https://www.instagram.com/pecheclinic_tw/" },
-    // { icon: FacebookIcon, url: "https://www.facebook.com/profile.php?id=61582363886175" },
-    // { icon: LineGrayIcon, url: "https://line.me/R/ti/p/@683jgqmd" },
+    { icon: FacebookGrayIcon, url: "https://www.facebook.com/profile.php?id=61582363886175" },
+    { icon: LineGrayIcon, url: "https://line.me/R/ti/p/@683jgqmd" },
   ],
   ja: [
     { icon: InstaLogoGrayIcon, url: "https://www.instagram.com/pecheclinic.jp/" },
-    // { icon: LineGrayIcon, url: "https://line.me/R/ti/p/@235wfyao" },
+    { icon: LineGrayIcon, url: "https://line.me/R/ti/p/@235wfyao" },
     {
       icon: TiktokGrayIcon,
       url: "https://www.tiktok.com/@pecheclinic_jp?is_from_webapp=1&sender_device=pc",
@@ -106,8 +104,8 @@ const FOOTER_SOCIAL_LINKS: Record<Language, FooterSocialItem[]> = {
   ],
   th: [
     { icon: InstaLogoGrayIcon, url: "https://www.instagram.com/pecheclinic_th/" },
-    { icon: FacebookIcon, url: "https://www.facebook.com/profile.php?id=61582230961269" },
-    // { icon: LineGrayIcon, url: "https://line.me/R/ti/p/@892druai" },
+    { icon: FacebookGrayIcon, url: "https://www.facebook.com/profile.php?id=61582230961269" },
+    { icon: LineGrayIcon, url: "https://line.me/R/ti/p/@892druai" },
     { icon: TiktokGrayIcon, url: "https://www.tiktok.com/@pecheclinic_th" },
   ],
 }

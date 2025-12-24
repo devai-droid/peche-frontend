@@ -347,7 +347,7 @@ const Events = () => {
                       !isSelected &&
                         (isFirstRow
                           ? tw`bg-[#FEF5EA] hover:(bg-tertiary) text-black hover:(text-primary)`
-                          : tw`bg-white hover:(bg-tertiary) font-normal text-black hover:(text-primary)`),
+                          : tw`bg-white font-normal text-black hover:(text-primary)`),
                     ]}>
                     <div tw="px-2 overflow-hidden text-ellipsis text-[13px] sm:text-[15px] md:text-[17px]">
                       {tv(category, "name")}

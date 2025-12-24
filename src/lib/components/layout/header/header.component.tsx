@@ -85,12 +85,12 @@ const SOCIAL_LINKS: Record<Language, SocialItem[]> = {
   ],
   ja: [
     { icon: InstaLogoIcon, url: "https://www.instagram.com/pecheclinic.jp/" },
+    { icon: LineIcon, url: "https://line.me/R/ti/p/@235wfyao" },
     {
       icon: TiktokIcon,
       url: "https://www.tiktok.com/@pecheclinic_jp?is_from_webapp=1&sender_device=pc",
     },
     { icon: XIcon, url: "https://x.com/pecheclinic_jp" },
-    { icon: LineIcon, url: "https://line.me/R/ti/p/@235wfyao" },
   ],
   th: [
     { icon: InstaLogoIcon, url: "https://www.instagram.com/pecheclinic_th/" },

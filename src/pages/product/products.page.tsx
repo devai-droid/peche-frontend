@@ -162,7 +162,7 @@ const Products = () => {
                     item,
                     selectedCategoryId === category.id
                       ? tw`text-white bg-primary`
-                      : tw`text-neutralBlack hover:(bg-tertiary) hover:(text-primary)`,
+                      : tw`text-neutralBlack hover:(text-primary)`,
                   ]}>
                   <div tw="px-2 overflow-hidden text-ellipsis text-[13px] sm:text-[15px] md:text-[17px]">
                     {tv(category, "name")}

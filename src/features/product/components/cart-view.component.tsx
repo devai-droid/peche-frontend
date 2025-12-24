@@ -171,7 +171,11 @@ const SurgeryList = () => {
           </Button>
         </div>
 
-        <div>
+        <div
+          tw="flex-1 overflow-auto mt-2"
+          css={{
+            maxHeight: "500px",
+          }}>
           {cart.map((item) => (
             <SurgeryItem
               key={item.event?.id || item.product?.id}
@@ -473,7 +477,7 @@ const BottomSheet = () => {
               <div
                 tw="overflow-auto pr-2 flex-1"
                 css={{
-                  minHeight: "0",
+                  maxHeight: "220px",
                 }}>
                 <div tw="flex flex-col">
                   {cart.map((item) => {
