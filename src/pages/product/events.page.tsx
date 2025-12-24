@@ -462,7 +462,7 @@ const Events = () => {
 
           <div tw="flex w-full gap-2 mt-8">
             <Button
-              tw="w-[150px]"
+              tw="w-[150px] text-[13px] md:text-[15px]"
               style={{ variant: "outlined", color: "point", size: "sm" }}
               onClick={() => {
                 setShowInquiryModal(false)
@@ -472,7 +472,7 @@ const Events = () => {
             </Button>
 
             <Button
-              tw="w-[150px]"
+              tw="w-[150px] text-[13px] md:text-[15px] px-[10px]"
               style={{ variant: "filled", color: "point", size: "sm" }}
               onClick={() => {
                 setInquiry(false)

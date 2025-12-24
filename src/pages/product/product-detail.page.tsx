@@ -370,14 +370,14 @@ const ProductDetail = () => {
 
           <div tw="flex justify-end gap-2 mt-8">
             <Button
-              tw="w-[150px]"
+              tw="w-[150px] text-[13px] md:text-[15px]"
               style={{ variant: "outlined", color: "point", size: "sm" }}
               onClick={() => setShowInquiryModal(false)}>
               취소하기
             </Button>
 
             <Button
-              tw="w-[150px]"
+              tw="w-[150px] text-[13px] md:text-[15px] px-[10px]"
               style={{ variant: "filled", color: "point", size: "sm" }}
               onClick={() => {
                 setInquiry(false)

@@ -599,7 +599,15 @@ const Reservations = () => {
 
       {/* ---------------- 변경 모달 ---------------- */}
       <Modal open={!!changeId} title="예약 변경" onClose={() => setChangeId(null)}>
-        <div tw="p-4">
+        <div
+          tw="p-4 overflow-y-auto"
+          css={{
+            maxHeight: "700px",
+            "@media (max-width: 640px)": {
+              maxHeight: "85vh",
+            },
+            WebkitOverflowScrolling: "touch", // 모바일 스크롤 부드럽게
+          }}>
           <Calendar
             value={today}
             onChange={(v) => v && setToday(v)}
