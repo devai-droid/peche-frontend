@@ -47,24 +47,6 @@ const HeaderNavigator = () => {
   const [searchParams] = useSearchParams()
   const [isOpenAllMenu, setIsOpenAllMenu] = React.useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
-  const urlType = searchParams.get("type")
-  // 나중에 수정해야됨. 첫 시술 고르는 부분임
-  // function getDefaultType() {
-  //   return dummyTreatments[0].children[0].id
-  // }
-
-  // function resolveChildType(type: string | null) {
-  //   if (!type) return getDefaultType()
-
-  //   // 모든 child를 하나의 array로 펼친 뒤 검색
-  //   const allChildren = dummyTreatments.flatMap((g) => g.children)
-
-  //   const found = allChildren.find((c) => c.id === type)
-
-  //   return found ? found.id : getDefaultType()
-  // }
-
-  // const selectedType = resolveChildType(urlType)
 
   // 페이지 변경될 때 전체 시술 페이지면 드롭다운 자동 오픈
   React.useEffect(() => {
@@ -125,6 +107,7 @@ const HeaderNavigator = () => {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
   const handleSelectFromDropdown = (item: any) => {
     customNavigate(`/treatment?type=${item.id}`)
     setIsOpenAllMenu(false)

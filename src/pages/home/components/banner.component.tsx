@@ -1,4 +1,3 @@
-import { useTranslation } from "react-i18next"
 import tw, { styled } from "twin.macro"
 import bannerImg from "@/assets/images/landing-page/landing.jpeg"
 import bannerMobileImg from "@/assets/images/landing-page/mobile-landing.jpeg"
@@ -13,7 +12,7 @@ const BannerWrapper = styled.section`
   }
 `
 
-// ✅ 이미지 중앙에 고정 + max-width 제한
+// 이미지 중앙에 고정 + max-width 제한
 const BannerImageContainer = styled.div`
   ${tw`absolute inset-0 flex justify-center bg-neutral`}
 `
@@ -24,7 +23,7 @@ const BannerImage = styled.img`
   width: 100%;
 `
 
-// ✅ 이 컨테이너가 로고 포함 (1440px 제한)
+// 이 컨테이너가 로고 포함 (1440px 제한)
 const BannerContentWrapper = styled.div`
   ${tw`
     absolute inset-0 flex flex-col justify-center
@@ -49,8 +48,6 @@ const BannerLogo = styled.img`
 `
 
 const Banner = () => {
-  const { i18n } = useTranslation()
-
   return (
     <BannerWrapper>
       <BannerImageContainer>

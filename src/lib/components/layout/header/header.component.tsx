@@ -155,7 +155,7 @@ const LeftMenu = ({
   )
 }
 
-const RightMenu = ({ isDesktop, setOpenSearch, isMenuOpen, setIsMenuOpen }: MenuProps) => {
+const RightMenu = ({ isDesktop, isMenuOpen, setIsMenuOpen }: MenuProps) => {
   const { t } = useTranslation()
   const navigate = useCustomNavigate()
   const [openSearchModal, setOpenSearchModal] = React.useState(false)

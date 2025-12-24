@@ -22,6 +22,7 @@ const AllTreatmentPage = () => {
   const [searchParams] = useSearchParams()
   const type = searchParams.get("type")
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [selected, setSelected] = useState<any>(null)
 
   // 🔥 eslint-friendly 버전

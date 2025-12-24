@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable no-alert */
 // reserve.page.tsx
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React from "react"
@@ -22,7 +24,6 @@ import {
 } from "@/lib/orval/reservations/reservations"
 import { DEFAULT_CONSULTATION_PRODUCT_ID } from "@/lib/constants/reservation.constants"
 import { env } from "@/lib/env"
-import { useSearchParams } from "react-router-dom"
 import { Language } from "@/lib/locales/i18n.config"
 import { useTranslation } from "react-i18next"
 import { userControllerUpdateMine } from "@/lib/orval/users/users"
@@ -62,7 +63,9 @@ const SurgeryItem = ({ item, updateCartItem, checked, onCheck }: SurgeryItemProp
   const { t, i18n } = useTranslation()
   const language = i18n.language as Language
 
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const name = tv(item.product ?? item.event!, "name")
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const description = tv(item.product ?? item.event!, "description")
   const discount = item.event?.discountPrice
   const price = item.event?.price || item.product?.price
@@ -242,7 +245,7 @@ const SurgeryList = ({
         <hr tw="border-t border-neutral20 my-4" />
         <div tw="flex gap-2 my-6 justify-center">
           <LinkButton
-            to="/products"
+            to="/events"
             tw="flex justify-center items-center gap-2"
             style={{ flexible: true, variant: "outlined" }}>
             {t("reservePage.addTreatments")}

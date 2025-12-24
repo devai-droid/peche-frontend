@@ -143,6 +143,8 @@ const Events = () => {
   const selectedCategoryId = params.get("category")
   const selectedEventBundleId = params.get("bundle")
   const [showInquiryModal, setShowInquiryModal] = React.useState(false)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [pendingAddEvent, setPendingAddEvent] = React.useState<any>(null)
 
   const keyMatch = {
     ko: "",
@@ -155,14 +157,15 @@ const Events = () => {
   const { i18n } = useTranslation()
   const lang = i18n.language as keyof typeof keyMatch
 
-  const { addToCart, resetCart, inquiry, setInquiry } = useCart()
+  const { addToCart, inquiry, setInquiry } = useCart()
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleAddToCart = (event: any) => {
     // 상담모드일 경우 → addToCart가 blockedByInquiry=true 반환함
-    const result = addToCart(item)
+    const result = addToCart(event)
 
     if (result?.blockedByInquiry) {
+      setPendingAddEvent(event)
       setShowInquiryModal(true)
       return
     }
@@ -225,6 +228,13 @@ const Events = () => {
     })
   }
 
+  React.useEffect(() => {
+    if (!inquiry && pendingAddEvent) {
+      addToCart(pendingAddEvent)
+      setPendingAddEvent(null)
+    }
+  }, [inquiry])
+
   useLayoutEffect(() => {
     if (
       visibleEvents?.length &&
@@ -266,8 +276,8 @@ const Events = () => {
   // visibleEvents에 선택된 번들의 날짜 정보가 있음
   const selectedBundle = visibleEvents?.find((b) => b.id === selectedEventBundleId)
 
-  const eventStartDate = selectedBundle?.startDate
-  const eventEndDate = selectedBundle?.endDate
+  // const eventStartDate = selectedBundle?.startDate
+  // const eventEndDate = selectedBundle?.endDate
 
   const EventCategoryBanner = ({
     name,
@@ -454,7 +464,10 @@ const Events = () => {
             <Button
               tw="w-[150px]"
               style={{ variant: "outlined", color: "point", size: "sm" }}
-              onClick={() => setShowInquiryModal(false)}>
+              onClick={() => {
+                setShowInquiryModal(false)
+                setPendingAddEvent(null)
+              }}>
               취소하기
             </Button>
 

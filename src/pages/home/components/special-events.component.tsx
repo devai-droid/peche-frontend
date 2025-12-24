@@ -6,7 +6,6 @@ import "swiper/css"
 import "swiper/css/navigation"
 import leftArrow from "@/assets/images/left-arrow.png"
 import rightArrow from "@/assets/images/right-arrow.png"
-import { useNavigate } from "react-router-dom"
 import CustomLink from "@/lib/components/custom-link.component"
 import { useEventCategoryControllerFindManyWithPaginationQuery } from "@/lib/orval/event-categories/event-categories"
 import { useEventBundleControllerFindVisible } from "@/lib/orval/event-bundle/event-bundle"
@@ -119,7 +118,6 @@ const Discount = tw.span`
 `
 
 const SpecialEventSection = () => {
-  const nav = useNavigate()
   const langQuery = useLanguageQuery()
   const tv = useLanguageValue()
   const { t, i18n } = useTranslation()
@@ -142,10 +140,6 @@ const SpecialEventSection = () => {
   const imageCategories = categories?.items?.filter((cat) => !!cat.image?.url) ?? []
 
   if (imageCategories.length === 0) return null
-
-  const handleClick = (categoryId: string) => {
-    nav(`/events?category=${categoryId}&bundle=${firstBundleId}`)
-  }
 
   const formatEventPrice = (lang: Language, discountPercent?: number, minPrice?: number) => {
     const priceStr = minPrice?.toLocaleString()

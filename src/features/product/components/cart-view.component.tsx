@@ -144,16 +144,13 @@ const SurgeryList = () => {
     setInquiry(checked)
   }
 
-  const selectedCount = checkedList.length
-  const totalCount = cart.length
-
   return (
     <>
       <div tw="pl-5 pr-4 py-6 bg-white font-pretendard tracking-tight leading-[150%]">
         <div tw="flex justify-between items-center pb-4 border-b border-b-[0.5px] border-neutral30">
           <div tw="font-bold text-[18px] md:text-[22px] flex items-center gap-1">
             {t("cart.shoppingCart")}
-            <span tw="text-primary text-[16px] md:text-[18px] font-semibold">
+            <span tw="text-primary text-[13px] md:text-[15px] font-semibold">
               ({checkedList.length}/{cart.length})
             </span>
           </div>
@@ -392,7 +389,7 @@ const BottomSheet = () => {
         <div tw="flex justify-between items-center">
           <div tw="font-semibold text-[18px] md:text-[22px]">
             {t("cart.shoppingCart")}{" "}
-            <span tw="text-primary font-semibold">
+            <span tw="text-primary font-semibold text-[13px] md:text-[15px]">
               ({checkedList.length}/{cart.length})
             </span>
           </div>

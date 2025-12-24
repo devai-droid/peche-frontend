@@ -7,11 +7,8 @@ import { authControllerAuthenticateByKakao } from "@/lib/orval/auth/auth"
 const KAKAO_OAUTH_HOST = "https://kauth.kakao.com/oauth"
 
 const authService = {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   loginWithKakaoSDK: (pathVisit: string | null, detailVisit: string | null) => {
-    // const encodedStates =
-    //   pathVisit && detailVisit
-    //     ? encodeURIComponent(`?path_visit=${pathVisit}&detail_visit=${detailVisit}`)
-    //     : ""
     const currentPath = window.location.pathname + window.location.search
     const encodedState = encodeURIComponent(currentPath)
 

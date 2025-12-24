@@ -103,7 +103,7 @@ const CardLabel = styled.div`
 const MostPopular = () => {
   const [openId, setOpenId] = useState<string | null>(null)
   const tv = useLanguageValue()
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
 
   const { data: categories } = useMostPopularCategoryControllerFindAll()
 

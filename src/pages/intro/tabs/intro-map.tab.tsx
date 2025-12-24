@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import KakaoMap from "@/lib/components/kakao-map/kakao-map.component"
+// import KakaoMap from "@/lib/components/kakao-map/kakao-map.component"
 import GoogleMapComponent from "@/lib/components/google-map/google-map.component"
 import AppMaxWidth from "@/lib/components/layout/app-max-width.component"
 import { useTranslation } from "react-i18next"

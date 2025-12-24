@@ -3,7 +3,6 @@ import tw, { styled } from "twin.macro"
 import introImg from "@/assets/images/introduction.png"
 import { ChevronRightIcon } from "@/assets/icon"
 import CustomLink from "@/lib/components/custom-link.component"
-import useLanguageValue from "@/lib/hooks/use-language-key"
 import { useTranslation } from "react-i18next"
 
 const Section = styled.section`

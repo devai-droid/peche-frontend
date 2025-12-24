@@ -1,5 +1,4 @@
 import React, { useEffect } from "react"
-import tw from "twin.macro"
 import { Dropdown, DropdownItem, Icon } from "@/design-system/components"
 import { useTranslation } from "react-i18next"
 import useResponsive from "@/lib/hooks/use-responsive"
@@ -59,7 +58,7 @@ const HeaderLanguage = () => {
   const language = displayLanguages.find((lang) => lang.key === i18n.language)
   return (
     <Dropdown
-      element={({ openDropdown, open }) => (
+      element={({ openDropdown }) => (
         <button onClick={openDropdown} tw="flex items-center">
           {isDesktop ? (
             <div tw="font-pretendard mr-2">{language?.value}</div>

@@ -3,7 +3,6 @@ import tw, { styled } from "twin.macro"
 import { CloseIcon } from "@/assets/icon"
 import wechatQrImg from "@/assets/images/wechat-qr.png"
 import GoogleMapComponent from "@/lib/components/google-map/google-map.component"
-import useLanguageValue from "@/lib/hooks/use-language-key"
 import { useTranslation } from "react-i18next"
 import useCustomNavigate from "@/lib/hooks/use-custom-navigate"
 import { Language } from "@/lib/locales/i18n.config"
@@ -66,7 +65,6 @@ const InfoTextWrapper = tw.div`
 `
 
 const Location = () => {
-  const tv = useLanguageValue()
   const { t, i18n } = useTranslation()
   const navigate = useCustomNavigate()
   const language = i18n.language as Language

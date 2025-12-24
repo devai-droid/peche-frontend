@@ -1,8 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-param-reassign */
 import React from "react"
 import tw, { styled } from "twin.macro"
 import Page from "@/lib/components/layout/page.component"
-import KakaoMap from "@/lib/components/kakao-map/kakao-map.component"
 import GoogleMapComponent from "@/lib/components/google-map/google-map.component"
 import CartView from "@/features/product/components/cart-view.component"
 
@@ -21,7 +21,7 @@ import "swiper/css"
 import beauty from "@/assets/images/beauty.png"
 import trust from "@/assets/images/trust.png"
 import transparency from "@/assets/images/transparency.png"
-import { GrayPlusIcon, CloseIcon } from "@/assets/icon"
+import { GrayPlusIcon } from "@/assets/icon"
 import interior1 from "@/assets/images/interior1.png"
 import interior2 from "@/assets/images/interior2.png"
 import interior3 from "@/assets/images/interior3.png"
@@ -31,11 +31,9 @@ import trustPic2 from "@/assets/images/trust-pic2.jpg"
 import trustPic3 from "@/assets/images/trust-pic3.jpg"
 import trustPic4 from "@/assets/images/trust-pic4.jpg"
 import crewPicture from "@/assets/images/crew-picture.jpg"
-import wechatQrImg from "@/assets/images/wechat-qr.png"
 import { useTranslation } from "react-i18next"
 import useCustomNavigate from "@/lib/hooks/use-custom-navigate"
 import { Language } from "@/lib/locales/i18n.config"
-import Modal from "@/lib/components/modal/modal.component"
 
 const PageContainer = tw.div`w-full flex flex-col items-center bg-white`
 

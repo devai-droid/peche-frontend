@@ -2,10 +2,6 @@ import { createBrowserRouter, Navigate, Outlet, ScrollRestoration } from "react-
 import Home from "@/pages/home/home.page"
 import Intro from "@/pages/intro/intro.page"
 import IntroHospital from "@/pages/intro/tabs/intro-hospital.tab"
-import IntroDoctor from "@/pages/intro/tabs/intro-doctor.tab"
-import IntroWorker from "@/pages/intro/tabs/intro-worker.tab"
-import IntroMachine from "@/pages/intro/tabs/intro-machine.tab"
-import IntroMap from "@/pages/intro/tabs/intro-map.tab"
 import AllTreatmentPage from "@/pages/treatment/all-treatment.page"
 import Products from "@/pages/product/products.page"
 import ProductDetail from "@/pages/product/product-detail.page"
@@ -73,9 +69,9 @@ const router = createBrowserRouter([
         children: [
           { path: "", element: <IntroHospital /> },
           // { path: "doctor", element: <IntroDoctor /> },
-          { path: "worker", element: <IntroWorker /> },
-          { path: "machine", element: <IntroMachine /> },
-          { path: "way", element: <IntroMap /> },
+          // { path: "worker", element: <IntroWorker /> },
+          // { path: "machine", element: <IntroMachine /> },
+          // { path: "way", element: <IntroMap /> },
         ],
       },
       { path: "blog", element: <Blog /> },

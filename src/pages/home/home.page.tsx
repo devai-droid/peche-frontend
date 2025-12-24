@@ -3,7 +3,6 @@ import EventModal from "./components/event-modal.component"
 import Banner from "./components/banner.component"
 import MostPopular from "./components/most-popular.component"
 import IntroductionSection from "./components/introduction-section.component"
-import TodayKeywords from "./components/today-keywords.component"
 import SpecialEventSection from "./components/special-events.component"
 import SearchSection from "./components/search-section.component"
 import Location from "./components/location.component"
@@ -39,10 +38,6 @@ const Home = () => {
   const popups = mainPopupList?.items
 
   const [clickedKeyword, setClickedKeyword] = useState("")
-  const handleKeywordClick = (keyword: string) => {
-    setClickedKeyword(keyword)
-    return keyword
-  }
 
   const expireEvents: LocalStorageEvent = JSON.parse(
     LocalStorage.get(LocalStorageKeys.Events) || "{}",

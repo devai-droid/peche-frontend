@@ -153,6 +153,15 @@ const ProductDetail = () => {
 
   const [showAllProducts, setShowAllProducts] = React.useState(false)
   const [showInquiryModal, setShowInquiryModal] = React.useState(false)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [pendingAddItem, setPendingAddItem] = React.useState<any>(null)
+
+  React.useEffect(() => {
+    if (!inquiry && pendingAddItem) {
+      addToCart(pendingAddItem)
+      setPendingAddItem(null)
+    }
+  }, [inquiry])
 
   // 최초 번들 자동 선택
   useLayoutEffect(() => {
@@ -189,6 +198,7 @@ const ProductDetail = () => {
       addToCart: () => {
         const result = addToCart({ event })
         if (result?.blockedByInquiry) {
+          setPendingAddItem({ event })
           setShowInquiryModal(true)
         }
       },
@@ -208,6 +218,7 @@ const ProductDetail = () => {
     addToCart: () => {
       const result = addToCart({ product })
       if (result?.blockedByInquiry) {
+        setPendingAddItem({ product })
         setShowInquiryModal(true)
       }
     },
@@ -218,12 +229,6 @@ const ProductDetail = () => {
 
   const DISPLAY_LIMIT = 5
   const displayedList = showAllProducts ? mergedList : mergedList.slice(0, DISPLAY_LIMIT)
-
-  // 마지막 이벤트 index
-  const lastEventIndex = dedupedEventList.length - 1
-
-  // 마지막 일반 상품 index (mergedList 기준 X, normalProducts 기준)
-  const lastNormalIndex = normalProducts.length - 1
 
   return (
     <Page hiddenFooter={false} bottomCartExists tw="bg-neutral">

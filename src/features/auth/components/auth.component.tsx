@@ -160,6 +160,7 @@ const Auth = ({ onAuth, onAgreementChange }: Props) => {
           <div tw="flex justify-start">
             <Button
               onClick={() => {
+                // eslint-disable-next-line no-alert
                 const confirmLogout = window.confirm(t("reservePage.logoutConfirm"))
                 if (confirmLogout) {
                   localStorage.removeItem("authToken")

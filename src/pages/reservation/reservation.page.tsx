@@ -33,7 +33,6 @@ import {
 } from "@/lib/orval/reservations/reservations"
 
 import { Reservation, AvailableReservationResultDto } from "@/lib/orval/model"
-import { isAfter, isSameDay } from "date-fns"
 
 // ─────────────────────────────────
 // Accordion 스타일 (MostPopular 디자인 동일 적용)
@@ -106,8 +105,6 @@ const Reservations = () => {
   // ─────────────────────────────────
   const activeReservations: Reservation[] = []
   const pastReservations: Reservation[] = []
-
-  const now = new Date()
 
   React.useEffect(() => {
     setAuthenticated(!!user?.id)
@@ -231,6 +228,7 @@ const Reservations = () => {
 
   const changeReservation = async () => {
     if (!selectedDatetime) return
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     await updateReservation({ id: changeId!, data: { datetime: selectedDatetime } })
     alert("예약이 변경되었습니다.")
     setChangeId(null)
@@ -310,13 +308,9 @@ const Reservations = () => {
     const products = r.products.map((p) => p.product.name)
     const events = r.events.map((e) => e.event.name)
 
-    const datetime = r.datetime.replace("T", " ").slice(0, 16)
-
     const totalPrice =
       r.products.reduce((a, p) => a + p.product.price, 0) +
       r.events.reduce((a, e) => a + (e.event.discountPrice || e.event.price), 0)
-
-    const contact = user?.phoneNumber || user?.email || "-"
 
     const datetimeDisplay = formatKstDatetime(r.datetime)
 
@@ -401,7 +395,6 @@ const Reservations = () => {
     const { i18n } = useTranslation()
     const { language } = i18n
     const isKorean = language === "ko"
-    const { user: me } = useMe()
 
     const [params] = useSearchParams()
     const pathVisit = params.get("path_visit")
@@ -512,7 +505,7 @@ const Reservations = () => {
         <EmailAuthModal
           open={openEmailModal}
           onClose={() => setOpenEmailModal(false)}
-          onComplete={(info) => {
+          onComplete={() => {
             setOpenEmailModal(false)
             window.location.reload()
           }}

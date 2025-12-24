@@ -1,5 +1,3 @@
-import { CloseIcon } from "@/assets/icon"
-import { IconButton } from "@/design-system/components"
 import MuiModal, { ModalProps } from "@mui/material/Modal"
 
 interface Props extends ModalProps {

@@ -5,7 +5,7 @@ import { CSSTransition } from "react-transition-group"
 import { useTranslation } from "react-i18next"
 import { Language } from "@/lib/locales/i18n.config"
 import { IconButton } from "@/design-system/components"
-import { CloseIcon, SearchSmallIcon, SearchPrimaryIcon } from "@/assets/icon"
+import { CloseIcon, SearchPrimaryIcon } from "@/assets/icon"
 import CustomLink from "@/lib/components/custom-link.component"
 
 import { useSearchKeywordControllerFindMany } from "@/lib/orval/search-keywords/search-keywords"
