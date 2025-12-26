@@ -104,16 +104,16 @@ const EmailAuthModal = ({ open, onClose, onComplete }: Props) => {
         <div tw="-my-8 w-full">
           <div tw="p-10 lg:p-14 text-center font-pretendard">
             <p tw="text-[18px] md:text-[22px] font-semibold leading-[1.4] mb-6">
-              <span tw="text-primary">입력하신 이메일 주소로</span>
+              <span tw="text-primary">{t("auth.codeSentText1")}</span>
               <br />
-              인증코드가 발송되었습니다.
+              {t("auth.codeSentText2")}
             </p>
 
             <Button
               tw="w-full h-[48px] text-[16px] font-semibold bg-[#C97A60]"
               style={{ variant: "filled" }}
               onClick={onCloseCodeModal}>
-              확인
+              {t("auth.confirm")}
             </Button>
           </div>
         </div>
@@ -136,16 +136,16 @@ const EmailAuthModal = ({ open, onClose, onComplete }: Props) => {
             {/* 제목 */}
             <div tw="mb-4">
               <div tw="text-[18px] lg:text-[22px] font-extrabold">
-                <span tw="text-primary">이메일</span>
-                <span tw="text-neutralBlack"> 인증</span>
+                <span tw="text-primary">{t("auth.email")}</span>
+                <span tw="text-neutralBlack"> {t("auth.auth")}</span>
               </div>
             </div>
 
             {/* 이름 입력 */}
             <div tw="mb-4">
-              <p tw="mb-2 text-[13px] lg:text-[14px] font-semibold">이름</p>
+              <p tw="mb-2 text-[13px] lg:text-[14px] font-semibold">{t("auth.name")}</p>
               <Input
-                placeholder="이름을 입력해주세요."
+                placeholder={t("auth.namePlaceholder")}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 tw="w-full flex-1 min-w-0 h-[40px] pl-2 text-[15px] lg:text-[17px] border border-neutral20"
@@ -154,11 +154,11 @@ const EmailAuthModal = ({ open, onClose, onComplete }: Props) => {
 
             {/* 이메일 입력 */}
             <div tw="mb-6">
-              <p tw="mb-2 text-[13px] lg:text-[14px] font-semibold">이메일 주소</p>
+              <p tw="mb-2 text-[13px] lg:text-[14px] font-semibold">{t("auth.emailAddress")}</p>
 
               <div tw="flex gap-2 items-center">
                 <Input
-                  placeholder="이메일을 입력해주세요."
+                  placeholder={t("auth.emailAddressPlaceholder")}
                   value={email}
                   onChange={(e) => {
                     const lower = e.target.value.toLowerCase()
@@ -181,16 +181,16 @@ const EmailAuthModal = ({ open, onClose, onComplete }: Props) => {
                     if (!name.trim() || !emailValid) return
                     createEmailCode({ data: { email } })
                   }}>
-                  인증번호 받기
+                  {t("auth.sendCode")}
                 </Button>
               </div>
 
               {emailTouched && email.length > 0 && (
                 <div tw="mt-2 text-[13px] lg:text-[14px]">
                   {emailValid ? (
-                    <span tw="text-green-600">✔ 올바른 이메일 주소입니다.</span>
+                    <span tw="text-green-600">{t("auth.emailValid")}</span>
                   ) : (
-                    <span tw="text-red-500">❗ 유효하지 않은 이메일 주소입니다.</span>
+                    <span tw="text-red-500">{t("auth.emailError")}</span>
                   )}
                 </div>
               )}
@@ -198,11 +198,11 @@ const EmailAuthModal = ({ open, onClose, onComplete }: Props) => {
 
             {/* 인증 코드 입력 */}
             <div tw="mb-6">
-              <p tw="mb-2 text-[13px] lg:text-[14px] font-semibold">인증코드</p>
+              <p tw="mb-2 text-[13px] lg:text-[14px] font-semibold">{t("auth.authCode")}</p>
 
               <div tw="flex gap-2 items-center">
                 <Input
-                  placeholder="인증코드를 입력해주세요."
+                  placeholder={t("auth.authCodePlaceholder")}
                   value={code}
                   onChange={(e) => {
                     setCode(e.target.value)
@@ -221,14 +221,12 @@ const EmailAuthModal = ({ open, onClose, onComplete }: Props) => {
                       data: { email, code, name },
                     })
                   }>
-                  인증하기
+                  {t("auth.authButton")}
                 </Button>
               </div>
 
               {codeTouched && codeError && (
-                <div tw="mt-2 text-[13px] lg:text-[14px] text-red-500">
-                  ❗ 인증번호가 일치하지 않습니다.
-                </div>
+                <div tw="mt-2 text-[13px] lg:text-[14px] text-red-500">{t("auth.authError")}</div>
               )}
             </div>
 
@@ -237,7 +235,7 @@ const EmailAuthModal = ({ open, onClose, onComplete }: Props) => {
               tw="w-full h-[40px] text-[13px] lg:text-[15px] font-normal bg-tertiaryDark border-tertiaryDark"
               style={{ variant: "filled" }}
               onClick={onClose}>
-              본인인증 완료
+              {t("auth.authComplete")}
             </Button>
           </div>
         </div>

@@ -293,7 +293,12 @@
     "reservationDateTime": "预订日期和时间",
     "reservationChangeCheck": "您想更改预订吗？",
     "reservationChangeConfirm": "顾客的预约变更已完成。",
-    "reservationCancelConfirm": "您的预订已被取消"
+    "reservationCancelConfirm": "您的预订已被取消",
+    "reservationModalTitle": "예약을 확정하시겠습니까?",
+    "reservationModalText1": "- 미성년자인 경우 반드시 보호자와 동행해주세요.",
+    "reservationModalText2": "- 상담 후 당일 시술하지 않는 경우 별도 진료비가 발생할 수 있습니다.",
+    "reservationModalCancelButton": "취소하기",
+    "reservationModalReserveButton": "예약하기"
   },
   "cart": {
     "shoppingCart": "购物车",
@@ -310,7 +315,10 @@
     "emptyCartTitle": "如果您的购物车中包含手术项目，则无法选择现场咨询。",
     "emptyCartText": "请在预约咨询前取消勾选所有已选疗程。",
     "cancel": "取消",
-    "emptyCart": "全部清除"
+    "emptyCart": "全部清除",
+    "emptyVisitThenSelectText1": "방문 상담이 담겨있는 상태에서는 시술 선택이 어렵습니다.",
+    "emptyVisitThenSelectText2": "방문 상담을 비운 후 시술을 담아주세요.",
+    "emptyVisitThenSelectButton": "방문 상담 비우기"
   },
   "reservationCheckPage": {
     "reservationCheck": "预订确认",
@@ -337,7 +345,22 @@
     "authSuccess": "您的身份验证已完成。",
     "name": "이름",
     "phone": "연락처",
-    "email": "이메일"
+    "email": "이메일",
+    "auth": "인증",
+    "emailAddress": "이메일 주소",
+    "emailAddressPlaceholder": "이메일을 입력해주세요.",
+    "namePlaceholder": "이름을 입력해주세요.",
+    "sendCode": "인증번호 받기",
+    "emailValid": "✔ 올바른 이메일 주소입니다.",
+    "emailError": "❗ 유효하지 않은 이메일 주소입니다.",
+    "authCode": "인증코드",
+    "authCodePlaceholder": "인증코드를 입력해주세요.",
+    "authButton": "인증하기",
+    "authError": "❗ 인증번호가 일치하지 않습니다.",
+    "authComplete": "본인인증 완료",
+    "codeSentText1": "입력하신 이메일 주소로",
+    "codeSentText2": "인증코드가 발송되었습니다.",
+    "confirm": "확인"
   },
   "blog": {
     "title": "博客",

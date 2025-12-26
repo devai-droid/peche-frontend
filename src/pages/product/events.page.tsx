@@ -449,15 +449,15 @@ const Events = () => {
       </div>
       <Modal
         open={showInquiryModal}
-        width="max-w-[400px]"
+        width="max-w-[400px] font-pretendard"
         onClose={() => setShowInquiryModal(false)}>
         <div tw="flex flex-col items-start justify-center h-full">
           <div tw="text-left text-[16px] lg:text-[18px] font-semibold leading-snug">
-            방문 상담이 담겨있는 상태에서는 시술 선택이 어렵습니다.
+            {t("cart.emptyVisitThenSelectText1")}
           </div>
 
           <div tw="text-neutral70 text-[14px] lg:text-[16px] text-left mt-3">
-            방문 상담을 비운 후 시술을 담아주세요.
+            {t("cart.emptyVisitThenSelectText2")}
           </div>
 
           <div tw="flex w-full gap-2 mt-8">
@@ -468,7 +468,7 @@ const Events = () => {
                 setShowInquiryModal(false)
                 setPendingAddEvent(null)
               }}>
-              취소하기
+              {t("cart.cancel")}
             </Button>
 
             <Button
@@ -478,7 +478,7 @@ const Events = () => {
                 setInquiry(false)
                 setShowInquiryModal(false)
               }}>
-              방문 상담 비우기
+              {t("cart.emptyVisitThenSelectButton")}
             </Button>
           </div>
         </div>

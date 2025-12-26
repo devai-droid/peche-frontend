@@ -651,11 +651,14 @@ const Reserve = () => {
       </div>
       <Modal open={confirmOpen} onClose={() => setConfirmOpen(false)} width="max-w-[480px]">
         <div tw="font-pretendard">
-          <div tw="text-[16px] md:text-[18px] font-semibold mb-4">예약을 확정하시겠습니까?</div>
+          <div tw="text-[16px] md:text-[18px] font-semibold mb-4">
+            {t("reservePage.reservationModalTitle")}
+          </div>
 
           <div tw="text-neutral70 leading-[150%] text-[14px] md:text-[16px] mb-8">
-            - 미성년자인 경우 반드시 보호자와 동행해주세요.
-            <br />- 상담 후 당일 시술하지 않는 경우 별도 진료비가 발생할 수 있습니다.
+            {t("reservePage.reservationModalText1")}
+            <br />
+            {t("reservePage.reservationModalText2")}
           </div>
 
           <div tw="flex gap-2 justify-center">
@@ -663,14 +666,14 @@ const Reserve = () => {
               tw="flex-1 h-[40px] text-[13px] md:text-[15px]"
               style={{ variant: "outlined", color: "point", size: "sm" }}
               onClick={() => setConfirmOpen(false)}>
-              취소하기
+              {t("reservePage.reservationModalCancelButton")}
             </Button>
 
             <Button
               tw="flex-1 h-[40px] text-[13px] md:text-[15px]"
               style={{ variant: "filled", color: "point", size: "sm" }}
               onClick={reserveConfirm}>
-              예약하기
+              {t("reservePage.reservationModalReserveButton")}
             </Button>
           </div>
         </div>
