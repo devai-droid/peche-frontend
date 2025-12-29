@@ -129,7 +129,7 @@ const Auth = ({ onAuth, onAgreementChange }: Props) => {
         <div tw="mt-4 mb-3 border-t border-neutral20" />
 
         <p tw="font-bold mb-3 text-[14px] lg:text-[16px]">
-          {t("reservePage.authTitle")}
+          {t("auth.identityVerification")}
           <span tw="text-error">*</span>
         </p>
       </div>
@@ -151,7 +151,7 @@ const Auth = ({ onAuth, onAgreementChange }: Props) => {
 
           {authInfo.email && (
             <div tw="flex mb-2">
-              <span tw="w-[70px] text-neutral50">{t("auth.email")}</span>
+              <span tw="w-[70px] text-neutral50">{t("auth.emailAddress")}</span>
               <span tw="text-neutral50">{authInfo.email}</span>
             </div>
           )}
@@ -207,11 +207,9 @@ const Auth = ({ onAuth, onAgreementChange }: Props) => {
               {/* 제목 + 설명문구 */}
               <div tw="flex flex-col md:flex-row md:items-center gap-1 mb-3">
                 <span tw="text-[15px] font-semibold whitespace-nowrap">
-                  {t("reservePage.helpChannelTitle", "상담채널")}
+                  {t("auth.counselingChannel")}
                 </span>
-                <span tw="text-[14px] text-neutral60">
-                  {t("reservePage.helpChannelDesc", "SNS 채널을 통해 빠르게 상담받아보세요.")}
-                </span>
+                <span tw="text-[14px] text-neutral60">{t("auth.counselingChannelText")}</span>
               </div>
 
               {/* 버튼 */}

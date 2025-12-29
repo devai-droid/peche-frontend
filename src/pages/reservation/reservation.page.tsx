@@ -445,7 +445,7 @@ const Reservations = () => {
           <img tw="w-[97px] mx-auto mb-4" src={LogoText} alt="Logo" />
 
           <div tw="text-center text-[18px] md:text-[22px] font-semibold">
-            {t("reservePage.loginRequiredMessage", "본인 인증")}
+            {t("auth.identityVerification")}
           </div>
         </div>
 
@@ -487,11 +487,11 @@ const Reservations = () => {
           <div tw="w-full flex flex-col items-start px-4 md:px-0 max-w-[460px] mx-auto">
             <div tw="text-[14px] md:text-[16px] mb-3 font-semibold">
               <span tw="text-[15px] font-semibold whitespace-nowrap">
-                {t("reservePage.helpChannelTitle", "상담채널")}
+                {t("auth.counselingChannel")}
               </span>
 
               <span tw="text-[13px] md:text-[14px] text-neutral60 mt-1 md:mt-0 pl-2">
-                {t("reservePage.helpChannelDesc", "SNS 채널을 통해 빠르게 상담받아보세요.")}
+                {t("auth.counselingChannelText")}
               </span>
             </div>
 

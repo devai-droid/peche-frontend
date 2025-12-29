@@ -269,7 +269,9 @@
     "marketingNotice": "마케팅활용에 동의하시면 특가 이벤트 및 할인 정보를 받아보실 수 있습니다.",
     "detail": "약관보기",
     "reservationComplete": "예약 완료",
-    "reservationCompleteText": "예약이 완료되었습니다.",
+    "reservationCompleteTitle": "예약이 완료되었습니다.",
+    "reservationCompleteText": "일정 확인 후 빠르게 예약 확정 알림톡을 보내드립니다.\n같은 예약 내역으로 1분 이내에 중복 신청하실 경우\n자동 처리되지 않을 수 있으니 참고하시기 바랍니다.",
+    "kakaoConsult": "카카오톡 상담하기",
     "checkConfirmationText": "예약 확정 문자를 꼭 확인해주세요.",
     "contactMessage": "예약 내용에 따라 시술진행이 불가능한 경우 개별 연락 드리겠습니다.",
     "reservationCheckChangeCancel": "예약 확인/변경/취소",
@@ -360,7 +362,10 @@
     "authComplete": "본인인증 완료",
     "codeSentText1": "입력하신 이메일 주소로",
     "codeSentText2": "인증코드가 발송되었습니다.",
-    "confirm": "확인"
+    "confirm": "확인",
+    "identityVerification": "본인인증",
+    "counselingChannel": "상담채널",
+    "counselingChannelText": "SNS 채널을 통해 빠르게 상담받아보세요."
   },
   "blog": {
     "title": "Blog",
