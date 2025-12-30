@@ -334,7 +334,10 @@
     "reservationDate": "예약일시",
     "treatmentList": "예약시술명",
     "totalPrice": "총 금액",
-    "vatNotIncluded": "원(부가세별도)"
+    "vatNotIncluded": "원(부가세별도)",
+    "reservationCancel": "예약 취소",
+    "reservationChange": "예약 변경",
+    "rebook": "같은 정보로 재예약하기"
   },
   "error": {
     "verificationNeeded": "본인인증이 필요합니다.",

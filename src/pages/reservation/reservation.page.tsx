@@ -24,6 +24,7 @@ import { useTranslation } from "react-i18next"
 import { useMe } from "@/features/user/hooks/use-user"
 import utc from "dayjs/plugin/utc"
 import timezone from "dayjs/plugin/timezone"
+import localizedFormat from "dayjs/plugin/localizedFormat"
 
 import {
   reservationControllerGetAvailableReservationByDay,
@@ -33,6 +34,45 @@ import {
 } from "@/lib/orval/reservations/reservations"
 
 import { Reservation, AvailableReservationResultDto } from "@/lib/orval/model"
+
+import "dayjs/locale/en"
+import "dayjs/locale/zh-cn"
+import "dayjs/locale/ja"
+import "dayjs/locale/zh-tw"
+import "dayjs/locale/th"
+
+dayjs.extend(localizedFormat)
+dayjs.extend(utc)
+dayjs.extend(timezone)
+
+const DATE_FORMAT_BY_LANG: Record<string, (d: dayjs.Dayjs) => string> = {
+  ko: (d) => {
+    const yoilMap = ["일", "월", "화", "수", "목", "금", "토"]
+    return d.format(`YYYY/MM/DD(${yoilMap[d.day()]}) HH:mm`)
+  },
+
+  en: (d) => d.locale("en").format("dddd, MMMM D, YYYY, h:mm A"),
+
+  zh: (d) => d.locale("zh-cn").format("YYYY年M月D日，dddd，A h:mm"),
+
+  "zh-TW": (d) => d.locale("zh-tw").format("YYYY年M月D日，dddd，A h:mm"),
+
+  ja: (d) => d.locale("ja").format("YYYY年M月D日（ddd）A h時mm分"),
+
+  th: (d) => {
+    // 태국: 불교력 (서기 + 543)
+    const buddhistYear = d.year() + 543
+    return d.locale("th").format(`วันddddที่ D MMMM พ.ศ. ${buddhistYear} เวลา HH:mm น.`)
+  },
+}
+
+const formatReservationDatetime = (dt: string, language: string) => {
+  const d = dayjs(dt.replace("Z", "")).tz("Asia/Seoul")
+
+  const formatter = DATE_FORMAT_BY_LANG[language] ?? DATE_FORMAT_BY_LANG.ko
+
+  return formatter(d)
+}
 
 // ─────────────────────────────────
 // Accordion 스타일 (MostPopular 디자인 동일 적용)
@@ -84,7 +124,8 @@ const TimeButton = ({ selected, children, ...props }: { selected?: boolean } & a
 // 본문 시작
 // ─────────────────────────────────
 const Reservations = () => {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const { language } = i18n
   const { user } = useMe()
   const [authenticated, setAuthenticated] = React.useState(!!user?.id)
   dayjs.extend(utc)
@@ -272,7 +313,7 @@ const Reservations = () => {
             // setCurrentEvents(r.events.map((e) => e.event.id))
             // setChangeId(r.id)
           }}>
-          같은 정보로 재예약하기
+          {t("reservationCheckPage.customerInfo")}
         </Button>
       )
     }
@@ -284,7 +325,7 @@ const Reservations = () => {
           tw="flex-1 text-[13px] md:text-[15px]"
           style={{ variant: "outlined", color: "point", size: "sm" }}
           onClick={() => setCancelId(r.id)}>
-          예약 취소
+          {t("reservationCheckPage.reservationCancel")}
         </Button>
 
         <Button
@@ -295,7 +336,7 @@ const Reservations = () => {
             setCurrentEvents(r.events.map((e) => e.event.id))
             setChangeId(r.id)
           }}>
-          예약 변경
+          {t("reservationCheckPage.reservationChange")}
         </Button>
       </div>
     )
@@ -312,13 +353,11 @@ const Reservations = () => {
       r.products.reduce((a, p) => a + p.product.price, 0) +
       r.events.reduce((a, e) => a + (e.event.discountPrice || e.event.price), 0)
 
-    const datetimeDisplay = formatKstDatetime(r.datetime)
-
     // 지난 예약인지 계산
     const isPast = dayjs(r.datetime).isBefore(dayjs())
 
     return (
-      <Card tw="bg-white px-6 pb-6 flex flex-col gap-6">
+      <Card key={r.id} tw="bg-white px-6 pb-6 flex flex-col gap-6">
         {/* ---------------- 고객정보 ---------------- */}
         <div>
           <div tw="font-semibold text-[16px] md:text-[18px] mb-3 text-neutralBlack">
@@ -349,7 +388,7 @@ const Reservations = () => {
 
           <Row>
             <Label>{t("reservationCheckPage.reservationDate")}</Label>
-            <div tw="text-neutral60">{datetimeDisplay}</div>
+            <div tw="text-neutral60">{formatReservationDatetime(r.datetime, language)}</div>
           </Row>
 
           <Row>
@@ -377,7 +416,9 @@ const Reservations = () => {
     return (
       <AccordionItem key={date}>
         <AccordionHeader open={isOpen} onClick={() => toggle(date)}>
-          <span tw="text-[16px] md:text-[18px]">{formatKstDatetime(list[0].datetime)}</span>
+          <span tw="text-[16px] md:text-[18px]">
+            {formatReservationDatetime(list[0].datetime, language)}
+          </span>
 
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2">
             <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
@@ -392,8 +433,6 @@ const Reservations = () => {
   }
 
   const AuthButtons = () => {
-    const { i18n } = useTranslation()
-    const { language } = i18n
     const isKorean = language === "ko"
 
     const [params] = useSearchParams()
@@ -535,13 +574,6 @@ const Reservations = () => {
 
   const [openId, setOpenId] = useState<string | null>(null)
   const toggle = (id: string) => setOpenId(openId === id ? null : id)
-
-  const formatKstDatetime = (dt: string) => {
-    const d = dayjs(dt.replace("Z", ""))
-    const yoilMap = ["일", "월", "화", "수", "목", "금", "토"]
-    const yoil = yoilMap[d.day()]
-    return d.format(`YYYY/MM/DD(${yoil}) HH:mm`)
-  }
 
   const H1 = tw.h1`text-xl font-bold`
 
