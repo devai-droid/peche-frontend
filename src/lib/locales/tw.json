@@ -337,7 +337,11 @@
     "vatNotIncluded": "원(부가세별도)",
     "reservationCancel": "取消預訂",
     "reservationChange": "更改預訂",
-    "rebook": "使用相同資訊重新預訂"
+    "rebook": "使用相同資訊重新預訂",
+    "cancel": "取消",
+    "cancelConfirm": "您確定要取消預訂嗎？",
+    "back": "回去",
+    "reservationCanceled": "預訂已取消"
   },
   "error": {
     "verificationNeeded": "需要本人认证。",

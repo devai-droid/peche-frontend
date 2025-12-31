@@ -296,7 +296,7 @@ const Reservations = () => {
           disabled
           tw="w-full mt-2 text-[13px] md:text-[15px]"
           style={{ variant: "outlined", color: "point", size: "sm" }}>
-          예약 취소됨
+          {t("reservationCheckPage.reservationCanceled")}
         </Button>
       )
     }
@@ -632,7 +632,7 @@ const Reservations = () => {
       {/* ---------------- 변경 모달 ---------------- */}
       <Modal open={!!changeId} title="예약 변경" onClose={() => setChangeId(null)}>
         <div
-          tw="p-4 overflow-y-auto"
+          tw="p-4 overflow-y-auto font-pretendard"
           css={{
             maxHeight: "700px",
             "@media (max-width: 640px)": {
@@ -648,24 +648,26 @@ const Reservations = () => {
 
           <div tw="flex justify-end gap-2 mt-6">
             <Button style={{ color: "black" }} onClick={() => setChangeId(null)}>
-              취소
+              {t("reservationCheckPage.cancel")}
             </Button>
             <Button disabled={!selectedDatetime} onClick={changeReservation}>
-              변경하기
+              {t("reservationCheckPage.reservationChange")}
             </Button>
           </div>
         </div>
       </Modal>
 
       {/* ---------------- 취소 모달 ---------------- */}
-      <Modal open={!!cancelId} title="예약 취소" onClose={() => setCancelId(null)}>
-        <div tw="p-4 text-center">
-          정말 예약을 취소하시겠습니까?
+      <Modal open={!!cancelId} onClose={() => setCancelId(null)}>
+        <div tw="p-4 text-center font-pretendard">
+          {t("reservationCheckPage.cancelConfirm")}
           <div tw="flex justify-end gap-2 mt-6">
             <Button style={{ color: "black" }} onClick={() => setCancelId(null)}>
-              뒤로
+              {t("reservationCheckPage.back")}
             </Button>
-            <Button onClick={cancelReservation}>예약 취소</Button>
+            <Button onClick={cancelReservation}>
+              {t("reservationCheckPage.reservationCancel")}
+            </Button>
           </div>
         </div>
       </Modal>

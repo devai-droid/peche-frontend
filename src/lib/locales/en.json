@@ -337,7 +337,11 @@
     "vatNotIncluded": "원(부가세별도)",
     "reservationCancel": "Cancel reservation",
     "reservationChange": "Change reservation",
-    "rebook": "Rebook with the same information"
+    "rebook": "Rebook with the same information",
+    "cancel": "Cancel",
+    "cancelConfirm": "Are you sure you want to cancel your reservation?",
+    "back": "Go back",
+    "reservationCanceled": "Reservation canceled"
   },
   "error": {
     "verificationNeeded": "Identity verification is required.",

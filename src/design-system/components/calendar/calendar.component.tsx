@@ -109,7 +109,7 @@ const Calendar = ({ disabledDate, footer, ...props }: CalendarProp) => {
               position: "absolute",
               inset: 0,
               margin: "auto",
-              width: "4.5rem",
+              width: "50px",
               height: "2.5rem",
               backgroundColor: "#DA7F67",
               zIndex: -1,

@@ -337,7 +337,11 @@
     "vatNotIncluded": "원(부가세별도)",
     "reservationCancel": "ยกเลิกการจอง",
     "reservationChange": "เปลี่ยนแปลงการจอง",
-    "rebook": "จองใหม่โดยใช้ข้อมูลเดิม"
+    "rebook": "จองใหม่โดยใช้ข้อมูลเดิม",
+    "cancel": "ยกเลิก",
+    "cancelConfirm": "คุณแน่ใจหรือไม่ว่าต้องการยกเลิกการจอง?",
+    "back": "กลับไป",
+    "reservationCanceled": "การจองถูกยกเลิก"
   },
   "error": {
     "verificationNeeded": "จำเป็นต้องมีการยืนยันส่วนบุคคล",
