@@ -151,6 +151,8 @@ interface SurgeryListProps {
   updateCartItem: (item: CartItem) => void
   inquiry: boolean
   setInquiry: (value: boolean) => void
+  inquiryMemo: string
+  setInquiryMemo: (value: string) => void
   removeFromCart: (ids: string[]) => void
 }
 
@@ -159,6 +161,8 @@ const SurgeryList = ({
   updateCartItem,
   inquiry,
   setInquiry,
+  inquiryMemo,
+  setInquiryMemo,
   removeFromCart,
 }: SurgeryListProps) => {
   const { checkedList, setCheckedList, resetCart } = useCart()
@@ -223,6 +227,42 @@ const SurgeryList = ({
 
       <hr tw="mt-3 mb-5" />
 
+      {inquiryChecked && cart.length === 0 && (
+        <div tw="mt-4 px-1 flex-none">
+          {/* 체크박스 + 이름 */}
+          <div tw="flex items-center text-[14px] font-semibold mb-2">
+            <Checkbox
+              checked={inquiryChecked}
+              onChange={(e) => handleInquiryCheckbox(e.target.checked)}
+              label={t("cart.visitThenSelect")}
+            />
+          </div>
+
+          {/* 가격 (0원) */}
+          <div tw="flex items-center gap-2 mb-4 ml-10">
+            <span tw="text-neutral50 line-through text-[13px]">{t("cart.freePrice")}</span>
+            <span tw="text-[16px] font-bold text-neutralBlack">{t("cart.freePrice")}</span>
+          </div>
+
+          {/* 상담 요청사항 */}
+          <div tw="text-primary text-[10px] md:text-[12px] font-semibold mb-2 pl-10">
+            {t("cart.request")}
+          </div>
+
+          <div tw="flex items-end gap-2 mx-10 w-[85%] md:w-[92%]">
+            <textarea
+              tw="flex-1 p-3 border border-neutral20 rounded-[1px] text-[14px] h-32"
+              placeholder={t("cart.writeRequest")}
+              value={inquiryMemo}
+              maxLength={200}
+              onChange={(e) => setInquiryMemo(e.target.value)}
+            />
+
+            <div tw="text-neutral50 text-[12px] mb-1">{inquiryMemo.length}/200</div>
+          </div>
+        </div>
+      )}
+
       <div tw="pl-4 pr-4">
         <div>
           {cart.map((item) => (
@@ -242,7 +282,7 @@ const SurgeryList = ({
             />
           ))}
         </div>
-        <hr tw="border-t border-neutral20 my-4" />
+        {!inquiryChecked && <hr tw="border-t border-neutral20 my-4" />}
         <div tw="flex gap-2 my-6 justify-center">
           <LinkButton
             to="/events"
@@ -269,16 +309,18 @@ const SurgeryList = ({
         width="max-w-[400px]"
         onClose={() => setShowInquiryModal(false)}>
         <div tw="flex flex-col items-start justify-center h-full font-pretendard">
-          <div tw="text-left text-[16px] font-semibold leading-snug">
+          <div tw="text-left text-[16px] lg:text-[18px] font-semibold leading-snug">
             {t("cart.emptyCartTitle")}
           </div>
 
-          <div tw="text-neutral70 text-left mt-3">{t("cart.emptyCartText")}</div>
+          <div tw="text-neutral70 text-left text-[14px] lg:text-[16px] mt-3">
+            {t("cart.emptyCartText")}
+          </div>
 
           <div tw="flex justify-end gap-2 mt-8">
             <Button
-              tw="w-[150px]"
-              style={{ variant: "outlined", color: "point", size: "lg" }}
+              tw="w-[150px] text-[13px] md:text-[15px]"
+              style={{ variant: "outlined", color: "point", size: "sm" }}
               onClick={() => {
                 setInquiryChecked(false) // UI 상태 끄기
                 setInquiry(false) // 전역 상태 끄기
@@ -288,8 +330,8 @@ const SurgeryList = ({
             </Button>
 
             <Button
-              tw="w-[150px]"
-              style={{ variant: "filled", color: "point", size: "lg" }}
+              tw="w-[150px] text-[13px] md:text-[15px] px-[10px]"
+              style={{ variant: "filled", color: "point", size: "sm" }}
               onClick={() => {
                 resetCart() // 🔥 모든 시술 비우기
                 setInquiry(true) // 방문 상담 활성화
@@ -315,6 +357,8 @@ const Reserve = () => {
   const {
     inquiry,
     setInquiry,
+    inquiryMemo,
+    setInquiryMemo,
     cart,
     updateCartItem,
     removeFromCart,
@@ -405,6 +449,7 @@ const Reserve = () => {
             datetime: selectedDatetime.replace("Z", ""),
             productIds: getProductIdsWithInquiry(),
             eventIds: getCheckedEventIds(),
+            userMemo: inquiryMemo || undefined,
           },
         },
         {
@@ -597,6 +642,8 @@ const Reserve = () => {
                   updateCartItem={updateCartItem}
                   inquiry={inquiry}
                   setInquiry={setInquiry}
+                  inquiryMemo={inquiryMemo}
+                  setInquiryMemo={setInquiryMemo}
                   removeFromCart={removeFromCart}
                 />
               </div>

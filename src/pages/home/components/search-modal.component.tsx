@@ -60,7 +60,7 @@ const Input = tw.input`
 const SuggestBox = tw.div`
   flex flex-wrap gap-3 text-[14px] md:text-[16px] text-neutral70
   w-auto md:w-[750px] sm:mx-auto mx-[24px]
-  mb-6
+  mb-[32px]
 `
 
 const SuggestTitle = tw.span`font-semibold text-neutralBlack mr-2`

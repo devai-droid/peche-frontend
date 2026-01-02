@@ -157,7 +157,7 @@ const Events = () => {
   const { i18n } = useTranslation()
   const lang = i18n.language as keyof typeof keyMatch
 
-  const { addToCart, inquiry, setInquiry } = useCart()
+  const { addToCart, inquiry, setInquiry, setInquiryMemo } = useCart()
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleAddToCart = (event: any) => {
@@ -476,6 +476,7 @@ const Events = () => {
               style={{ variant: "filled", color: "point", size: "sm" }}
               onClick={() => {
                 setInquiry(false)
+                setInquiryMemo("")
                 setShowInquiryModal(false)
               }}>
               {t("cart.emptyVisitThenSelectButton")}

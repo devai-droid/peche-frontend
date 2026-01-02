@@ -13,7 +13,7 @@ const Section = tw.section`
 `
 
 const Inner = tw.div`
-  max-w-[1440px] mx-auto flex flex-col md:flex-row items-stretch overflow-hidden rounded-none
+  max-w-[1440px] mx-auto px-0 md:px-10 flex flex-col md:flex-row items-stretch overflow-hidden rounded-none
 `
 
 const ImageBox = styled.div`

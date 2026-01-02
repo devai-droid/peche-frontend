@@ -109,7 +109,7 @@ const ProductItem = ({
 
 const ProductDetail = () => {
   const { t, i18n } = useTranslation()
-  const { addToCart, inquiry, setInquiry } = useCart()
+  const { addToCart, inquiry, setInquiry, setInquiryMemo } = useCart()
   const { id } = useParams<{ id: string }>()
   const langQuery = useLanguageQuery()
   const tv = useLanguageValue()
@@ -381,6 +381,7 @@ const ProductDetail = () => {
               style={{ variant: "filled", color: "point", size: "sm" }}
               onClick={() => {
                 setInquiry(false)
+                setInquiryMemo("")
                 setShowInquiryModal(false)
               }}>
               {t("cart.emptyVisitThenSelectButton")}
