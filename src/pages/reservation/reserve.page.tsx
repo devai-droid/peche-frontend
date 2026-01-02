@@ -3,22 +3,20 @@
 // reserve.page.tsx
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React from "react"
-import { CalendarSimpleIcon, CloseIcon, PlusPrimaryIcon } from "@/assets/icon"
+import { CalendarSimpleIcon, PlusPrimaryIcon } from "@/assets/icon"
 import { Button, Calendar, Checkbox, Icon, LinkButton } from "@/design-system/components"
 import Auth from "@/features/auth/components/auth.component"
 import AppMaxWidth from "@/lib/components/layout/app-max-width.component"
 import Page from "@/lib/components/layout/page.component"
-import CustomLink from "@/lib/components/custom-link.component"
 
 import tw from "twin.macro"
 import useCustomNavigate from "@/lib/hooks/use-custom-navigate"
 import useCart, { CartItem } from "@/features/product/hooks/use-cart"
 import useLanguageValue from "@/lib/hooks/use-language-key"
-import { AvailableReservationResultDto, Event } from "@/lib/orval/model"
+import { AvailableReservationResultDto } from "@/lib/orval/model"
 import dayjs from "dayjs"
 import utc from "dayjs/plugin/utc"
 import {
-  reservationControllerGetAvailableReservationByDay,
   reservationControllerGetAvailableReservationByDayPublic,
   useReservationControllerCreate,
 } from "@/lib/orval/reservations/reservations"
@@ -33,7 +31,6 @@ import Modal from "@/lib/components/modal/modal.component"
 /* ---------------- Small UI ---------------- */
 const H1 = tw.h1`text-xl font-bold`
 const H2 = tw.h2`text-lg font-extrabold`
-const Textarea = tw.textarea`h-10 py-1.5 px-2 border border-[#d0d0d0] rounded-lg flex-1 min-w-0 w-full`
 
 const TimeButton = ({ selected, children, ...props }: { selected?: boolean } & any) => {
   return (
@@ -60,7 +57,7 @@ interface SurgeryItemProps {
 
 const SurgeryItem = ({ item, updateCartItem, checked, onCheck }: SurgeryItemProps) => {
   const tv = useLanguageValue()
-  const { t, i18n } = useTranslation()
+  const { i18n } = useTranslation()
   const language = i18n.language as Language
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -388,17 +385,6 @@ const Reserve = () => {
     marketing: false,
   })
 
-  /* -------- 예약 가능 시간 조회 -------- */
-  const getAvailableReservations = async (y: number, m: number, d: number) => {
-    return reservationControllerGetAvailableReservationByDay({
-      year: y,
-      month: m,
-      day: d,
-      productIds: getProductIdsWithInquiry(),
-      eventIds: getCheckedEventIds(),
-    })
-  }
-
   /* -------- NEW 예약 가능 시간 조회 -------- */
   const getAvailableReservationsPublic = async (y: number, m: number, d: number) => {
     return reservationControllerGetAvailableReservationByDayPublic({
@@ -481,7 +467,7 @@ const Reserve = () => {
   React.useEffect(() => {
     if (getCheckedEventIds().length > 0 || getCheckedProductIds().length > 0 || inquiry) {
       getAvailableReservationsPublic(today.year(), today.month() + 1, today.date()).then((res) => {
-        // 🔥 UTC → KST (+9h) 변환 패치
+        // UTC → KST (+9h) 변환 패치
         const patched = res.map((slot) => ({
           ...slot,
           datetime: dayjs(slot.datetime).add(9, "hour").toISOString(),
@@ -492,7 +478,6 @@ const Reserve = () => {
       })
     }
   }, [today, inquiry, checkedList])
-  //
 
   dayjs.extend(utc)
 
@@ -560,41 +545,6 @@ const Reserve = () => {
   /* -------- 예약하기 -------- */
   const { mutate } = useReservationControllerCreate()
 
-  const reserve = () => {
-    if (!authInfo) {
-      alert("본인인증이 필요합니다.")
-      return
-    }
-
-    if (!agree.terms || !agree.privacy) {
-      alert("필수 약관을 동의해주세요.")
-      return
-    }
-
-    if (!selectedDatetime) {
-      alert("예약 시간을 선택해주세요.")
-      return
-    }
-
-    userControllerUpdateMine({ languageLocale: language })
-
-    mutate(
-      {
-        data: {
-          datetime: selectedDatetime.replace("Z", ""),
-          productIds: getProductIdsWithInquiry(),
-          eventIds: getCheckedEventIds(),
-        },
-      },
-      {
-        onSuccess: () => {
-          resetCart()
-          navigate("/reservation/complete")
-        },
-      },
-    )
-  }
-
   // 장바구니에 시술이 있으면 상담하기는 항상 false
   React.useEffect(() => {
     if (cart.length > 0 && inquiry) {
@@ -633,10 +583,6 @@ const Reserve = () => {
             <div tw="flex-1 min-w-0 flex flex-col gap-10">
               {/* --- 시술 리스트 섹션 --- */}
               <div tw="bg-white p-6">
-                {/* <H2 tw="mb-6">
-                  {t("reservePage.addedTreatments")} <span tw="text-point">{cart.length}</span>
-                </H2> */}
-
                 <SurgeryList
                   cart={cart}
                   updateCartItem={updateCartItem}
@@ -661,9 +607,6 @@ const Reserve = () => {
                   }}
                   footer={<div>{renderTimeSlots()}</div>}
                 />
-
-                {/* 캘린더 바깥 여백에서 시간 선택 컴포넌트가 필요 없다면 제거 가능 */}
-                {/* <div tw="mt-6">{renderTimeSlots()}</div> */}
               </div>
             </div>
 

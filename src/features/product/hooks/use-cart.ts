@@ -22,6 +22,7 @@ const useCart = () => {
     // setInquiry(true)
     setJustAddedId("")
     setCheckedList([])
+    setInquiryMemo("")
     localStorage.removeItem("eventEndDates") // 장바구니 비우면 이벤트 종료일자 저장된 데이터 삭제
   }
   const getCheckedProductIds = () => {

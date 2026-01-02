@@ -27,7 +27,7 @@ import timezone from "dayjs/plugin/timezone"
 import localizedFormat from "dayjs/plugin/localizedFormat"
 
 import {
-  reservationControllerGetAvailableReservationByDay,
+  reservationControllerGetAvailableReservationByDayPublic,
   useReservationControllerFindMine,
   useReservationControllerUpdate,
   useReservationControllerRemove,
@@ -197,7 +197,7 @@ const Reservations = () => {
     if (!changeId) return
     if (currentProducts.length === 0 && currentEvents.length === 0) return
 
-    reservationControllerGetAvailableReservationByDay({
+    reservationControllerGetAvailableReservationByDayPublic({
       year: today.year(),
       month: today.month() + 1,
       day: today.date(),
