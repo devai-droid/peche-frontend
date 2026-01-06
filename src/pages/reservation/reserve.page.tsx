@@ -481,7 +481,21 @@ const Reserve = () => {
 
   dayjs.extend(utc)
 
+  const getTodayCutoffTime = () => {
+    let cutoff = dayjs().startOf("minute").add(30, "minute")
+
+    const remainder = cutoff.minute() % 30
+    if (remainder !== 0) {
+      cutoff = cutoff.add(30 - remainder, "minute")
+    }
+
+    return cutoff.second(0)
+  }
+
   const renderTimeSlots = () => {
+    const isToday = today.isSame(dayjs(), "day")
+    const cutoffTime = isToday ? getTodayCutoffTime() : null
+
     const availableTimes = new Set(
       todaySlots.map((slot) => dayjs(slot.datetime.replace("Z", "")).format("HH:mm")),
     )
@@ -494,6 +508,9 @@ const Reserve = () => {
             gridTemplateColumns: "repeat(auto-fill, minmax(90px, 1fr))",
             gap: "5px",
             width: "100%",
+            "@media (min-width: 2200px)": {
+              gap: "10px",
+            },
           }}>
           {[
             "10:00",
@@ -519,17 +536,26 @@ const Reserve = () => {
             "20:00",
             "20:30",
           ].map((slot) => {
-            const available = availableTimes.has(slot)
+            const availableFromBackend = availableTimes.has(slot)
+
+            const slotDatetime = dayjs(`${today.format("YYYY-MM-DD")}T${slot}:00`)
+
+            const blockedByTime = isToday && cutoffTime && slotDatetime.isBefore(cutoffTime)
+
+            const disabled = !availableFromBackend || blockedByTime
             const selected = selectedDatetime.includes(slot)
 
             return (
               <TimeButton
                 key={slot}
-                disabled={!available}
+                disabled={disabled}
                 selected={selected}
                 onClick={() => {
+                  if (disabled) return
+
                   const base = todaySlots[0]?.datetime
                   if (!base) return
+
                   const [datePart] = base.split("T")
                   setSelectedDatetime(`${datePart}T${slot}:00.000Z`)
                 }}>

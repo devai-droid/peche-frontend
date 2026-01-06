@@ -159,15 +159,15 @@ const HoverItem = styled.div`
 `
 
 const desktopImages = [
-  { src: peche1, title: "Pêche", desc: "생기있는 코랄빛" },
-  { src: peche2, title: "Pêche", desc: "영원한 젊음" },
-  { src: peche3, title: "Pêche", desc: "밝고 부드러운 속살" },
+  { src: peche1, titleKey: "intro.peche.title", descKey: "intro.peche.desc1" },
+  { src: peche2, titleKey: "intro.peche.title", descKey: "intro.peche.desc2" },
+  { src: peche3, titleKey: "intro.peche.title", descKey: "intro.peche.desc3" },
 ]
 
 const mobileImages = [
-  { src: peche1Mobile, title: "Pêche", desc: "생기있는 코랄빛" },
-  { src: peche2Mobile, title: "Pêche", desc: "영원한 젊음" },
-  { src: peche3Mobile, title: "Pêche", desc: "밝고 부드러운 속살" },
+  { src: peche1Mobile, titleKey: "intro.peche.title", descKey: "intro.peche.desc1" },
+  { src: peche2Mobile, titleKey: "intro.peche.title", descKey: "intro.peche.desc2" },
+  { src: peche3Mobile, titleKey: "intro.peche.title", descKey: "intro.peche.desc3" },
 ]
 
 const MobileSwiperWrapper = styled.div`
@@ -586,8 +586,8 @@ const Intro = () => {
                   <HoverItem key={index} className={`item-${index}`}>
                     <img src={img.src} alt={`peche-${index}`} />
                     <div className="label">
-                      <p tw="font-time">{img.title}</p>
-                      <p>{img.desc}</p>
+                      <p tw="font-time">{t(img.titleKey)}</p>
+                      <p tw="font-pretendard">{t(img.descKey)}</p>
                     </div>
                   </HoverItem>
                 ))}
@@ -612,8 +612,8 @@ const Intro = () => {
                           <img src={img.src} alt={`mobile-peche-${i}`} />
 
                           <div className="label">
-                            <p tw="font-time">{img.title}</p>
-                            <p>{img.desc}</p>
+                            <p tw="font-time">{t(img.titleKey)}</p>
+                            <p tw="font-pretendard">{t(img.descKey)}</p>
                           </div>
                         </div>
                       </MobileSlide>

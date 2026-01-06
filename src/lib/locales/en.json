@@ -110,6 +110,12 @@
     "info": "3F, 364 Gangnam-daero, Gangnam-gu, Seoul (Yeoksam-dong, Miwang Building)  |  Representative: Taeon Ahn  |  Business Registration Number 219-05-28999  |  Main Number 02-533-8176"
   },
   "intro": {
+    "peche": {
+      "title": "Pêche",
+      "desc1": "Vibrant Coral",
+      "desc2": "영원한 젊음",
+      "desc3": "밝고 부드러운 속살"
+    },
     "introHospital": "About us",
     "wayToCome": "Directions",
     "introMachine": "Equipment",
