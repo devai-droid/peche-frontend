@@ -126,7 +126,7 @@ const SurgeryItem = ({ item, updateCartItem, checked, onCheck }: SurgeryItemProp
                 -
               </button>
 
-              <span tw="w-4 text-center">{item.count}</span>
+              <span tw="w-4 text-center text-[13px] md:text-[15px]">{item.count}</span>
 
               <button
                 tw="w-6 h-6 flex justify-center items-center text-neutral50 bg-neutral"

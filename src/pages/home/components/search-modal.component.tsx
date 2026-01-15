@@ -13,13 +13,13 @@ import { useSearchControllerFindMany } from "@/lib/orval/search/search"
 import useLanguageValue from "@/lib/hooks/use-language-key"
 
 const Overlay = tw.div`
-  fixed inset-0 bg-black bg-opacity-40 z-[500]
+  fixed inset-0 bg-black bg-opacity-40 z-[5000]
   flex justify-center items-start overflow-auto
 `
 
 const ModalOuter = tw.div`
   w-full md:w-[900px]
-  mt-[4rem] md:mt-[9rem]
+  mt-[4rem] md:mt-[6rem]
   bg-[#FEF5EA]
   rounded-t-none shadow-xl
   h-[700px]
@@ -36,7 +36,7 @@ const ModalInner = tw.div`
 `
 
 const HeaderArea = tw.div`
-  flex justify-end mb-3
+  flex justify-end
 `
 
 const Title = styled.h2`
@@ -151,7 +151,7 @@ const SearchModal = ({ open, onClose }: Props) => {
       <Overlay>
         <ModalOuter>
           <HeaderArea>
-            <IconButton icon={CloseIcon} onClick={onClose} />
+            <IconButton tw="py-2" iconSize={20} icon={CloseIcon} onClick={onClose} />
           </HeaderArea>
 
           <Title>{renderTitle()}</Title>
