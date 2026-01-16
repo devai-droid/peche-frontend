@@ -378,7 +378,8 @@
     "confirm": "check",
     "identityVerification": "Identity verification",
     "counselingChannel": "Counseling Channel",
-    "counselingChannelText": "Get quick advice through SNS channels."
+    "counselingChannelText": "Get quick advice through SNS channels.",
+    "contactIfNotYou": "If it's not you, please contact us via SNS"
   },
   "blog": {
     "title": "Blog",

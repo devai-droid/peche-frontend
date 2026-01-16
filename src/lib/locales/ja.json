@@ -378,7 +378,8 @@
     "confirm": "チェック",
     "identityVerification": "本人確認",
     "counselingChannel": "カウンセリングチャンネル",
-    "counselingChannelText": "SNS チャネルを通じて迅速なアドバイスを入手できます。"
+    "counselingChannelText": "SNS チャネルを通じて迅速なアドバイスを入手できます。",
+    "contactIfNotYou": "ご本人様でない場合はSNSにてご連絡ください"
   },
   "blog": {
     "title": "Blog",

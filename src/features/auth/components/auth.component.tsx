@@ -121,6 +121,21 @@ const Auth = ({ onAuth, onAgreementChange }: Props) => {
     window.open(url, "_blank")
   }
 
+  const CounselingChannel = helpIcon ? (
+    <div tw="w-full max-w-[580px] mb-6">
+      {/* 제목 + 설명 */}
+      <div tw="flex flex-col md:flex-row md:items-center gap-1 mb-3">
+        <span tw="text-[15px] font-semibold whitespace-nowrap">{t("auth.counselingChannel")}</span>
+        <span tw="text-[14px] text-neutral60">{t("auth.counselingChannelText")}</span>
+      </div>
+
+      {/* 버튼 */}
+      <button tw="flex items-center gap-2" className="sns-btn-conversion" onClick={handleHelpClick}>
+        <img src={helpIcon} alt="help" tw="h-[38px]" />
+      </button>
+    </div>
+  ) : null
+
   return (
     <div tw="w-full bg-white p-6 font-pretendard tracking-tight leading-[150%] text-[13px] lg:text-[15px]">
       {/* ================= 본인인증 ================= */}
@@ -156,6 +171,10 @@ const Auth = ({ onAuth, onAgreementChange }: Props) => {
             </div>
           )}
 
+          <div tw="flex mb-2">
+            <span tw="text-secondary3">{t("auth.contactIfNotYou")}</span>
+          </div>
+
           {/* ================= 로그아웃 버튼 ================= */}
           <div tw="flex justify-start">
             <Button
@@ -176,6 +195,7 @@ const Auth = ({ onAuth, onAgreementChange }: Props) => {
               {t("reservePage.logout")}
             </Button>
           </div>
+          <div tw="mt-6">{CounselingChannel}</div>
         </div>
       ) : (
         <>
@@ -201,18 +221,15 @@ const Auth = ({ onAuth, onAgreementChange }: Props) => {
               {t("reservePage.emailVerification")}
             </button>
           </div>
-
-          {helpIcon && (
+          {CounselingChannel}
+          {/* {helpIcon && (
             <div tw="w-full max-w-[580px] mb-6">
-              {/* 제목 + 설명문구 */}
               <div tw="flex flex-col md:flex-row md:items-center gap-1 mb-3">
                 <span tw="text-[15px] font-semibold whitespace-nowrap">
                   {t("auth.counselingChannel")}
                 </span>
                 <span tw="text-[14px] text-neutral60">{t("auth.counselingChannelText")}</span>
               </div>
-
-              {/* 버튼 */}
               <button
                 tw="flex items-center gap-2"
                 className="sns-btn-conversion"
@@ -220,7 +237,7 @@ const Auth = ({ onAuth, onAgreementChange }: Props) => {
                 <img src={helpIcon} alt="help" tw="h-[38px]" />
               </button>
             </div>
-          )}
+          )} */}
         </>
       )}
 

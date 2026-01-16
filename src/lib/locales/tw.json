@@ -378,7 +378,8 @@
     "confirm": "查看",
     "identityVerification": "身份驗證",
     "counselingChannel": "諮詢頻道",
-    "counselingChannelText": "透過社群媒體管道快速獲取建議。"
+    "counselingChannelText": "透過社群媒體管道快速獲取建議。",
+    "contactIfNotYou": "如果不是你本人，請透過社群媒體與我們聯繫。"
   },
   "blog": {
     "title": "部落格",

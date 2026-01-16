@@ -378,7 +378,8 @@
     "confirm": "ตรวจสอบ",
     "identityVerification": "การตรวจสอบตัวตน",
     "counselingChannel": "ช่องทางการให้คำปรึกษา",
-    "counselingChannelText": "รับคำแนะนำอย่างรวดเร็วผ่านช่องทางโซเชียลมีเดีย"
+    "counselingChannelText": "รับคำแนะนำอย่างรวดเร็วผ่านช่องทางโซเชียลมีเดีย",
+    "contactIfNotYou": "ถ้าไม่ใช่คุณ กรุณาติดต่อผ่านโซเชียลมีเดีย"
   },
   "blog": {
     "title": "บล็อก",

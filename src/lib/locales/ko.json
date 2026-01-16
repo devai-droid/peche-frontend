@@ -378,7 +378,8 @@
     "confirm": "확인",
     "identityVerification": "본인인증",
     "counselingChannel": "상담채널",
-    "counselingChannelText": "SNS 채널을 통해 빠르게 상담받아보세요."
+    "counselingChannelText": "SNS 채널을 통해 빠르게 상담받아보세요.",
+    "contactIfNotYou": "본인이 아니라면 카카오톡으로 연락주세요."
   },
   "blog": {
     "title": "Blog",

@@ -378,7 +378,8 @@
     "confirm": "查看",
     "identityVerification": "身份验证",
     "counselingChannel": "咨询频道",
-    "counselingChannelText": "通过社交媒体渠道快速获取建议。"
+    "counselingChannelText": "通过社交媒体渠道快速获取建议。",
+    "contactIfNotYou": "如果不是你本人，请通过社交媒体联系我们。"
   },
   "blog": {
     "title": "博客",
