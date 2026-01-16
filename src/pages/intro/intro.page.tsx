@@ -4,6 +4,7 @@ import React from "react"
 import tw, { styled } from "twin.macro"
 import Page from "@/lib/components/layout/page.component"
 import GoogleMapComponent from "@/lib/components/google-map/google-map.component"
+import KakaoMap from "@/lib/components/kakao-map/kakao-map.component"
 import CartView from "@/features/product/components/cart-view.component"
 
 // 이미지 import
@@ -839,7 +840,7 @@ const Intro = () => {
               {/* Right side */}
               <MapColumn>
                 <GoogleMapWrapper>
-                  <GoogleMapComponent />
+                  {language === "ko" ? <KakaoMap /> : <GoogleMapComponent />}
                 </GoogleMapWrapper>
               </MapColumn>
             </MapInner>

@@ -3,6 +3,7 @@ import tw, { styled } from "twin.macro"
 import { CloseIcon } from "@/assets/icon"
 import wechatQrImg from "@/assets/images/wechat-qr.png"
 import GoogleMapComponent from "@/lib/components/google-map/google-map.component"
+import KakaoMap from "@/lib/components/kakao-map/kakao-map.component"
 import { useTranslation } from "react-i18next"
 import useCustomNavigate from "@/lib/hooks/use-custom-navigate"
 import { Language } from "@/lib/locales/i18n.config"
@@ -154,7 +155,7 @@ const Location = () => {
         {/* Right side */}
         <MapColumn>
           <GoogleMapWrapper>
-            <GoogleMapComponent />
+            {language === "ko" ? <KakaoMap /> : <GoogleMapComponent />}
           </GoogleMapWrapper>
         </MapColumn>
       </MapInner>
