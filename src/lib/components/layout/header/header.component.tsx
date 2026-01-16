@@ -31,6 +31,7 @@ import { Language } from "@/lib/locales/i18n.config"
 import { useSearchControllerFindMany } from "@/lib/orval/search/search"
 import CustomLink from "../../custom-link.component"
 import Modal from "@/lib/components/modal/modal.component"
+import useCart from "@/features/product/hooks/use-cart"
 
 const HeaderContainer = tw.header`h-16 lg:h-20 relative bg-neutral`
 
@@ -159,6 +160,9 @@ const RightMenu = ({ isDesktop, isMenuOpen, setIsMenuOpen }: MenuProps) => {
   const { t } = useTranslation()
   const navigate = useCustomNavigate()
   const [openSearchModal, setOpenSearchModal] = React.useState(false)
+  const { cart } = useCart()
+
+  const totalCount = cart.reduce((acc, item) => acc + item.count, 0)
 
   return (
     <div tw="flex items-center">
@@ -176,7 +180,7 @@ const RightMenu = ({ isDesktop, isMenuOpen, setIsMenuOpen }: MenuProps) => {
             onClick={() => navigate("/reservation/new")}>
             {t("header.shoppingCart")}
             <span tw="inline-flex items-center justify-center w-[18px] h-[18px] rounded-full bg-[#BD7B60] text-white text-[11px] font-medium">
-              0
+              {totalCount}
             </span>
           </button>
 
@@ -201,7 +205,7 @@ const RightMenu = ({ isDesktop, isMenuOpen, setIsMenuOpen }: MenuProps) => {
                   onClick={() => navigate("/reservation/new")}
                 />
                 <span tw="absolute top-0.5 -right-0.5 flex items-center justify-center w-[16px] h-[16px] rounded-full bg-[#DA7F67] text-white text-[10px] font-medium">
-                  0
+                  {totalCount}
                 </span>
               </div>
               <IconButton tw="p-2" icon={SearchIcon} onClick={() => setOpenSearchModal(true)} />

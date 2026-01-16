@@ -22,10 +22,10 @@ import beauty from "@/assets/images/beauty.png"
 import trust from "@/assets/images/trust.png"
 import transparency from "@/assets/images/transparency.png"
 import { GrayPlusIcon } from "@/assets/icon"
-import interior1 from "@/assets/images/interior1.png"
-import interior2 from "@/assets/images/interior2.png"
+import interior1 from "@/assets/images/interior1.jpg"
+import interior2 from "@/assets/images/interior2.jpg"
 import interior3 from "@/assets/images/interior3.png"
-import interior4 from "@/assets/images/interior4.png"
+import interior4 from "@/assets/images/interior4.jpg"
 import trustPic1 from "@/assets/images/trust-pic1.jpg"
 import trustPic2 from "@/assets/images/trust-pic2.jpg"
 import trustPic3 from "@/assets/images/trust-pic3.jpg"
@@ -259,7 +259,7 @@ const SectionInterior = tw.section`
 `
 
 const InteriorTextWrapper = tw.div`
-  w-full max-w-[1440px] mx-auto px-6 md:px-10 font-pretendard
+  w-full max-w-[1440px] mx-auto px-[20px] md:px-[30px] font-pretendard
 `
 
 const FullWidthImageWrapper = tw.div`
@@ -267,7 +267,7 @@ const FullWidthImageWrapper = tw.div`
 `
 
 const InteriorImageContainer = tw.div`
-  max-w-[1440px] mx-auto w-full px-0
+  max-w-[1440px] mx-auto w-full px-[20px] md:px-[30px]
 `
 
 // 텍스트 블록
@@ -311,12 +311,6 @@ const BottomImageRow = styled.div`
   ${tw`flex flex-col md:flex-row w-full justify-between items-start md:items-end`}
   align-items: flex-start;
   gap: 0;
-
-  @media (max-width: 767px) {
-    margin-left: -20px;
-    margin-right: -20px;
-    width: calc(100% + 40px);
-  }
 `
 
 // ✅ 왼쪽 블록 전체 높이를 오른쪽과 맞춤
@@ -333,7 +327,7 @@ const LeftBlock = styled.div`
 const LeftText = styled.p`
   ${tw`text-[14px] md:text-[16px] tracking-tight text-neutral70 font-pretendard leading-[1.5]`}
   margin-bottom: 25px; /* ✅ 모바일용 좁은 여백 */
-  padding-left: 25px;
+  white-space: pre-line;
 
   @media (min-width: 768px) {
     margin-bottom: 32px; /* ✅ 데스크탑 여유 */
@@ -406,7 +400,7 @@ const CustomerTrustHeading = tw.h3`
 `
 
 const CustomerTrustParagraph = tw.p`
-  text-[16px] md:text-[18px] text-neutral70 tracking-tight leading-[1.4]
+  text-[14px] md:text-[16px] text-neutral70 tracking-tight leading-[1.4]
 `
 
 /* ──────────────────────────────
