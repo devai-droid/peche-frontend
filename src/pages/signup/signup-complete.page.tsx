@@ -20,7 +20,7 @@ const SignupComplete = () => {
               아래 <span tw="font-semibold">홈으로 이동</span> 버튼을 클릭하여 홈페이지를
               이용해주세요.
               <br />
-              문의사항이 있으실 경우 02-533-8176 로 연락주세요.
+              문의사항이 있으실 경우 02-553-8176 로 연락주세요.
             </p>
 
             <CustomLink to="/">
