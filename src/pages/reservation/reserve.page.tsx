@@ -440,6 +440,7 @@ const Reserve = () => {
         },
         {
           onSuccess: () => {
+            localStorage.removeItem("reservation:selectedDatetime")
             resetCart()
             navigate("/reservation/complete")
           },
@@ -462,6 +463,15 @@ const Reserve = () => {
       setAuthInfo(info)
     }
   }, [me])
+
+  // 페이지 진입 시 localStorage 에 저장된 날짜/시간 있는지 확인
+  React.useEffect(() => {
+    const savedDatetime = localStorage.getItem("reservation:selectedDatetime")
+    const savedToday = localStorage.getItem("reservation:today")
+
+    if (savedDatetime) setSelectedDatetime(savedDatetime)
+    if (savedToday) setToday(dayjs(savedToday))
+  }, [])
 
   /* -------- 캘린더 변경 시 조회 -------- */
   React.useEffect(() => {
@@ -557,7 +567,11 @@ const Reserve = () => {
                   if (!base) return
 
                   const [datePart] = base.split("T")
+                  const value = `${datePart}T${slot}:00.000Z`
                   setSelectedDatetime(`${datePart}T${slot}:00.000Z`)
+                  // 카톡 본인인증 후 선택 리셋되는 것 방지하기 위해 localStorage 사용
+                  localStorage.setItem("reservation:today", today.toISOString())
+                  localStorage.setItem("reservation:selectedDatetime", value)
                 }}>
                 {slot}
               </TimeButton>
@@ -629,6 +643,8 @@ const Reserve = () => {
                     if (value) {
                       setToday(value)
                       setSelectedDatetime("")
+                      localStorage.removeItem("reservation:selectedDatetime")
+                      localStorage.setItem("reservation:today", value.toISOString())
                     }
                   }}
                   footer={<div>{renderTimeSlots()}</div>}
