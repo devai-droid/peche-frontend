@@ -121,7 +121,11 @@ const SearchSection = () => {
         <SearchBox>
           <Title>{renderTitle()}</Title>
           <SearchBar onClick={() => setOpenSearchModal(true)}>
-            <Input placeholder={t("search.placeholder")} />
+            <Input
+              placeholder={t("search.placeholder")}
+              readOnly
+              onFocus={(e) => e.target.blur()}
+            />
             <SearchIcon />
           </SearchBar>
 
