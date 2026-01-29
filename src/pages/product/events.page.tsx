@@ -343,7 +343,7 @@ const Events = () => {
               {categories?.items?.map((category, index) => {
                 const isSelected = selectedCategoryId === category.id
                 // 모바일/데스크탑 구분
-                const isFirstRow = (isMobile && index < 6) || (!isMobile && index < 6)
+                const isFirstRow = (isMobile && index < 4) || (!isMobile && index < 4)
 
                 return (
                   <button
