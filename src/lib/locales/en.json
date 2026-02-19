@@ -306,7 +306,8 @@
     "reservationModalText1": "- If you are a minor, you must be accompanied by a guardian.",
     "reservationModalText2": "- If you do not receive treatment on the same day as the consultation, a separate treatment fee may be charged.",
     "reservationModalCancelButton": "Cancel",
-    "reservationModalReserveButton": "Make a reservation"
+    "reservationModalReserveButton": "Make a reservation",
+    "timeExpired": "Reservation time has already passed or is within 30 minutes. Please choose again."
   },
   "cart": {
     "shoppingCart": "Shopping Cart",

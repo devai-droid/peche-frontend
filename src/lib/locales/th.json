@@ -306,7 +306,8 @@
     "reservationModalText1": "- หากคุณเป็นผู้เยาว์ คุณต้องมีผู้ปกครองมาด้วย",
     "reservationModalText2": "- หากคุณไม่ได้รับการรักษาในวันเดียวกับวันที่ปรึกษาแพทย์อาจมีการเรียกเก็บ ค่ารักษาเพิ่มเติม",
     "reservationModalCancelButton": "ยกเลิก",
-    "reservationModalReserveButton": "ทำการสำรองที่นั่ง"
+    "reservationModalReserveButton": "ทำการสำรองที่นั่ง",
+    "timeExpired": "Reservation time has already passed or is within 30 minutes. Please choose again."
   },
   "cart": {
     "shoppingCart": "รถเข็นสินค้า",

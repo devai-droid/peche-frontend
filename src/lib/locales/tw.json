@@ -306,7 +306,8 @@
     "reservationModalText1": "- 若您是未成年人，必須由監護人陪同。",
     "reservationModalText2": "-如果您未在諮詢當天接受治療，可能需要另行支付治療費用。",
     "reservationModalCancelButton": "取消",
-    "reservationModalReserveButton": "進行預訂"
+    "reservationModalReserveButton": "進行預訂",
+    "timeExpired": "預約時間已過或距離現在不足 30 分鐘，請重新選擇。"
   },
   "cart": {
     "shoppingCart": "購物車",

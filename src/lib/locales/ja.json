@@ -306,7 +306,8 @@
     "reservationModalText1": "・未成年の方は保護者同伴でお越しください。",
     "reservationModalText2": "・診察当日に施術を受けられなかった場合は、別途施術料がかかる場合がございます。",
     "reservationModalCancelButton": "キャンセル",
-    "reservationModalReserveButton": "予約する"
+    "reservationModalReserveButton": "予約する",
+    "timeExpired": "選択された予約時間はすでに過ぎているか、現在時刻から30分以内です。もう一度お選びください。"
   },
   "cart": {
     "shoppingCart": "ショッピングカート",

@@ -306,7 +306,8 @@
     "reservationModalText1": "- 如果您是未成年人，必须由监护人陪同",
     "reservationModalText2": "-如果您未在咨询当天接受治疗，可能需要另行支付治疗费用。",
     "reservationModalCancelButton": "取消",
-    "reservationModalReserveButton": "进行预订"
+    "reservationModalReserveButton": "进行预订",
+    "timeExpired": "预约时间已过或距离当前不足30分钟，请重新选择。"
   },
   "cart": {
     "shoppingCart": "购物车",

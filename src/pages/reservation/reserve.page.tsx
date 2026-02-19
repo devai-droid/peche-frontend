@@ -162,18 +162,26 @@ const SurgeryList = ({
   setInquiryMemo,
   removeFromCart,
 }: SurgeryListProps) => {
-  const { checkedList, setCheckedList, resetCart } = useCart()
+  const { checkedList, setCheckedList, resetCart, hasHydrated } = useCart()
   const { t } = useTranslation()
 
   // cart와 동일한 모달 상태 추가
   const [inquiryChecked, setInquiryChecked] = React.useState(inquiry)
   const [showInquiryModal, setShowInquiryModal] = React.useState(false)
 
+  // React.useEffect(() => {
+  //   if (cart.length > 0 && inquiryChecked) {
+  //     setInquiryChecked(false)
+  //   }
+  // }, [cart])
   React.useEffect(() => {
+    // hydrate 중에는 실행하지 않음
+    if (!hasHydrated.current) return
+
     if (cart.length > 0 && inquiryChecked) {
       setInquiryChecked(false)
     }
-  }, [cart])
+  }, [cart, inquiryChecked])
 
   React.useEffect(() => {
     setInquiryChecked(inquiry)
@@ -363,6 +371,7 @@ const Reserve = () => {
     resetCart,
     getCheckedEventIds,
     getCheckedProductIds,
+    hasHydrated,
   } = useCart()
 
   const [today, setToday] = React.useState(dayjs())
@@ -425,6 +434,18 @@ const Reserve = () => {
 
   const reserveConfirm = async () => {
     if (!authInfo) return
+
+    const selected = dayjs(selectedDatetime.replace("Z", ""))
+
+    const now = dayjs()
+    const cutoff = getTodayCutoffTime()
+
+    const isToday = selected.isSame(now, "day")
+
+    if (isToday && selected.isBefore(cutoff)) {
+      alert(t("reservePage.timeExpired"))
+      return
+    }
 
     try {
       await userControllerUpdateMine({ languageLocale: language })
@@ -586,11 +607,18 @@ const Reserve = () => {
   const { mutate } = useReservationControllerCreate()
 
   // 장바구니에 시술이 있으면 상담하기는 항상 false
+  // React.useEffect(() => {
+  //   if (cart.length > 0 && inquiry) {
+  //     setInquiry(false)
+  //   }
+  // }, [cart])
   React.useEffect(() => {
+    if (!hasHydrated.current) return
+
     if (cart.length > 0 && inquiry) {
       setInquiry(false)
     }
-  }, [cart])
+  }, [cart, inquiry])
 
   /* -------- 예약 버튼 disabled -------- */
   const reservationDisabled = !authInfo || !agree.terms || !agree.privacy || !selectedDatetime

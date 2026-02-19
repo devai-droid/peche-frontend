@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Event, Product } from "@/lib/orval/model"
+import React, { useRef } from "react"
 import { useSessionStorage } from "usehooks-ts"
 
 export interface CartItem {
@@ -16,6 +17,14 @@ const useCart = () => {
   const [checkedList, setCheckedList] = useSessionStorage<string[]>("checkedList", [])
   const [openBottomSheet, setOpenBottomSheet] = useSessionStorage<boolean>("openBottomSheet", false)
   const [inquiryMemo, setInquiryMemo] = useSessionStorage<string>("inquiryMemo", "")
+
+  // hydrate 완료 여부
+  const hasHydratedRef = useRef(false)
+
+  React.useEffect(() => {
+    // 첫 렌더 이후 한 번만 true
+    hasHydratedRef.current = true
+  }, [])
 
   const resetCart = () => {
     setCart([])
@@ -110,6 +119,7 @@ const useCart = () => {
     setOpenBottomSheet,
     inquiryMemo,
     setInquiryMemo,
+    hasHydrated: hasHydratedRef,
   }
 }
 
