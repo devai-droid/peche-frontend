@@ -189,7 +189,7 @@ const RightMenu = ({ isDesktop, isMenuOpen, setIsMenuOpen }: MenuProps) => {
             {t("header.checkReservation")}
           </button>
 
-          <div tw="w-3 ml-8" />
+          <div tw="ml-8" />
           <HeaderLanguage />
           <SearchModal open={openSearchModal} onClose={() => setOpenSearchModal(false)} />
         </>
@@ -209,6 +209,7 @@ const RightMenu = ({ isDesktop, isMenuOpen, setIsMenuOpen }: MenuProps) => {
                 </span>
               </div>
               <IconButton tw="p-2" icon={SearchIcon} onClick={() => setOpenSearchModal(true)} />
+              <HeaderLanguage />
               <IconButton
                 tw="p-2"
                 icon={HamburgerIcon}
@@ -227,7 +228,6 @@ const RightMenu = ({ isDesktop, isMenuOpen, setIsMenuOpen }: MenuProps) => {
                 onClick={() => navigate("/reservation")}>
                 {t("header.checkReservation")}
               </button>
-              <HeaderLanguage />
               <IconButton
                 tw="p-2"
                 icon={CloseIcon}
