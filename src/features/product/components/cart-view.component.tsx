@@ -12,6 +12,8 @@ import KakaoImg from "@/assets/images/sns/kakao.png"
 import LineImg from "@/assets/images/sns/line.png"
 import WhatsAppImg from "@/assets/images/sns/whatsapp.png"
 import WeChatImg from "@/assets/images/sns/wechat.png"
+// TODO: instagram.png 에셋 추가 후 교체 예정
+import InstaImg from "@/assets/icons/Logo-Insta.svg"
 import wechatQrImg from "@/assets/images/wechat-qr.png"
 import useCustomNavigate from "@/lib/hooks/use-custom-navigate"
 import Modal from "@/lib/components/modal/modal.component"
@@ -612,7 +614,7 @@ const BottomButtons = ({
       icon: WhatsAppImg,
       css: line,
       lang: [Language.ENG],
-      link: "https://wa.me/821025326285",
+      link: "https://wa.me/message/3ARKGGTBNAY2M1",
     },
     {
       id: 4,
@@ -637,6 +639,30 @@ const BottomButtons = ({
       css: line,
       lang: [Language.CHN],
       type: "modal",
+    },
+    {
+      id: 7,
+      name: t("button.inquiryButton.instagram"),
+      icon: InstaImg,
+      css: line,
+      lang: [Language.ENG],
+      link: "https://www.instagram.com/pecheclinic.en/",
+    },
+    {
+      id: 8,
+      name: t("button.inquiryButton.instagram"),
+      icon: InstaImg,
+      css: line,
+      lang: [Language.CHN],
+      link: "https://www.instagram.com/pecheclinic.cn/",
+    },
+    {
+      id: 9,
+      name: t("button.inquiryButton.instagram"),
+      icon: InstaImg,
+      css: line,
+      lang: [Language.JPN],
+      link: "https://www.instagram.com/pecheclinic.jp/",
     },
   ]
 

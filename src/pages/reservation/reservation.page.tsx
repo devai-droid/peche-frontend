@@ -13,6 +13,8 @@ import KakaoHelp from "@/assets/images/sns/icon_kakao_help.png"
 import WhatsAppHelp from "@/assets/images/sns/icon_WhatsApp_help.png"
 import LineHelp from "@/assets/images/sns/icon_LINE_help.png"
 import WeChatHelp from "@/assets/images/sns/icon_WeChat_help.png"
+// TODO: icon_Instagram_help.png 에셋 추가 후 교체 예정
+import InstaHelpIcon from "@/assets/icons/Logo-Insta.svg"
 import wechatQrImg from "@/assets/images/wechat-qr.png"
 import EmailAuthModal from "@/features/auth/components/email-auth-modal.component"
 
@@ -456,7 +458,7 @@ const Reservations = () => {
 
     const HELP_LINKS: Record<Language, string> = {
       ko: "https://pf.kakao.com/_dxoiLn",
-      en: "https://wa.me/821025326285",
+      en: "https://wa.me/message/3ARKGGTBNAY2M1",
       ja: "https://line.me/R/ti/p/@235wfyao",
       th: "https://line.me/R/ti/p/@892druai",
       "zh-TW": "https://line.me/R/ti/p/@683jgqmd",
@@ -464,6 +466,13 @@ const Reservations = () => {
       // 중국 간체는 상담채널 없음 → 빈 문자열 또는 undefined
       zh: "",
     }
+
+    const INSTAGRAM_LINKS: Record<string, string> = {
+      en: "https://www.instagram.com/pecheclinic.en/",
+      zh: "https://www.instagram.com/pecheclinic.cn/",
+      ja: "https://www.instagram.com/pecheclinic.jp/",
+    }
+    const instaLink = INSTAGRAM_LINKS[language]
 
     const handleHelpClick = () => {
       if (language === Language.CHN) {
@@ -482,10 +491,38 @@ const Reservations = () => {
         {/* 로고 영역 */}
         <div tw="flex flex-col items-center mb-8">
           <img tw="w-[97px] mx-auto mb-4" src={LogoText} alt="Logo" />
+        </div>
 
-          <div tw="text-center text-[18px] md:text-[22px] font-semibold">
-            {t("auth.identityVerification")}
+        {/* ================= 상담채널 영역 (상단) ================= */}
+        {helpIcon && (
+          <div tw="w-full flex flex-col items-center px-4 md:px-0 max-w-[460px] mx-auto mb-10">
+            <div tw="text-center text-[18px] md:text-[22px] font-semibold mb-2">
+              {t("auth.counselingChannel")}
+            </div>
+            <div tw="text-center text-[13px] md:text-[14px] text-neutral60 mb-4">
+              {t("auth.counselingChannelText")}
+            </div>
+
+            <div tw="flex items-center gap-3">
+              <button tw="flex items-center gap-2" onClick={handleHelpClick}>
+                <img src={helpIcon} alt="help" tw="h-[36px]" />
+              </button>
+              {instaLink && (
+                <a
+                  href={instaLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  tw="flex items-center">
+                  <img src={InstaHelpIcon} alt="Instagram" tw="h-[36px]" />
+                </a>
+              )}
+            </div>
           </div>
+        )}
+
+        {/* ================= 본인인증 (하단) ================= */}
+        <div tw="text-center text-[18px] md:text-[22px] font-semibold mb-8">
+          {t("auth.identityVerification")}
         </div>
 
         {/* ===================== 인증 버튼 그룹 ===================== */}
@@ -520,25 +557,6 @@ const Reservations = () => {
             {t("reservePage.emailVerification")}
           </button>
         </div>
-
-        {/* ================= 상담채널 영역 ================= */}
-        {helpIcon && (
-          <div tw="w-full flex flex-col items-start px-4 md:px-0 max-w-[460px] mx-auto">
-            <div tw="text-[14px] md:text-[16px] mb-3 font-semibold">
-              <span tw="text-[15px] font-semibold whitespace-nowrap">
-                {t("auth.counselingChannel")}
-              </span>
-
-              <span tw="text-[13px] md:text-[14px] text-neutral60 mt-1 md:mt-0 pl-2">
-                {t("auth.counselingChannelText")}
-              </span>
-            </div>
-
-            <button tw="flex items-center gap-2" onClick={handleHelpClick}>
-              <img src={helpIcon} alt="help" tw="h-[36px]" />
-            </button>
-          </div>
-        )}
 
         {/* ================= 이메일 인증 모달 ================= */}
         <EmailAuthModal
@@ -588,7 +606,7 @@ const Reservations = () => {
             <H1 tw="pt-4 md:pt-0 pb-8 text-[24px] lg:text-[30px] text-center">
               {t("reservationCheckPage.reservationCheck")}
             </H1>
-            <div tw="bg-white w-full max-w-[580px] md:h-[470px] px-4 py-10 rounded-none font-pretendard">
+            <div tw="bg-white w-full max-w-[580px] md:min-h-[470px] px-4 py-10 rounded-none font-pretendard">
               <AuthButtons />
             </div>
           </AppMaxWidth>

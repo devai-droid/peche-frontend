@@ -11,10 +11,10 @@ const ReservationComplete = () => {
 
   const HELP_LINKS: Record<Language, string> = {
     ko: "https://pf.kakao.com/_dxoiLn",
-    en: "https://pf.kakao.com/_dxoiLn",
-    ja: "https://pf.kakao.com/_dxoiLn",
-    th: "https://pf.kakao.com/_dxoiLn",
-    "zh-TW": "https://pf.kakao.com/_dxoiLn",
+    en: "https://wa.me/message/3ARKGGTBNAY2M1",
+    ja: "https://line.me/R/ti/p/@235wfyao",
+    th: "https://line.me/R/ti/p/@892druai",
+    "zh-TW": "https://line.me/R/ti/p/@683jgqmd",
     zh: "https://pf.kakao.com/_dxoiLn",
   }
 

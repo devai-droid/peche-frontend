@@ -70,7 +70,7 @@ const SOCIAL_LINKS: Record<Language, SocialItem[]> = {
     { icon: InstaLogoIcon, url: "https://www.instagram.com/peche_clinic/" },
   ],
   en: [
-    { icon: WhatsappIcon, url: "https://wa.me/821025326285" },
+    { icon: WhatsappIcon, url: "https://wa.me/message/3ARKGGTBNAY2M1" },
     { icon: InstaLogoIcon, url: "https://www.instagram.com/pecheclinic.en/" },
     { icon: TiktokIcon, url: "https://www.tiktok.com/@pecheclinic_eng?lang=ko-KR" },
   ],

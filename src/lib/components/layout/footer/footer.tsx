@@ -80,7 +80,7 @@ const FOOTER_SOCIAL_LINKS: Record<Language, FooterSocialItem[]> = {
     { icon: InstaLogoGrayIcon, url: "https://www.instagram.com/peche_clinic/" },
   ],
   en: [
-    { icon: WhatsappGrayIcon, url: "https://wa.me/821025326285" },
+    { icon: WhatsappGrayIcon, url: "https://wa.me/message/3ARKGGTBNAY2M1" },
     { icon: InstaLogoGrayIcon, url: "https://www.instagram.com/pecheclinic.en/" },
     { icon: TiktokGrayIcon, url: "https://www.tiktok.com/@pecheclinic_eng" },
   ],

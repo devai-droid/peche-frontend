@@ -10,6 +10,8 @@ import KakaoHelp from "@/assets/images/sns/icon_kakao_help.png"
 import WhatsAppHelp from "@/assets/images/sns/icon_WhatsApp_help.png"
 import LineHelp from "@/assets/images/sns/icon_LINE_help.png"
 import WeChatHelp from "@/assets/images/sns/icon_WeChat_help.png"
+// TODO: icon_Instagram_help.png 에셋 추가 후 교체 예정
+import InstaHelpIcon from "@/assets/icons/Logo-Insta.svg"
 import { authService } from "@/lib/service/auth.service"
 import { useSearchParams } from "react-router-dom"
 import EmailAuthModal from "./email-auth-modal.component"
@@ -100,7 +102,7 @@ const Auth = ({ onAuth, onAgreementChange }: Props) => {
 
   const HELP_LINKS: Record<Language, string> = {
     ko: "https://pf.kakao.com/_dxoiLn",
-    en: "https://wa.me/821025326285",
+    en: "https://wa.me/message/3ARKGGTBNAY2M1",
     ja: "https://line.me/R/ti/p/@235wfyao",
     th: "https://line.me/R/ti/p/@892druai",
     "zh-TW": "https://line.me/R/ti/p/@683jgqmd",
@@ -108,6 +110,13 @@ const Auth = ({ onAuth, onAgreementChange }: Props) => {
     // 중국 간체는 상담채널 없음 → 빈 문자열 또는 undefined
     zh: "",
   }
+
+  const INSTAGRAM_LINKS: Record<string, string> = {
+    en: "https://www.instagram.com/pecheclinic.en/",
+    zh: "https://www.instagram.com/pecheclinic.cn/",
+    ja: "https://www.instagram.com/pecheclinic.jp/",
+  }
+  const instaLink = INSTAGRAM_LINKS[language]
 
   const handleHelpClick = () => {
     if (language === Language.CHN) {
@@ -122,27 +131,42 @@ const Auth = ({ onAuth, onAgreementChange }: Props) => {
   }
 
   const CounselingChannel = helpIcon ? (
-    <div tw="w-full max-w-[580px] mb-6">
-      {/* 제목 + 설명 */}
-      <div tw="flex flex-col md:flex-row md:items-center gap-1 mb-3">
-        <span tw="text-[15px] font-semibold whitespace-nowrap">{t("auth.counselingChannel")}</span>
-        <span tw="text-[14px] text-neutral60">{t("auth.counselingChannelText")}</span>
+    <div tw="w-full max-w-[580px] mb-6 flex flex-col items-center">
+      <div tw="text-center font-bold mb-1 text-[14px] lg:text-[16px]">
+        {t("auth.counselingChannel")}
+      </div>
+      <div tw="text-center text-[13px] lg:text-[14px] text-neutral60 mb-3">
+        {t("auth.counselingChannelText")}
       </div>
 
       {/* 버튼 */}
-      <button tw="flex items-center gap-2" className="sns-btn-conversion" onClick={handleHelpClick}>
-        <img src={helpIcon} alt="help" tw="h-[38px]" />
-      </button>
+      <div tw="flex items-center gap-3">
+        <button
+          tw="flex items-center gap-2"
+          className="sns-btn-conversion"
+          onClick={handleHelpClick}>
+          <img src={helpIcon} alt="help" tw="h-[38px]" />
+        </button>
+        {instaLink && (
+          <a href={instaLink} target="_blank" rel="noopener noreferrer" tw="flex items-center">
+            <img src={InstaHelpIcon} alt="Instagram" tw="h-[38px]" />
+          </a>
+        )}
+      </div>
     </div>
   ) : null
 
   return (
     <div tw="w-full bg-white p-6 font-pretendard tracking-tight leading-[150%] text-[13px] lg:text-[15px]">
-      {/* ================= 본인인증 ================= */}
+      {/* ================= 상담채널 (상단) ================= */}
       <div tw="mb-2">
         <H2>{t("reservePage.customerInfo")}</H2>
         <div tw="mt-4 mb-3 border-t border-neutral20" />
+      </div>
+      {CounselingChannel}
 
+      {/* ================= 본인인증 (하단) ================= */}
+      <div tw="mb-2">
         <p tw="font-bold mb-3 text-[14px] lg:text-[16px]">
           {t("auth.identityVerification")}
           <span tw="text-error">*</span>
@@ -195,7 +219,6 @@ const Auth = ({ onAuth, onAgreementChange }: Props) => {
               {t("reservePage.logout")}
             </Button>
           </div>
-          <div tw="mt-6">{CounselingChannel}</div>
         </div>
       ) : (
         <>
@@ -221,7 +244,6 @@ const Auth = ({ onAuth, onAgreementChange }: Props) => {
               {t("reservePage.emailVerification")}
             </button>
           </div>
-          {CounselingChannel}
           {/* {helpIcon && (
             <div tw="w-full max-w-[580px] mb-6">
               <div tw="flex flex-col md:flex-row md:items-center gap-1 mb-3">

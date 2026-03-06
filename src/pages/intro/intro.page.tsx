@@ -518,7 +518,7 @@ const Intro = () => {
     }
 
     if (language === "en") {
-      window.open("https://wa.me/821025326285", "_blank")
+      window.open("https://wa.me/message/3ARKGGTBNAY2M1", "_blank")
       return
     }
 
