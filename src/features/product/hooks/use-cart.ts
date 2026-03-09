@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Event, Product } from "@/lib/orval/model"
 import React, { useRef } from "react"
-import { useSessionStorage } from "usehooks-ts"
+import { useLocalStorage } from "usehooks-ts"
 
 export interface CartItem {
   event?: Event
@@ -11,12 +11,12 @@ export interface CartItem {
 }
 
 const useCart = () => {
-  const [inquiry, setInquiry] = useSessionStorage<boolean>("inquiry", false)
-  const [cart, setCart] = useSessionStorage<CartItem[]>("cart", [])
-  const [justAddedId, setJustAddedId] = useSessionStorage<string>("justAddedId", "")
-  const [checkedList, setCheckedList] = useSessionStorage<string[]>("checkedList", [])
-  const [openBottomSheet, setOpenBottomSheet] = useSessionStorage<boolean>("openBottomSheet", false)
-  const [inquiryMemo, setInquiryMemo] = useSessionStorage<string>("inquiryMemo", "")
+  const [inquiry, setInquiry] = useLocalStorage<boolean>("inquiry", false)
+  const [cart, setCart] = useLocalStorage<CartItem[]>("cart", [])
+  const [justAddedId, setJustAddedId] = useLocalStorage<string>("justAddedId", "")
+  const [checkedList, setCheckedList] = useLocalStorage<string[]>("checkedList", [])
+  const [openBottomSheet, setOpenBottomSheet] = useLocalStorage<boolean>("openBottomSheet", false)
+  const [inquiryMemo, setInquiryMemo] = useLocalStorage<string>("inquiryMemo", "")
 
   // hydrate 완료 여부
   const hasHydratedRef = useRef(false)
@@ -32,7 +32,7 @@ const useCart = () => {
     setJustAddedId("")
     setCheckedList([])
     setInquiryMemo("")
-    localStorage.removeItem("eventEndDates") // 장바구니 비우면 이벤트 종료일자 저장된 데이터 삭제
+    localStorage.removeItem("eventEndDates")
   }
   const getCheckedProductIds = () => {
     return cart

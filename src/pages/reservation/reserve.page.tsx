@@ -437,13 +437,15 @@ const Reserve = () => {
 
     const selected = dayjs(selectedDatetime.replace("Z", ""))
 
-    const now = dayjs()
+    const currentTime = dayjs()
     const cutoff = getTodayCutoffTime()
 
-    const isToday = selected.isSame(now, "day")
+    const isToday = selected.isSame(currentTime, "day")
 
     if (isToday && selected.isBefore(cutoff)) {
       alert(t("reservePage.timeExpired"))
+      setSelectedDatetime("")
+      localStorage.removeItem("reservation:selectedDatetime")
       return
     }
 
@@ -682,7 +684,10 @@ const Reserve = () => {
 
             {/* ---------------- RIGHT: Auth + 예약 버튼 ---------------- */}
             <div tw="hidden lg:block w-[390px] shrink-0">
-              <Auth onAuth={(info) => setAuthInfo(info)} onAgreementChange={(a) => setAgree(a)} />
+              <Auth
+                onAuth={(info) => setAuthInfo(info)}
+                onAgreementChange={(a) => setAgree(a)}
+              />
 
               {/* 예약 버튼 */}
               <Button
@@ -700,7 +705,10 @@ const Reserve = () => {
 
           {/* ---------------- MOBILE ---------------- */}
           <div tw="block lg:hidden mt-10">
-            <Auth onAuth={(info) => setAuthInfo(info)} onAgreementChange={(a) => setAgree(a)} />
+            <Auth
+              onAuth={(info) => setAuthInfo(info)}
+              onAgreementChange={(a) => setAgree(a)}
+            />
 
             <Button
               tw="w-full h-[52px] mt-6 font-bold"

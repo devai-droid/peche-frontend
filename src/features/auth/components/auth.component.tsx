@@ -16,6 +16,7 @@ import { authService } from "@/lib/service/auth.service"
 import { useSearchParams } from "react-router-dom"
 import EmailAuthModal from "./email-auth-modal.component"
 import { useMe } from "@/features/user/hooks/use-user"
+import { useLogout } from "@/features/auth/hooks/use-auth"
 import Modal from "@/lib/components/modal/modal.component"
 
 const H2 = tw.h2`text-lg font-extrabold`
@@ -36,6 +37,7 @@ const Auth = ({ onAuth, onAgreementChange }: Props) => {
   const { t } = useTranslation()
   const { language } = i18n
   const { user: me } = useMe()
+  const { logout } = useLogout()
   const isKorean = language === Language.KOR
 
   const [params] = useSearchParams()
@@ -206,9 +208,7 @@ const Auth = ({ onAuth, onAgreementChange }: Props) => {
                 // eslint-disable-next-line no-alert
                 const confirmLogout = window.confirm(t("reservePage.logoutConfirm"))
                 if (confirmLogout) {
-                  localStorage.removeItem("authToken")
-                  localStorage.removeItem("user")
-                  window.location.reload()
+                  logout()
                 }
               }}
               tw="w-20 h-6 mt-2 px-2"
@@ -236,13 +236,15 @@ const Auth = ({ onAuth, onAgreementChange }: Props) => {
               </button>
             )}
 
-            <button
-              tw="h-[80px] flex flex-col items-center justify-center gap-2 font-bold text-white"
-              css={isKorean ? tw`flex-1 bg-[#4DAA57]` : tw`w-full bg-[#4DAA57]`}
-              onClick={() => setOpenEmailModal(true)}>
-              <Icon icon={EmailIcon} size={25} />
-              {t("reservePage.emailVerification")}
-            </button>
+            {!isKorean && (
+              <button
+                tw="h-[80px] flex flex-col items-center justify-center gap-2 font-bold text-white"
+                css={tw`w-full bg-[#4DAA57]`}
+                onClick={() => setOpenEmailModal(true)}>
+                <Icon icon={EmailIcon} size={25} />
+                {t("reservePage.emailVerification")}
+              </button>
+            )}
           </div>
           {/* {helpIcon && (
             <div tw="w-full max-w-[580px] mb-6">
