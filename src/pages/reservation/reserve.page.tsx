@@ -684,10 +684,7 @@ const Reserve = () => {
 
             {/* ---------------- RIGHT: Auth + 예약 버튼 ---------------- */}
             <div tw="hidden lg:block w-[390px] shrink-0">
-              <Auth
-                onAuth={(info) => setAuthInfo(info)}
-                onAgreementChange={(a) => setAgree(a)}
-              />
+              <Auth onAuth={(info) => setAuthInfo(info)} onAgreementChange={(a) => setAgree(a)} />
 
               {/* 예약 버튼 */}
               <Button
@@ -705,10 +702,7 @@ const Reserve = () => {
 
           {/* ---------------- MOBILE ---------------- */}
           <div tw="block lg:hidden mt-10">
-            <Auth
-              onAuth={(info) => setAuthInfo(info)}
-              onAgreementChange={(a) => setAgree(a)}
-            />
+            <Auth onAuth={(info) => setAuthInfo(info)} onAgreementChange={(a) => setAgree(a)} />
 
             <Button
               tw="w-full h-[52px] mt-6 font-bold"
