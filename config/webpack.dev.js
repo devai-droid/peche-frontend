@@ -8,6 +8,7 @@ const path = require("path")
 module.exports = merge(common, {
   mode: "development",
   devtool: "inline-source-map",
+  ignoreWarnings: [/Deprecation/],
   devServer: {
     open: true,
     hot: true,
@@ -38,7 +39,14 @@ module.exports = merge(common, {
             },
           },
           "postcss-loader",
-          "sass-loader",
+          {
+            loader: "sass-loader",
+            options: {
+              sassOptions: {
+                silenceDeprecations: ["legacy-js-api", "import", "global-builtin"],
+              },
+            },
+          },
           {
             loader: "sass-resources-loader",
             options: {
@@ -50,7 +58,18 @@ module.exports = merge(common, {
       {
         test: /\.(sa|sc|c)ss$/i,
         include: /node_modules/,
-        use: ["style-loader", "css-loader", "sass-loader"],
+        use: [
+          "style-loader",
+          "css-loader",
+          {
+            loader: "sass-loader",
+            options: {
+              sassOptions: {
+                silenceDeprecations: ["legacy-js-api", "import", "global-builtin"],
+              },
+            },
+          },
+        ],
       },
     ],
   },

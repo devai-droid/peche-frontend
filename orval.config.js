@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   "peche-backend": {
     output: {
       target: "src/lib/orval/store.ts",
@@ -17,6 +17,8 @@ export default {
         },
       },
     },
-    input: {},
+    input: {
+      target: "http://localhost:3007/api/docs-json",
+    },
   },
 }
