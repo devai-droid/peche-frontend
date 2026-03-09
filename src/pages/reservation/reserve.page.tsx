@@ -372,6 +372,8 @@ const Reserve = () => {
     getCheckedEventIds,
     getCheckedProductIds,
     hasHydrated,
+    backupToCookie,
+    restoreFromCookie,
   } = useCart()
 
   const [today, setToday] = React.useState(dayjs())
@@ -487,10 +489,12 @@ const Reserve = () => {
     }
   }, [me])
 
-  // 페이지 진입 시 localStorage 에 저장된 날짜/시간 있는지 확인
+  // 페이지 진입 시 cookie 백업 복원 → localStorage 확인
   React.useEffect(() => {
-    const savedDatetime = localStorage.getItem("reservation:selectedDatetime")
-    const savedToday = localStorage.getItem("reservation:today")
+    const restored = restoreFromCookie()
+    const savedDatetime =
+      restored?.selectedDatetime || localStorage.getItem("reservation:selectedDatetime")
+    const savedToday = restored?.today || localStorage.getItem("reservation:today")
 
     if (savedDatetime) setSelectedDatetime(savedDatetime)
     if (savedToday) setToday(dayjs(savedToday))
@@ -684,7 +688,11 @@ const Reserve = () => {
 
             {/* ---------------- RIGHT: Auth + 예약 버튼 ---------------- */}
             <div tw="hidden lg:block w-[390px] shrink-0">
-              <Auth onAuth={(info) => setAuthInfo(info)} onAgreementChange={(a) => setAgree(a)} />
+              <Auth
+                onAuth={(info) => setAuthInfo(info)}
+                onAgreementChange={(a) => setAgree(a)}
+                onBeforeKakaoAuth={backupToCookie}
+              />
 
               {/* 예약 버튼 */}
               <Button
@@ -702,7 +710,11 @@ const Reserve = () => {
 
           {/* ---------------- MOBILE ---------------- */}
           <div tw="block lg:hidden mt-10">
-            <Auth onAuth={(info) => setAuthInfo(info)} onAgreementChange={(a) => setAgree(a)} />
+            <Auth
+              onAuth={(info) => setAuthInfo(info)}
+              onAgreementChange={(a) => setAgree(a)}
+              onBeforeKakaoAuth={backupToCookie}
+            />
 
             <Button
               tw="w-full h-[52px] mt-6 font-bold"

@@ -119,6 +119,48 @@ const useCart = () => {
     setCart(newCart)
   }
 
+  const backupToCookie = () => {
+    try {
+      const backup = {
+        cart,
+        checkedList,
+        inquiry,
+        inquiryMemo,
+        selectedDatetime: localStorage.getItem("reservation:selectedDatetime") || "",
+        today: localStorage.getItem("reservation:today") || "",
+      }
+      setCookie(BACKUP_COOKIE, JSON.stringify(backup), BACKUP_MAX_AGE)
+    } catch (e) {
+      console.warn("[cart] cookie backup failed", e)
+    }
+  }
+
+  const restoreFromCookie = () => {
+    try {
+      const raw = getCookie(BACKUP_COOKIE)
+      if (!raw) return null
+      const backup = JSON.parse(raw)
+      // localStorage가 비었을 때만 복원
+      if (cart.length === 0 && backup.cart?.length > 0) {
+        setCart(backup.cart)
+        setCheckedList(backup.checkedList || [])
+        setInquiry(backup.inquiry ?? false)
+        setInquiryMemo(backup.inquiryMemo || "")
+      }
+      if (backup.selectedDatetime) {
+        localStorage.setItem("reservation:selectedDatetime", backup.selectedDatetime)
+      }
+      if (backup.today) {
+        localStorage.setItem("reservation:today", backup.today)
+      }
+      deleteCookie(BACKUP_COOKIE)
+      return { selectedDatetime: backup.selectedDatetime, today: backup.today }
+    } catch (e) {
+      console.warn("[cart] cookie restore failed", e)
+      return null
+    }
+  }
+
   return {
     inquiry,
     setInquiry,
@@ -137,6 +179,8 @@ const useCart = () => {
     inquiryMemo,
     setInquiryMemo,
     hasHydrated: hasHydratedRef,
+    backupToCookie,
+    restoreFromCookie,
   }
 }
 

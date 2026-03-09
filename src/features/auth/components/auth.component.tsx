@@ -31,9 +31,10 @@ interface AuthInfo {
 interface Props {
   onAuth: (info: AuthInfo) => void
   onAgreementChange: (agree: { terms: boolean; privacy: boolean; marketing: boolean }) => void
+  onBeforeKakaoAuth?: () => void
 }
 
-const Auth = ({ onAuth, onAgreementChange }: Props) => {
+const Auth = ({ onAuth, onAgreementChange, onBeforeKakaoAuth }: Props) => {
   const { t } = useTranslation()
   const { language } = i18n
   const { user: me } = useMe()
@@ -229,6 +230,7 @@ const Auth = ({ onAuth, onAgreementChange }: Props) => {
                 tw="h-[80px] flex flex-col items-center justify-center gap-2 font-bold"
                 css={tw`flex-1 bg-[#FFE812]`}
                 onClick={() => {
+                  onBeforeKakaoAuth?.()
                   authService.loginWithKakaoSDK(pathVisit, detailVisit)
                 }}>
                 <Icon icon={KakaoLogoMini} size={25} />
