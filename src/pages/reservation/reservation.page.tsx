@@ -544,18 +544,20 @@ const Reservations = () => {
             </button>
           )}
 
-          {/* ---- 이메일 인증 ---- */}
-          <button
-            tw="flex flex-col items-center justify-center gap-2 font-bold text-white text-[15px] md:text-[17px]"
-            css={tw`bg-[#4DAA57]`}
-            style={{
-              width: isKorean ? "220px" : "220px",
-              height: "100px",
-            }}
-            onClick={() => setOpenEmailModal(true)}>
-            <Icon icon={EmailIcon} size={26} />
-            {t("reservePage.emailVerification")}
-          </button>
+          {/* ---- 이메일 인증 (한국어 제외) ---- */}
+          {!isKorean && (
+            <button
+              tw="flex flex-col items-center justify-center gap-2 font-bold text-white text-[15px] md:text-[17px]"
+              css={tw`bg-[#4DAA57]`}
+              style={{
+                width: "220px",
+                height: "100px",
+              }}
+              onClick={() => setOpenEmailModal(true)}>
+              <Icon icon={EmailIcon} size={26} />
+              {t("reservePage.emailVerification")}
+            </button>
+          )}
         </div>
 
         {/* ================= 이메일 인증 모달 ================= */}

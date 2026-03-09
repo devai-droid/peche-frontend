@@ -243,8 +243,8 @@ const Events = () => {
     ) {
       setParams(
         (prev) => {
-          prev.set("category", categories.items[0].id)
-          prev.set("bundle", visibleEvents[0].id)
+          prev.set("category", categories.items[0]?.id)
+          prev.set("bundle", visibleEvents[0]?.id)
           return prev
         },
         { replace: true },

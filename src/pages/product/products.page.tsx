@@ -114,7 +114,7 @@ const Products = () => {
   }
 
   useLayoutEffect(() => {
-    if (categories && !selectedCategoryId) {
+    if (categories && !selectedCategoryId && categories?.items?.[0]) {
       handleCategory(categories?.items[0].id, true)
     }
   }, [categories])
