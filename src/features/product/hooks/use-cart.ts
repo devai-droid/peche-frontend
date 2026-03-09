@@ -10,6 +10,23 @@ export interface CartItem {
   count: number
 }
 
+/* ---------- Cookie helpers (Safari ITP / 모바일 대응) ---------- */
+const BACKUP_COOKIE = "__cart_backup"
+const BACKUP_MAX_AGE = 300 // 5분
+
+function setCookie(name: string, value: string, maxAge: number) {
+  document.cookie = `${name}=${encodeURIComponent(value)};path=/;max-age=${maxAge};SameSite=Lax`
+}
+
+function getCookie(name: string): string | null {
+  const match = document.cookie.match(new RegExp(`(?:^|; )${name}=([^;]*)`))
+  return match ? decodeURIComponent(match[1]) : null
+}
+
+function deleteCookie(name: string) {
+  document.cookie = `${name}=;path=/;max-age=0`
+}
+
 const useCart = () => {
   const [inquiry, setInquiry] = useLocalStorage<boolean>("inquiry", false)
   const [cart, setCart] = useLocalStorage<CartItem[]>("cart", [])
