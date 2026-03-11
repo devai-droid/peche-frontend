@@ -4,6 +4,26 @@
 
 ---
 
+## [2026-03-11]
+
+### Changed - SNS 상담 아이콘 교체 및 인스타그램 추가
+
+- 인스타그램 상담 아이콘 신규 추가 (한국 외 전체 언어: EN/ZH/JA)
+  - 장바구니 Auth 섹션 (`auth.component.tsx`)
+  - 예약확인 페이지 (`reservation.page.tsx`)
+  - 모바일 하단 탭바 상담하기 (`cart-view.component.tsx`)
+- 카카오/WhatsApp/LINE/WeChat help 아이콘 이미지 업데이트 (고해상도)
+- 모바일 하단 인스타그램 버튼 초록색 배경 제거 → 이미지만 표시
+
+### Fixed - 카카오 인증 장바구니 백업 개선
+
+- Cookie 백업 데이터를 slim 포맷으로 변경 (4KB 쿠키 제한 대응)
+  - 전체 Event/Product 객체 대신 id, 다국어 name, price만 저장
+- Cookie domain을 `.pecheskin.clinic`으로 설정 (www/non-www 간 쿠키 공유)
+- 카카오 리다이렉트 핸들러에서 navigate 전에 localStorage 직접 복원
+
+---
+
 ## [2026-03-09]
 
 ### Fixed - 카카오 인증 후 장바구니/예약시간 소실 버그
