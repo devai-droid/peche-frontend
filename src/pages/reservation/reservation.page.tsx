@@ -442,6 +442,7 @@ const Reservations = () => {
 
     const [openEmailModal, setOpenEmailModal] = React.useState(false)
     const [openWeChatModal, setOpenWeChatModal] = React.useState(false)
+    const [openEmailConfirm, setOpenEmailConfirm] = React.useState(false)
 
     /* ---------- 상담채널 이미지 매핑 ---------- */
     const helpImageMap: Record<string, string | null> = {
@@ -543,7 +544,20 @@ const Reservations = () => {
             </button>
           )}
 
-          {/* ---- 이메일 인증 (한국어 제외) ---- */}
+          {/* ---- 이메일 인증 (한국어: confirm 선행 / 비한국어: 바로 열기) ---- */}
+          {isKorean && (
+            <button
+              tw="flex flex-col items-center justify-center gap-2 font-bold text-white text-[15px] md:text-[17px]"
+              css={tw`bg-[#4DAA57]`}
+              style={{
+                width: "220px",
+                height: "100px",
+              }}
+              onClick={() => setOpenEmailConfirm(true)}>
+              <Icon icon={EmailIcon} size={26} />
+              {t("reservePage.emailVerification")}
+            </button>
+          )}
           {!isKorean && (
             <button
               tw="flex flex-col items-center justify-center gap-2 font-bold text-white text-[15px] md:text-[17px]"
@@ -568,6 +582,38 @@ const Reservations = () => {
             window.location.reload()
           }}
         />
+        {/* ================= 이메일 인증 confirm 모달 (ko) ================= */}
+        <Modal open={openEmailConfirm} onClose={() => setOpenEmailConfirm(false)} width="max-w-md">
+          <div tw="-mx-10 -my-8 p-8 font-pretendard text-center">
+            <p tw="text-[16px] md:text-[18px] font-bold leading-[160%] mb-4 whitespace-pre-line">
+              이메일 인증은 <span tw="text-primary">해외 거주 고객 및</span>
+              {"\n"}
+              <span tw="text-primary">외국인 고객</span>을 위한 인증 방식입니다.
+              {"\n"}
+              국내 고객의 경우 카카오톡 인증을 이용해 주세요.
+            </p>
+            <p tw="text-[13px] md:text-[14px] text-neutral60 leading-[160%] mb-8 whitespace-pre-line">
+              {t("auth.emailConfirmLine2")}
+            </p>
+            <div tw="flex gap-3">
+              <Button
+                tw="flex-1 h-[44px] text-[14px] font-bold"
+                style={{ variant: "outlined", color: "gray" }}
+                onClick={() => setOpenEmailConfirm(false)}>
+                {t("reservationCheckPage.cancel")}
+              </Button>
+              <Button
+                tw="flex-1 h-[44px] text-[14px] font-bold"
+                style={{ variant: "filled", color: "point" }}
+                onClick={() => {
+                  setOpenEmailConfirm(false)
+                  setOpenEmailModal(true)
+                }}>
+                {t("auth.confirm")}
+              </Button>
+            </div>
+          </div>
+        </Modal>
         <Modal open={openWeChatModal} onClose={() => setOpenWeChatModal(false)} width="max-w-md">
           <div tw="-mx-10 -my-8">
             {/* 상단 영역 */}

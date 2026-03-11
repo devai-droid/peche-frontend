@@ -55,6 +55,7 @@ const Auth = ({ onAuth, onAgreementChange, onBeforeKakaoAuth }: Props) => {
 
   const [openEmailModal, setOpenEmailModal] = React.useState(false)
   const [openWeChatModal, setOpenWeChatModal] = React.useState(false)
+  const [openEmailConfirm, setOpenEmailConfirm] = React.useState(false)
 
   /* 전체동의 동기화 */
   React.useEffect(() => {
@@ -225,16 +226,25 @@ const Auth = ({ onAuth, onAgreementChange, onBeforeKakaoAuth }: Props) => {
           {/* ================= 인증 버튼 ================= */}
           <div tw="flex gap-3 justify-center items-center mb-6">
             {isKorean && (
-              <button
-                tw="h-[80px] flex flex-col items-center justify-center gap-2 font-bold"
-                css={tw`flex-1 bg-[#FFE812]`}
-                onClick={() => {
-                  onBeforeKakaoAuth?.()
-                  authService.loginWithKakaoSDK(pathVisit, detailVisit)
-                }}>
-                <Icon icon={KakaoLogoMini} size={25} />
-                카카오 인증
-              </button>
+              <>
+                <button
+                  tw="h-[80px] flex flex-col items-center justify-center gap-2 font-bold"
+                  css={tw`flex-1 bg-[#FFE812]`}
+                  onClick={() => {
+                    onBeforeKakaoAuth?.()
+                    authService.loginWithKakaoSDK(pathVisit, detailVisit)
+                  }}>
+                  <Icon icon={KakaoLogoMini} size={25} />
+                  카카오 인증
+                </button>
+                <button
+                  tw="h-[80px] flex flex-col items-center justify-center gap-2 font-bold text-white"
+                  css={tw`flex-1 bg-[#4DAA57]`}
+                  onClick={() => setOpenEmailConfirm(true)}>
+                  <Icon icon={EmailIcon} size={25} />
+                  {t("reservePage.emailVerification")}
+                </button>
+              </>
             )}
 
             {!isKorean && (
@@ -340,6 +350,38 @@ const Auth = ({ onAuth, onAgreementChange, onBeforeKakaoAuth }: Props) => {
           onAuth(info)
         }}
       />
+      {/* ================= 이메일 인증 confirm 모달 (ko) ================= */}
+      <Modal open={openEmailConfirm} onClose={() => setOpenEmailConfirm(false)} width="max-w-md">
+        <div tw="-mx-10 -my-8 p-8 font-pretendard text-center">
+          <p tw="text-[16px] lg:text-[18px] font-bold leading-[160%] mb-4 whitespace-pre-line">
+            이메일 인증은 <span tw="text-primary">해외 거주 고객 및</span>
+            {"\n"}
+            <span tw="text-primary">외국인 고객</span>을 위한 인증 방식입니다.
+            {"\n"}
+            국내 고객의 경우 카카오톡 인증을 이용해 주세요.
+          </p>
+          <p tw="text-[13px] lg:text-[14px] text-neutral60 leading-[160%] mb-8 whitespace-pre-line">
+            {t("auth.emailConfirmLine2")}
+          </p>
+          <div tw="flex gap-3">
+            <Button
+              tw="flex-1 h-[44px] text-[14px] font-bold"
+              style={{ variant: "outlined", color: "gray" }}
+              onClick={() => setOpenEmailConfirm(false)}>
+              {t("reservationCheckPage.cancel")}
+            </Button>
+            <Button
+              tw="flex-1 h-[44px] text-[14px] font-bold"
+              style={{ variant: "filled", color: "point" }}
+              onClick={() => {
+                setOpenEmailConfirm(false)
+                setOpenEmailModal(true)
+              }}>
+              {t("auth.confirm")}
+            </Button>
+          </div>
+        </div>
+      </Modal>
       <Modal open={openWeChatModal} onClose={() => setOpenWeChatModal(false)} width="max-w-md">
         <div tw="-mx-10 -my-8">
           {/* 상단 회색 영역 */}
