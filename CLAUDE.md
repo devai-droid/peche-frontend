@@ -16,7 +16,7 @@
 
 - Webhook URL: AWS SSM `/peche/prod/base/slack/webhook-url` (SecureString)
 - 알림 스크립트: `./scripts/slack-notify.sh`
-- 업데이트 템플릿: `./scripts/slack-notify.sh update "v버전" "변경사항1" "변경사항2"`
+- 업데이트 템플릿: `./scripts/slack-notify.sh update "" "변경사항1" "변경사항2"` (버전 빈값이면 package.json에서 자동 읽기)
 - 자유 메시지: `./scripts/slack-notify.sh msg "내용"`
 
 ## 배포

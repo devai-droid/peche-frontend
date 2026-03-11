@@ -30,8 +30,15 @@ DATE=$(date '+%Y-%m-%d %H:%M')
 if [ "$MODE" = "update" ]; then
   VERSION="${2}"
   if [ -z "$VERSION" ]; then
-    echo "버전을 입력하세요 (예: v1.0.1):"
-    read VERSION
+    # package.json에서 버전 자동 읽기
+    SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+    PKG_VERSION=$(node -p "require('${SCRIPT_DIR}/../package.json').version" 2>/dev/null)
+    if [ -n "$PKG_VERSION" ]; then
+      VERSION="v${PKG_VERSION}"
+    else
+      echo "버전을 입력하세요 (예: v1.0.1):"
+      read VERSION
+    fi
   fi
 
   # 3번째 인자부터 변경사항 수집
