@@ -13,9 +13,10 @@ export interface CartItem {
 /* ---------- Cookie helpers (Safari ITP / 모바일 대응) ---------- */
 const BACKUP_COOKIE = "__cart_backup"
 const BACKUP_MAX_AGE = 300 // 5분
+const COOKIE_DOMAIN = window.location.hostname.replace(/^www\./, "")
 
 function setCookie(name: string, value: string, maxAge: number) {
-  document.cookie = `${name}=${encodeURIComponent(value)};path=/;max-age=${maxAge};SameSite=Lax`
+  document.cookie = `${name}=${encodeURIComponent(value)};path=/;max-age=${maxAge};SameSite=Lax;domain=.${COOKIE_DOMAIN}`
 }
 
 function getCookie(name: string): string | null {
@@ -24,7 +25,54 @@ function getCookie(name: string): string | null {
 }
 
 function deleteCookie(name: string) {
-  document.cookie = `${name}=;path=/;max-age=0`
+  document.cookie = `${name}=;path=/;max-age=0;domain=.${COOKIE_DOMAIN}`
+}
+
+/** Cart item → 쿠키용 최소 데이터 (4KB 제한 대응) */
+function slimCartItem(item: CartItem) {
+  const e = item.event
+  const p = item.product
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const slim: any = { c: item.count }
+  if (e) {
+    slim.e = {
+      id: e.id,
+      name: e.name,
+      nameEN: e.nameEN,
+      nameJA: e.nameJA,
+      nameTH: e.nameTH,
+      nameZH: e.nameZH,
+      nameZHTW: e.nameZHTW,
+      price: e.price,
+      discountPrice: e.discountPrice,
+      category: e.category
+        ? { startDate: e.category.startDate, endDate: e.category.endDate }
+        : undefined,
+    }
+  }
+  if (p) {
+    slim.p = {
+      id: p.id,
+      name: p.name,
+      nameEN: p.nameEN,
+      nameJA: p.nameJA,
+      nameTH: p.nameTH,
+      nameZH: p.nameZH,
+      nameZHTW: p.nameZHTW,
+      price: p.price,
+    }
+  }
+  return slim
+}
+
+/** 쿠키 최소 데이터 → CartItem 복원 */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function fattenCartItem(slim: any): CartItem {
+  return {
+    event: slim.e ? (slim.e as Event) : undefined,
+    product: slim.p ? (slim.p as Product) : undefined,
+    count: slim.c,
+  }
 }
 
 const useCart = () => {
@@ -122,12 +170,12 @@ const useCart = () => {
   const backupToCookie = () => {
     try {
       const backup = {
-        cart,
-        checkedList,
-        inquiry,
-        inquiryMemo,
-        selectedDatetime: localStorage.getItem("reservation:selectedDatetime") || "",
-        today: localStorage.getItem("reservation:today") || "",
+        items: cart.map(slimCartItem),
+        cl: checkedList,
+        inq: inquiry,
+        im: inquiryMemo,
+        dt: localStorage.getItem("reservation:selectedDatetime") || "",
+        td: localStorage.getItem("reservation:today") || "",
       }
       setCookie(BACKUP_COOKIE, JSON.stringify(backup), BACKUP_MAX_AGE)
     } catch (e) {
@@ -138,23 +186,26 @@ const useCart = () => {
   const restoreFromCookie = () => {
     try {
       const raw = getCookie(BACKUP_COOKIE)
-      if (!raw) return null
+      if (!raw) {
+        return null
+      }
       const backup = JSON.parse(raw)
+      const restoredCart = (backup.items || []).map(fattenCartItem)
       // localStorage가 비었을 때만 복원
-      if (cart.length === 0 && backup.cart?.length > 0) {
-        setCart(backup.cart)
-        setCheckedList(backup.checkedList || [])
-        setInquiry(backup.inquiry ?? false)
-        setInquiryMemo(backup.inquiryMemo || "")
+      if (cart.length === 0 && restoredCart.length > 0) {
+        setCart(restoredCart)
+        setCheckedList(backup.cl || [])
+        setInquiry(backup.inq ?? false)
+        setInquiryMemo(backup.im || "")
       }
-      if (backup.selectedDatetime) {
-        localStorage.setItem("reservation:selectedDatetime", backup.selectedDatetime)
+      if (backup.dt) {
+        localStorage.setItem("reservation:selectedDatetime", backup.dt)
       }
-      if (backup.today) {
-        localStorage.setItem("reservation:today", backup.today)
+      if (backup.td) {
+        localStorage.setItem("reservation:today", backup.td)
       }
       deleteCookie(BACKUP_COOKIE)
-      return { selectedDatetime: backup.selectedDatetime, today: backup.today }
+      return { selectedDatetime: backup.dt, today: backup.td }
     } catch (e) {
       console.warn("[cart] cookie restore failed", e)
       return null

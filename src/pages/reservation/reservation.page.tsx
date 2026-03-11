@@ -13,8 +13,7 @@ import KakaoHelp from "@/assets/images/sns/icon_kakao_help.png"
 import WhatsAppHelp from "@/assets/images/sns/icon_WhatsApp_help.png"
 import LineHelp from "@/assets/images/sns/icon_LINE_help.png"
 import WeChatHelp from "@/assets/images/sns/icon_WeChat_help.png"
-// TODO: icon_Instagram_help.png 에셋 추가 후 교체 예정
-import InstaHelpIcon from "@/assets/icons/Logo-Insta.svg"
+import InstaHelpIcon from "@/assets/images/sns/icon_instagram_help.png"
 import wechatQrImg from "@/assets/images/wechat-qr.png"
 import EmailAuthModal from "@/features/auth/components/email-auth-modal.component"
 

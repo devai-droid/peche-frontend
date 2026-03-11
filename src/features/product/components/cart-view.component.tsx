@@ -12,8 +12,7 @@ import KakaoImg from "@/assets/images/sns/kakao.png"
 import LineImg from "@/assets/images/sns/line.png"
 import WhatsAppImg from "@/assets/images/sns/whatsapp.png"
 import WeChatImg from "@/assets/images/sns/wechat.png"
-// TODO: instagram.png 에셋 추가 후 교체 예정
-import InstaImg from "@/assets/icons/Logo-Insta.svg"
+import InstaImg from "@/assets/images/sns/instagram.png"
 import wechatQrImg from "@/assets/images/wechat-qr.png"
 import useCustomNavigate from "@/lib/hooks/use-custom-navigate"
 import Modal from "@/lib/components/modal/modal.component"
@@ -23,6 +22,7 @@ const InquiryButton = tw.button`rounded-lg w-16 h-16 flex justify-center items-c
 
 const kakao = tw`bg-[#FFE812]`
 const line = tw`bg-[#00CF2E] text-white`
+const insta = tw`bg-transparent p-0`
 
 const SurgeryItem = ({
   item,
@@ -644,7 +644,7 @@ const BottomButtons = ({
       id: 7,
       name: t("button.inquiryButton.instagram"),
       icon: InstaImg,
-      css: line,
+      css: insta,
       lang: [Language.ENG],
       link: "https://www.instagram.com/pecheclinic.en/",
     },
@@ -652,7 +652,7 @@ const BottomButtons = ({
       id: 8,
       name: t("button.inquiryButton.instagram"),
       icon: InstaImg,
-      css: line,
+      css: insta,
       lang: [Language.CHN],
       link: "https://www.instagram.com/pecheclinic.cn/",
     },
@@ -660,7 +660,7 @@ const BottomButtons = ({
       id: 9,
       name: t("button.inquiryButton.instagram"),
       icon: InstaImg,
-      css: line,
+      css: insta,
       lang: [Language.JPN],
       link: "https://www.instagram.com/pecheclinic.jp/",
     },
