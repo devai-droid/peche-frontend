@@ -175,7 +175,7 @@ const HeaderLanguage = () => {
             borderRadius: 0,
             overflow: "hidden",
             boxShadow: "0 8px 24px rgba(0,0,0,0.3)",
-            minWidth: "90px",
+            width: "auto",
             paddingTop: "4px",
             paddingBottom: "4px",
           }}>
@@ -187,7 +187,7 @@ const HeaderLanguage = () => {
                 display: "flex",
                 alignItems: "center",
                 gap: "8px",
-                padding: "8px 16px",
+                padding: "8px 12px",
                 color: lang.key === current.key ? "#DA7F67" : "white",
                 background: "transparent",
                 border: "none",
