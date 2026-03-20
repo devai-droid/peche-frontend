@@ -30,6 +30,8 @@ const Blog = () => {
 
   const { data: eventCategoriesData } = useEventCategoryControllerFindManyWithPaginationQuery({
     status: EventCategoryControllerFindManyWithPaginationQueryStatus.ACTIVE,
+    sortBy: ["order"],
+    sortOrder: ["ASC"],
     limit: 100,
   })
 
