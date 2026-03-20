@@ -4,13 +4,14 @@ import tw from "twin.macro"
 import HeaderNavigator from "./header-navigator.component"
 import HeaderComponent from "./header.component"
 import HeaderSearch from "./header-search.component"
-import { AppBar } from "@mui/material"
+import { AppBar, Slide, useScrollTrigger } from "@mui/material"
 import useResponsive from "@/lib/hooks/use-responsive"
 
 const DropShadow = tw.div`w-full h-full bg-white border-b border-neutral20`
 
 interface HeaderProps {
   hideNavigator?: boolean
+  hideOnScroll?: boolean
   onClickDrawer?: () => void
   clickedKeyword?: string
   setClickedKeyword?: (keyword: string) => void
@@ -18,11 +19,13 @@ interface HeaderProps {
 
 const Header = ({
   hideNavigator,
+  hideOnScroll,
   onClickDrawer,
   clickedKeyword,
   setClickedKeyword,
 }: HeaderProps) => {
   const { isDesktop } = useResponsive()
+  const scrollTrigger = useScrollTrigger()
 
   useEffect(() => {
     if (clickedKeyword) {
@@ -31,29 +34,39 @@ const Header = ({
   }, [clickedKeyword])
   const [openSearch, setOpenSearch] = React.useState(false)
 
+  const appBar = (
+    <AppBar sx={{ background: "transparent", boxShadow: "none", color: "black" }}>
+      {/* 모바일 */}
+      <DropShadow>
+        <HeaderComponent
+          onClickDrawer={onClickDrawer}
+          clickedKeyword={clickedKeyword}
+          setClickedKeyword={setClickedKeyword}
+        />
+        {!hideNavigator && <HeaderNavigator />}
+      </DropShadow>
+      {/* 데탑 */}
+      {isDesktop && (
+        <HeaderSearch
+          open={openSearch}
+          setOpen={setOpenSearch}
+          clickedKeyword={clickedKeyword}
+          setClickedKeyword={setClickedKeyword}
+        />
+      )}
+    </AppBar>
+  )
+
   return (
     <>
-      <AppBar sx={{ background: "transparent", boxShadow: "none", color: "black" }}>
-        {/* 모바일 */}
-        <DropShadow>
-          <HeaderComponent
-            onClickDrawer={onClickDrawer}
-            clickedKeyword={clickedKeyword}
-            setClickedKeyword={setClickedKeyword}
-          />
-          {!hideNavigator && <HeaderNavigator />}
-        </DropShadow>
-        {/* 데탑 */}
-        {isDesktop && (
-          <HeaderSearch
-            open={openSearch}
-            setOpen={setOpenSearch}
-            clickedKeyword={clickedKeyword}
-            setClickedKeyword={setClickedKeyword}
-          />
-        )}
-      </AppBar>
-      {isDesktop && <div id="header-height" tw="h-28" />}
+      {hideOnScroll ? (
+        <Slide appear={false} direction="down" in={!scrollTrigger}>
+          {appBar}
+        </Slide>
+      ) : (
+        appBar
+      )}
+      <div id="header-height" tw="h-[120px] lg:h-28" />
     </>
   )
 }

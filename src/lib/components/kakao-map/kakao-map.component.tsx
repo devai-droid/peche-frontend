@@ -20,13 +20,14 @@ const location = {
   lng: 127.0294,
 }
 
-const { kakao } = window as unknown as { kakao: Kakao }
-
 const KakaoMap = () => {
   const { t, i18n } = useTranslation()
   const language = i18n.language as Language
 
   useEffect(() => {
+    const { kakao } = window as unknown as { kakao: Kakao }
+    if (!kakao?.maps) return
+
     const container = document.getElementById("map")
     const options = {
       center: new kakao.maps.LatLng(location.lat, location.lng),
@@ -44,11 +45,11 @@ const KakaoMap = () => {
     const infoWindow1 = new kakao.maps.InfoWindow({
       content: `
         <div style="
-          padding:10px; 
-          font-size:14px; 
-          border-radius:5px; 
-          background-color:#fff; 
-          box-shadow:0px 2px 5px rgba(0,0,0,0.3); 
+          padding:10px;
+          font-size:14px;
+          border-radius:5px;
+          background-color:#fff;
+          box-shadow:0px 2px 5px rgba(0,0,0,0.3);
           max-width:200px;">
           <strong>${t("footer.address")}</strong>
           <br />

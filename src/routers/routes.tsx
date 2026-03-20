@@ -13,8 +13,12 @@ import KakaoRedirectedOauthPage from "@/pages/auth/kakao-redirected-oauth/kakao-
 import TermsOfService from "@/pages/terms/term-of-service.page"
 import PrivacyPolicy from "@/pages/terms/privacy-policy.page"
 import Blog from "@/pages/blog/blog.page"
+import BlogDetail from "@/pages/blog/blog-detail.page"
+import BlogWrite from "@/pages/blog/blog-write.page"
 import Signup from "@/pages/signup/signup.page"
 import SignupComplete from "@/pages/signup/signup-complete.page"
+import AdminLogin from "@/pages/admin/admin-login.page"
+import AdminCategories from "@/pages/admin/admin-categories.page"
 
 const router = createBrowserRouter([
   {
@@ -75,6 +79,11 @@ const router = createBrowserRouter([
         ],
       },
       { path: "blog", element: <Blog /> },
+      { path: "blog/write", element: <BlogWrite /> },
+      { path: "blog/edit/:slug", element: <BlogWrite /> },
+      { path: "blog/:slug", element: <BlogDetail /> },
+      { path: "admin/login", element: <AdminLogin /> },
+      { path: "admin/categories", element: <AdminCategories /> },
       { path: "termsofservice", element: <TermsOfService /> },
       { path: "privacypolicy", element: <PrivacyPolicy /> },
       { path: "signup", element: <Signup /> },

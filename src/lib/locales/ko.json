@@ -387,6 +387,41 @@
   "blog": {
     "title": "Blog",
     "subtitle": "블로그",
-    "notAvailable": "서비스 준비 중입니다."
+    "notAvailable": "서비스 준비 중입니다.",
+    "noPosts": "아직 게시된 글이 없습니다.",
+    "backToList": "목록으로",
+    "write": "글쓰기",
+    "edit": "수정",
+    "delete": "삭제",
+    "save": "저장",
+    "cancel": "취소",
+    "titleField": "제목",
+    "summaryField": "요약",
+    "contentField": "본문",
+    "slugField": "URL 슬러그",
+    "authorField": "작성자",
+    "thumbnailField": "썸네일 URL",
+    "categoryField": "카테고리",
+    "publishDate": "게시일",
+    "editPost": "수정",
+    "allCategory": "전체",
+    "deletePost": "삭제",
+    "deleteConfirm": "정말 삭제하시겠습니까?",
+    "toc": "목차",
+    "profileClinic": "페슈의원",
+    "profileTitle": "피부과전문의",
+    "profileDesc": "대한민국 전체 의사 중 단 2%에 해당하는 피부과 전문의로서, 안티에이징과 피부 재생 분야에서 다수의 학회 활동과 풍부한 임상 연구를 통해 축적한 전문 지식을 바탕으로, 개개인의 피부 상태에 최적화된 치료 시스템을 제공합니다.",
+    "profileMore": "자세히 보기 →",
+    "viewEvents": "관련 시술 이벤트 가격 보기"
+  },
+  "admin": {
+    "login": "관리자 로그인",
+    "email": "이메일",
+    "password": "비밀번호",
+    "loginButton": "로그인",
+    "loginError": "이메일 또는 비밀번호가 올바르지 않습니다.",
+    "categories": "카테고리 관리",
+    "addCategory": "카테고리 추가",
+    "categoryName": "카테고리명"
   }
 }

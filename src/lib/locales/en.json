@@ -387,6 +387,41 @@
   "blog": {
     "title": "Blog",
     "subtitle": "Blog",
-    "notAvailable": "The service is currently under preparation."
+    "notAvailable": "The service is currently under preparation.",
+    "noPosts": "No posts yet.",
+    "backToList": "Back to list",
+    "write": "Write",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "cancel": "Cancel",
+    "titleField": "Title",
+    "summaryField": "Summary",
+    "contentField": "Content",
+    "slugField": "URL Slug",
+    "authorField": "Author",
+    "thumbnailField": "Thumbnail URL",
+    "categoryField": "Category",
+    "publishDate": "Publish date",
+    "editPost": "Edit",
+    "allCategory": "All",
+    "deletePost": "Delete",
+    "deleteConfirm": "Are you sure you want to delete this post?",
+    "toc": "Table of Contents",
+    "profileClinic": "Peche Clinic",
+    "profileTitle": "Board-Certified Dermatologist",
+    "profileDesc": "As one of the top 2% of board-certified dermatologists in South Korea, our specialist brings extensive clinical research and academic experience in anti-aging and skin regeneration to provide optimized treatment systems tailored to each individual's skin condition.",
+    "profileMore": "Learn more →",
+    "viewEvents": "View Related Treatment Event Prices"
+  },
+  "admin": {
+    "login": "Admin Login",
+    "email": "Email",
+    "password": "Password",
+    "loginButton": "Log in",
+    "loginError": "Invalid email or password.",
+    "categories": "Category Management",
+    "addCategory": "Add Category",
+    "categoryName": "Category Name"
   }
 }

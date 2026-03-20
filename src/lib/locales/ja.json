@@ -404,13 +404,15 @@
     "categoryField": "カテゴリー",
     "publishDate": "公開日",
     "editPost": "編集",
+    "allCategory": "全て",
     "deletePost": "削除",
     "deleteConfirm": "本当にこの記事を削除しますか？",
     "toc": "目次",
     "profileClinic": "ペシュクリニック",
     "profileTitle": "皮膚科専門医",
     "profileDesc": "韓国の全医師のわずか2%に該当する皮膚科専門医として、アンチエイジングと皮膚再生分野での数多くの学会活動と豊富な臨床研究を通じて蓄積した専門知識を基に、一人ひとりの肌状態に最適化された治療システムを提供しています。",
-    "profileMore": "詳しく見る →"
+    "profileMore": "詳しく見る →",
+    "viewEvents": "関連施術イベント価格を見る"
   },
   "admin": {
     "login": "管理者ログイン",

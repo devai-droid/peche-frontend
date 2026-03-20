@@ -404,13 +404,15 @@
     "categoryField": "分类",
     "publishDate": "发布日期",
     "editPost": "编辑",
+    "allCategory": "全部",
     "deletePost": "删除",
     "deleteConfirm": "确定要删除这篇文章吗？",
     "toc": "目录",
     "profileClinic": "Peche皮肤科",
     "profileTitle": "皮肤科专科医生",
     "profileDesc": "作为韩国仅占全体医生2%的皮肤科专科医生，凭借在抗衰老和皮肤再生领域的多次学术活动和丰富的临床研究积累的专业知识，提供针对每个人皮肤状态优化的治疗方案。",
-    "profileMore": "了解更多 →"
+    "profileMore": "了解更多 →",
+    "viewEvents": "查看相关疗程活动价格"
   },
   "admin": {
     "login": "管理员登录",

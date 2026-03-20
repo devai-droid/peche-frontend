@@ -7,6 +7,7 @@ interface Props {
   children?: React.ReactNode
   header?: HeaderProps
   hiddenFooter?: boolean
+  hideOnScroll?: boolean
   bottomCartExists?: boolean
   clickedKeyword?: string
   setClickedKeyword?: (keyword: string) => void
@@ -16,6 +17,7 @@ const Page = ({
   children,
   header,
   hiddenFooter = true,
+  hideOnScroll = false,
   bottomCartExists = false,
   clickedKeyword,
   setClickedKeyword,
@@ -27,6 +29,7 @@ const Page = ({
       <AppDrawer open={openDrawer} onClose={() => setOpenDrawer(false)} />
       <Header
         {...header}
+        hideOnScroll={hideOnScroll}
         onClickDrawer={() => setOpenDrawer(true)}
         clickedKeyword={clickedKeyword}
         setClickedKeyword={setClickedKeyword}

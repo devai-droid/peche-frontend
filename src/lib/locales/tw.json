@@ -404,13 +404,15 @@
     "categoryField": "分類",
     "publishDate": "發佈日期",
     "editPost": "編輯",
+    "allCategory": "全部",
     "deletePost": "刪除",
     "deleteConfirm": "確定要刪除這篇文章嗎？",
     "toc": "目錄",
     "profileClinic": "Peche皮膚科",
     "profileTitle": "皮膚科專科醫師",
     "profileDesc": "作為韓國僅佔全體醫師2%的皮膚科專科醫師，憑藉在抗衰老和皮膚再生領域的多次學術活動和豐富的臨床研究積累的專業知識，提供針對每個人皮膚狀態優化的治療方案。",
-    "profileMore": "了解更多 →"
+    "profileMore": "了解更多 →",
+    "viewEvents": "查看相關療程活動價格"
   },
   "admin": {
     "login": "管理員登入",

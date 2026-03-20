@@ -16,6 +16,13 @@ module.exports = merge(common, {
     port: 8086,
     historyApiFallback: true,
     liveReload: true,
+    allowedHosts: "all",
+    proxy: {
+      "/api": {
+        target: "http://localhost:3007",
+        changeOrigin: true,
+      },
+    },
   },
   output: {
     filename: "[name].js",

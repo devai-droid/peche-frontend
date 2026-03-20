@@ -243,7 +243,7 @@ const Events = () => {
     ) {
       setParams(
         (prev) => {
-          prev.set("category", categories.items[0]?.id)
+          if (!selectedCategoryId) prev.set("category", categories.items[0]?.id)
           prev.set("bundle", visibleEvents[0]?.id)
           return prev
         },
