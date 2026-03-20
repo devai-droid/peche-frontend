@@ -14,8 +14,9 @@ import WhatsAppHelp from "@/assets/images/sns/icon_WhatsApp_help.png"
 import LineHelp from "@/assets/images/sns/icon_LINE_help.png"
 import WeChatHelp from "@/assets/images/sns/icon_WeChat_help.png"
 import InstaHelpIcon from "@/assets/images/sns/icon_instagram_help.png"
-import wechatQrImg from "@/assets/images/wechat-qr.png"
+import wechatQrImg from "@/assets/images/wechat-qr.jpg"
 import EmailAuthModal from "@/features/auth/components/email-auth-modal.component"
+import WhatsAppQrModal from "@/lib/components/whatsapp-qr-modal.component"
 
 import React, { useEffect, useState } from "react"
 import tw, { styled } from "twin.macro"
@@ -23,6 +24,7 @@ import dayjs from "dayjs"
 import { Language } from "@/lib/locales/i18n.config"
 import { useTranslation } from "react-i18next"
 import { useMe } from "@/features/user/hooks/use-user"
+import { useAdminAuth } from "@/lib/hooks/use-admin-auth"
 import utc from "dayjs/plugin/utc"
 import timezone from "dayjs/plugin/timezone"
 import localizedFormat from "dayjs/plugin/localizedFormat"
@@ -128,7 +130,8 @@ const Reservations = () => {
   const { t, i18n } = useTranslation()
   const { language } = i18n
   const { user } = useMe()
-  const [authenticated, setAuthenticated] = React.useState(!!user?.id)
+  const { isAdmin } = useAdminAuth()
+  const [authenticated, setAuthenticated] = React.useState(!!user?.id && !isAdmin)
   dayjs.extend(utc)
   dayjs.extend(timezone)
 
@@ -149,8 +152,8 @@ const Reservations = () => {
   const pastReservations: Reservation[] = []
 
   React.useEffect(() => {
-    setAuthenticated(!!user?.id)
-  }, [user])
+    setAuthenticated(!!user?.id && !isAdmin)
+  }, [user, isAdmin])
 
   reservations.forEach((r) => {
     const date = dayjs.utc(r.datetime).tz("Asia/Seoul")
@@ -442,6 +445,7 @@ const Reservations = () => {
 
     const [openEmailModal, setOpenEmailModal] = React.useState(false)
     const [openWeChatModal, setOpenWeChatModal] = React.useState(false)
+    const [openWhatsAppModal, setOpenWhatsAppModal] = React.useState(false)
     const [openEmailConfirm, setOpenEmailConfirm] = React.useState(false)
 
     /* ---------- 상담채널 이미지 매핑 ---------- */
@@ -477,6 +481,11 @@ const Reservations = () => {
     const handleHelpClick = () => {
       if (language === Language.CHN) {
         setOpenWeChatModal(true)
+        return
+      }
+
+      if (language === Language.ENG) {
+        setOpenWhatsAppModal(true)
         return
       }
 
@@ -633,6 +642,7 @@ const Reservations = () => {
             </div>
           </div>
         </Modal>
+        <WhatsAppQrModal open={openWhatsAppModal} onClose={() => setOpenWhatsAppModal(false)} />
       </>
     )
   }

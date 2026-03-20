@@ -35,6 +35,7 @@ import crewPicture from "@/assets/images/crew-picture.jpg"
 import { useTranslation } from "react-i18next"
 import useCustomNavigate from "@/lib/hooks/use-custom-navigate"
 import { Language } from "@/lib/locales/i18n.config"
+import WhatsAppQrModal from "@/lib/components/whatsapp-qr-modal.component"
 
 const PageContainer = tw.div`w-full flex flex-col items-center bg-white`
 
@@ -499,6 +500,7 @@ const Intro = () => {
   }, [])
 
   const [openWeChatModal, setOpenWeChatModal] = React.useState(false)
+  const [openWhatsAppModal, setOpenWhatsAppModal] = React.useState(false)
 
   const handleChatClick = () => {
     if (language === "ko") {
@@ -518,7 +520,7 @@ const Intro = () => {
     }
 
     if (language === "en") {
-      window.open("https://wa.me/message/3ARKGGTBNAY2M1", "_blank")
+      setOpenWhatsAppModal(true)
       return
     }
 
@@ -847,6 +849,7 @@ const Intro = () => {
           </MapSection>
         </PageContainer>
       </CartView>
+      <WhatsAppQrModal open={openWhatsAppModal} onClose={() => setOpenWhatsAppModal(false)} />
     </Page>
   )
 }

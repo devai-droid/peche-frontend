@@ -1,13 +1,14 @@
 import React from "react"
 import tw, { styled } from "twin.macro"
 import { CloseIcon } from "@/assets/icon"
-import wechatQrImg from "@/assets/images/wechat-qr.png"
+import wechatQrImg from "@/assets/images/wechat-qr.jpg"
 import GoogleMapComponent from "@/lib/components/google-map/google-map.component"
 import KakaoMap from "@/lib/components/kakao-map/kakao-map.component"
 import { useTranslation } from "react-i18next"
 import useCustomNavigate from "@/lib/hooks/use-custom-navigate"
 import { Language } from "@/lib/locales/i18n.config"
 import Modal from "@/lib/components/modal/modal.component"
+import WhatsAppQrModal from "@/lib/components/whatsapp-qr-modal.component"
 
 const MapSection = tw.section`
   w-full bg-neutral overflow-hidden
@@ -71,6 +72,7 @@ const Location = () => {
   const language = i18n.language as Language
 
   const [openWeChatModal, setOpenWeChatModal] = React.useState(false)
+  const [openWhatsAppModal, setOpenWhatsAppModal] = React.useState(false)
 
   const handleChatClick = () => {
     if (language === "ko") {
@@ -90,7 +92,7 @@ const Location = () => {
     }
 
     if (language === "en") {
-      window.open("https://wa.me/message/3ARKGGTBNAY2M1", "_blank")
+      setOpenWhatsAppModal(true)
       return
     }
 
@@ -174,6 +176,7 @@ const Location = () => {
           </div>
         </div>
       </Modal>
+      <WhatsAppQrModal open={openWhatsAppModal} onClose={() => setOpenWhatsAppModal(false)} />
     </MapSection>
   )
 }

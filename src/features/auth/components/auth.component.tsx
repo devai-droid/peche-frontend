@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next"
 import i18n from "i18next"
 import { Language } from "@/lib/locales/i18n.config"
 import { KakaoLogoMini, EmailIcon, CloseIcon } from "@/assets/icon"
-import wechatQrImg from "@/assets/images/wechat-qr.png"
+import wechatQrImg from "@/assets/images/wechat-qr.jpg"
 import { Checkbox, Icon, Button } from "@/design-system/components"
 import KakaoHelp from "@/assets/images/sns/icon_kakao_help.png"
 import WhatsAppHelp from "@/assets/images/sns/icon_WhatsApp_help.png"
@@ -17,6 +17,7 @@ import EmailAuthModal from "./email-auth-modal.component"
 import { useMe } from "@/features/user/hooks/use-user"
 import { useLogout } from "@/features/auth/hooks/use-auth"
 import Modal from "@/lib/components/modal/modal.component"
+import WhatsAppQrModal from "@/lib/components/whatsapp-qr-modal.component"
 
 const H2 = tw.h2`text-lg font-extrabold`
 
@@ -55,6 +56,7 @@ const Auth = ({ onAuth, onAgreementChange, onBeforeKakaoAuth }: Props) => {
 
   const [openEmailModal, setOpenEmailModal] = React.useState(false)
   const [openWeChatModal, setOpenWeChatModal] = React.useState(false)
+  const [openWhatsAppModal, setOpenWhatsAppModal] = React.useState(false)
   const [openEmailConfirm, setOpenEmailConfirm] = React.useState(false)
 
   /* 전체동의 동기화 */
@@ -124,6 +126,11 @@ const Auth = ({ onAuth, onAgreementChange, onBeforeKakaoAuth }: Props) => {
   const handleHelpClick = () => {
     if (language === Language.CHN) {
       setOpenWeChatModal(true)
+      return
+    }
+
+    if (language === Language.ENG) {
+      setOpenWhatsAppModal(true)
       return
     }
 
@@ -401,6 +408,7 @@ const Auth = ({ onAuth, onAgreementChange, onBeforeKakaoAuth }: Props) => {
           </div>
         </div>
       </Modal>
+      <WhatsAppQrModal open={openWhatsAppModal} onClose={() => setOpenWhatsAppModal(false)} />
     </div>
   )
 }

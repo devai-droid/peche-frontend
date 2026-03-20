@@ -17,7 +17,7 @@ import {
   LineIcon,
   WhatsappIcon,
 } from "@/assets/icon"
-import wechatQrImg from "@/assets/images/wechat-qr.png"
+import wechatQrImg from "@/assets/images/wechat-qr.jpg"
 import { IconButton, Logo, MobileLogo } from "@/design-system/components"
 import AppMaxWidth from "../app-max-width.component"
 import useResponsive from "@/lib/hooks/use-responsive"
@@ -31,6 +31,7 @@ import { Language } from "@/lib/locales/i18n.config"
 import { useSearchControllerFindMany } from "@/lib/orval/search/search"
 import CustomLink from "../../custom-link.component"
 import Modal from "@/lib/components/modal/modal.component"
+import WhatsAppQrModal from "@/lib/components/whatsapp-qr-modal.component"
 import useCart from "@/features/product/hooks/use-cart"
 
 const HeaderContainer = tw.header`h-16 lg:h-20 relative bg-neutral`
@@ -55,7 +56,7 @@ interface SocialLinkItem {
 interface SocialModalItem {
   icon: React.FC<React.SVGProps<SVGSVGElement>>
   type: "modal"
-  modalKey: string
+  modalKey: "wechat" | "whatsapp"
   url?: undefined
 }
 
@@ -70,7 +71,7 @@ const SOCIAL_LINKS: Record<Language, SocialItem[]> = {
     { icon: InstaLogoIcon, url: "https://www.instagram.com/peche_clinic/" },
   ],
   en: [
-    { icon: WhatsappIcon, url: "https://wa.me/message/3ARKGGTBNAY2M1" },
+    { icon: WhatsappIcon, type: "modal", modalKey: "whatsapp" },
     { icon: InstaLogoIcon, url: "https://www.instagram.com/pecheclinic.en/" },
     { icon: TiktokIcon, url: "https://www.tiktok.com/@pecheclinic_eng?lang=ko-KR" },
   ],
@@ -107,9 +108,11 @@ const SOCIAL_LINKS: Record<Language, SocialItem[]> = {
 const LeftMenu = ({
   isDesktop,
   openWeChatModal,
+  openWhatsAppModal,
 }: {
   isDesktop?: boolean
   openWeChatModal?: () => void
+  openWhatsAppModal?: () => void
 }) => {
   const { i18n } = useTranslation()
   const language = i18n.language as Language
@@ -130,10 +133,11 @@ const LeftMenu = ({
         const Icon = item.icon
 
         if (item.type === "modal") {
+          const handleClick = item.modalKey === "whatsapp" ? openWhatsAppModal : openWeChatModal
           return (
             <button
               key={idx}
-              onClick={openWeChatModal}
+              onClick={handleClick}
               className="sns-btn-conversion"
               tw="flex items-center justify-center hover:opacity-80">
               <Icon width={24} height={24} />
@@ -393,6 +397,7 @@ const HeaderComponent = ({ onClickDrawer, clickedKeyword, setClickedKeyword }: P
   const [openSearch, setOpenSearch] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [openWeChatModal, setOpenWeChatModal] = useState(false)
+  const [openWhatsAppModal, setOpenWhatsAppModal] = useState(false)
 
   useEffect(() => {
     if (clickedKeyword && !isDesktop) {
@@ -412,7 +417,11 @@ const HeaderComponent = ({ onClickDrawer, clickedKeyword, setClickedKeyword }: P
         <>
           <div tw="absolute-center">{isDesktop && <Logo />}</div>
           <AppMaxWidth tw="h-full flex justify-between items-center font-pretendard md:text-[15px] text-[13px]">
-            <LeftMenu isDesktop={isDesktop} openWeChatModal={() => setOpenWeChatModal(true)} />
+            <LeftMenu
+              isDesktop={isDesktop}
+              openWeChatModal={() => setOpenWeChatModal(true)}
+              openWhatsAppModal={() => setOpenWhatsAppModal(true)}
+            />
             <RightMenu
               isDesktop={isDesktop}
               setOpenSearch={setOpenSearch}
@@ -441,6 +450,7 @@ const HeaderComponent = ({ onClickDrawer, clickedKeyword, setClickedKeyword }: P
               </div>
             </div>
           </Modal>
+          <WhatsAppQrModal open={openWhatsAppModal} onClose={() => setOpenWhatsAppModal(false)} />
         </>
       )}
     </HeaderContainer>

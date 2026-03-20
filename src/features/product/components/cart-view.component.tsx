@@ -13,9 +13,10 @@ import LineImg from "@/assets/images/sns/line.png"
 import WhatsAppImg from "@/assets/images/sns/whatsapp.png"
 import WeChatImg from "@/assets/images/sns/wechat.png"
 import InstaImg from "@/assets/images/sns/instagram.png"
-import wechatQrImg from "@/assets/images/wechat-qr.png"
+import wechatQrImg from "@/assets/images/wechat-qr.jpg"
 import useCustomNavigate from "@/lib/hooks/use-custom-navigate"
 import Modal from "@/lib/components/modal/modal.component"
+import WhatsAppQrModal from "@/lib/components/whatsapp-qr-modal.component"
 
 const BottomButton = tw.button`flex-1 h-16 flex justify-center items-center gap-2 text-white bg-secondary font-semibold`
 const InquiryButton = tw.button`rounded-lg w-16 h-16 flex justify-center items-center flex-col`
@@ -582,6 +583,7 @@ const BottomButtons = ({
 
   const navigate = useCustomNavigate()
   const [openWeChatModal, setOpenWeChatModal] = React.useState(false)
+  const [openWhatsAppModal, setOpenWhatsAppModal] = React.useState(false)
 
   const inquiryButtons: {
     id: number
@@ -591,6 +593,7 @@ const BottomButtons = ({
     lang: Language[]
     link?: string
     type?: "modal"
+    modalKey?: "wechat" | "whatsapp"
   }[] = [
     {
       id: 1,
@@ -614,7 +617,8 @@ const BottomButtons = ({
       icon: WhatsAppImg,
       css: line,
       lang: [Language.ENG],
-      link: "https://wa.me/message/3ARKGGTBNAY2M1",
+      type: "modal",
+      modalKey: "whatsapp",
     },
     {
       id: 4,
@@ -639,6 +643,7 @@ const BottomButtons = ({
       css: line,
       lang: [Language.CHN],
       type: "modal",
+      modalKey: "wechat",
     },
     {
       id: 7,
@@ -695,7 +700,8 @@ const BottomButtons = ({
                 css={button.css}
                 onClick={() => {
                   if (button.type === "modal") {
-                    setOpenWeChatModal(true)
+                    if (button.modalKey === "whatsapp") setOpenWhatsAppModal(true)
+                    else setOpenWeChatModal(true)
                   }
                 }}>
                 {button.type === "modal" ? (
@@ -726,6 +732,7 @@ const BottomButtons = ({
           </div>
         </div>
       </Modal>
+      <WhatsAppQrModal open={openWhatsAppModal} onClose={() => setOpenWhatsAppModal(false)} />
     </div>
   )
 }

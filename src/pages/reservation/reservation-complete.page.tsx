@@ -3,11 +3,14 @@ import Page from "@/lib/components/layout/page.component"
 import { useTranslation } from "react-i18next"
 import useCustomNavigate from "@/lib/hooks/use-custom-navigate"
 import { Language } from "@/lib/locales/i18n.config"
+import React from "react"
+import WhatsAppQrModal from "@/lib/components/whatsapp-qr-modal.component"
 
 const ReservationComplete = () => {
   const { t, i18n } = useTranslation()
   const navigate = useCustomNavigate()
   const { language } = i18n
+  const [openWhatsAppModal, setOpenWhatsAppModal] = React.useState(false)
 
   const HELP_LINKS: Record<Language, string> = {
     ko: "https://pf.kakao.com/_dxoiLn",
@@ -19,6 +22,11 @@ const ReservationComplete = () => {
   }
 
   const handleHelpClick = () => {
+    if (language === Language.ENG) {
+      setOpenWhatsAppModal(true)
+      return
+    }
+
     const url = HELP_LINKS[language as Language]
     if (!url) return
 
@@ -59,6 +67,7 @@ const ReservationComplete = () => {
           </div>
         </div>
       </div>
+      <WhatsAppQrModal open={openWhatsAppModal} onClose={() => setOpenWhatsAppModal(false)} />
     </Page>
   )
 }

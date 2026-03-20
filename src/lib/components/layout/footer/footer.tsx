@@ -18,7 +18,8 @@ import FooterLogoImg from "@/assets/images/peche-footer-logo.png"
 import { useTranslation } from "react-i18next"
 import { Language } from "@/lib/locales/i18n.config"
 import Modal from "@/lib/components/modal/modal.component"
-import wechatQrImg from "@/assets/images/wechat-qr.png"
+import wechatQrImg from "@/assets/images/wechat-qr.jpg"
+import WhatsAppQrModal from "@/lib/components/whatsapp-qr-modal.component"
 
 const FooterWrapper = tw.footer`
   w-full bg-neutral20 text-[#444] text-sm
@@ -68,7 +69,7 @@ type FooterSocialItem =
   | {
       icon: React.FC<React.SVGProps<SVGSVGElement>>
       type: "modal"
-      modalKey: "wechat"
+      modalKey: "wechat" | "whatsapp"
       url?: undefined
     }
 
@@ -80,7 +81,7 @@ const FOOTER_SOCIAL_LINKS: Record<Language, FooterSocialItem[]> = {
     { icon: InstaLogoGrayIcon, url: "https://www.instagram.com/peche_clinic/" },
   ],
   en: [
-    { icon: WhatsappGrayIcon, url: "https://wa.me/message/3ARKGGTBNAY2M1" },
+    { icon: WhatsappGrayIcon, type: "modal", modalKey: "whatsapp" },
     { icon: InstaLogoGrayIcon, url: "https://www.instagram.com/pecheclinic.en/" },
     { icon: TiktokGrayIcon, url: "https://www.tiktok.com/@pecheclinic_eng" },
   ],
@@ -118,6 +119,7 @@ const Footer = ({ bottomCartExists = false }: FooterProps) => {
   const { t, i18n } = useTranslation()
   const language = i18n.language as Language
   const [openWeChatModal, setOpenWeChatModal] = React.useState(false)
+  const [openWhatsAppModal, setOpenWhatsAppModal] = React.useState(false)
 
   const socialLinks = FOOTER_SOCIAL_LINKS[language] ?? FOOTER_SOCIAL_LINKS.ko
 
@@ -157,10 +159,14 @@ const Footer = ({ bottomCartExists = false }: FooterProps) => {
               const Icon = item.icon
 
               if (item.type === "modal") {
+                const handleClick =
+                  item.modalKey === "whatsapp"
+                    ? () => setOpenWhatsAppModal(true)
+                    : () => setOpenWeChatModal(true)
                 return (
                   <button
                     key={i}
-                    onClick={() => setOpenWeChatModal(true)}
+                    onClick={handleClick}
                     className="sns-btn-conversion"
                     tw="flex items-center hover:opacity-60 transition">
                     <Icon width={24} height={24} />
@@ -196,6 +202,7 @@ const Footer = ({ bottomCartExists = false }: FooterProps) => {
           </div>
         </div>
       </Modal>
+      <WhatsAppQrModal open={openWhatsAppModal} onClose={() => setOpenWhatsAppModal(false)} />
     </FooterWrapper>
   )
 }
