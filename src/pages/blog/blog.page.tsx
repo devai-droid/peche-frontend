@@ -17,6 +17,10 @@ import useLanguageValue from "@/lib/hooks/use-language-key"
 
 const POSTS_PER_PAGE = 12
 
+const item = tw`w-full font-semibold font-pretendard text-center h-14 flex items-center justify-center bg-white`
+
+const colSpan = (column: number) => `span ${column} / span ${column}`
+
 const Blog = () => {
   const { t, i18n } = useTranslation()
   const { isMobile, isDesktop } = useResponsive()
@@ -86,7 +90,7 @@ const Blog = () => {
       </div>
 
       <div tw="bg-white min-h-screen font-pretendard tracking-tight leading-[150%]">
-        <AppMaxWidth tw="max-lg:p-0">
+        <AppMaxWidth tw="max-lg:px-0 max-lg:pt-0 pb-20 lg:pb-32">
           {/* Header with Write Button */}
           <div tw="flex justify-between items-center mt-[40px] lg:mt-[80px] mb-6 lg:mb-10 max-lg:px-4">
             <div tw="text-[22px] lg:text-[28px] font-semibold text-neutralBlack">
@@ -115,24 +119,47 @@ const Blog = () => {
 
           {/* Event Category Tabs */}
           {eventCategories.length > 0 && (
-            <div tw="flex justify-center mb-6 lg:mb-10 max-lg:px-4">
+            <div tw="flex justify-center mb-4 lg:mb-12 max-lg:p-4">
               <div tw="grid justify-center bg-neutral30 gap-px p-px grid-cols-3 lg:grid-cols-5 w-full">
-                {tabs.map((tab) => {
+                {tabs.map((tab, index) => {
                   const isSelected = selectedEventCatId === tab.id
+                  const isFirstRow = (isMobile && index < 4) || (!isMobile && index < 4)
                   return (
                     <button
                       key={tab.id ?? "__all__"}
                       onClick={() => handleTabClick(tab.id)}
                       css={[
-                        tw`py-3 text-[13px] sm:text-[15px] font-medium transition-colors duration-150`,
-                        isSelected
-                          ? tw`bg-[#DA7F67] text-white`
-                          : tw`bg-[#FEF5EA] text-black hover:bg-[#f5ddd3] hover:text-[#DA7F67]`,
+                        item,
+                        isSelected && tw`bg-[#DA7F67] text-white`,
+                        !isSelected &&
+                          (isFirstRow
+                            ? tw`bg-[#FEF5EA] hover:(bg-tertiary) text-black hover:(text-primary)`
+                            : tw`bg-white font-normal text-black hover:(text-primary)`),
                       ]}>
-                      <div tw="px-2 overflow-hidden text-ellipsis">{tab.label}</div>
+                      <div tw="px-2 overflow-hidden text-ellipsis text-[13px] sm:text-[15px] md:text-[17px]">
+                        {tab.label}
+                      </div>
                     </button>
                   )
                 })}
+                <div
+                  tw="max-lg:hidden bg-[#f4f4f4]"
+                  css={{
+                    gridColumn: colSpan(5 - (tabs.length % 5)),
+                    display: tabs.length % 5 === 0 ? "none" : "block",
+                    marginBottom: "-1px",
+                    marginRight: "-1px",
+                  }}
+                />
+                <div
+                  tw="lg:hidden bg-[#f4f4f4]"
+                  css={{
+                    gridColumn: colSpan(3 - (tabs.length % 3)),
+                    display: tabs.length % 3 === 0 ? "none" : "block",
+                    marginBottom: "-1px",
+                    marginRight: "-1px",
+                  }}
+                />
               </div>
             </div>
           )}
@@ -146,7 +173,7 @@ const Blog = () => {
 
           {/* Empty State */}
           {!isLoading && posts.length === 0 && (
-            <div tw="flex justify-center py-20 text-[18px] lg:text-[22px] text-neutral70">
+            <div tw="flex justify-center py-20 text-[18px] lg:text-[22px] text-neutral70 max-lg:px-4">
               {t("blog.noPosts")}
             </div>
           )}
