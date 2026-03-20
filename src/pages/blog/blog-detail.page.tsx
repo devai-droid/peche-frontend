@@ -40,12 +40,13 @@ function preprocessContent(html: string): string {
       .replace(/\s+/g, "_")
       .replace(/[^\wㄱ-ㅎ가-힣ぁ-んァ-ン一-龯]/g, "")
     if (!base) return
+    const el = h as HTMLElement
     if (!counter[base]) {
       counter[base] = 1
-      h.id = base
+      el.id = base
     } else {
       counter[base] += 1
-      h.id = `${base}-${counter[base]}`
+      el.id = `${base}-${counter[base]}`
     }
   })
 
@@ -326,9 +327,7 @@ const BlogDetail = () => {
               {!isDesktop && (
                 <div tw="mb-6">
                   {tocItems.length > 0 && (
-                    <nav
-                      tw="p-4 border border-neutral30"
-                      css={[{ backgroundColor: "#fafafa" }]}>
+                    <nav tw="p-4 border border-neutral30" css={[{ backgroundColor: "#fafafa" }]}>
                       <div
                         tw="text-[14px] font-semibold text-neutralBlack mb-2 pb-2 border-b"
                         css={[{ borderColor: "#DA7F67" }]}>

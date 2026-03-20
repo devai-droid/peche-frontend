@@ -35,7 +35,12 @@ const Blog = () => {
 
   const eventCategories = eventCategoriesData?.items ?? []
 
-  const { data, isLoading } = useBlogList(page, POSTS_PER_PAGE, lang, selectedEventCatId ?? undefined)
+  const { data, isLoading } = useBlogList(
+    page,
+    POSTS_PER_PAGE,
+    lang,
+    selectedEventCatId ?? undefined,
+  )
 
   const posts = data?.data ?? []
   const lastPage = data?.lastPage ?? 1
@@ -50,7 +55,10 @@ const Blog = () => {
     setPage(1)
   }
 
-  const tabs = [{ id: null, label: t("blog.allCategory") }, ...eventCategories.map((cat) => ({ id: cat.id, label: tv(cat, "name") }))]
+  const tabs = [
+    { id: null, label: t("blog.allCategory") },
+    ...eventCategories.map((cat) => ({ id: cat.id, label: tv(cat, "name") })),
+  ]
 
   return (
     <Page hiddenFooter={false} bottomCartExists={false}>
@@ -119,9 +127,7 @@ const Blog = () => {
                           ? tw`bg-[#DA7F67] text-white`
                           : tw`bg-[#FEF5EA] text-black hover:bg-[#f5ddd3] hover:text-[#DA7F67]`,
                       ]}>
-                      <div tw="px-2 overflow-hidden text-ellipsis">
-                        {tab.label}
-                      </div>
+                      <div tw="px-2 overflow-hidden text-ellipsis">{tab.label}</div>
                     </button>
                   )
                 })}

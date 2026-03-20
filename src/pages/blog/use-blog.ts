@@ -12,7 +12,12 @@ import {
 
 const BLOG_QUERY_KEY = "blog"
 
-async function fetchBlogList(page: number, limit: number, lang: string, eventCategoryId?: string): Promise<BlogListResponse> {
+async function fetchBlogList(
+  page: number,
+  limit: number,
+  lang: string,
+  eventCategoryId?: string,
+): Promise<BlogListResponse> {
   const res: AxiosResponse<BlogListResponse> = await axiosClient.get("/api/blog", {
     params: { page, limit, lang, ...(eventCategoryId ? { eventCategoryId } : {}) },
   })
@@ -31,7 +36,12 @@ async function fetchBlogCategories(): Promise<BlogCategoriesResponse> {
   return res.data
 }
 
-export const useBlogList = (page: number, limit: number, lang: string, eventCategoryId?: string) => {
+export const useBlogList = (
+  page: number,
+  limit: number,
+  lang: string,
+  eventCategoryId?: string,
+) => {
   return useQuery<BlogListResponse, Error, BlogListResponse, QueryKey>(
     [BLOG_QUERY_KEY, "list", page, limit, lang, eventCategoryId],
     () => fetchBlogList(page, limit, lang, eventCategoryId),

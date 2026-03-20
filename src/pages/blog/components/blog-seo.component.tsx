@@ -23,7 +23,15 @@ interface BlogSeoProps {
   tocItems?: TocItem[]
 }
 
-const BlogSeo = ({ post, title, summary, lang, slug, sanitizedContent, tocItems }: BlogSeoProps) => {
+const BlogSeo = ({
+  post,
+  title,
+  summary,
+  lang,
+  slug,
+  sanitizedContent,
+  tocItems,
+}: BlogSeoProps) => {
   const siteUrl = "https://pecheskin.clinic"
   const pageUrl = `${siteUrl}/${lang}/blog/${slug}`
   const siteName = "페슈의원"

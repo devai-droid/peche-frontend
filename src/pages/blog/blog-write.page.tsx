@@ -290,7 +290,9 @@ const BlogWrite = () => {
                   onChange={(e) => setKeywords(e.target.value)}
                   placeholder="키워드1, 키워드2, 키워드3"
                 />
-                <p tw="text-[12px] text-neutral50 mt-1">쉼표로 구분. meta keywords 태그에 적용됩니다.</p>
+                <p tw="text-[12px] text-neutral50 mt-1">
+                  쉼표로 구분. meta keywords 태그에 적용됩니다.
+                </p>
               </div>
 
               {/* Thumbnail Upload */}

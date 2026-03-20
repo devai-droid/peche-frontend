@@ -20,7 +20,13 @@ const TOOLBAR_ITEMS: ToolbarItem[] = [
     after: "</strong>",
     placeholder: "강조텍스트",
   },
-  { label: "Link", title: "링크", before: '<a href="URL">', after: "</a>", placeholder: "링크텍스트" },
+  {
+    label: "Link",
+    title: "링크",
+    before: '<a href="URL">',
+    after: "</a>",
+    placeholder: "링크텍스트",
+  },
   {
     label: "UL",
     title: "순서없는 목록",
@@ -59,7 +65,7 @@ const HtmlToolbar = ({ textareaRef, onChange }: HtmlToolbarProps) => {
 
     const start = textarea.selectionStart
     const end = textarea.selectionEnd
-    const value = textarea.value
+    const { value } = textarea
     const selected = value.substring(start, end)
 
     const content = selected || item.placeholder
