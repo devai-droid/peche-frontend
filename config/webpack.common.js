@@ -65,7 +65,9 @@ module.exports = {
       patterns: [
         { from: "public/robots.txt", to: "robots.txt" },
         { from: "public/manifest.json", to: "manifest.json" },
-        // { from: "public/logo48.png", to: "logo48.png" },
+        { from: "public/favicon.ico", to: "favicon.ico" },
+        { from: "public/favicon-32x32.png", to: "favicon-32x32.png" },
+        { from: "public/favicon-16x16.png", to: "favicon-16x16.png" },
       ],
     }),
     new ESLintPlugin({
