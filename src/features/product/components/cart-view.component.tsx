@@ -16,7 +16,6 @@ import InstaImg from "@/assets/images/sns/instagram.png"
 import wechatQrImg from "@/assets/images/wechat-qr.jpg"
 import useCustomNavigate from "@/lib/hooks/use-custom-navigate"
 import Modal from "@/lib/components/modal/modal.component"
-import WhatsAppQrModal from "@/lib/components/whatsapp-qr-modal.component"
 
 const BottomButton = tw.button`flex-1 h-16 flex justify-center items-center gap-2 text-white bg-secondary font-semibold`
 const InquiryButton = tw.button`rounded-lg w-16 h-16 flex justify-center items-center flex-col`
@@ -583,7 +582,6 @@ const BottomButtons = ({
 
   const navigate = useCustomNavigate()
   const [openWeChatModal, setOpenWeChatModal] = React.useState(false)
-  const [openWhatsAppModal, setOpenWhatsAppModal] = React.useState(false)
 
   const inquiryButtons: {
     id: number
@@ -617,8 +615,7 @@ const BottomButtons = ({
       icon: WhatsAppImg,
       css: line,
       lang: [Language.ENG],
-      type: "modal",
-      modalKey: "whatsapp",
+      link: "https://wa.me/message/4Y5JC2HX6OH5H1",
     },
     {
       id: 4,
@@ -700,8 +697,7 @@ const BottomButtons = ({
                 css={button.css}
                 onClick={() => {
                   if (button.type === "modal") {
-                    if (button.modalKey === "whatsapp") setOpenWhatsAppModal(true)
-                    else setOpenWeChatModal(true)
+                    setOpenWeChatModal(true)
                   }
                 }}>
                 {button.type === "modal" ? (
@@ -732,7 +728,6 @@ const BottomButtons = ({
           </div>
         </div>
       </Modal>
-      <WhatsAppQrModal open={openWhatsAppModal} onClose={() => setOpenWhatsAppModal(false)} />
     </div>
   )
 }

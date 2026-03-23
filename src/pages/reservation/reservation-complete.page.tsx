@@ -4,14 +4,11 @@ import { useTranslation } from "react-i18next"
 import useCustomNavigate from "@/lib/hooks/use-custom-navigate"
 import { Language } from "@/lib/locales/i18n.config"
 import React from "react"
-import WhatsAppQrModal from "@/lib/components/whatsapp-qr-modal.component"
 
 const ReservationComplete = () => {
   const { t, i18n } = useTranslation()
   const navigate = useCustomNavigate()
   const { language } = i18n
-  const [openWhatsAppModal, setOpenWhatsAppModal] = React.useState(false)
-
   const HELP_LINKS: Record<Language, string> = {
     ko: "https://pf.kakao.com/_dxoiLn",
     en: "https://wa.me/message/3ARKGGTBNAY2M1",
@@ -23,7 +20,7 @@ const ReservationComplete = () => {
 
   const handleHelpClick = () => {
     if (language === Language.ENG) {
-      setOpenWhatsAppModal(true)
+      window.open("https://wa.me/message/4Y5JC2HX6OH5H1", "_blank")
       return
     }
 
@@ -67,7 +64,6 @@ const ReservationComplete = () => {
           </div>
         </div>
       </div>
-      <WhatsAppQrModal open={openWhatsAppModal} onClose={() => setOpenWhatsAppModal(false)} />
     </Page>
   )
 }

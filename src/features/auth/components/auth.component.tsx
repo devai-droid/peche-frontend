@@ -17,7 +17,6 @@ import EmailAuthModal from "./email-auth-modal.component"
 import { useMe } from "@/features/user/hooks/use-user"
 import { useLogout } from "@/features/auth/hooks/use-auth"
 import Modal from "@/lib/components/modal/modal.component"
-import WhatsAppQrModal from "@/lib/components/whatsapp-qr-modal.component"
 
 const H2 = tw.h2`text-lg font-extrabold`
 
@@ -56,7 +55,6 @@ const Auth = ({ onAuth, onAgreementChange, onBeforeKakaoAuth }: Props) => {
 
   const [openEmailModal, setOpenEmailModal] = React.useState(false)
   const [openWeChatModal, setOpenWeChatModal] = React.useState(false)
-  const [openWhatsAppModal, setOpenWhatsAppModal] = React.useState(false)
   const [openEmailConfirm, setOpenEmailConfirm] = React.useState(false)
 
   /* 전체동의 동기화 */
@@ -130,7 +128,7 @@ const Auth = ({ onAuth, onAgreementChange, onBeforeKakaoAuth }: Props) => {
     }
 
     if (language === Language.ENG) {
-      setOpenWhatsAppModal(true)
+      window.open("https://wa.me/message/4Y5JC2HX6OH5H1", "_blank")
       return
     }
 
@@ -408,7 +406,6 @@ const Auth = ({ onAuth, onAgreementChange, onBeforeKakaoAuth }: Props) => {
           </div>
         </div>
       </Modal>
-      <WhatsAppQrModal open={openWhatsAppModal} onClose={() => setOpenWhatsAppModal(false)} />
     </div>
   )
 }

@@ -16,7 +16,7 @@ import WeChatHelp from "@/assets/images/sns/icon_WeChat_help.png"
 import InstaHelpIcon from "@/assets/images/sns/icon_instagram_help.png"
 import wechatQrImg from "@/assets/images/wechat-qr.jpg"
 import EmailAuthModal from "@/features/auth/components/email-auth-modal.component"
-import WhatsAppQrModal from "@/lib/components/whatsapp-qr-modal.component"
+
 
 import React, { useEffect, useState } from "react"
 import tw, { styled } from "twin.macro"
@@ -445,7 +445,6 @@ const Reservations = () => {
 
     const [openEmailModal, setOpenEmailModal] = React.useState(false)
     const [openWeChatModal, setOpenWeChatModal] = React.useState(false)
-    const [openWhatsAppModal, setOpenWhatsAppModal] = React.useState(false)
     const [openEmailConfirm, setOpenEmailConfirm] = React.useState(false)
 
     /* ---------- 상담채널 이미지 매핑 ---------- */
@@ -485,7 +484,7 @@ const Reservations = () => {
       }
 
       if (language === Language.ENG) {
-        setOpenWhatsAppModal(true)
+        window.open("https://wa.me/message/4Y5JC2HX6OH5H1", "_blank")
         return
       }
 
@@ -642,7 +641,6 @@ const Reservations = () => {
             </div>
           </div>
         </Modal>
-        <WhatsAppQrModal open={openWhatsAppModal} onClose={() => setOpenWhatsAppModal(false)} />
       </>
     )
   }

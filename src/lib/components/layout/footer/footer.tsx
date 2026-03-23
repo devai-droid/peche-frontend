@@ -19,7 +19,7 @@ import { useTranslation } from "react-i18next"
 import { Language } from "@/lib/locales/i18n.config"
 import Modal from "@/lib/components/modal/modal.component"
 import wechatQrImg from "@/assets/images/wechat-qr.jpg"
-import WhatsAppQrModal from "@/lib/components/whatsapp-qr-modal.component"
+
 
 const FooterWrapper = tw.footer`
   w-full bg-neutral20 text-[#444] text-sm
@@ -81,7 +81,7 @@ const FOOTER_SOCIAL_LINKS: Record<Language, FooterSocialItem[]> = {
     { icon: InstaLogoGrayIcon, url: "https://www.instagram.com/peche_clinic/" },
   ],
   en: [
-    { icon: WhatsappGrayIcon, type: "modal", modalKey: "whatsapp" },
+    { icon: WhatsappGrayIcon, url: "https://wa.me/message/4Y5JC2HX6OH5H1" },
     { icon: InstaLogoGrayIcon, url: "https://www.instagram.com/pecheclinic.en/" },
     { icon: TiktokGrayIcon, url: "https://www.tiktok.com/@pecheclinic_eng" },
   ],
@@ -119,7 +119,6 @@ const Footer = ({ bottomCartExists = false }: FooterProps) => {
   const { t, i18n } = useTranslation()
   const language = i18n.language as Language
   const [openWeChatModal, setOpenWeChatModal] = React.useState(false)
-  const [openWhatsAppModal, setOpenWhatsAppModal] = React.useState(false)
 
   const socialLinks = FOOTER_SOCIAL_LINKS[language] ?? FOOTER_SOCIAL_LINKS.ko
 
@@ -159,10 +158,7 @@ const Footer = ({ bottomCartExists = false }: FooterProps) => {
               const Icon = item.icon
 
               if (item.type === "modal") {
-                const handleClick =
-                  item.modalKey === "whatsapp"
-                    ? () => setOpenWhatsAppModal(true)
-                    : () => setOpenWeChatModal(true)
+                const handleClick = () => setOpenWeChatModal(true)
                 return (
                   <button
                     key={i}
@@ -202,7 +198,6 @@ const Footer = ({ bottomCartExists = false }: FooterProps) => {
           </div>
         </div>
       </Modal>
-      <WhatsAppQrModal open={openWhatsAppModal} onClose={() => setOpenWhatsAppModal(false)} />
     </FooterWrapper>
   )
 }

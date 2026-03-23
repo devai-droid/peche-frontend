@@ -31,7 +31,7 @@ import { Language } from "@/lib/locales/i18n.config"
 import { useSearchControllerFindMany } from "@/lib/orval/search/search"
 import CustomLink from "../../custom-link.component"
 import Modal from "@/lib/components/modal/modal.component"
-import WhatsAppQrModal from "@/lib/components/whatsapp-qr-modal.component"
+
 import useCart from "@/features/product/hooks/use-cart"
 
 const HeaderContainer = tw.header`h-16 lg:h-20 relative bg-neutral`
@@ -71,7 +71,7 @@ const SOCIAL_LINKS: Record<Language, SocialItem[]> = {
     { icon: InstaLogoIcon, url: "https://www.instagram.com/peche_clinic/" },
   ],
   en: [
-    { icon: WhatsappIcon, type: "modal", modalKey: "whatsapp" },
+    { icon: WhatsappIcon, url: "https://wa.me/message/4Y5JC2HX6OH5H1" },
     { icon: InstaLogoIcon, url: "https://www.instagram.com/pecheclinic.en/" },
     { icon: TiktokIcon, url: "https://www.tiktok.com/@pecheclinic_eng?lang=ko-KR" },
   ],
@@ -108,11 +108,9 @@ const SOCIAL_LINKS: Record<Language, SocialItem[]> = {
 const LeftMenu = ({
   isDesktop,
   openWeChatModal,
-  openWhatsAppModal,
 }: {
   isDesktop?: boolean
   openWeChatModal?: () => void
-  openWhatsAppModal?: () => void
 }) => {
   const { i18n } = useTranslation()
   const language = i18n.language as Language
@@ -133,7 +131,7 @@ const LeftMenu = ({
         const Icon = item.icon
 
         if (item.type === "modal") {
-          const handleClick = item.modalKey === "whatsapp" ? openWhatsAppModal : openWeChatModal
+          const handleClick = openWeChatModal
           return (
             <button
               key={idx}
@@ -397,7 +395,6 @@ const HeaderComponent = ({ onClickDrawer, clickedKeyword, setClickedKeyword }: P
   const [openSearch, setOpenSearch] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [openWeChatModal, setOpenWeChatModal] = useState(false)
-  const [openWhatsAppModal, setOpenWhatsAppModal] = useState(false)
 
   useEffect(() => {
     if (clickedKeyword && !isDesktop) {
@@ -420,7 +417,6 @@ const HeaderComponent = ({ onClickDrawer, clickedKeyword, setClickedKeyword }: P
             <LeftMenu
               isDesktop={isDesktop}
               openWeChatModal={() => setOpenWeChatModal(true)}
-              openWhatsAppModal={() => setOpenWhatsAppModal(true)}
             />
             <RightMenu
               isDesktop={isDesktop}
@@ -450,7 +446,6 @@ const HeaderComponent = ({ onClickDrawer, clickedKeyword, setClickedKeyword }: P
               </div>
             </div>
           </Modal>
-          <WhatsAppQrModal open={openWhatsAppModal} onClose={() => setOpenWhatsAppModal(false)} />
         </>
       )}
     </HeaderContainer>
