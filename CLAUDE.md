@@ -19,6 +19,16 @@
 - 업데이트 템플릿: `./scripts/slack-notify.sh update "" "변경사항1" "변경사항2"` (버전 빈값이면 package.json에서 자동 읽기)
 - 자유 메시지: `./scripts/slack-notify.sh msg "내용"`
 
+## 버전 관리 루틴
+
+- **버전 규칙**: Semantic Versioning
+  - `x.Y.0` (minor): 새 기능 추가 (새 페이지, 새 메뉴 등)
+  - `x.y.Z` (patch): 버그 수정, UI 수정, 텍스트/이미지 변경
+- **배포 시 필수 순서**:
+  1. `package.json` 버전 올리기
+  2. `CHANGELOG.md`에 변경사항 기록
+  3. 커밋 → `STAGE=prod make shoot` → 슬랙 알림
+
 ## 배포
 
 - 운영: `STAGE=prod make shoot` (orval → webpack build → S3 sync → CloudFront 무효화)
