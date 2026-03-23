@@ -191,6 +191,22 @@ const BlogWrite = () => {
 
   const contentTextareaRef = useRef<HTMLTextAreaElement>(null)
 
+  const handleContentKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key !== "Enter") return
+    e.preventDefault()
+    const textarea = e.currentTarget
+    const start = textarea.selectionStart
+    const end = textarea.selectionEnd
+    const fieldKey = getFieldKey("content", currentTab.suffix)
+    const value = fields[fieldKey]
+    const insertion = "<br>\n"
+    const newValue = value.substring(0, start) + insertion + value.substring(end)
+    handleFieldChange(fieldKey, newValue)
+    requestAnimationFrame(() => {
+      textarea.setSelectionRange(start + insertion.length, start + insertion.length)
+    })
+  }
+
   const currentTab = LANG_TABS.find((tab) => tab.key === activeLangTab) ?? LANG_TABS[0]
 
   return (
@@ -276,6 +292,7 @@ const BlogWrite = () => {
                   onChange={(e) =>
                     handleFieldChange(getFieldKey("content", currentTab.suffix), e.target.value)
                   }
+                  onKeyDown={handleContentKeyDown}
                   placeholder="<p>HTML content...</p>"
                 />
               </div>

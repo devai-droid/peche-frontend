@@ -91,39 +91,13 @@ const Blog = () => {
 
       <div tw="bg-white min-h-screen font-pretendard tracking-tight leading-[150%]">
         <AppMaxWidth tw="max-lg:px-0 max-lg:pt-0 pb-20 lg:pb-32">
-          {/* Header with Write Button */}
-          <div tw="flex justify-between items-center mt-[40px] lg:mt-[80px] mb-6 lg:mb-10 max-lg:px-4">
-            <div tw="text-[22px] lg:text-[28px] font-semibold text-neutralBlack">
-              {t("blog.title")}
-            </div>
-            {isAdmin && (
-              <button
-                onClick={() => navigate(`/${lang}/blog/write`)}
-                tw="
-                  px-4 py-2 text-[14px] lg:text-[15px]
-                  border font-medium
-                  transition-colors duration-200
-                  hover:text-white
-                "
-                css={[
-                  {
-                    color: "#DA7F67",
-                    borderColor: "#DA7F67",
-                  },
-                  tw`hover:bg-[#DA7F67]`,
-                ]}>
-                {t("blog.write")}
-              </button>
-            )}
-          </div>
-
           {/* Event Category Tabs */}
           {eventCategories.length > 0 && (
-            <div tw="flex justify-center mb-4 lg:mb-12 max-lg:p-4">
+            <div tw="flex justify-center mt-8 lg:mt-16 mb-4 lg:mb-12 max-lg:p-4">
               <div tw="grid justify-center bg-neutral30 gap-px p-px grid-cols-3 lg:grid-cols-5 w-full">
                 {tabs.map((tab, index) => {
                   const isSelected = selectedEventCatId === tab.id
-                  const isFirstRow = (isMobile && index < 4) || (!isMobile && index < 4)
+                  const isFirstRow = isDesktop ? index < 5 : index < 3
                   return (
                     <button
                       key={tab.id ?? "__all__"}
@@ -143,7 +117,7 @@ const Blog = () => {
                   )
                 })}
                 <div
-                  tw="max-lg:hidden bg-[#f4f4f4]"
+                  tw="max-lg:hidden bg-white"
                   css={{
                     gridColumn: colSpan(5 - (tabs.length % 5)),
                     display: tabs.length % 5 === 0 ? "none" : "block",
@@ -152,7 +126,7 @@ const Blog = () => {
                   }}
                 />
                 <div
-                  tw="lg:hidden bg-[#f4f4f4]"
+                  tw="lg:hidden bg-white"
                   css={{
                     gridColumn: colSpan(3 - (tabs.length % 3)),
                     display: tabs.length % 3 === 0 ? "none" : "block",
@@ -173,8 +147,29 @@ const Blog = () => {
 
           {/* Empty State */}
           {!isLoading && posts.length === 0 && (
-            <div tw="flex justify-center py-20 text-[18px] lg:text-[22px] text-neutral70 max-lg:px-4">
-              {t("blog.noPosts")}
+            <div tw="flex flex-col items-center py-20 max-lg:px-4">
+              <div tw="text-[18px] lg:text-[22px] text-neutral70">{t("blog.noPosts")}</div>
+              {isAdmin && (
+                <div tw="flex justify-center mt-6">
+                  <button
+                    onClick={() => navigate(`/${lang}/blog/write`)}
+                    tw="
+                      px-4 py-2 text-[14px] lg:text-[15px]
+                      border font-medium
+                      transition-colors duration-200
+                      hover:text-white
+                    "
+                    css={[
+                      {
+                        color: "#DA7F67",
+                        borderColor: "#DA7F67",
+                      },
+                      tw`hover:bg-[#DA7F67]`,
+                    ]}>
+                    {t("blog.write")}
+                  </button>
+                </div>
+              )}
             </div>
           )}
 
@@ -190,9 +185,31 @@ const Blog = () => {
                   !isDesktop && !isMobile && tw`grid-cols-2`,
                 ]}>
                 {posts.map((post) => (
-                  <BlogCard key={post.id} post={post} />
+                  <BlogCard key={post.id} post={post} eventCategories={eventCategories} />
                 ))}
               </div>
+
+              {isAdmin && (
+                <div tw="flex justify-end mt-10 lg:mt-12 max-lg:px-4">
+                  <button
+                    onClick={() => navigate(`/${lang}/blog/write`)}
+                    tw="
+                      px-4 py-2 text-[14px] lg:text-[15px]
+                      border font-medium
+                      transition-colors duration-200
+                      hover:text-white
+                    "
+                    css={[
+                      {
+                        color: "#DA7F67",
+                        borderColor: "#DA7F67",
+                      },
+                      tw`hover:bg-[#DA7F67]`,
+                    ]}>
+                    {t("blog.write")}
+                  </button>
+                </div>
+              )}
 
               <div tw="mt-16 lg:mt-20">
                 <BlogPagination

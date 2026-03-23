@@ -8,6 +8,8 @@ import { useTranslation } from "react-i18next"
 import { useParams, useNavigate } from "react-router-dom"
 import { useAdminAuth } from "@/lib/hooks/use-admin-auth"
 import { useBlogDetail, useBlogDelete } from "./use-blog"
+import { useEventCategoryControllerFindManyWithPaginationQuery } from "@/lib/orval/event-categories/event-categories"
+import { EventCategoryControllerFindManyWithPaginationQueryStatus } from "@/lib/orval/model"
 import BlogSeo from "./components/blog-seo.component"
 import CustomLink from "@/lib/components/custom-link.component"
 import tw, { css } from "twin.macro"
@@ -66,6 +68,15 @@ const BlogDetail = () => {
 
   const { data, isLoading } = useBlogDetail(slug ?? "", lang)
   const post = data?.data
+
+  const { data: eventCategoriesData } = useEventCategoryControllerFindManyWithPaginationQuery({
+    status: EventCategoryControllerFindManyWithPaginationQueryStatus.ACTIVE,
+    sortBy: ["order"],
+    sortOrder: ["ASC"],
+    limit: 100,
+  })
+  const eventCategories = eventCategoriesData?.items ?? []
+  const eventCategory = eventCategories.find((c) => c.id === post?.eventCategoryId)
 
   const title = post ? tv(post, "title") : ""
   const summary = post ? tv(post, "summary") : ""
@@ -252,9 +263,9 @@ const BlogDetail = () => {
                 )}
                 <CustomLink
                   to={
-                    post.categories.find((cat) => cat.eventCategoryId)
-                      ? `/${lang}/events?category=${post.categories.find((cat) => cat.eventCategoryId)?.eventCategoryId}`
-                      : `/${lang}/events`
+                    post.eventCategoryId
+                      ? `/events?category=${post.eventCategoryId}`
+                      : `/events`
                   }
                   tw="block w-full text-center mt-4 text-[13px] px-5 py-[7px] bg-primary text-white font-medium transition hover:bg-[#AB6655]">
                   {t("blog.viewEvents")}
@@ -282,12 +293,10 @@ const BlogDetail = () => {
 
               {/* Meta: categories | date */}
               <div tw="flex items-center gap-3 text-[13px] lg:text-[14px] text-neutral50 mb-6 lg:mb-8 pb-6 lg:pb-8 border-b border-neutral30">
-                {post.categories.map((cat) => (
-                  <span key={cat.id} css={[{ color: "rgb(218, 127, 103)" }]}>
-                    {tv(cat, "name")}
-                  </span>
-                ))}
-                {post.categories.length > 0 && <span>|</span>}
+                {eventCategory && (
+                  <span css={[{ color: "rgb(218, 127, 103)" }]}>{tv(eventCategory, "name")}</span>
+                )}
+                {eventCategory && <span>|</span>}
                 <span>{publishedDate}</span>
               </div>
 
@@ -387,8 +396,13 @@ const BlogDetail = () => {
                     p {
                       margin-bottom: 1em;
                     }
-                    ul,
+                    ul {
+                      list-style-type: disc;
+                      padding-left: 1.5em;
+                      margin-bottom: 1em;
+                    }
                     ol {
+                      list-style-type: decimal;
                       padding-left: 1.5em;
                       margin-bottom: 1em;
                     }

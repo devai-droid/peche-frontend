@@ -3,9 +3,11 @@ import { BlogPost } from "../blog.types"
 import useLanguageValue from "@/lib/hooks/use-language-key"
 import CustomLink from "@/lib/components/custom-link.component"
 import { css } from "twin.macro"
+import { EventCategory } from "@/lib/orval/model"
 
 interface BlogCardProps {
   post: BlogPost
+  eventCategories?: EventCategory[]
 }
 
 const lineClamp2 = css`
@@ -22,8 +24,9 @@ const lineClamp1 = css`
   overflow: hidden;
 `
 
-const BlogCard = ({ post }: BlogCardProps) => {
+const BlogCard = ({ post, eventCategories }: BlogCardProps) => {
   const tv = useLanguageValue()
+  const eventCategory = eventCategories?.find((c) => c.id === post.eventCategoryId)
 
   const title = tv(post, "title")
   const summary = tv(post, "summary")
@@ -70,14 +73,13 @@ const BlogCard = ({ post }: BlogCardProps) => {
 
           {/* Categories + Date + ViewCount */}
           <div tw="flex items-center gap-2">
-            {post.categories.map((cat) => (
+            {eventCategory && (
               <span
-                key={cat.id}
                 tw="text-[11px] px-[6px] py-[1px] rounded-sm font-medium"
                 css={[{ color: "#DA7F67", backgroundColor: "rgba(218, 127, 103, 0.1)" }]}>
-                {tv(cat, "name")}
+                {tv(eventCategory, "name")}
               </span>
-            ))}
+            )}
             <span tw="text-[12px] text-neutral50">{publishedDate}</span>
             {post.viewCount != null && (
               <span tw="text-[11px] text-neutral50 ml-auto flex items-center gap-[3px]">
