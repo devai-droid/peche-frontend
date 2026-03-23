@@ -136,7 +136,7 @@ const Event = ({
 
 const Events = () => {
   const { t } = useTranslation()
-  const { isMobile, isDesktop } = useResponsive()
+  const { isMobile } = useResponsive()
   const tv = useLanguageValue()
   const langQuery = useLanguageQuery()
   const [params, setParams] = useSearchParams()
@@ -364,17 +364,21 @@ const Events = () => {
                 )
               })}
               <div
-                tw="max-lg:hidden bg-neutral30"
+                tw="max-lg:hidden bg-white"
                 css={{
                   gridColumn: `span ${5 - (categories.items.length % 5)} / span ${5 - (categories.items.length % 5)}`,
                   display: categories.items.length % 5 === 0 ? "none" : "block",
+                  marginBottom: "-1px",
+                  marginRight: "-1px",
                 }}
               />
               <div
-                tw="lg:hidden bg-neutral30"
+                tw="lg:hidden bg-white"
                 css={{
                   gridColumn: `span ${3 - (categories.items.length % 3)} / span ${3 - (categories.items.length % 3)}`,
                   display: categories.items.length % 3 === 0 ? "none" : "block",
+                  marginBottom: "-1px",
+                  marginRight: "-1px",
                 }}
               />
             </div>
