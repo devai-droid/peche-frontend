@@ -301,7 +301,7 @@ const BlogDetail = () => {
               </div>
 
               {/* Admin Actions */}
-              {isAdmin && (
+              {isAdmin && isDesktop && (
                 <div tw="flex gap-2 mb-6">
                   <button
                     onClick={() => navigate(`/${lang}/blog/edit/${post.slug}`)}

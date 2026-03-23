@@ -149,7 +149,7 @@ const Blog = () => {
           {!isLoading && posts.length === 0 && (
             <div tw="flex flex-col items-center py-20 max-lg:px-4">
               <div tw="text-[18px] lg:text-[22px] text-neutral70">{t("blog.noPosts")}</div>
-              {isAdmin && (
+              {isAdmin && isDesktop && (
                 <div tw="flex justify-center mt-6">
                   <button
                     onClick={() => navigate(`/${lang}/blog/write`)}
@@ -189,7 +189,7 @@ const Blog = () => {
                 ))}
               </div>
 
-              {isAdmin && (
+              {isAdmin && isDesktop && (
                 <div tw="flex justify-end mt-10 lg:mt-12 max-lg:px-4">
                   <button
                     onClick={() => navigate(`/${lang}/blog/write`)}
