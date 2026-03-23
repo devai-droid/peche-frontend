@@ -4,6 +4,19 @@
 
 ---
 
+## [1.4.3] - 2026-03-23
+
+### Fixed
+
+- 외국어 사이트 주소 내 건물명 오타 수정 (Miwang → Meewang Building)
+  - EN/TH: Miwang Building → Meewang Building
+  - JA: ミワンビル（Meewang Building） 영어명 병기
+  - ZH/TW: 美王大厦/美王大樓 Meewang Building 영어명 병기
+- 가격이벤트 페이지 대분류 탭 배경색 기준 수정 (PC/모바일 동일: 첫방문·원데이·이달의·패키지상품)
+- 블로그 페이지 대분류 탭 배경색 기준 수정 (PC/모바일 동일: 전체·첫방문·원데이·이달의·패키지상품)
+
+---
+
 ## [1.4.2] - 2026-03-23
 
 ### Fixed

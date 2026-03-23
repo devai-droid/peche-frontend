@@ -97,7 +97,7 @@ const Blog = () => {
               <div tw="grid justify-center bg-neutral30 gap-px p-px grid-cols-3 lg:grid-cols-5 w-full">
                 {tabs.map((tab, index) => {
                   const isSelected = selectedEventCatId === tab.id
-                  const isFirstRow = isDesktop ? index < 5 : index < 3
+                  const isFirstRow = index < 5
                   return (
                     <button
                       key={tab.id ?? "__all__"}
