@@ -364,7 +364,7 @@ const Events = () => {
                 )
               })}
               <div
-                tw="max-lg:hidden bg-white"
+                tw="max-lg:hidden bg-neutral"
                 css={{
                   gridColumn: `span ${5 - (categories.items.length % 5)} / span ${5 - (categories.items.length % 5)}`,
                   display: categories.items.length % 5 === 0 ? "none" : "block",
@@ -373,7 +373,7 @@ const Events = () => {
                 }}
               />
               <div
-                tw="lg:hidden bg-white"
+                tw="lg:hidden bg-neutral"
                 css={{
                   gridColumn: `span ${3 - (categories.items.length % 3)} / span ${3 - (categories.items.length % 3)}`,
                   display: categories.items.length % 3 === 0 ? "none" : "block",
