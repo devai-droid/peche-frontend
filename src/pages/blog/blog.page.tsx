@@ -93,7 +93,7 @@ const Blog = () => {
           {/* Event Category Tabs */}
           {eventCategories.length > 0 && (
             <div tw="flex justify-center mt-8 lg:mt-16 mb-4 lg:mb-12 max-lg:p-4">
-              <div tw="grid justify-center gap-px p-px grid-cols-3 lg:grid-cols-5 w-full">
+              <div tw="grid justify-center bg-neutral30 gap-px p-px grid-cols-3 lg:grid-cols-5 w-full">
                 {tabs.map((tab, index) => {
                   const isSelected = selectedEventCatId === tab.id
                   const isFirstRow = index < 5
@@ -115,6 +115,20 @@ const Blog = () => {
                     </button>
                   )
                 })}
+                <div
+                  tw="max-lg:hidden bg-neutral30"
+                  css={{
+                    gridColumn: `span ${5 - (tabs.length % 5)} / span ${5 - (tabs.length % 5)}`,
+                    display: tabs.length % 5 === 0 ? "none" : "block",
+                  }}
+                />
+                <div
+                  tw="lg:hidden bg-neutral30"
+                  css={{
+                    gridColumn: `span ${3 - (tabs.length % 3)} / span ${3 - (tabs.length % 3)}`,
+                    display: tabs.length % 3 === 0 ? "none" : "block",
+                  }}
+                />
               </div>
             </div>
           )}
