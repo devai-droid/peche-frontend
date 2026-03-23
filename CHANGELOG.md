@@ -4,6 +4,51 @@
 
 ---
 
+## [1.4.1] - 2026-03-23
+
+### Fixed
+
+- EN 사이트 WhatsApp 버튼 클릭 시 QR 모달 → 링크 이동으로 변경
+- 예약확인변경 페이지 어드민 로그인 시 빈화면 수정
+- WeChat QR 이미지 확장자 통일 (.png → .jpg)
+
+---
+
+## [1.4.0] - 2026-03-21
+
+### Added - 블로그 기능 신규 출시
+
+**블로그 백엔드 (BE)**
+- `BlogPost`, `BlogCategory` 엔티티 및 CRUD API 추가
+- 블로그 목록/상세/생성/수정/삭제 엔드포인트 (`/api/blog`)
+- 조회수(`view_count`) 컬럼 마이그레이션 추가
+- `eventCategoryId` 컬럼 마이그레이션 idempotent 처리 (`DROP COLUMN IF EXISTS`)
+- `AddBlogKeywords`, `AddBlogViewCount` 마이그레이션 운영 배포 완료
+
+**블로그 프론트엔드 (FE)**
+- 블로그 목록 페이지 (`/blog`): 배너, 이벤트 대분류 탭 필터, 그리드, 페이지네이션
+- 블로그 상세 페이지 (`/blog/:slug`): TOC 사이드바, 콘텐츠 렌더링, 작성자 프로필, SEO
+- 블로그 작성/수정 페이지 (`/blog/write`, `/blog/edit/:slug`): 6개 언어 탭, HTML 에디터 툴바
+- 어드민 전용 글쓰기 버튼 (썸네일 그리드 하단 우측, 게시글 없을 시 중앙)
+
+### Fixed - 블로그 UI/UX 개선
+
+- 이벤트 대분류 탭 배경색(`#FEF5EA`) 소실 수정: `isFirstRow` 로직 desktop(5열)/mobile(3열) 분리
+- 탭 필러 div 배경색 gray → white
+- 블로그 목록 상단 padding을 가격이벤트 페이지와 동일하게 맞춤 (`mt-8 lg:mt-16`)
+- 블로그 카드·상세 페이지 카테고리 미표시 수정: `post.eventCategoryId` 기반 이벤트 대분류명 표시
+- ol/ul 리스트 스타일 구분: `ul { list-style-type: disc }`, `ol { list-style-type: decimal }`
+- 콘텐츠 textarea Enter 키 → `<br>` 자동 삽입
+- TOC "가격이벤트 보기" 버튼: `CustomLink` 이중 language prefix 버그 수정 → 해당 대분류로 정확히 이동
+
+### Ops - 운영 인프라
+
+- 운영 DB `admin@pecheskin.clinic` 계정 ADMIN 권한 부여 (ECS exec 경유)
+- ECS 서비스 `enableExecuteCommand: true` 영구 활성화 (운영 디버깅용)
+- ECS task role `peche-ecs-task-role-prod`에 SSM exec 정책 추가
+
+---
+
 ## [1.3.0] - 2026-03-11
 
 ### Changed - SNS 상담 아이콘 교체 및 인스타그램 추가
