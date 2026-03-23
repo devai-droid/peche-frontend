@@ -136,7 +136,7 @@ const Event = ({
 
 const Events = () => {
   const { t } = useTranslation()
-  const { isMobile } = useResponsive()
+  const { isMobile, isDesktop } = useResponsive()
   const tv = useLanguageValue()
   const langQuery = useLanguageQuery()
   const [params, setParams] = useSearchParams()
@@ -343,7 +343,7 @@ const Events = () => {
               {categories?.items?.map((category, index) => {
                 const isSelected = selectedCategoryId === category.id
                 // 모바일/데스크탑 구분
-                const isFirstRow = (isMobile && index < 4) || (!isMobile && index < 4)
+                const isFirstRow = isDesktop ? index < 5 : index < 3
 
                 return (
                   <button
@@ -366,7 +366,7 @@ const Events = () => {
                 )
               })}
               <div
-                tw="max-lg:hidden bg-[#f4f4f4]"
+                tw="max-lg:hidden bg-white"
                 css={{
                   gridColumn: colSpan(5 - (categories.items.length % 5)),
                   display: categories.items.length % 5 === 0 ? "none" : "block",
@@ -376,7 +376,7 @@ const Events = () => {
               />
 
               <div
-                tw="lg:hidden bg-[#f4f4f4]"
+                tw="lg:hidden bg-white"
                 css={{
                   gridColumn: colSpan(3 - (categories.items.length % 3)),
                   display: categories.items.length % 3 === 0 ? "none" : "block",
