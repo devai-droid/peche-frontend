@@ -256,8 +256,6 @@ const Events = () => {
     return <Page />
   }
 
-  const colSpan = (column: number) => `span ${column} / span ${column}`
-
   // -----------------------------
   // Event Category Header UI
   // -----------------------------
@@ -339,7 +337,7 @@ const Events = () => {
       <div tw="bg-neutral min-h-screen pt-[1px] tracking-tight leading-[150%]">
         <AppMaxWidth tw="max-lg:px-0 max-lg:pt-0 max-lg:pb-20 pb-32">
           <div tw="flex justify-center mt-8 lg:mt-16 mb-4 lg:mb-12 max-lg:p-4">
-            <div tw="grid justify-center bg-neutral30 gap-px p-px grid-cols-3 lg:grid-cols-5 w-full">
+            <div tw="grid justify-center gap-px p-px grid-cols-3 lg:grid-cols-5 w-full">
               {categories?.items?.map((category, index) => {
                 const isSelected = selectedCategoryId === category.id
                 // 모바일/데스크탑 구분
@@ -365,25 +363,6 @@ const Events = () => {
                   </button>
                 )
               })}
-              <div
-                tw="max-lg:hidden bg-white"
-                css={{
-                  gridColumn: colSpan(5 - (categories.items.length % 5)),
-                  display: categories.items.length % 5 === 0 ? "none" : "block",
-                  marginBottom: "-1px",
-                  marginRight: "-1px",
-                }}
-              />
-
-              <div
-                tw="lg:hidden bg-white"
-                css={{
-                  gridColumn: colSpan(3 - (categories.items.length % 3)),
-                  display: categories.items.length % 3 === 0 ? "none" : "block",
-                  marginBottom: "-1px",
-                  marginRight: "-1px",
-                }}
-              />
             </div>
           </div>
           <CartView isHome={false}>
