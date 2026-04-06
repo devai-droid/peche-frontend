@@ -214,10 +214,12 @@ const Products = () => {
            ${minDiscountPrice.toLocaleString()} ${t("reservePage.won")} ~
          </span>`
                   } else {
-                    // Calculate the minimum price from product.products if available
+                    // Calculate the minimum price from product.products (할인가 우선, 없으면 정상가)
                     const minPrice = product.products.reduce((acc, cur) => {
-                      const p = cur as unknown as ProductModel
-                      return acc === 0 ? p.price : Math.min(acc, p.price)
+                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                      const p = cur as any
+                      const effectivePrice = p.discountPrice || p.price
+                      return acc === 0 ? effectivePrice : Math.min(acc, effectivePrice)
                     }, 0)
 
                     price = `
