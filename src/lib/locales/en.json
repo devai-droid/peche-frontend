@@ -2,7 +2,7 @@
   "header": {
     "home": "Main",
     "surgeryAndPrice": "All Treatments",
-    "treatmentList": "전체 시술",
+    "treatmentList": "All Treatments",
     "hospital": "About us",
     "reservation": "Book now",
     "event": "Price & Events",
@@ -363,7 +363,7 @@
     "phone": "연락처",
     "email": "Email",
     "auth": "verification",
-     "emailAddress": "Email address",
+    "emailAddress": "Email address",
     "emailAddressPlaceholder": "Please enter your email address.",
     "namePlaceholder": "Please write down your name",
     "sendCode": "Receive verification number",

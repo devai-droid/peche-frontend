@@ -178,8 +178,7 @@ const ProductDetail = () => {
       type: "event" as const,
       name: tv(event, "name"),
       description: tv(event, "description"),
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      bundleName: (event as any).bundle?.name,
+      bundleName: event.category ? tv(event.category, "name") : undefined,
       price: `${(event.discountPrice || event.price).toLocaleString()} ${t("reservePage.won")}`,
       originalPrice: event.discountPrice
         ? `${event.price.toLocaleString()} ${t("reservePage.won")}`
@@ -276,7 +275,7 @@ const ProductDetail = () => {
                     ? tw`bg-[#DA7F67] text-white`
                     : tw`bg-white text-neutral70 hover:text-[#DA7F67]`,
                 ]}>
-                {"가격·이벤트"}
+                {t("header.event")}
               </button>
               <button
                 onClick={() => { setActiveTab("product"); setShowAllProducts(false) }}
@@ -286,7 +285,7 @@ const ProductDetail = () => {
                     ? tw`bg-[#DA7F67] text-white`
                     : tw`bg-white text-neutral70 hover:text-[#DA7F67]`,
                 ]}>
-                {"전체시술"}
+                {t("header.treatmentList")}
               </button>
             </div>
 
