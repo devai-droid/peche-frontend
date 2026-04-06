@@ -186,13 +186,10 @@ const Events = () => {
     // Retrieve existing end dates from local storage
     const endDates = getEventEndDates()
 
-    const selectedEventBundle = visibleEvents?.find((ev) => ev.id === selectedEventBundleId)
-
-    if (selectedEventBundle) {
-      // update endDates
-      endDates[event.event.id] = selectedEventBundle.endDate
-
-      // Save the updated end dates back to local storage
+    // 이벤트의 번들에서 endDate 가져오기
+    const bundle = event.event?.bundle
+    if (bundle?.endDate) {
+      endDates[event.event.id] = bundle.endDate
       setEventEndDates(endDates)
     }
     addToCart(event)
@@ -264,7 +261,6 @@ const Events = () => {
   const { data: events } = useEventControllerFindManyInfinite(
     {
       categoryId: selectedCategoryId ?? undefined,
-      bundleId: selectedEventBundleId ?? undefined,
       sortBy: [`order${keyMatch[lang]}`],
       sortOrder: ["ASC"],
       limit: 100,
@@ -272,7 +268,7 @@ const Events = () => {
     },
     {
       query: {
-        enabled: !!selectedCategoryId && !!selectedEventBundleId && !isProductTab,
+        enabled: !!selectedCategoryId && !isProductTab,
         getNextPageParam,
       },
     },
@@ -310,22 +306,20 @@ const Events = () => {
 
   useLayoutEffect(() => {
     if (
-      visibleEvents?.length &&
       combinedTabs.length &&
-      (!selectedCategoryId || !selectedEventBundleId)
+      !selectedCategoryId
     ) {
       setParams(
         (prev) => {
-          if (!selectedCategoryId) prev.set("category", combinedTabs[0]?.id)
-          prev.set("bundle", visibleEvents[0]?.id)
+          prev.set("category", combinedTabs[0]?.id)
           return prev
         },
         { replace: true },
       )
     }
-  }, [combinedTabs, visibleEvents])
+  }, [combinedTabs])
 
-  if (!combinedTabs.length || !visibleEvents) {
+  if (!combinedTabs.length) {
     return <Page />
   }
 
@@ -342,11 +336,10 @@ const Events = () => {
     name: string
     description: string
   }
-  // visibleEvents에 선택된 번들의 날짜 정보가 있음
-  const selectedBundle = visibleEvents?.find((b) => b.id === selectedEventBundleId)
-
-  // const eventStartDate = selectedBundle?.startDate
-  // const eventEndDate = selectedBundle?.endDate
+  // 이벤트의 첫 번째 번들에서 날짜 정보 가져오기
+  const firstEvent = events?.pages?.[0]?.items?.[0]
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const eventBundle = (firstEvent as any)?.bundle
 
   const EventCategoryBanner = ({
     name,
@@ -455,15 +448,15 @@ const Events = () => {
             {/* 특별 이벤트 탭: 배너 + 이벤트 목록 */}
             {!isProductTab && (
               <>
-                {selectedTab?.image?.url && selectedBundle && (
+                {selectedTab?.image?.url && eventBundle && (
                   <EventCategoryBanner
                     name={tv(selectedTab, "name")}
-                    startDate={selectedBundle.startDate}
-                    endDate={selectedBundle.endDate}
+                    startDate={eventBundle.startDate}
+                    endDate={eventBundle.endDate}
                     imageUrl={selectedTab.image.url}
                   />
                 )}
-                {selectedTab?.description && !selectedTab.image?.url && selectedBundle && (
+                {selectedTab?.description && !selectedTab.image?.url && (
                   <NoPictureCategoryBanner
                     name={tv(selectedTab, "name")}
                     description={tv(selectedTab, "description")}
