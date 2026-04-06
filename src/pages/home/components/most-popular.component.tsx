@@ -92,9 +92,32 @@ const StyledSwiperSlide = styled(SwiperSlide)`
 `
 
 const CardLabel = styled.div`
-  ${tw`absolute bottom-2 right-2 bg-white text-[13px] px-2 py-1`}
-  min-width: 40px; /* 또는 60~100px 사이로 네가 원하는 값 */
+  ${tw`absolute bottom-2 right-2 bg-white text-[13px] px-2 py-1 text-center`}
+  min-width: 40px;
   white-space: nowrap;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+`
+
+const ImageCardLink = styled(CustomLink)`
+  ${tw`block relative overflow-hidden bg-gray-100 cursor-pointer`}
+  width: 321px;
+  height: 321px;
+  margin: 0 auto;
+  transform: translateZ(0);
+
+  .img-wrap {
+    ${tw`w-full h-full overflow-hidden`}
+  }
+  img {
+    ${tw`w-full h-full object-cover transition-transform duration-500`}
+    transform: scale(1);
+    will-change: transform;
+  }
+
+  &:hover img {
+    transform: scale(1.05);
+  }
 `
 
 // ─────────────────────────────
@@ -112,27 +135,6 @@ const MostPopular = () => {
       setOpenId(categories[0].id)
     }
   }, [categories])
-
-  const ImageCardLink = styled(CustomLink)`
-    ${tw`relative overflow-hidden bg-gray-100 cursor-pointer`}
-    width: 321px;
-    height: 321px;
-    margin: 0 auto;
-    transform: translateZ(0); /* 레이어 고정 */
-
-    .img-wrap {
-      ${tw`w-full h-full overflow-hidden`}
-    }
-    img {
-      ${tw`w-full h-full object-cover transition-transform duration-500`}
-      transform: scale(1);
-      will-change: transform;
-    }
-
-    &:hover img {
-      transform: scale(1.05); /* 105% 확대 */
-    }
-  `
 
   const toggleAccordion = (id: string) => {
     setOpenId(openId === id ? null : id)

@@ -17,6 +17,8 @@ import { useSearchParams } from "react-router-dom"
 import useLanguageQuery from "@/lib/hooks/use-language-query"
 import { useEventCategoryControllerFindManyWithPaginationQuery } from "@/lib/orval/event-categories/event-categories"
 import { useEventBundleControllerFindVisible } from "@/lib/orval/event-bundle/event-bundle"
+import { useProductControllerFindMany } from "@/lib/orval/products/products"
+import { useProductCategoryControllerFindMany } from "@/lib/orval/product-categories/product-categories"
 import dayjs from "dayjs"
 import useCart from "@/features/product/hooks/use-cart"
 import { getNextPageParam } from "@/lib/api/http-client.helper"
@@ -197,13 +199,68 @@ const Events = () => {
   }
 
   const { data: visibleEvents } = useEventBundleControllerFindVisible()
-  const { data: categories } = useEventCategoryControllerFindManyWithPaginationQuery({
+  const { data: eventCategories } = useEventCategoryControllerFindManyWithPaginationQuery({
     status: "ACTIVE",
     sortBy: ["order"],
     sortOrder: ["ASC"],
     limit: 100,
     ...langQuery,
   })
+  const { data: productCategories } = useProductCategoryControllerFindMany({
+    status: "ACTIVE",
+    sortBy: ["order"],
+    sortOrder: ["ASC"],
+    limit: 100,
+  })
+
+  // 통합 탭 목록: EventCategory (특별 이벤트 4개) + ProductCategory (상시)
+  const combinedTabs = React.useMemo(() => {
+    const eventTabs = (eventCategories?.items ?? []).map((c) => ({
+      id: c.id,
+      name: c.name,
+      nameEN: c.nameEN,
+      nameZH: c.nameZH,
+      nameZHTW: c.nameZHTW,
+      nameJA: c.nameJA,
+      nameTH: c.nameTH,
+      type: "event" as const,
+      image: c.image,
+      description: c.description,
+      descriptionEN: c.descriptionEN,
+      descriptionZH: c.descriptionZH,
+      descriptionZHTW: c.descriptionZHTW,
+      descriptionJA: c.descriptionJA,
+      descriptionTH: c.descriptionTH,
+      startDate: c.startDate,
+      endDate: c.endDate,
+    }))
+    const productTabs = (productCategories?.items ?? []).map((c) => ({
+      id: c.id,
+      name: c.name,
+      nameEN: c.nameEN,
+      nameZH: c.nameZH,
+      nameZHTW: c.nameZHTW,
+      nameJA: c.nameJA,
+      nameTH: c.nameTH,
+      type: "product" as const,
+      image: undefined,
+      description: undefined,
+      descriptionEN: undefined,
+      descriptionZH: undefined,
+      descriptionZHTW: undefined,
+      descriptionJA: undefined,
+      descriptionTH: undefined,
+      startDate: undefined,
+      endDate: undefined,
+    }))
+    return [...eventTabs, ...productTabs]
+  }, [eventCategories, productCategories])
+
+  // 현재 선택된 탭이 event인지 product인지
+  const selectedTab = combinedTabs.find((t) => t.id === selectedCategoryId)
+  const isProductTab = selectedTab?.type === "product"
+
+  // 이벤트 데이터 (특별 이벤트 탭 선택 시)
   const { data: events } = useEventControllerFindManyInfinite(
     {
       categoryId: selectedCategoryId ?? undefined,
@@ -215,8 +272,24 @@ const Events = () => {
     },
     {
       query: {
-        enabled: !!selectedCategoryId && !!selectedEventBundleId,
+        enabled: !!selectedCategoryId && !!selectedEventBundleId && !isProductTab,
         getNextPageParam,
+      },
+    },
+  )
+
+  // 상품 데이터 (상시 탭 선택 시)
+  const { data: products } = useProductControllerFindMany(
+    {
+      categoryId: selectedCategoryId ?? undefined,
+      sortBy: [`order${keyMatch[lang]}`],
+      sortOrder: ["ASC"],
+      limit: 1000,
+      ...langQuery,
+    },
+    {
+      query: {
+        enabled: !!selectedCategoryId && isProductTab,
       },
     },
   )
@@ -238,21 +311,21 @@ const Events = () => {
   useLayoutEffect(() => {
     if (
       visibleEvents?.length &&
-      categories?.items?.length &&
+      combinedTabs.length &&
       (!selectedCategoryId || !selectedEventBundleId)
     ) {
       setParams(
         (prev) => {
-          if (!selectedCategoryId) prev.set("category", categories.items[0]?.id)
+          if (!selectedCategoryId) prev.set("category", combinedTabs[0]?.id)
           prev.set("bundle", visibleEvents[0]?.id)
           return prev
         },
         { replace: true },
       )
     }
-  }, [categories, visibleEvents])
+  }, [combinedTabs, visibleEvents])
 
-  if (!categories || !visibleEvents) {
+  if (!combinedTabs.length || !visibleEvents) {
     return <Page />
   }
 
@@ -269,8 +342,6 @@ const Events = () => {
     name: string
     description: string
   }
-  const selectedCategory = categories?.items?.find((c) => c.id === selectedCategoryId)
-
   // visibleEvents에 선택된 번들의 날짜 정보가 있음
   const selectedBundle = visibleEvents?.find((b) => b.id === selectedEventBundleId)
 
@@ -338,27 +409,24 @@ const Events = () => {
         <AppMaxWidth tw="max-lg:px-0 max-lg:pt-0 max-lg:pb-20 pb-32">
           <div tw="flex justify-center mt-8 lg:mt-16 mb-4 lg:mb-12 max-lg:p-4">
             <div tw="grid justify-center bg-neutral30 gap-px p-px grid-cols-3 lg:grid-cols-5 w-full">
-              {categories?.items?.map((category, index) => {
-                const isSelected = selectedCategoryId === category.id
-                // 모바일/데스크탑 구분
-                const isFirstRow = index < 4
+              {combinedTabs.map((tab, index) => {
+                const isSelected = selectedCategoryId === tab.id
+                const isEventTab = tab.type === "event"
 
                 return (
                   <button
-                    key={category.id}
-                    onClick={() => handleCategory(category.id)}
+                    key={tab.id}
+                    onClick={() => handleCategory(tab.id)}
                     css={[
                       item,
-                      // 선택된 버튼 스타일 (공통)
                       isSelected && tw`bg-[#DA7F67] text-white`,
-                      // 비선택 버튼: 첫줄 / 아니면 구분
                       !isSelected &&
-                        (isFirstRow
+                        (isEventTab
                           ? tw`bg-[#FEF5EA] hover:(bg-tertiary) text-black hover:(text-primary)`
                           : tw`bg-white font-normal text-black hover:(text-primary)`),
                     ]}>
                     <div tw="px-2 overflow-hidden text-ellipsis text-[13px] sm:text-[15px] md:text-[17px]">
-                      {tv(category, "name")}
+                      {tv(tab, "name")}
                     </div>
                   </button>
                 )
@@ -366,8 +434,8 @@ const Events = () => {
               <div
                 tw="max-lg:hidden bg-neutral"
                 css={{
-                  gridColumn: `span ${5 - (categories.items.length % 5)} / span ${5 - (categories.items.length % 5)}`,
-                  display: categories.items.length % 5 === 0 ? "none" : "block",
+                  gridColumn: `span ${5 - (combinedTabs.length % 5)} / span ${5 - (combinedTabs.length % 5)}`,
+                  display: combinedTabs.length % 5 === 0 ? "none" : "block",
                   marginBottom: "-1px",
                   marginRight: "-1px",
                 }}
@@ -375,8 +443,8 @@ const Events = () => {
               <div
                 tw="lg:hidden bg-neutral"
                 css={{
-                  gridColumn: `span ${3 - (categories.items.length % 3)} / span ${3 - (categories.items.length % 3)}`,
-                  display: categories.items.length % 3 === 0 ? "none" : "block",
+                  gridColumn: `span ${3 - (combinedTabs.length % 3)} / span ${3 - (combinedTabs.length % 3)}`,
+                  display: combinedTabs.length % 3 === 0 ? "none" : "block",
                   marginBottom: "-1px",
                   marginRight: "-1px",
                 }}
@@ -384,62 +452,106 @@ const Events = () => {
             </div>
           </div>
           <CartView isHome={false}>
-            {selectedCategory?.image?.url && selectedBundle && (
-              <EventCategoryBanner
-                name={tv(selectedCategory, "name")}
-                startDate={selectedBundle.startDate}
-                endDate={selectedBundle.endDate}
-                imageUrl={selectedCategory.image.url}
-              />
-            )}
-            {selectedCategory?.description && !selectedCategory.image?.url && selectedBundle && (
-              <NoPictureCategoryBanner
-                name={tv(selectedCategory, "name")}
-                description={tv(selectedCategory, "description")}
-              />
+            {/* 특별 이벤트 탭: 배너 + 이벤트 목록 */}
+            {!isProductTab && (
+              <>
+                {selectedTab?.image?.url && selectedBundle && (
+                  <EventCategoryBanner
+                    name={tv(selectedTab, "name")}
+                    startDate={selectedBundle.startDate}
+                    endDate={selectedBundle.endDate}
+                    imageUrl={selectedTab.image.url}
+                  />
+                )}
+                {selectedTab?.description && !selectedTab.image?.url && selectedBundle && (
+                  <NoPictureCategoryBanner
+                    name={tv(selectedTab, "name")}
+                    description={tv(selectedTab, "description")}
+                  />
+                )}
+
+                <div tw="flex flex-col gap-4 max-lg:px-4">
+                  {events?.pages
+                    .flatMap((page) => page.items)
+                    .filter(
+                      (event, index, self) =>
+                        index === self.findIndex((e) => tv(e, "name") === tv(event, "name")),
+                    )
+                    .map((event, index) => (
+                      <Event
+                        addToCart={() => handleAddToCart({ event })}
+                        id={event.detailPage?.id}
+                        key={index}
+                        name={tv(event, "name")}
+                        description={tv(event, "description")}
+                        subDescription={
+                          event.category?.startDate
+                            ? `${dayjs(event.category.startDate).format("YYYY.MM.DD")} ~ ${dayjs(
+                                event.category.endDate,
+                              ).format("YYYY.MM.DD")}`
+                            : ""
+                        }
+                        originalPrice={
+                          event.discountPrice
+                            ? `${event.price.toLocaleString()} ${t("reservePage.won")}`
+                            : undefined
+                        }
+                        price={`${(event.discountPrice || event.price).toLocaleString()} ${t(
+                          "reservePage.won",
+                        )}`}
+                        isNew={event.label?.includes("NEW")}
+                        isPop={event.label?.includes("POP")}
+                        isBest={event.label?.includes("BEST")}
+                        isKakao={event.label?.includes("KAKAO")}
+                      />
+                    ))}
+                </div>
+                {events?.pages[0]?.meta?.totalItems === 0 && (
+                  <div tw="flex flex-col gap-4 lg:gap-6" style={{ textAlign: "center" }}>
+                    {t("productDetail.noEvents")}
+                  </div>
+                )}
+              </>
             )}
 
-            <div tw="flex flex-col gap-4 max-lg:px-4">
-              {events?.pages
-                .flatMap((page) => page.items)
-                // name 기준으로 중복 제거
-                .filter(
-                  (event, index, self) =>
-                    index === self.findIndex((e) => tv(e, "name") === tv(event, "name")),
-                )
-                .map((event, index) => (
-                  <Event
-                    addToCart={() => handleAddToCart({ event })}
-                    id={event.detailPage?.id}
-                    key={index}
-                    name={tv(event, "name")}
-                    description={tv(event, "description")}
-                    subDescription={
-                      event.category.startDate
-                        ? `${dayjs(event.category.startDate).format("YYYY.MM.DD")} ~ ${dayjs(
-                            event.category.endDate,
-                          ).format("YYYY.MM.DD")}`
-                        : ""
-                    }
-                    originalPrice={
-                      event.discountPrice
-                        ? `${event.price.toLocaleString()} ${t("reservePage.won")}`
-                        : undefined
-                    }
-                    price={`${(event.discountPrice || event.price).toLocaleString()} ${t(
-                      "reservePage.won",
-                    )}`}
-                    isNew={event.label?.includes("NEW")}
-                    isPop={event.label?.includes("POP")}
-                    isBest={event.label?.includes("BEST")}
-                    isKakao={event.label?.includes("KAKAO")}
-                  />
-                ))}
-            </div>
-            {events?.pages[0].meta.totalItems === 0 && (
-              <div tw="flex flex-col gap-4 lg:gap-6" style={{ textAlign: "center" }}>
-                {t("productDetail.noEvents")}
-              </div>
+            {/* 상시 탭: 상품 목록 (할인가 표시) */}
+            {isProductTab && (
+              <>
+                <div tw="flex flex-col gap-4 max-lg:px-4">
+                  {products?.items
+                    ?.filter(
+                      (product, index, self) =>
+                        index === self.findIndex((p) => tv(p, "name") === tv(product, "name")),
+                    )
+                    .map((product, index) => {
+                      // discountPrice는 BE에서 추가 후 orval 재생성 시 타입에 반영됨
+                      const p = product as typeof product & { discountPrice?: number }
+                      return (
+                        <Event
+                          addToCart={() => handleAddToCart({ event: product })}
+                          id={product.detailPage?.id}
+                          key={index}
+                          name={tv(product, "name")}
+                          description={tv(product, "description")}
+                          subDescription=""
+                          originalPrice={
+                            p.discountPrice
+                              ? `${product.price.toLocaleString()} ${t("reservePage.won")}`
+                              : undefined
+                          }
+                          price={`${(p.discountPrice || product.price).toLocaleString()} ${t(
+                            "reservePage.won",
+                          )}`}
+                        />
+                      )
+                    })}
+                </div>
+                {products?.items?.length === 0 && (
+                  <div tw="flex flex-col gap-4 lg:gap-6" style={{ textAlign: "center" }}>
+                    {t("productDetail.noEvents")}
+                  </div>
+                )}
+              </>
             )}
           </CartView>
         </AppMaxWidth>
