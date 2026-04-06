@@ -155,6 +155,7 @@ const ProductDetail = () => {
   )
 
   const [showAllProducts, setShowAllProducts] = React.useState(false)
+  const [activeTab, setActiveTab] = React.useState<"event" | "product">("event")
   const [showInquiryModal, setShowInquiryModal] = React.useState(false)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [pendingAddItem, setPendingAddItem] = React.useState<any>(null)
@@ -222,9 +223,6 @@ const ProductDetail = () => {
       },
     }
   })
-
-  // 탭 상태
-  const [activeTab, setActiveTab] = React.useState<"event" | "product">("event")
 
   const DISPLAY_LIMIT = 5
   const activeList = activeTab === "event" ? dedupedEventList : normalProducts
