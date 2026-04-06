@@ -59,11 +59,6 @@ const ProductItem = ({
       ]}>
       {/* Chip 영역 */}
       <div tw="flex gap-1">
-        {bundleName && (
-          <Chip tw="h-[24px] px-2 text-[13px] md:text-[15px] leading-[1] px-[4px]" color="primary">
-            {bundleName}
-          </Chip>
-        )}
         {isPop && (
           <Chip tw="h-[24px] px-2 text-[13px] md:text-[15px] leading-[1] px-[4px]" color="primary">
             {t("common.pop")}
@@ -87,7 +82,10 @@ const ProductItem = ({
       </div>
 
       {/* 제목 */}
-      <div tw="text-neutralBlack text-[16px] md:text-[18px] font-semibold">{name}</div>
+      <div tw="text-[16px] md:text-[18px] font-semibold">
+        {bundleName && <span tw="text-[#DA7F67]">{bundleName} </span>}
+        <span tw="text-neutralBlack">{name}</span>
+      </div>
 
       {/* 설명 */}
       <div tw="text-[13px] md:text-[14px] text-neutral70 whitespace-pre-line">{description}</div>
