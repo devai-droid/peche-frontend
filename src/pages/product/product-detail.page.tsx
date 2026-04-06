@@ -276,7 +276,7 @@ const ProductDetail = () => {
                     ? tw`bg-[#DA7F67] text-white`
                     : tw`bg-white text-neutral70 hover:text-[#DA7F67]`,
                 ]}>
-                {t("productDetail.eventsTitle") || "가격이벤트"}
+                {"가격·이벤트"}
               </button>
               <button
                 onClick={() => { setActiveTab("product"); setShowAllProducts(false) }}
@@ -286,7 +286,7 @@ const ProductDetail = () => {
                     ? tw`bg-[#DA7F67] text-white`
                     : tw`bg-white text-neutral70 hover:text-[#DA7F67]`,
                 ]}>
-                {t("productDetail.allTreatments") || "전체시술"}
+                {"전체시술"}
               </button>
             </div>
 
