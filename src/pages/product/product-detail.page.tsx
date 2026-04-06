@@ -9,7 +9,7 @@ import AppMaxWidth from "@/lib/components/layout/app-max-width.component"
 import Page from "@/lib/components/layout/page.component"
 import useLanguageValue from "@/lib/hooks/use-language-key"
 import useLanguageQuery from "@/lib/hooks/use-language-query"
-import { useEventBundleControllerFindVisible } from "@/lib/orval/event-bundle/event-bundle"
+// import { useEventBundleControllerFindVisible } from "@/lib/orval/event-bundle/event-bundle"
 import { useEventControllerFindMany } from "@/lib/orval/events/events"
 import { useProductDetailPageControllerFindOne } from "@/lib/orval/product-detail-pages/product-detail-pages"
 import { useProductControllerFindMany } from "@/lib/orval/products/products"
@@ -27,6 +27,7 @@ interface ProductProps {
   description: string
   price: string | number
   originalPrice?: string | number
+  bundleName?: string
   isNew?: boolean
   isKakao?: boolean
   isBest?: boolean
@@ -40,6 +41,7 @@ const ProductItem = ({
   description,
   price,
   originalPrice,
+  bundleName,
   isNew,
   isKakao,
   isBest,
@@ -57,6 +59,11 @@ const ProductItem = ({
       ]}>
       {/* Chip 영역 */}
       <div tw="flex gap-1">
+        {bundleName && (
+          <Chip tw="h-[24px] px-2 text-[13px] md:text-[15px] leading-[1] px-[4px]" color="primary">
+            {bundleName}
+          </Chip>
+        )}
         {isPop && (
           <Chip tw="h-[24px] px-2 text-[13px] md:text-[15px] leading-[1] px-[4px]" color="primary">
             {t("common.pop")}
@@ -137,18 +144,16 @@ const ProductDetail = () => {
     { query: { enabled: !!id } },
   )
 
-  const { data: visibleEvents } = useEventBundleControllerFindVisible()
   const { data: events } = useEventControllerFindMany(
     {
       detailPageId: id,
-      bundleId: selectedEventBundleId ?? undefined,
-      sortBy: ["discountPrice"],
+      sortBy: ["order"],
       sortOrder: ["ASC"],
       page: 1,
       limit: 500,
       ...langQuery,
     },
-    { query: { enabled: !!selectedEventBundleId } },
+    { query: { enabled: !!id } },
   )
 
   const [showAllProducts, setShowAllProducts] = React.useState(false)
@@ -163,19 +168,6 @@ const ProductDetail = () => {
     }
   }, [inquiry])
 
-  // 최초 번들 자동 선택
-  useLayoutEffect(() => {
-    if (visibleEvents?.length && !selectedEventBundleId) {
-      setParams(
-        (prev) => {
-          prev.set("bundle", visibleEvents[0].id)
-          return prev
-        },
-        { replace: true },
-      )
-    }
-  })
-
   if (!productDetail || !products) return <Page />
 
   const name = tv(productDetail, "name")
@@ -187,6 +179,8 @@ const ProductDetail = () => {
       type: "event" as const,
       name: tv(event, "name"),
       description: tv(event, "description"),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      bundleName: (event as any).bundle?.name,
       price: `${(event.discountPrice || event.price).toLocaleString()} ${t("reservePage.won")}`,
       originalPrice: event.discountPrice
         ? `${event.price.toLocaleString()} ${t("reservePage.won")}`
