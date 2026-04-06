@@ -285,7 +285,7 @@ const ProductDetail = () => {
                     ? tw`bg-[#DA7F67] text-white`
                     : tw`bg-white text-neutral70 hover:text-[#DA7F67]`,
                 ]}>
-                {t("header.treatmentList")}
+                {t("header.surgeryAndPrice")}
               </button>
             </div>
 
