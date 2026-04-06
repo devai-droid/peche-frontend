@@ -201,26 +201,34 @@ const ProductDetail = () => {
     (item, idx, self) => idx === self.findIndex((e) => e.name === item.name),
   )
 
-  // 일반 상품 리스트
-  const normalProducts = products.items.map((product) => ({
-    type: "normal" as const,
-    name: tv(product, "name"),
-    description: tv(product, "description"),
-    price: `${product.price.toLocaleString()} ${t("reservePage.won")}`,
-    addToCart: () => {
-      const result = addToCart({ product })
-      if (result?.blockedByInquiry) {
-        setPendingAddItem({ product })
-        setShowInquiryModal(true)
-      }
-    },
-  }))
+  // 일반 상품 리스트 (정상가+할인가)
+  const normalProducts = products.items.map((product) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const p = product as typeof product & { discountPrice?: number }
+    return {
+      type: "normal" as const,
+      name: tv(product, "name"),
+      description: tv(product, "description"),
+      price: `${(p.discountPrice || product.price).toLocaleString()} ${t("reservePage.won")}`,
+      originalPrice: p.discountPrice
+        ? `${product.price.toLocaleString()} ${t("reservePage.won")}`
+        : undefined,
+      addToCart: () => {
+        const result = addToCart({ product })
+        if (result?.blockedByInquiry) {
+          setPendingAddItem({ product })
+          setShowInquiryModal(true)
+        }
+      },
+    }
+  })
 
-  // 합치기
-  const mergedList = [...dedupedEventList, ...normalProducts]
+  // 탭 상태
+  const [activeTab, setActiveTab] = React.useState<"event" | "product">("event")
 
   const DISPLAY_LIMIT = 5
-  const displayedList = showAllProducts ? mergedList : mergedList.slice(0, DISPLAY_LIMIT)
+  const activeList = activeTab === "event" ? dedupedEventList : normalProducts
+  const displayedList = showAllProducts ? activeList : activeList.slice(0, DISPLAY_LIMIT)
 
   return (
     <Page hiddenFooter={false} bottomCartExists tw="bg-neutral">
@@ -260,35 +268,41 @@ const ProductDetail = () => {
               {/* <div tw="text-neutral70 text-[15px] md:text-[17px] mt-4">{subTitle}</div> */}
             </div>
 
-            {/* 상품 리스트 */}
+            {/* 탭 */}
+            <div tw="flex mb-4">
+              <button
+                onClick={() => { setActiveTab("event"); setShowAllProducts(false) }}
+                css={[
+                  tw`flex-1 py-3 text-[15px] md:text-[17px] font-semibold text-center transition-colors`,
+                  activeTab === "event"
+                    ? tw`bg-[#DA7F67] text-white`
+                    : tw`bg-white text-neutral70 hover:text-[#DA7F67]`,
+                ]}>
+                {t("productDetail.eventsTitle") || "가격이벤트"}
+              </button>
+              <button
+                onClick={() => { setActiveTab("product"); setShowAllProducts(false) }}
+                css={[
+                  tw`flex-1 py-3 text-[15px] md:text-[17px] font-semibold text-center transition-colors`,
+                  activeTab === "product"
+                    ? tw`bg-[#DA7F67] text-white`
+                    : tw`bg-white text-neutral70 hover:text-[#DA7F67]`,
+                ]}>
+                {t("productDetail.allTreatments") || "전체시술"}
+              </button>
+            </div>
+
+            {/* 리스트 */}
             <div>
               {displayedList.map((item, index) => {
-                const isEvent = item.type === "event"
-                const isNormal = item.type === "normal"
-
-                // 이벤트 상품 마지막인지?
-                const hideBorderEvent = isEvent && index === eventList.length - 1
-
-                // 일반 상품 마지막인지?
-                const hideBorderNormal =
-                  isNormal && index === eventList.length + normalProducts.length - 1
-
-                const hideBorder = hideBorderEvent || hideBorderNormal
-
-                // 이벤트 → 일반 사이 공간
-                const showGap =
-                  index > 0 && displayedList[index - 1].type === "event" && item.type === "normal"
-
+                const hideBorder = index === displayedList.length - 1
                 return (
-                  <React.Fragment key={index}>
-                    {showGap && <div tw="h-6 bg-neutral" />}
-                    <ProductItem {...item} hideBorder={hideBorder} />
-                  </React.Fragment>
+                  <ProductItem key={index} {...item} hideBorder={hideBorder} />
                 )
               })}
 
               {/* 더보기 버튼 */}
-              {!showAllProducts && mergedList.length > DISPLAY_LIMIT && (
+              {!showAllProducts && activeList.length > DISPLAY_LIMIT && (
                 <div tw="flex justify-center mt-8">
                   <button
                     tw="
