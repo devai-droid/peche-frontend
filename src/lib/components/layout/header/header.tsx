@@ -66,7 +66,6 @@ const Header = ({
       ) : (
         appBar
       )}
-      <div id="header-height" tw="h-[120px] lg:h-28" />
     </>
   )
 }
