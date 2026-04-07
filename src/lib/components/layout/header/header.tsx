@@ -66,6 +66,7 @@ const Header = ({
       ) : (
         appBar
       )}
+      <div tw="hidden lg:block lg:h-28" />
     </>
   )
 }
