@@ -9,7 +9,6 @@ import doctorChoiProfile from "@/assets/images/doctor-choi-profile.png"
 import doctorShinProfile from "@/assets/images/doctor-shin-profile.png"
 import doctorDataBased from "@/assets/images/doctor-data-based.png"
 import doctorCommunication from "@/assets/images/doctor-communication.png"
-import doctorAhnSign from "@/assets/images/doctor-ahn-sign.png"
 
 const PageContainer = tw.div`w-full flex flex-col items-center bg-white`
 
@@ -88,22 +87,16 @@ const IntroBodyGroup = styled.div`
 const IntroBody = tw.p`
   text-[16px] md:text-[18px] font-pretendard font-medium text-neutral70 tracking-tight leading-[1.5] whitespace-pre-line
 `
-/* PC: row, gap=12  MO: row, gap=8 */
-const DoctorSignBlock = styled.div`
-  ${tw`flex items-center`}
+/* 이름 + 직급 블록 */
+const DoctorNameBlock = styled.div`
+  ${tw`flex items-baseline`}
   gap: 8px;
-
-  @media (min-width: 768px) {
-    gap: 12px;
-  }
 `
-/* PC: 600/18px  MO: 600/16px, #121212 */
-const DoctorSignName = tw.span`
-  text-[16px] md:text-[18px] font-pretendard font-semibold text-neutralBlack tracking-tight leading-[1.4]
+const DoctorName = tw.span`
+  text-[22px] md:text-[26px] font-pretendard font-bold text-neutralBlack tracking-tight leading-[1.4]
 `
-/* 100x50 */
-const DoctorSignImage = tw.img`
-  w-[100px] h-[50px] object-contain
+const DoctorPosition = tw.span`
+  text-[16px] md:text-[18px] font-pretendard font-bold text-neutralBlack tracking-tight leading-[1.4]
 `
 
 /* ── Section 2: 이미지 + 텍스트 ──
@@ -301,10 +294,10 @@ const DoctorPage = () => {
                   <IntroBody>{t("doctor.introBody2")}</IntroBody>
                 </IntroBodyGroup>
               </IntroTextGroup>
-              <DoctorSignBlock>
-                <DoctorSignName>{t("doctor.introSign")}</DoctorSignName>
-                <DoctorSignImage src={doctorAhnSign} alt="안태언 서명" />
-              </DoctorSignBlock>
+              <DoctorNameBlock>
+                <DoctorName>안태언</DoctorName>
+                <DoctorPosition>대표원장</DoctorPosition>
+              </DoctorNameBlock>
             </IntroTextBlock>
           </Section1>
 
