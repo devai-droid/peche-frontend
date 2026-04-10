@@ -109,7 +109,7 @@
     "hospitalThirdBuildingAddress": "首尔特别市瑞草区江南大路 69路10 西湖大厦 5-6 层 诗丽雅医院 3 馆",
     "privacyPolicy": "隐私政策",
     "termsOfService": "服务条款",
-    "info": "首尔市江南区江南大路364号3楼（驿三洞美王大厦 Meewang Building）| 代表：安泰恩 | 营业执照号码：219-05-28999 | 总机：02-553-8176"
+    "info": "首尔市江南区江南大路364号3楼（驿三洞美王大厦 Meewang Building）| 代表：Ahn Taeon | 营业执照号码：219-05-28999 | 总机：02-553-8176"
   },
   "intro": {
     "peche": {
@@ -433,7 +433,9 @@
     "introTitleSuffix": "'的\n佩舒皮肤科 医疗团队",
     "introBody1": "佩舒的医疗团队凭借6万例以上的临床经验，\n精准把握每位患者的个体特征，以卓越的专业能力审慎诊疗，打造最佳效果。",
     "introBody2": "同时，我们在真诚的沟通与细致的关怀中，始终坚守信赖的价值。",
-    "introSign": "安泰彦 代表院长",
+    "introSign": "Dr. Ahn, Tae-Eon  Chief Director",
+    "introSignName": "安泰彦",
+    "introSignPosition": "代表院长",
     "section2Title": "基于6万例以上治疗经验的'可预见性'",
     "section2Body1": "我们将6万例以上的临床经验进行数据化整理，转化为系统化的诊疗指南，\n确立顶尖品质标准 确保每位医生都能保持最高的治疗品质。",
     "section2Body2": "通过每周对全体医疗团队、护理团队及咨询团队的培训，\n不断提升对个人肤质的精准判别能力和细腻的操作技术。",

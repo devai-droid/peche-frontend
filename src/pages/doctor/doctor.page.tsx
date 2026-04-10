@@ -17,86 +17,67 @@ const PageContainer = tw.div`w-full flex flex-col items-center bg-white`
 const ContentContainer = styled.div`
   ${tw`w-full flex flex-col items-center`}
   gap: 64px;
-  padding: 64px 0;
+  padding: 128px 0 64px;
 
   @media (min-width: 768px) {
     gap: 160px;
-    padding: 80px 0 160px;
+    padding: 128px 0 160px;
   }
 `
 
-/* ── Section 1: 소개 ──
-   PC: row, center, padding=0 120, gap=64
-   MO: row wrap, padding=0 16, gap=48 */
-const Section1 = styled.section`
-  ${tw`w-full max-w-[1440px] flex flex-row flex-wrap justify-center items-center`}
-  gap: 48px;
-  padding: 0 16px;
-
-  @media (min-width: 768px) {
-    ${tw`flex-nowrap`}
-    gap: 64px;
-    padding: 0 120px;
-  }
+/* ── Section 1: 소개 (페슈의원 소개와 동일 구조) ── */
+const Section1 = tw.section`
+  w-full max-w-[1440px] mx-auto px-6 md:px-10
+  flex flex-col lg:flex-row justify-between
+  gap-8 lg:gap-20 xl:gap-28
 `
-/* PC: 568x568  MO: 328x328 */
-const IntroImage = styled.img`
-  ${tw`flex-shrink-0 object-cover`}
-  width: 328px;
-  height: 328px;
-
-  @media (min-width: 768px) {
-    width: 568px;
-    height: 568px;
-  }
+const IntroTextBlock = tw.div`
+  w-full lg:w-1/2 flex flex-col
+  justify-center
+  lg:h-[520px]
 `
-/* PC: column, gap=32  MO: column, gap=16 */
-const IntroTextBlock = styled.div`
-  ${tw`flex flex-col justify-center`}
-  gap: 16px;
-  width: 328px;
-
-  @media (min-width: 768px) {
-    gap: 32px;
-    width: auto;
-  }
+const IntroTitle = styled.h2`
+  ${tw`text-[32px] md:text-[40px] font-semibold leading-[1.4] font-pretendard tracking-tight whitespace-pre-line`}
 `
-/* PC: column, gap=16  MO: column, gap=12 */
-const IntroTextGroup = styled.div`
+const IntroParagraphBlock = styled.div`
   ${tw`flex flex-col`}
-  gap: 12px;
-
-  @media (min-width: 768px) {
-    gap: 16px;
-  }
-`
-/* PC: 600/40px  MO: 600/32px, #DA7F67 */
-const IntroTitle = tw.h2`
-  text-[32px] md:text-[40px] font-pretendard font-semibold text-neutralBlack tracking-tight leading-[1.4] whitespace-pre-line
-`
-/* PC: column, gap=16  MO: column, gap=8 */
-const IntroBodyGroup = styled.div`
-  ${tw`flex flex-col`}
+  margin-top: 16px;
   gap: 8px;
 
   @media (min-width: 768px) {
+    margin-top: 24px;
     gap: 16px;
   }
 `
-/* PC: 500/18px  MO: 500/16px, #666666 */
 const IntroBody = tw.p`
-  text-[16px] md:text-[18px] font-pretendard font-medium text-neutral70 tracking-tight leading-[1.5] whitespace-pre-line
+  text-[16px] md:text-[18px] leading-[1.5] text-neutral70 tracking-tight
+  font-pretendard whitespace-pre-line
 `
-/* 이름 + 직급 블록 */
+const IntroImage = styled.img`
+  ${tw`
+    w-full lg:w-[520px] xl:w-[520px]
+    aspect-square
+    object-cover rounded-none
+    lg:ml-auto
+  `}
+`
+/* row, gap=12 */
 const DoctorNameBlock = styled.div`
-  ${tw`flex items-baseline`}
+  ${tw`flex flex-row`}
   gap: 8px;
+  margin-top: 16px;
+
+  @media (min-width: 768px) {
+    margin-top: 32px;
+  }
 `
+/* Pretendard 700 22px, ls=+2%, #121212 */
 const DoctorName = tw.span`
-  text-[22px] md:text-[26px] font-pretendard font-bold text-neutralBlack tracking-[0.02em] leading-[1.4]
+  text-[22px] font-pretendard font-bold text-neutralBlack tracking-[0.02em] leading-[1.4]
 `
+/* Pretendard 400 22px, ls=+2%, #121212 */
 const DoctorPosition = tw.span`
-  text-[16px] md:text-[18px] font-pretendard font-bold text-neutralBlack tracking-tight leading-[1.4]
+  text-[22px] font-pretendard font-normal text-neutralBlack tracking-[0.02em] leading-[1.4]
 `
 
 /* ── Section 2: 이미지 + 텍스트 ──
@@ -281,24 +262,25 @@ const DoctorPage = () => {
         <ContentContainer>
           {/* Section 1: 소개 */}
           <Section1>
-            <IntroImage src={doctorIntro} alt="안태언 대표원장" />
             <IntroTextBlock>
-              <IntroTextGroup>
-                <IntroTitle>
-                    {t("doctor.introTitlePrefix")}
-                    <span tw="text-primary">{t("doctor.introTitleHighlight")}</span>
-                    {t("doctor.introTitleSuffix")}
-                  </IntroTitle>
-                <IntroBodyGroup>
-                  <IntroBody>{t("doctor.introBody1")}</IntroBody>
-                  <IntroBody>{t("doctor.introBody2")}</IntroBody>
-                </IntroBodyGroup>
-              </IntroTextGroup>
+              <IntroTitle>
+                {t("doctor.introTitlePrefix")}
+                <span tw="text-primary">{t("doctor.introTitleHighlight")}</span>
+                {t("doctor.introTitleSuffix")}
+              </IntroTitle>
+
+              <IntroParagraphBlock>
+                <IntroBody>{t("doctor.introBody1")}</IntroBody>
+                <IntroBody>{t("doctor.introBody2")}</IntroBody>
+              </IntroParagraphBlock>
+
               <DoctorNameBlock>
-                <DoctorName>안태언</DoctorName>
-                <DoctorPosition>대표원장</DoctorPosition>
+                <DoctorName>{t("doctor.introSignName")}</DoctorName>
+                <DoctorPosition>{t("doctor.introSignPosition")}</DoctorPosition>
               </DoctorNameBlock>
             </IntroTextBlock>
+
+            <IntroImage src={doctorIntro} alt="안태언 대표원장" />
           </Section1>
 
           {/* Section 2: 이미지 + 텍스트 */}

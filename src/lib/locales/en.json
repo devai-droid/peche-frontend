@@ -109,7 +109,7 @@
     "hospitalThirdBuildingAddress": "5-6 floor, Seoho Building, 10, Gangnam-daero 69-gil, Seocho-gu, Seoul, Republic of Korea",
     "privacyPolicy": "Privacy Policy",
     "termsOfService": "Terms of Service",
-    "info": "3F, 364 Gangnam-daero, Gangnam-gu, Seoul (Yeoksam-dong, Meewang Building)  |  Representative: Taeon Ahn  |  Business Registration Number 219-05-28999  |  Main Number 02-553-8176"
+    "info": "3F, 364 Gangnam-daero, Gangnam-gu, Seoul (Yeoksam-dong, Meewang Building)  |  Representative: Ahn Taeon  |  Business Registration Number 219-05-28999  |  Main Number 02-553-8176"
   },
   "intro": {
     "peche": {
@@ -433,7 +433,9 @@
     "introTitleSuffix": "\nPeche Medical Team",
     "introBody1": "Peche's medical team, with over 60,000 clinical cases of expertise,\nprecisely identifies individual characteristics and delivers the best results with professionalism and careful treatment.",
     "introBody2": "Furthermore, we uphold the value of trust through sincere communication and attentive care.",
-    "introSign": "Dr. Ahn, Tae-Eon, Chief Director",
+    "introSign": "Dr. Ahn, Tae-Eon  Chief Director",
+    "introSignName": "Dr. Ahn, Tae-Eon",
+    "introSignPosition": "Chief Director",
     "section2Title": "'Predictability' Based on Over 60,000 Treatment Cases",
     "section2Body1": "We have systematized over 60,000 clinical experiences into data-driven protocols\nto ensure all medical staff maintain the highest treatment quality.",
     "section2Body2": "Through weekly training for all medical, nursing, and consulting teams,\nwe continuously enhance precise skin assessment skills and refined treatment techniques.",

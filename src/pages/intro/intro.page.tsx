@@ -40,7 +40,7 @@ const PageContainer = tw.div`w-full flex flex-col items-center bg-white`
 
 /* 2️⃣ TRUST Section */
 const SectionTrust = tw.section`
-  w-full bg-white text-neutralBlack pt-32 md:pt-20 pb-16 md:py-32
+  w-full bg-white text-neutralBlack pt-[120px] pb-16 md:pb-32
 `
 
 const TrustInner = tw.div`
@@ -72,8 +72,15 @@ const TrustHeading = styled.h2<{ language: string }>`
 `
 
 // 작은 글씨 섹션
-const TrustParagraphBlock = tw.div`
-  mt-4
+const TrustParagraphBlock = styled.div`
+  ${tw`flex flex-col`}
+  margin-top: 16px;
+  gap: 8px;
+
+  @media (min-width: 768px) {
+    margin-top: 24px;
+    gap: 16px;
+  }
 `
 
 const TrustParagraph = tw.p`
@@ -83,11 +90,12 @@ const TrustParagraph = tw.p`
 
 const TrustImage = styled.img`
   ${tw`
-    w-full lg:w-[550px] xl:w-[704px]
-    h-[280px] md:h-[420px] lg:h-[500px] xl:h-[520px]
+    w-full lg:w-[520px] xl:w-[520px]
+    aspect-square
     object-cover rounded-none
     lg:ml-auto
   `}
+  object-position: left center;
 `
 
 /* ──────────────────────────────
@@ -236,7 +244,7 @@ const SymbolDesc = tw.p`
 
 /* Core Value */
 const CoreValueContainer = tw.div`
-  w-full bg-white rounded-none mt-20 py-14 flex flex-col items-center
+  w-full bg-white rounded-none py-14 flex flex-col items-center
 `
 const CoreTitle = tw.h3`
   text-center text-[18px] md:text-[22px] font-medium text-neutralBlack mb-12 font-time tracking-tight
@@ -401,7 +409,7 @@ const CustomerTrustHeading = tw.h3`
 `
 
 const CustomerTrustParagraph = tw.p`
-  text-[14px] md:text-[16px] text-neutral70 tracking-tight leading-[1.4]
+  text-[14px] md:text-[16px] text-neutral70 tracking-tight leading-[1.4] whitespace-pre-line
 `
 
 /* ──────────────────────────────
@@ -548,11 +556,8 @@ const Intro = () => {
                 </TrustHeadingBlock>
 
                 <TrustParagraphBlock>
-                  <TrustParagraph>
-                    {t("intro.trustParagraph1")}
-                    {"\n"} {"\n"}
-                    {t("intro.trustParagraph2")}
-                  </TrustParagraph>
+                  <TrustParagraph>{t("intro.trustParagraph1")}</TrustParagraph>
+                  <TrustParagraph>{t("intro.trustParagraph2")}</TrustParagraph>
                 </TrustParagraphBlock>
               </TrustTextBlock>
 
@@ -574,47 +579,6 @@ const Intro = () => {
                 {t("intro.symbolDesc2")}
                 <br /> {t("intro.symbolDesc3")}
               </SymbolDesc>
-
-              <HoverGrid>
-                {desktopImages.map((img, index) => (
-                  <HoverItem key={index} className={`item-${index}`}>
-                    <img src={img.src} alt={`peche-${index}`} />
-                    <div className="label">
-                      <p tw="font-time">{t(img.titleKey)}</p>
-                      <p tw="font-pretendard">{t(img.descKey)}</p>
-                    </div>
-                  </HoverItem>
-                ))}
-              </HoverGrid>
-
-              <MobileSwiperWrapper>
-                <Swiper
-                  modules={[Pagination]}
-                  pagination={{ clickable: true }}
-                  spaceBetween={5}
-                  slidesPerView="auto"
-                  centeredSlides={false}
-                  roundLengths
-                  onFromEdge={(swiper) => {
-                    swiper.allowSlideNext = true
-                    swiper.allowSlidePrev = true
-                  }}>
-                  {mobileImages.map((img, i) => (
-                    <StyledSwiperSlide key={i}>
-                      <MobileSlide>
-                        <div className="img-wrapper">
-                          <img src={img.src} alt={`mobile-peche-${i}`} />
-
-                          <div className="label">
-                            <p tw="font-time">{t(img.titleKey)}</p>
-                            <p tw="font-pretendard">{t(img.descKey)}</p>
-                          </div>
-                        </div>
-                      </MobileSlide>
-                    </StyledSwiperSlide>
-                  ))}
-                </Swiper>
-              </MobileSwiperWrapper>
 
               {/* Core Value */}
               <CoreValueContainer>
@@ -648,6 +612,7 @@ const Intro = () => {
               </CoreValueContainer>
             </SymbolInner>
           </SectionSymbolTrust>
+
           <SectionInterior>
             <InteriorTextWrapper>
               {/* 텍스트 */}
