@@ -19,8 +19,4 @@ export const menuLinks = [
     name: "header.blog",
     href: "/blog",
   },
-  {
-    name: "header.whyPeche",
-    href: "/why-peche",
-  },
 ]
