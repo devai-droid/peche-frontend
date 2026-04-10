@@ -19,6 +19,7 @@ import Signup from "@/pages/signup/signup.page"
 import SignupComplete from "@/pages/signup/signup-complete.page"
 import AdminLogin from "@/pages/admin/admin-login.page"
 import AdminCategories from "@/pages/admin/admin-categories.page"
+import DoctorPage from "@/pages/doctor/doctor.page"
 
 const router = createBrowserRouter([
   {
@@ -78,6 +79,7 @@ const router = createBrowserRouter([
           // { path: "way", element: <IntroMap /> },
         ],
       },
+      { path: "doctor", element: <DoctorPage /> },
       { path: "blog", element: <Blog /> },
       { path: "blog/write", element: <BlogWrite /> },
       { path: "blog/edit/:slug", element: <BlogWrite /> },

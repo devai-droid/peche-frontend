@@ -4,6 +4,10 @@ export const menuLinks = [
     href: "/intro",
   },
   {
+    name: "header.doctor",
+    href: "/doctor",
+  },
+  {
     name: "header.surgeryAndPrice",
     href: "/products",
   },
