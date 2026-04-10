@@ -106,7 +106,7 @@ const PillCircle = styled.div`
   }
 `
 const PillTitle = tw.span`
-  text-[24px] md:text-[30px] font-pretendard font-semibold text-primary tracking-tight leading-[1.4]
+  text-[18px] md:text-[22px] font-pretendard font-semibold text-primary tracking-tight leading-[1.4]
 `
 const PillSubtitle = tw.span`
   text-[14px] md:text-[18px] font-time font-normal text-neutral60 tracking-tight leading-[1.4]
