@@ -18,7 +18,7 @@ text-neutralBlack
 
 const DesktopLinkContainer = tw.div`
   w-max h-full flex items-center justify-center
-  gap-[4rem]
+  gap-[2rem]
   absolute-center
 `
 

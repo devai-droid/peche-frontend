@@ -4,7 +4,6 @@ import Page from "@/lib/components/layout/page.component"
 import { useTranslation } from "react-i18next"
 import KakaoMap from "@/lib/components/kakao-map/kakao-map.component"
 import GoogleMapComponent from "@/lib/components/google-map/google-map.component"
-import { useJsApiLoader } from "@react-google-maps/api"
 import { Language } from "@/lib/locales/i18n.config"
 import Modal from "@/lib/components/modal/modal.component"
 
@@ -287,17 +286,9 @@ const HELP_LINKS: Record<string, string> = {
 
 /* ── Why Pêche Page ── */
 const WhyPechePage = () => {
-  const { i18n } = useTranslation()
+  const { t, i18n } = useTranslation()
   const language = i18n.language as Language
   const [openWeChatModal, setOpenWeChatModal] = React.useState(false)
-
-  // Places 라이브러리 포함해서 Google Maps 로드 (리뷰 가져오기용)
-  useJsApiLoader({
-    id: "google-map-script",
-    googleMapsApiKey: "AIzaSyBnCzoLh8deDtFObswdeXMO_orKxEaGMp0",
-    libraries: ["places"] as ("places")[],
-    language: "en",
-  })
 
   const { reviews, placeRating, totalReviews, loading } = useGoogleReviews(3)
 
@@ -322,37 +313,26 @@ const WhyPechePage = () => {
           <HeroWrapper>
             <HeroImage src={whyPeche01} alt="Pêche Clinic Interior" />
             <HeroTextSection>
-              <HeroTitle>
-                Global Standard in Gangnam, Pêche Clinic
-              </HeroTitle>
-              <HeroBody>
-                {
-                  "6만 건의 시술 경험이 증명하는 결과\n국적과 언어를 넘어 신뢰를 전하는 프리미엄 케어를 경험하세요."
-                }
-              </HeroBody>
+              <HeroTitle>{t("whyPeche.heroTitle")}</HeroTitle>
+              <HeroBody>{t("whyPeche.heroBody")}</HeroBody>
             </HeroTextSection>
           </HeroWrapper>
 
           {/* Section 2: Why Pêche Clinic? */}
           <WhyTitleSection>
             <WhyTitleBlock>
-              <WhyTitle>Why Pêche Clinic?</WhyTitle>
-              <WhySubtitle>
-                페슈의원의 신뢰는 정직, 전문, 편의입니다.
-              </WhySubtitle>
+              <WhyTitle>{t("whyPeche.whyTitle")}</WhyTitle>
+              <WhySubtitle>{t("whyPeche.whySubtitle")}</WhySubtitle>
             </WhyTitleBlock>
             <PillRow>
               <PillCircle>
-                <PillTitle>정직</PillTitle>
-                <PillSubtitle>Honesty</PillSubtitle>
+                <PillTitle>{t("whyPeche.pill1")}</PillTitle>
               </PillCircle>
               <PillCircle>
-                <PillTitle>전문</PillTitle>
-                <PillSubtitle>Expertise</PillSubtitle>
+                <PillTitle>{t("whyPeche.pill2")}</PillTitle>
               </PillCircle>
               <PillCircle>
-                <PillTitle>편의</PillTitle>
-                <PillSubtitle>Convenience</PillSubtitle>
+                <PillTitle>{t("whyPeche.pill3")}</PillTitle>
               </PillCircle>
             </PillRow>
           </WhyTitleSection>
@@ -362,70 +342,36 @@ const WhyPechePage = () => {
             <CardRow>
               <CardImage src={whyPeche02} alt="내외국인 동일 정가제" />
               <CardContent>
-                <CardTitle>내외국인 동일 정가제</CardTitle>
-                <CardBody>
-                  해외 환자가 타국에서 의료 서비스를 선택할 때 가장 중요하게
-                  고려하는 기준은 비용의 신뢰성입니다. 페슈의원은 국적에 따른
-                  차등 가격을 책정하지 않고, 모든 환자에게 내국인과 동일한 정가
-                  정책을 적용하고 있습니다. 이를 통해 환자는 비용에 대한
-                  불필요한 염려 없이 진료에 집중할 수 있으며, 누구에게나
-                  공정하고 일관된 프리미엄 서비스를 제공받을 수 있습니다.
-                </CardBody>
+                <CardTitle>{t("whyPeche.card1Title")}</CardTitle>
+                <CardBody>{t("whyPeche.card1Body")}</CardBody>
               </CardContent>
             </CardRow>
             <CardRow>
-              <CardImage src={whyPeche03} alt="유리창으로 오픈된 시술준비실" />
+              <CardImage src={whyPeche03} alt={t("whyPeche.card2Title")} />
               <CardContent>
-                <CardTitle>유리창으로 오픈된 시술준비실</CardTitle>
-                <CardBody>
-                  시술 시 정품 의약품을 사용하는지, 약속된 정량을 정확히
-                  지키는지에 대한 의구심은 당연히 들 수 있습니다. 페슈의원은
-                  시술준비실을 투명한 유리창으로 공개하여 약품 조제 과정을
-                  환자가 직접 눈으로 확인할 수 있도록 함으로써, 정직한 진료
-                  원칙을 시각적으로 증명합니다.
-                </CardBody>
+                <CardTitle>{t("whyPeche.card2Title")}</CardTitle>
+                <CardBody>{t("whyPeche.card2Body")}</CardBody>
               </CardContent>
             </CardRow>
             <CardRow>
-              <CardImage src={whyPeche04} alt="60,000+ 시술 케이스" />
+              <CardImage src={whyPeche04} alt={t("whyPeche.card3Title")} />
               <CardContent>
-                <CardTitle>60,000+ 시술 케이스</CardTitle>
-                <CardBody>
-                  의료진의 주관적인 감에만 의존하는 진료는 시술 결과의 편차를
-                  발생시킬 위험이 있습니다. 페슈의원은 6만 건 이상의 임상
-                  데이터를 바탕으로 환자 개개인의 피부 타입에 최적화된 시술
-                  효과를 사전에 예측하여 집도하며, 이를 통해 결과의 오차를
-                  최소화하고 각 환자에게 가장 효과적인 의료 서비스를
-                  제공합니다.
-                </CardBody>
+                <CardTitle>{t("whyPeche.card3Title")}</CardTitle>
+                <CardBody>{t("whyPeche.card3Body")}</CardBody>
               </CardContent>
             </CardRow>
             <CardRow>
-              <CardImage src={whyPeche05} alt="전담 외국어 응대" />
+              <CardImage src={whyPeche05} alt={t("whyPeche.card4Title")} />
               <CardContent>
-                <CardTitle>전담 외국어 응대</CardTitle>
-                <CardBody>
-                  의료 용어의 복잡성과 언어 장벽은 타국에서 진료를 받는
-                  환자에게 심리적 위축과 오해를 불러일으킬 수 있습니다.
-                  페슈의원은 영어, 중국어, 일어 전문 상담원이 상주하여 진료
-                  상담부터 시술 중의 상황 설명, 시술 후 관리까지 환자의
-                  언어로 직접 소통함으로써 소통 부재로 인한 불안을 없애고
-                  안심하실 수 있도록 합니다.
-                </CardBody>
+                <CardTitle>{t("whyPeche.card4Title")}</CardTitle>
+                <CardBody>{t("whyPeche.card4Body")}</CardBody>
               </CardContent>
             </CardRow>
             <CardRow>
-              <CardImage src={whyPeche06} alt="강남역 초역세권" />
+              <CardImage src={whyPeche06} alt={t("whyPeche.card5Title")} />
               <CardContent>
-                <CardTitle>강남역 초역세권</CardTitle>
-                <CardBody>
-                  해외 환자에게는 한정된 여행 시간 내에서 이동 동선의 효율성을
-                  확보하는 것은 굉장히 중요합니다. 페슈의원은 서울 교통의
-                  중심인 강남역 4번 출구 바로 앞에 위치하여 이동 시간을
-                  최소화해주며, 관광 및 쇼핑 동선과 연결성이 우수하여 해외
-                  환자의 방문 편의성을 극대화할 수 있는 최적의 입지 조건을
-                  갖고 있습니다.
-                </CardBody>
+                <CardTitle>{t("whyPeche.card5Title")}</CardTitle>
+                <CardBody>{t("whyPeche.card5Body")}</CardBody>
               </CardContent>
             </CardRow>
           </CardsSection>
@@ -434,17 +380,10 @@ const WhyPechePage = () => {
           <TrustSection>
             <TrustImage src={whyPeche07} alt="페슈의원 팀" />
             <TrustTextBlock>
-              <TrustTitle>결국, 신뢰는 사람으로 완성됩니다</TrustTitle>
+              <TrustTitle>{t("whyPeche.trustTitle")}</TrustTitle>
               <TrustBodyGroup>
-                <TrustBody>
-                  페슈의원의 의료진과 직원들은 정직한 설명으로 환자가 올바른
-                  선택을 할 수 있도록 돕습니다.
-                </TrustBody>
-                <TrustBody>
-                  {
-                    "개인에게 가장 효과적인 시술을 고민하고, 전문성을 바탕으로 신중하게 진료합니다. 또한 진심 어린 응대와 세심한 배려 속에서도, 때로는 단호하게 신뢰의 가치를 지켜나갑니다."
-                  }
-                </TrustBody>
+                <TrustBody>{t("whyPeche.trustBody1")}</TrustBody>
+                <TrustBody>{t("whyPeche.trustBody2")}</TrustBody>
               </TrustBodyGroup>
             </TrustTextBlock>
           </TrustSection>
@@ -452,7 +391,7 @@ const WhyPechePage = () => {
           {/* Section 5: Global Review */}
           <ReviewSection>
             <div tw="flex flex-col items-center gap-2">
-              <ReviewTitle>Global Review</ReviewTitle>
+              <ReviewTitle>{t("whyPeche.reviewTitle")}</ReviewTitle>
               {!loading && placeRating > 0 && (
                 <ReviewMeta>
                   <ReviewStars>
@@ -515,7 +454,7 @@ const WhyPechePage = () => {
 
           {/* Section 6: CTA (기존 상담 버튼 패턴) */}
           <CtaSection>
-            <CtaTitle>언어 장벽 없는 실시간 무료 상담을 시작하세요</CtaTitle>
+            <CtaTitle>{t("whyPeche.ctaTitle")}</CtaTitle>
             <button
               tw="flex items-center gap-2"
               className="sns-btn-conversion"
@@ -536,12 +475,19 @@ const WhyPechePage = () => {
         onClose={() => setOpenWeChatModal(false)}
         width="max-w-md"
       >
-        <div tw="flex flex-col items-center bg-white rounded-xl overflow-hidden">
-          <div tw="w-full bg-neutral20 py-3 px-4 flex justify-between items-center">
-            <span tw="text-neutralBlack font-semibold">Peche clinic</span>
-            <button onClick={() => setOpenWeChatModal(false)}>✕</button>
+        <div tw="-mx-10 -my-8">
+          <div tw="bg-[#F3F3F3] w-full relative">
+            <div tw="px-4 pb-3 pt-12">
+              <div tw="text-[24px] font-time text-neutral90">Peche clinic</div>
+            </div>
+            <button
+              tw="absolute top-3 right-4"
+              onClick={() => setOpenWeChatModal(false)}
+            >
+              ✕
+            </button>
           </div>
-          <div tw="p-8">
+          <div tw="p-6 flex justify-center bg-white">
             <img
               src={wechatQrImg}
               alt="wechat qr"
