@@ -65,10 +65,10 @@ const IntroImage = styled.img`
 const DoctorNameBlock = styled.div`
   ${tw`flex flex-row`}
   gap: 8px;
-  margin-top: 16px;
+  margin-top: 24px;
 
   @media (min-width: 768px) {
-    margin-top: 32px;
+    margin-top: 40px;
   }
 `
 /* Pretendard 700 22px, ls=+2%, #121212 */
