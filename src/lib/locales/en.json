@@ -424,5 +424,28 @@
     "categories": "Category Management",
     "addCategory": "Add Category",
     "categoryName": "Category Name"
+  },
+  "doctor": {
+    "introTitle": "Trusted\nPeche Medical Team",
+    "introTitlePrefix": "",
+    "introTitleHighlight": "Trusted",
+    "introTitleSuffix": "\nPeche Medical Team",
+    "introBody1": "Peche's medical team, with over 60,000 clinical cases of expertise,\nprecisely identifies individual characteristics and delivers the best results with professionalism and careful treatment.",
+    "introBody2": "Furthermore, we uphold the value of trust through sincere communication and attentive care.",
+    "introSign": "Dr. Ahn, Tae-Eon, Chief Director",
+    "section2Title": "'Predictability' Based on Over 60,000 Treatment Cases",
+    "section2Body1": "We have systematized over 60,000 clinical experiences into data-driven protocols\nto ensure all medical staff maintain the highest treatment quality.",
+    "section2Body2": "Through weekly training for all medical, nursing, and consulting teams,\nwe continuously enhance precise skin assessment skills and refined treatment techniques.",
+    "section2Body3": "Peche's medical team pursues the most natural and definite transformation for each individual.",
+    "teamTitle": "Our Doctors",
+    "doctorAhn": "Dr. Ahn, Tae-Eon\nChief Director",
+    "doctorChoi": "Dr. Choi, Jae-Hyeong\nGeneral Director",
+    "doctorShin": "Dr. Shin, Dong-Min\nDirector",
+    "principleTitle": "Treatment Principles Pursuing Only the Best Results",
+    "principleDesc": "Peche's medical team must meet the treatment quality standards\nset by the Chief Director to earn treatment qualifications.\n\nBy sharing systematic protocols developed from analyzing over 60,000 cases,\nyou can experience the best treatment results regardless of which doctor you see.",
+    "principle1Title": "Data-Based Diagnosis, Not Intuition",
+    "principle1Body": "Through 3D MetaView diagnosis, we visually present your individual skin condition. We explain the necessity and expected effects of treatment in detail, creating optimal treatment results.",
+    "principle2Title": "Communication About Pain and Sensation During Treatment",
+    "principle2Body": "Understanding the vague fear that comes from silent procedures, we continuously share the current stage, remaining time, and expected pain levels, adjusting treatment intensity and dosage for each individual to achieve maximum treatment effectiveness."
   }
 }

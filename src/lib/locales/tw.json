@@ -424,5 +424,28 @@
     "categories": "分類管理",
     "addCategory": "新增分類",
     "categoryName": "分類名稱"
+  },
+  "doctor": {
+    "introTitle": "值得'信賴'的\n佩舒 醫療團隊",
+    "introTitlePrefix": "值得'",
+    "introTitleHighlight": "信賴",
+    "introTitleSuffix": "'的\n佩舒 醫療團隊",
+    "introBody1": "佩舒的醫療團隊憑藉6萬例以上的臨床經驗，\n精準掌握個體特徵，以專業能力打造最佳效果，審慎診療。",
+    "introBody2": "同時，我們以真誠的溝通和細緻的關懷，堅守信賴的價值。",
+    "introSign": "Dr. Ahn, Tae-Eon  代表院長",
+    "section2Title": "基於6萬例以上治療經驗的'可預見性'",
+    "section2Body1": "我們將6萬例以上的臨床經驗進行數據化，制定標準化手冊，\n確保所有醫療團隊成員始終保持最高的治療品質。",
+    "section2Body2": "透過每週對全體醫療、護理及諮詢團隊的培訓，\n不斷提升對個人皮膚狀態的精準判別能力和細膩的手法技術。",
+    "section2Body3": "佩舒 醫療團隊追求每位顧客最自然且顯著的改變。",
+    "teamTitle": "醫療團隊",
+    "doctorAhn": "安泰彦  代表院長",
+    "doctorChoi": "崔在亨 總括院長",
+    "doctorShin": "申東慜  院長",
+    "principleTitle": "只追求最佳效果的治療原則",
+    "principleDesc": "佩舒的醫療團隊必須達到代表院長所要求的治療品質標準，方可獲得治療資格。\n\n我們共享基於6萬例以上經驗分析而建立的系統化診療方案，\n因此無論您由哪位醫師診治，都能獲得最佳的治療效果。",
+    "principle1Title": "基於數據而非憑感覺的診療",
+    "principle1Body": "透過3D MetaView診斷，直觀呈現個人皮膚狀態。詳細說明治療的必要性和預期效果，打造最優治療效果。",
+    "principle2Title": "治療過程中關於疼痛與感覺的溝通",
+    "principle2Body": "我們深知沉默中進行治療所帶來的莫名恐懼，因此會持續告知您當前的治療階段、剩餘時間及預計疼痛程度，並根據個人情況調整治療強度和用量，以確保獲得最佳治療效果。"
   }
 }
