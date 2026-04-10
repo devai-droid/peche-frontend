@@ -93,7 +93,7 @@ const DoctorNameBlock = styled.div`
   gap: 8px;
 `
 const DoctorName = tw.span`
-  text-[22px] md:text-[26px] font-pretendard font-bold text-neutralBlack tracking-tight leading-[1.4]
+  text-[22px] md:text-[26px] font-pretendard font-bold text-neutralBlack tracking-[0.02em] leading-[1.4]
 `
 const DoctorPosition = tw.span`
   text-[16px] md:text-[18px] font-pretendard font-bold text-neutralBlack tracking-tight leading-[1.4]
