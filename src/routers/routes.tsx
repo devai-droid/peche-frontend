@@ -20,6 +20,7 @@ import SignupComplete from "@/pages/signup/signup-complete.page"
 import AdminLogin from "@/pages/admin/admin-login.page"
 import AdminCategories from "@/pages/admin/admin-categories.page"
 import DoctorPage from "@/pages/doctor/doctor.page"
+import WhyPechePage from "@/pages/why-peche/why-peche.page"
 
 const router = createBrowserRouter([
   {
@@ -80,6 +81,7 @@ const router = createBrowserRouter([
         ],
       },
       { path: "doctor", element: <DoctorPage /> },
+      { path: "why-peche", element: <WhyPechePage /> },
       { path: "blog", element: <Blog /> },
       { path: "blog/write", element: <BlogWrite /> },
       { path: "blog/edit/:slug", element: <BlogWrite /> },

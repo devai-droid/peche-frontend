@@ -4,6 +4,16 @@
 
 ---
 
+## [1.7.0] - 2026-04-10
+
+### Added
+
+- Why Pêche? 페이지 신규 추가 (/why-peche)
+- GNB에 "Why Pêche?" 메뉴 추가 (전 언어 통일)
+- Global Review 섹션 — Google Places API 리뷰 연동 (API 키 설정 필요)
+
+---
+
 ## [1.6.0] - 2026-04-10
 
 ### Added

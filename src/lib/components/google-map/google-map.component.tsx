@@ -23,6 +23,7 @@ function GoogleMapComponent() {
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: "AIzaSyBnCzoLh8deDtFObswdeXMO_orKxEaGMp0",
+    libraries: ["places"] as ("places")[],
     language: "en",
   })
 
