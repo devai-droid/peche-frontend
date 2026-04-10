@@ -131,8 +131,13 @@ const HeaderLanguage = () => {
   const urlValue = location.pathname.split("/")[1]
 
   useEffect(() => {
+    const urlToLang: Record<string, string> = {
+      tw: Language.TWN,
+    }
+    const resolved = urlToLang[urlValue] || urlValue
+
     Object.values(Language).forEach((lang) => {
-      if (urlValue === lang && i18n.language !== lang) {
+      if (resolved === lang && i18n.language !== lang) {
         i18n.changeLanguage(lang)
       }
     })
