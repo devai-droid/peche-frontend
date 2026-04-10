@@ -290,6 +290,13 @@ const WhyPechePage = () => {
   const language = i18n.language as Language
   const [openWeChatModal, setOpenWeChatModal] = React.useState(false)
 
+  // 한국어 페이지 접근 시 홈으로 리다이렉트
+  React.useEffect(() => {
+    if (language === "ko") {
+      window.location.href = "/ko"
+    }
+  }, [language])
+
   const { reviews, placeRating, totalReviews, loading } = useGoogleReviews(3)
 
   const helpIcon = HELP_ICONS[language] || WhatsAppHelp
