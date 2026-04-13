@@ -58,26 +58,26 @@ const IntroImage = styled.img`
     w-full lg:w-[520px] xl:w-[520px]
     aspect-square
     object-cover rounded-none
-    lg:ml-auto
   `}
 `
-/* row, gap=12 */
+/* row, gap=16, items baseline */
 const DoctorNameBlock = styled.div`
-  ${tw`flex flex-row`}
-  gap: 8px;
+  ${tw`flex flex-row items-baseline`}
+  gap: 16px;
   margin-top: 24px;
 
   @media (min-width: 768px) {
-    margin-top: 40px;
+    margin-top: 32px;
   }
 `
-/* Pretendard 700 22px, ls=+2%, #121212 */
+/* Pretendard 700 30px, ls=+2%, #121212 */
 const DoctorName = tw.span`
-  text-[22px] font-pretendard font-bold text-neutralBlack tracking-[0.02em] leading-[1.4]
+  text-[24px] md:text-[30px] font-pretendard font-bold text-neutralBlack tracking-[0.02em] leading-[1.4]
 `
-/* Pretendard 400 22px, ls=+2%, #121212 */
-const DoctorPosition = tw.span`
-  text-[22px] font-pretendard font-normal text-neutralBlack tracking-[0.02em] leading-[1.4]
+/* Pretendard 400 18px, ls=+2%, #121212 */
+const DoctorPosition = styled.span`
+  ${tw`text-[16px] md:text-[18px] font-pretendard font-normal text-neutralBlack tracking-[0.02em] leading-[1.4]`}
+  transform: translateY(-2px);
 `
 
 /* ── Section 2: 이미지 + 텍스트 ──
@@ -262,6 +262,8 @@ const DoctorPage = () => {
         <ContentContainer>
           {/* Section 1: 소개 */}
           <Section1>
+            <IntroImage src={doctorIntro} alt="안태언 대표원장" />
+
             <IntroTextBlock>
               <IntroTitle>
                 {t("doctor.introTitlePrefix")}
@@ -279,8 +281,6 @@ const DoctorPage = () => {
                 <DoctorPosition>{t("doctor.introSignPosition")}</DoctorPosition>
               </DoctorNameBlock>
             </IntroTextBlock>
-
-            <IntroImage src={doctorIntro} alt="안태언 대표원장" />
           </Section1>
 
           {/* Section 2: 이미지 + 텍스트 */}

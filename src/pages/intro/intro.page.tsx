@@ -93,9 +93,7 @@ const TrustImage = styled.img`
     w-full lg:w-[520px] xl:w-[520px]
     aspect-square
     object-cover rounded-none
-    lg:ml-auto
   `}
-  object-position: left center;
 `
 
 /* ──────────────────────────────
@@ -546,6 +544,8 @@ const Intro = () => {
           {/* 2️⃣ TRUST Section */}
           <SectionTrust>
             <TrustInner>
+              <TrustImage src={modelImg} alt="clinic model" />
+
               <TrustTextBlock>
                 <TrustHeadingBlock>
                   <TrustHeading language={language}>
@@ -560,8 +560,6 @@ const Intro = () => {
                   <TrustParagraph>{t("intro.trustParagraph2")}</TrustParagraph>
                 </TrustParagraphBlock>
               </TrustTextBlock>
-
-              <TrustImage src={modelImg} alt="clinic model" />
             </TrustInner>
           </SectionTrust>
 
