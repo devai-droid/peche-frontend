@@ -24,7 +24,7 @@ const Logo: React.FC<Props> = ({ className, ...props }) => {
       className={cx(styles.link, className)}
       href={`${window.location.origin}/${language}?${search}`}
       {...props}>
-      <PecheLogoPc width={129} height={23} aria-label="Logo" />
+      <PecheLogoPc width={148} height={28} aria-label="Logo" />
     </a>
   )
 }
