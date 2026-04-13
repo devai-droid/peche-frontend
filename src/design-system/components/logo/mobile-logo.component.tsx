@@ -1,6 +1,6 @@
 import React from "react"
 import cx from "classnames"
-import LogoImg from "@/assets/images/peche-mobile-logo.png"
+import { ReactComponent as PecheLogoHorizontal } from "@/assets/icons/peche-logo-horizontal.svg"
 
 import styles from "./logo.component.module.scss"
 import { useTranslation } from "react-i18next"
@@ -24,7 +24,7 @@ const MobileLogo: React.FC<Props> = ({ className, ...props }) => {
       className={cx(styles.link, className)}
       href={`${window.location.origin}/${language}?${search}`}
       {...props}>
-      <img className={cx(styles.mobileLogo, className)} src={LogoImg} alt="mobileLogo" />
+      <PecheLogoHorizontal width={129} height={23} aria-label="mobileLogo" />
     </a>
   )
 }

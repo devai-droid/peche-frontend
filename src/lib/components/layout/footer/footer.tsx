@@ -14,7 +14,7 @@ import {
   FacebookGrayIcon,
   CloseIcon,
 } from "@/assets/icon"
-import FooterLogoImg from "@/assets/images/peche-footer-logo.png"
+import { ReactComponent as FooterLogo } from "@/assets/icons/peche-footer-logo.svg"
 import { useTranslation } from "react-i18next"
 import { Language } from "@/lib/locales/i18n.config"
 import Modal from "@/lib/components/modal/modal.component"
@@ -137,7 +137,7 @@ const Footer = ({ bottomCartExists = false }: FooterProps) => {
         {/* Top */}
         <FooterTop>
           <LogoBlock>
-            <img src={FooterLogoImg} alt="Peche Clinic" tw="w-[129px] h-auto" loading="lazy" />
+            <FooterLogo width={129} height={24} aria-label="Peche Clinic" />
             <div tw="mt-2">{t("footer.info")}</div>
             <div>© 2025 Peche. All Rights Reserved.</div>
           </LogoBlock>

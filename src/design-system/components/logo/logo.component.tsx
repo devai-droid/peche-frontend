@@ -1,6 +1,6 @@
 import React from "react"
 import cx from "classnames"
-import LogoImg from "@/assets/images/peche-logo.png"
+import { ReactComponent as PecheLogoPc } from "@/assets/icons/peche-logo-pc.svg"
 
 import styles from "./logo.component.module.scss"
 import { useTranslation } from "react-i18next"
@@ -24,7 +24,7 @@ const Logo: React.FC<Props> = ({ className, ...props }) => {
       className={cx(styles.link, className)}
       href={`${window.location.origin}/${language}?${search}`}
       {...props}>
-      <img className={cx(styles.logo, className)} src={LogoImg} alt="Logo" />
+      <PecheLogoPc width={129} height={23} aria-label="Logo" />
     </a>
   )
 }
