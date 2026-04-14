@@ -4,6 +4,17 @@
 
 ---
 
+## [1.8.1] - 2026-04-14
+
+### Changed
+
+- 소개 페이지 customerTrust2 / interior 텍스트 6개 언어 교체
+- 소개 페이지 trustHeading 하이라이트 단어 분리 (ja/zh/tw/th)
+- Google Maps API → 정적 이미지로 교체 (intro, home, intro-map)
+- 카카오 지도 보기 → 구글 지도 보기로 변경
+
+---
+
 ## [1.8.0] - 2026-04-14
 
 ### Added
