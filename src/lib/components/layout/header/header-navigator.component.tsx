@@ -76,7 +76,7 @@ const HeaderNavigator = () => {
   }, [isOpenAllMenu])
 
   const isSelected = (href: string) => {
-    const currentPath = location.pathname.replace(/^\/(ko|en|ja|zh|th)/, "")
+    const currentPath = location.pathname.replace(/^\/(ko|en|ja|zh-TW|zh|tw|th)/, "")
     return currentPath === href || currentPath.startsWith(`${href}/`)
   }
 
