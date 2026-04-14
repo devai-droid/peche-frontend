@@ -792,7 +792,9 @@ const Intro = () => {
                       <OutlineButton
                         onClick={() =>
                           window.open(
-                            "https://www.google.com/maps/search/?api=1&query=37.49556,127.0294",
+                            language === "ko"
+                              ? "https://kko.kakao.com/LK40uI5cBA"
+                              : "https://www.google.com/maps/search/?api=1&query=37.49556,127.0294",
                             "_blank",
                           )
                         }>
