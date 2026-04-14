@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // import KakaoMap from "@/lib/components/kakao-map/kakao-map.component"
-import GoogleMapComponent from "@/lib/components/google-map/google-map.component"
+import mapImg from "@/assets/images/why-peche-map.png"
 import AppMaxWidth from "@/lib/components/layout/app-max-width.component"
 import { useTranslation } from "react-i18next"
 import { Language } from "@/lib/locales/i18n.config"
@@ -40,8 +40,7 @@ const IntroMap = () => {
     <AppMaxWidth>
       <div tw="mx-auto max-w-3xl">
         <div tw="aspect-video">
-          {/* 여기서 언어에 따라 지도 다르게 보여주고. 구글맵일 경우 구글맵 언어를 prop으로 넘겨주기? */}
-          <GoogleMapComponent />
+          <img src={mapImg} alt="페슈의원 위치" tw="w-full h-full object-cover" />
         </div>
         <div tw="mt-6 bg-[#f8efe4] rounded-lg min-h-[3.5rem] font-nanumgothic text-black flex items-center justify-center p-2">
           <div tw="flex flex-col items-center gap-2">

@@ -3,8 +3,7 @@
 import React from "react"
 import tw, { styled } from "twin.macro"
 import Page from "@/lib/components/layout/page.component"
-import GoogleMapComponent from "@/lib/components/google-map/google-map.component"
-import KakaoMap from "@/lib/components/kakao-map/kakao-map.component"
+import mapImg from "@/assets/images/why-peche-map.png"
 import CartView from "@/features/product/components/cart-view.component"
 
 // 이미지 import
@@ -791,7 +790,12 @@ const Intro = () => {
                         {t("location.rightButton1")}
                       </OutlineButton>
                       <OutlineButton
-                        onClick={() => window.open("https://kko.kakao.com/LK40uI5cBA", "_blank")}>
+                        onClick={() =>
+                          window.open(
+                            "https://www.google.com/maps/search/?api=1&query=37.49556,127.0294",
+                            "_blank",
+                          )
+                        }>
                         {t("location.rightButton2")}
                       </OutlineButton>
                     </ButtonGroup>
@@ -802,7 +806,7 @@ const Intro = () => {
               {/* Right side */}
               <MapColumn>
                 <GoogleMapWrapper>
-                  {language === "ko" ? <KakaoMap /> : <GoogleMapComponent />}
+                  <img src={mapImg} alt="페슈의원 위치" tw="w-full h-full object-cover" />
                 </GoogleMapWrapper>
               </MapColumn>
             </MapInner>

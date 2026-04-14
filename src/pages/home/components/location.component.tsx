@@ -2,8 +2,7 @@ import React from "react"
 import tw, { styled } from "twin.macro"
 import { CloseIcon } from "@/assets/icon"
 import wechatQrImg from "@/assets/images/wechat-qr.jpg"
-import GoogleMapComponent from "@/lib/components/google-map/google-map.component"
-import KakaoMap from "@/lib/components/kakao-map/kakao-map.component"
+import mapImg from "@/assets/images/why-peche-map.png"
 import { useTranslation } from "react-i18next"
 import useCustomNavigate from "@/lib/hooks/use-custom-navigate"
 import { Language } from "@/lib/locales/i18n.config"
@@ -154,7 +153,7 @@ const Location = () => {
         {/* Right side */}
         <MapColumn>
           <GoogleMapWrapper>
-            {language === "ko" ? <KakaoMap /> : <GoogleMapComponent />}
+            <img src={mapImg} alt="페슈의원 위치" tw="w-full h-full object-cover" />
           </GoogleMapWrapper>
         </MapColumn>
       </MapInner>
