@@ -476,6 +476,12 @@
     "trustBody1": "佩舒的医疗团队和工作人员通过诚实的说明，帮助患者做出正确的选择。",
     "trustBody2": "我们认真考量对每位患者最有效的治疗方案，并以专业知识为基础审慎诊疗。 同时，在真诚的服务与细致的关怀中，必要时也会果断地坚守信赖的价值。",
     "reviewTitle": "Global Review",
-    "ctaTitle": "中文专家在线，实时免费咨询"
+    "ctaTitle": "中文专家在线，实时免费咨询",
+    "contactConsultLabel": "咨询",
+    "contactConsultDesc": "中文专家在线，实时免费咨询",
+    "contactConsultCta": "WeChat",
+    "contactDirectionsLabel": "方向",
+    "contactDirectionsDesc": "首尔市江南区江南大路364号3楼\n（驿三洞美王大厦 Meewang Building）",
+    "contactDirectionsCta": "Google Map"
   }
 }

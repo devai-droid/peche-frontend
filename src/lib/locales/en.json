@@ -476,6 +476,12 @@
     "trustBody1": "The medical team and staff at PECHE help patients make the right choices through honest explanations.",
     "trustBody2": "We carefully consider the most effective treatment for each individual and provide care with expertise and prudence. Furthermore, while delivering heartfelt service and attentive care, we also stand firm in upholding the value of trust when necessary.",
     "reviewTitle": "Global Review",
-    "ctaTitle": "Free Consultation with Seamless Multilingual Support"
+    "ctaTitle": "Free Consultation with Seamless Multilingual Support",
+    "contactConsultLabel": "Consultation",
+    "contactConsultDesc": "Free Consultation\nwith Seamless\nMultilingual Support",
+    "contactConsultCta": "WhatsApp",
+    "contactDirectionsLabel": "Directions",
+    "contactDirectionsDesc": "364 Gangnam-daero, 3F,\nGangnam-gu, Seoul\n(Yeoksam-dong,\nMeewang Building)",
+    "contactDirectionsCta": "Google Map"
   }
 }

@@ -476,6 +476,12 @@
     "trustBody1": "佩舒的醫療團隊和工作人員透過誠實的說明，幫助患者做出正確的選擇。",
     "trustBody2": "我們認真考量對每位患者最有效的治療方案，並以專業知識為基礎審慎診療。 同時，在真誠的服務與細緻的關懷中，必要時也會果斷地堅守信賴的價值。",
     "reviewTitle": "Global Review",
-    "ctaTitle": "溝通無障礙，即刻開啟中文諮詢"
+    "ctaTitle": "溝通無障礙，即刻開啟中文諮詢",
+    "contactConsultLabel": "諮詢",
+    "contactConsultDesc": "溝通無障礙，即刻開啟中文諮詢",
+    "contactConsultCta": "LINE",
+    "contactDirectionsLabel": "方向",
+    "contactDirectionsDesc": "首尔市江南区江南大路364号3楼\n（驿三洞美王大厦 Meewang Building）",
+    "contactDirectionsCta": "Google Map"
   }
 }

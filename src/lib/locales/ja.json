@@ -476,6 +476,12 @@
     "trustBody1": "PECHEの医療陣とスタッフは、誠実な説明を通じて患者様が正しい選択ができるようサポートいたします。",
     "trustBody2": "一人ひとりに最も効果的な施術を真剣に考え、専門性を基に慎重に診療を行います。 また、心のこもった対応ときめ細やかな配慮の中でも、時には毅然として信頼の価値を守り抜きます。",
     "reviewTitle": "Global Review",
-    "ctaTitle": "日本語で安心 今すぐ無料相談"
+    "ctaTitle": "日本語で安心 今すぐ無料相談",
+    "contactConsultLabel": "相談",
+    "contactConsultDesc": "日本語で安心 今すぐ無料相談",
+    "contactConsultCta": "LINE",
+    "contactDirectionsLabel": "道順",
+    "contactDirectionsDesc": "364 Gangnam-daero, 3F, Gangnam-gu, Seoul\n(Yeoksam-dong, ミワンビル（Meewang Building）)",
+    "contactDirectionsCta": "Google Map"
   }
 }

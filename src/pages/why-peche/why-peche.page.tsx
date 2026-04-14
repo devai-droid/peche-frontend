@@ -2,8 +2,6 @@ import React from "react"
 import tw, { styled } from "twin.macro"
 import Page from "@/lib/components/layout/page.component"
 import { useTranslation } from "react-i18next"
-import KakaoMap from "@/lib/components/kakao-map/kakao-map.component"
-import GoogleMapComponent from "@/lib/components/google-map/google-map.component"
 import { Language } from "@/lib/locales/i18n.config"
 import Modal from "@/lib/components/modal/modal.component"
 
@@ -14,7 +12,9 @@ import whyPeche04 from "@/assets/images/why-peche-04.png"
 import whyPeche05 from "@/assets/images/why-peche-05.png"
 import whyPeche06 from "@/assets/images/why-peche-06.png"
 import whyPeche07 from "@/assets/images/why-peche-07.png"
-import useGoogleReviews from "./use-google-reviews"
+import whyPecheMap from "@/assets/images/why-peche-map.png"
+import { ReactComponent as ChatIcon } from "@/assets/icons/why-peche-chat.svg"
+import { ReactComponent as MapPinIcon } from "@/assets/icons/why-peche-mappin.svg"
 
 import KakaoHelp from "@/assets/images/sns/icon_kakao_help.png"
 import WhatsAppHelp from "@/assets/images/sns/icon_WhatsApp_help.png"
@@ -123,10 +123,11 @@ const CardsSection = styled.section`
   }
 `
 const CardRow = styled.div`
-  ${tw`w-full flex flex-col md:flex-row justify-center items-start`}
+  ${tw`w-full flex flex-col justify-center items-start`}
   gap: 24px;
 
-  @media (min-width: 768px) {
+  @media (min-width: 1025px) {
+    ${tw`flex-row`}
     gap: 40px;
   }
 `
@@ -134,14 +135,18 @@ const CardImage = styled.img`
   ${tw`w-full object-cover flex-shrink-0`}
   height: 200px;
 
-  @media (min-width: 768px) {
+  @media (min-width: 1025px) {
     width: 580px;
     height: 326px;
   }
 `
 const CardContent = styled.div`
-  ${tw`flex flex-col w-full md:w-[580px]`}
+  ${tw`flex flex-col w-full`}
   gap: 16px;
+
+  @media (min-width: 1025px) {
+    width: 580px;
+  }
 `
 const CardTitle = tw.h3`
   text-[18px] md:text-[22px] font-pretendard font-semibold text-primary tracking-tight leading-[1.4]
@@ -150,33 +155,42 @@ const CardBody = tw.p`
   text-[14px] md:text-[16px] font-pretendard font-normal text-neutral70 tracking-tight leading-[1.5]
 `
 
-/* ── Section 4: 단체사진 + 신뢰 ── */
+/* ── Section 4: 단체사진 + 신뢰 ──
+   상단 풀와이드 이미지 + 하단 좌우 텍스트 블록, bg #FEF5EF */
 const TrustSection = styled.section`
-  ${tw`w-full max-w-[1440px] flex flex-col md:flex-row justify-center items-center`}
-  gap: 48px;
-  padding: 0 16px;
+  ${tw`w-full flex flex-col bg-tertiary`}
+  gap: 64px;
+  padding: 0 0 64px;
 
-  @media (min-width: 768px) {
-    gap: 64px;
-    padding: 0 120px;
+  @media (max-width: 767px) {
+    gap: 40px;
+    padding: 0 0 48px;
   }
 `
 const TrustImage = styled.img`
-  ${tw`w-full object-cover flex-shrink-0`}
-  height: 300px;
+  ${tw`w-full object-cover`}
+  height: 600px;
 
-  @media (min-width: 768px) {
-    width: 568px;
-    height: 426px;
+  @media (max-width: 767px) {
+    height: 300px;
   }
 `
 const TrustTextBlock = styled.div`
-  ${tw`flex flex-col justify-center`}
-  gap: 16px;
+  ${tw`w-full flex flex-col md:flex-row justify-center items-start`}
+  gap: 40px;
+  padding: 0 16px;
+
+  @media (min-width: 768px) {
+    padding: 0 120px;
+  }
+`
+const TrustTitleBlock = styled.div`
+  ${tw`flex flex-col`}
+  gap: 8px;
   width: 100%;
 
   @media (min-width: 768px) {
-    width: 568px;
+    width: 580px;
   }
 `
 const TrustTitle = tw.h2`
@@ -185,9 +199,14 @@ const TrustTitle = tw.h2`
 const TrustBodyGroup = styled.div`
   ${tw`flex flex-col`}
   gap: 16px;
+  width: 100%;
+
+  @media (min-width: 768px) {
+    width: 580px;
+  }
 `
 const TrustBody = tw.p`
-  text-[14px] md:text-[16px] font-pretendard font-medium text-neutral70 tracking-tight leading-[1.5] whitespace-pre-line
+  text-[14px] md:text-[16px] font-pretendard font-normal text-neutral70 tracking-tight leading-[1.5] whitespace-pre-line
 `
 
 /* ── Section 5: Global Review ── */
@@ -266,6 +285,83 @@ const MapContainer = tw.div`
   w-full max-w-[660px] h-[320px] md:h-[480px]
 `
 
+/* ── Section 7: Contact Info (카드 2 + 지도) ── */
+const ContactSection = styled.section`
+  ${tw`w-full max-w-[1440px] flex flex-col justify-center items-center`}
+  gap: 24px;
+  padding: 0 16px;
+
+  @media (min-width: 1025px) {
+    ${tw`flex-row items-stretch`}
+    gap: 40px;
+    padding: 0 120px;
+  }
+`
+const ContactCardsCol = styled.div`
+  ${tw`flex flex-col w-full`}
+  gap: 24px;
+
+  @media (min-width: 1025px) {
+    ${tw`flex-row`}
+    gap: 40px;
+    width: auto;
+  }
+`
+const ContactCard = styled.div`
+  ${tw`flex flex-col justify-between w-full`}
+  padding: 20px;
+  gap: 24px;
+  border: 1.5px solid #da7f67;
+
+  @media (min-width: 1025px) {
+    width: 250px;
+    height: 342px;
+    flex: 1;
+  }
+`
+const ContactCardTop = styled.div`
+  ${tw`flex flex-col items-start`}
+  gap: 12px;
+`
+const ContactCardIcon = styled.div`
+  ${tw`flex items-center justify-center`}
+  width: 48px;
+  height: 48px;
+`
+const ContactCardTextGroup = styled.div`
+  ${tw`flex flex-col items-start`}
+  gap: 16px;
+`
+const ContactCardLabel = tw.p`
+  text-[16px] font-pretendard font-semibold text-primary leading-[1.5] tracking-tight
+`
+const ContactCardDesc = tw.p`
+  text-[16px] font-pretendard font-normal leading-[1.5] tracking-tight whitespace-pre-line text-left
+  text-[#2A2A2A]
+`
+const ContactCardLink = styled.button`
+  ${tw`flex flex-row items-center cursor-pointer bg-transparent`}
+  gap: 12px;
+  color: #da7f67;
+  font-family: Pretendard;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.5em;
+  letter-spacing: -0.02em;
+  border: none;
+  padding: 0;
+`
+const MapContainerLarge = styled.div`
+  ${tw`w-full`}
+  height: 422px;
+
+  @media (min-width: 1025px) {
+    width: 619px;
+    height: 342px;
+    flex: 1;
+  }
+`
+
 /* 상담 버튼 매핑 (기존 패턴) */
 const HELP_ICONS: Record<string, string> = {
   ko: KakaoHelp,
@@ -297,7 +393,6 @@ const WhyPechePage = () => {
     }
   }, [language])
 
-  const { reviews, placeRating, totalReviews, loading } = useGoogleReviews(3)
 
   const helpIcon = HELP_ICONS[language] || WhatsAppHelp
   const helpLink = HELP_LINKS[language]
@@ -387,7 +482,9 @@ const WhyPechePage = () => {
           <TrustSection>
             <TrustImage src={whyPeche07} alt="페슈의원 팀" />
             <TrustTextBlock>
-              <TrustTitle>{t("whyPeche.trustTitle")}</TrustTitle>
+              <TrustTitleBlock>
+                <TrustTitle>{t("whyPeche.trustTitle")}</TrustTitle>
+              </TrustTitleBlock>
               <TrustBodyGroup>
                 <TrustBody>{t("whyPeche.trustBody1")}</TrustBody>
                 <TrustBody>{t("whyPeche.trustBody2")}</TrustBody>
@@ -395,84 +492,64 @@ const WhyPechePage = () => {
             </TrustTextBlock>
           </TrustSection>
 
-          {/* Section 5: Global Review */}
-          <ReviewSection>
-            <div tw="flex flex-col items-center gap-2">
-              <ReviewTitle>{t("whyPeche.reviewTitle")}</ReviewTitle>
-              {!loading && placeRating > 0 && (
-                <ReviewMeta>
-                  <ReviewStars>
-                    {[...Array(5)].map((_, i) => (
-                      <span
-                        key={i}
-                        tw="text-[20px]"
-                        style={{
-                          color: i < Math.round(placeRating) ? "#F5A623" : "#C8C8C8",
-                        }}
-                      >
-                        ★
-                      </span>
-                    ))}
-                  </ReviewStars>
-                  <ReviewRating>{placeRating.toFixed(1)}</ReviewRating>
-                  <ReviewCount>({totalReviews.toLocaleString()})</ReviewCount>
-                </ReviewMeta>
-              )}
-            </div>
-            {loading ? (
-              <p tw="text-neutral50 text-[14px]">리뷰를 불러오는 중...</p>
-            ) : reviews.length > 0 ? (
-              <ReviewCardRow>
-                {reviews.map((review, idx) => (
-                  <ReviewCard key={idx}>
-                    <ReviewHeader>
-                      <ReviewAvatar
-                        src={review.profile_photo_url}
-                        alt={review.author_name}
-                      />
-                      <ReviewAuthorBlock>
-                        <ReviewAuthor>{review.author_name}</ReviewAuthor>
-                        <ReviewTime>
-                          {review.relative_time_description}
-                        </ReviewTime>
-                      </ReviewAuthorBlock>
-                    </ReviewHeader>
-                    <ReviewStars>
-                      {[...Array(5)].map((_, i) => (
-                        <span
-                          key={i}
-                          tw="text-[16px]"
-                          style={{
-                            color: i < review.rating ? "#F5A623" : "#C8C8C8",
-                          }}
-                        >
-                          ★
-                        </span>
-                      ))}
-                    </ReviewStars>
-                    <ReviewText>{review.text}</ReviewText>
-                  </ReviewCard>
-                ))}
-              </ReviewCardRow>
-            ) : (
-              <p tw="text-neutral50 text-[14px]">리뷰가 없습니다.</p>
-            )}
-          </ReviewSection>
-
-          {/* Section 6: CTA (기존 상담 버튼 패턴) */}
-          <CtaSection>
-            <CtaTitle>{t("whyPeche.ctaTitle")}</CtaTitle>
-            <button
-              tw="flex items-center gap-2"
-              className="sns-btn-conversion"
-              onClick={handleHelpClick}
-            >
-              <img src={helpIcon} alt="상담하기" tw="h-[38px]" />
-            </button>
-            <MapContainer>
-              {language === "ko" ? <KakaoMap /> : <GoogleMapComponent />}
-            </MapContainer>
-          </CtaSection>
+          {/* Section 5: Contact Info (카드 2 + 지도) */}
+          <ContactSection>
+            <ContactCardsCol>
+              <ContactCard>
+                <ContactCardTop>
+                  <ContactCardIcon>
+                    <ChatIcon width={48} height={48} />
+                  </ContactCardIcon>
+                  <ContactCardTextGroup>
+                    <ContactCardLabel>
+                      {t("whyPeche.contactConsultLabel")}
+                    </ContactCardLabel>
+                    <ContactCardDesc>
+                      {t("whyPeche.contactConsultDesc")}
+                    </ContactCardDesc>
+                  </ContactCardTextGroup>
+                </ContactCardTop>
+                <ContactCardLink
+                  className="sns-btn-conversion"
+                  onClick={handleHelpClick}
+                >
+                  {t("whyPeche.contactConsultCta")} →
+                </ContactCardLink>
+              </ContactCard>
+              <ContactCard>
+                <ContactCardTop>
+                  <ContactCardIcon>
+                    <MapPinIcon width={48} height={48} />
+                  </ContactCardIcon>
+                  <ContactCardTextGroup>
+                    <ContactCardLabel>
+                      {t("whyPeche.contactDirectionsLabel")}
+                    </ContactCardLabel>
+                    <ContactCardDesc>
+                      {t("whyPeche.contactDirectionsDesc")}
+                    </ContactCardDesc>
+                  </ContactCardTextGroup>
+                </ContactCardTop>
+                <ContactCardLink
+                  onClick={() =>
+                    window.open(
+                      "https://maps.google.com/?q=37.49556,127.0294",
+                      "_blank",
+                    )
+                  }
+                >
+                  {t("whyPeche.contactDirectionsCta")} →
+                </ContactCardLink>
+              </ContactCard>
+            </ContactCardsCol>
+            <MapContainerLarge>
+              <img
+                src={whyPecheMap}
+                alt="페슈의원 위치"
+                tw="w-full h-full object-cover"
+              />
+            </MapContainerLarge>
+          </ContactSection>
         </ContentContainer>
       </PageContainer>
 

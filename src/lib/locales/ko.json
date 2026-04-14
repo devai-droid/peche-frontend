@@ -476,6 +476,12 @@
     "trustBody1": "페슈의원의 의료진과 직원들은 정직한 설명으로 환자가 올바른 선택을 할 수 있도록 돕습니다.",
     "trustBody2": "개인에게 가장 효과적인 시술을 고민하고, 전문성을 바탕으로 신중하게 진료합니다. 또한 진심 어린 응대와 세심한 배려 속에서도, 때로는 단호하게 신뢰의 가치를 지켜나갑니다.",
     "reviewTitle": "Global Review",
-    "ctaTitle": "언어 장벽 없는 실시간 무료 상담을 시작하세요"
+    "ctaTitle": "언어 장벽 없는 실시간 무료 상담을 시작하세요",
+    "contactConsultLabel": "Consultation",
+    "contactConsultDesc": "언어 장벽 없는\n실시간 무료 상담을\n시작하세요",
+    "contactConsultCta": "WhatsApp",
+    "contactDirectionsLabel": "Directions",
+    "contactDirectionsDesc": "서울특별시 강남구\n강남대로 364, 3층\n(역삼동, 미왕빌딩)",
+    "contactDirectionsCta": "Google Map"
   }
 }

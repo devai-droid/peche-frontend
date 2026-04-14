@@ -37,11 +37,13 @@ const MobileMenu = () => {
 
   return (
     <Container>
-      {menuLinks.map((link) => (
-        <MenuItem key={link.name} onClick={() => customNavigate(link.href)}>
-          {t(link.name)}
-        </MenuItem>
-      ))}
+      {menuLinks
+        .filter((link) => !link.excludeLanguages?.includes(i18n.language))
+        .map((link) => (
+          <MenuItem key={link.name} onClick={() => customNavigate(link.href)}>
+            {t(link.name)}
+          </MenuItem>
+        ))}
     </Container>
   )
 }

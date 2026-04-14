@@ -476,6 +476,12 @@
     "trustBody1": "ทีมแพทย์และเจ้าหน้าที่ของ PECHE ช่วยให้ผู้ป่วยตัดสินใจเลือกได้อย่างถูกต้องผ่านคำอธิบายที่ซื่อสัตย์",
     "trustBody2": "เราพิจารณาอย่างรอบคอบถึงหัตถการที่มีประสิทธิภาพสูงสุดสำหรับแต่ละบุคคล และให้การรักษาด้วยความเชี่ยวชาญอย่างรอบคอบ นอกจากนี้ ภายใต้การบริการด้วยใจและการดูแลอย่างใส่ใจ เรายังยืนหยัดอย่างมั่นคงในการรักษาคุณค่าแห่งความไว้วางใจเมื่อจำเป็น",
     "reviewTitle": "Global Review",
-    "ctaTitle": "ปรึกษาฟรีแบบเรียลไทม์"
+    "ctaTitle": "ปรึกษาฟรีแบบเรียลไทม์",
+    "contactConsultLabel": "ปรึกษา",
+    "contactConsultDesc": "ปรึกษาฟรีแบบเรียลไทม์",
+    "contactConsultCta": "LINE",
+    "contactDirectionsLabel": "ทิศทาง",
+    "contactDirectionsDesc": "364 Gangnam-daero, 3F, Gangnam-gu, Seoul\n(Yeoksam-dong, Meewang Building)",
+    "contactDirectionsCta": "Google Map"
   }
 }

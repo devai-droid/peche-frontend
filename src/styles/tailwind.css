@@ -21,4 +21,11 @@
       "Segoe UI Symbol",
       "Noto Color Emoji";
   }
+
+  /* PC 최소 너비 보장 — 1025px 이상에선 1440px 아래로 줄어들지 않음 */
+  @media (min-width: 1025px) {
+    body {
+      min-width: 1440px;
+    }
+  }
 }

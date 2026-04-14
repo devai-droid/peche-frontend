@@ -125,7 +125,9 @@ const HeaderNavigator = () => {
   return (
     <Container>
       <DesktopLinkContainer>
-        {menuLinks.map((link) => {
+        {menuLinks
+          .filter((link) => !link.excludeLanguages?.includes(i18n.language))
+          .map((link) => {
           const isAll = link.name === "header.treatmentList"
 
           if (isAll) {
