@@ -363,7 +363,7 @@ const ProductDetail = () => {
 
                   {/* 대표 이미지 영역 */}
                   {langImage?.url && (
-                    <div tw="bg-white p-6 md:p-10 mt-10">
+                    <div tw="bg-white mt-10">
                       <img src={langImage.url} alt={name} tw="w-full rounded-lg" />
                     </div>
                   )}
