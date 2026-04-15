@@ -323,38 +323,53 @@ const ProductDetail = () => {
             </div>
 
             {/* 비디오 영역 */}
-            {productDetail.referenceUrl && (
-              <div tw="bg-white p-[8px] md:p-[16px] py-6 md:py-12 mt-16">
-                {/* 시술 소개 영상 텍스트 */}
-                <div tw="text-[18px] md:text-[22px] font-semibold text-neutralBlack mb-[8px] md:mb-[16px]">
-                  {t("productDetail.treatmentVideo")}
-                </div>
+            {(() => {
+              const suffix = keyMatch[lang]
+              const langReferenceUrl =
+                (productDetail as unknown as Record<string, string | undefined>)[
+                  `referenceUrl${suffix}`
+                ] || productDetail.referenceUrl
+              const langImage =
+                (productDetail as unknown as Record<string, { url?: string } | undefined>)[
+                  `image${suffix}`
+                ] || productDetail.image
+              return (
+                <>
+                  {langReferenceUrl && (
+                    <div tw="bg-white p-[8px] md:p-[16px] py-6 md:py-12 mt-16">
+                      {/* 시술 소개 영상 텍스트 */}
+                      <div tw="text-[18px] md:text-[22px] font-semibold text-neutralBlack mb-[8px] md:mb-[16px]">
+                        {t("productDetail.treatmentVideo")}
+                      </div>
 
-                {/* 검은색 보더 */}
-                <div tw="border-t border-neutralBlack mb-6" />
+                      {/* 검은색 보더 */}
+                      <div tw="border-t border-neutralBlack mb-6" />
 
-                {/* 살색 비디오 컨테이너 */}
-                <div tw="bg-white">
-                  <iframe
-                    width="100%"
-                    height="100%"
-                    tw="w-full h-[650px] md:h-[860px]"
-                    title="Youtube video"
-                    src={`https://www.youtube.com/embed/${
-                      productDetail.referenceUrl?.split("/").pop() ?? ""
-                    }`}
-                    allowFullScreen
-                  />
-                </div>
-              </div>
-            )}
+                      {/* 살색 비디오 컨테이너 */}
+                      <div tw="bg-white">
+                        <iframe
+                          width="100%"
+                          height="100%"
+                          tw="w-full h-[650px] md:h-[860px]"
+                          title="Youtube video"
+                          src={`https://www.youtube.com/embed/${
+                            langReferenceUrl?.split("/").pop() ?? ""
+                          }`}
+                          allowFullScreen
+                        />
+                      </div>
+                    </div>
+                  )}
 
-            {/* 대표 이미지 영역 */}
-            {productDetail.image?.url && (
-              <div tw="bg-white p-6 md:p-10 mt-10">
-                <img src={productDetail.image.url} alt={name} tw="w-full rounded-lg" />
-              </div>
-            )}
+                  {/* 대표 이미지 영역 */}
+                  {langImage?.url && (
+                    <div tw="bg-white p-6 md:p-10 mt-10">
+                      <img src={langImage.url} alt={name} tw="w-full rounded-lg" />
+                    </div>
+                  )}
+                </>
+              )
+            })()}
           </CartView>
         </AppMaxWidth>
       </div>
