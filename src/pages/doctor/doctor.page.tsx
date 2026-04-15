@@ -79,7 +79,7 @@ const DoctorName = styled.span`
 const DoctorPosition = styled.span`
   ${tw`text-[16px] md:text-[18px] font-pretendard font-normal text-neutralBlack tracking-[0.02em]`}
   line-height: 1;
-  transform: translateY(4px);
+  transform: translateY(3px);
 
   @media (min-width: 768px) {
     transform: translateY(6px);
