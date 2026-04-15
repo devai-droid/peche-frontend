@@ -60,9 +60,9 @@ const IntroImage = styled.img`
     object-cover rounded-none
   `}
 `
-/* row, gap=16, items baseline */
+/* row, gap=16, items end (하단 정렬) */
 const DoctorNameBlock = styled.div`
-  ${tw`flex flex-row items-baseline`}
+  ${tw`flex flex-row items-end`}
   gap: 16px;
   margin-top: 24px;
 
@@ -77,7 +77,11 @@ const DoctorName = tw.span`
 /* Pretendard 400 18px, ls=+2%, #121212 */
 const DoctorPosition = styled.span`
   ${tw`text-[16px] md:text-[18px] font-pretendard font-normal text-neutralBlack tracking-[0.02em] leading-[1.4]`}
-  transform: translateY(-2px);
+  transform: translateY(-1px);
+
+  @media (min-width: 768px) {
+    transform: translateY(-2px);
+  }
 `
 
 /* ── Section 2: 이미지 + 텍스트 ──
