@@ -12,6 +12,7 @@ import whyPeche04 from "@/assets/images/why-peche-04.png"
 import whyPeche05 from "@/assets/images/why-peche-05.png"
 import whyPeche06 from "@/assets/images/why-peche-06.png"
 import whyPeche07 from "@/assets/images/why-peche-07.png"
+import whyPeche07Mo from "@/assets/images/why-peche-07-mo.png"
 import whyPecheMap from "@/assets/images/why-peche-map.png"
 import { ReactComponent as ChatIcon } from "@/assets/icons/why-peche-chat.svg"
 import { ReactComponent as MapPinIcon } from "@/assets/icons/why-peche-mappin.svg"
@@ -171,10 +172,11 @@ const TrustImage = styled.img`
   ${tw`w-full object-cover`}
   height: 600px;
 
-  @media (max-width: 767px) {
-    height: 300px;
+  @media (max-width: 1024px) {
+    height: 210px;
   }
 `
+const TrustPicture = tw.picture`w-full block`
 const TrustTextBlock = styled.div`
   ${tw`w-full flex flex-col md:flex-row justify-center items-start`}
   gap: 40px;
@@ -480,7 +482,10 @@ const WhyPechePage = () => {
 
           {/* Section 4: 단체사진 + 신뢰 */}
           <TrustSection>
-            <TrustImage src={whyPeche07} alt="페슈의원 팀" />
+            <TrustPicture>
+              <source media="(max-width: 1024px)" srcSet={whyPeche07Mo} />
+              <TrustImage src={whyPeche07} alt="페슈의원 팀" />
+            </TrustPicture>
             <TrustTextBlock>
               <TrustTitleBlock>
                 <TrustTitle>{t("whyPeche.trustTitle")}</TrustTitle>
