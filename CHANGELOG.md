@@ -4,6 +4,34 @@
 
 ---
 
+## [1.9.0] - 2026-04-15
+
+### Added
+
+- 의료진 소개 안태언 대표원장 정렬 보정 (가운데 정렬 + 시각 보정)
+- 페슈의원 소개 인테리어 우측 이미지 교체 (정사각형 1:1)
+- Why Pêche? 단체사진 모바일 가로 이미지 분기
+
+### Changed
+
+- GNB 메뉴명 외국어 단축 (의료진 소개, Blog ja)
+- Why Pêche? GNB 메뉴 번역 적용 (zh/ja/tw/th)
+- 시술 검색 버튼 5개 외국어 번역
+- 소개 페이지 customerTrust2 / interior 텍스트 교체 (메타뷰 3D 진단)
+- 한국어 외 모든 언어에서 카카오 지도 → 구글 지도 보기
+- SNS 아이콘 (X, Facebook, Instagram, Tiktok 등) 신규 SVG 교체
+- SNS 아이콘 사이즈 24px → 28px (헤더/푸터)
+- PC/푸터 로고 SVG 적용 + PC 헤더 로고 1.15배 확대
+
+### Fixed
+
+- 일본 사이트 헤더 X 아이콘 노출
+- 대만/태국 사이트 헤더/푸터 Facebook 아이콘 노출
+- GNB active 표시 regex tw/zh-TW 매핑 추가
+- 텍스트 줄바꿈 반영 (interior, customerTrust 등)
+
+---
+
 ## [1.8.1] - 2026-04-14
 
 ### Changed

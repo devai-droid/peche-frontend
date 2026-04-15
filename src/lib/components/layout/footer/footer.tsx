@@ -165,14 +165,14 @@ const Footer = ({ bottomCartExists = false }: FooterProps) => {
                     onClick={handleClick}
                     className="sns-btn-conversion"
                     tw="flex items-center hover:opacity-60 transition">
-                    <Icon width={24} height={24} />
+                    <Icon width={28} height={28} />
                   </button>
                 )
               }
 
               return (
                 <IconLink key={i} href={item.url} target="_blank" rel="noopener noreferrer">
-                  <Icon width={24} height={24} />
+                  <Icon width={28} height={28} />
                 </IconLink>
               )
             })}

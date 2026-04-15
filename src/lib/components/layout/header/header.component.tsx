@@ -138,7 +138,7 @@ const LeftMenu = ({
               onClick={handleClick}
               className="sns-btn-conversion"
               tw="flex items-center justify-center hover:opacity-80">
-              <Icon width={24} height={24} />
+              <Icon width={28} height={28} />
             </button>
           )
         }
@@ -150,7 +150,7 @@ const LeftMenu = ({
             target="_blank"
             rel="noopener noreferrer"
             tw="flex items-center justify-center hover:opacity-80">
-            <Icon width={24} height={24} />
+            <Icon width={28} height={28} />
           </a>
         )
       })}

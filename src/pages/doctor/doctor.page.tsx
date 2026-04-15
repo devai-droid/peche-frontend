@@ -60,9 +60,9 @@ const IntroImage = styled.img`
     object-cover rounded-none
   `}
 `
-/* row, gap=16, items end (하단 정렬) */
+/* row, gap=16, items center (가운데 정렬) */
 const DoctorNameBlock = styled.div`
-  ${tw`flex flex-row items-end`}
+  ${tw`flex flex-row items-center`}
   gap: 16px;
   margin-top: 24px;
 
@@ -71,16 +71,18 @@ const DoctorNameBlock = styled.div`
   }
 `
 /* Pretendard 700 30px, ls=+2%, #121212 */
-const DoctorName = tw.span`
-  text-[24px] md:text-[30px] font-pretendard font-bold text-neutralBlack tracking-[0.02em] leading-[1.4]
+const DoctorName = styled.span`
+  ${tw`text-[24px] md:text-[30px] font-pretendard font-bold text-neutralBlack tracking-[0.02em]`}
+  line-height: 1;
 `
 /* Pretendard 400 18px, ls=+2%, #121212 */
 const DoctorPosition = styled.span`
-  ${tw`text-[16px] md:text-[18px] font-pretendard font-normal text-neutralBlack tracking-[0.02em] leading-[1.4]`}
-  transform: translateY(-1px);
+  ${tw`text-[16px] md:text-[18px] font-pretendard font-normal text-neutralBlack tracking-[0.02em]`}
+  line-height: 1;
+  transform: translateY(4px);
 
   @media (min-width: 768px) {
-    transform: translateY(-2px);
+    transform: translateY(6px);
   }
 `
 
