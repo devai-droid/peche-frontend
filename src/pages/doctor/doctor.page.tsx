@@ -60,10 +60,10 @@ const IntroImage = styled.img`
     object-cover rounded-none
   `}
 `
-/* row, gap=16, items center (가운데 정렬) */
+/* row, gap=14, items center (가운데 정렬) */
 const DoctorNameBlock = styled.div`
   ${tw`flex flex-row items-center`}
-  gap: 16px;
+  gap: 14px;
   margin-top: 24px;
 
   @media (min-width: 768px) {
@@ -82,7 +82,7 @@ const DoctorPosition = styled.span`
   transform: translateY(3px);
 
   @media (min-width: 768px) {
-    transform: translateY(6px);
+    transform: translateY(5px);
   }
 `
 
