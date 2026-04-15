@@ -15,6 +15,10 @@
   - 어드민: 팝업 목록에서 노출여부·메모 컬럼 제거, 게시 시작/종료 컬럼 추가
   - 프론트: API 필터링으로 자동 반영 (코드 변경 없음)
 
+### Fixed
+
+- 이벤트 번들 게시기간 저장 시 필요한 필드(name/postStartDate/postEndDate/startDate/endDate/visibleFirst/visibleSecond)만 전송하도록 수정 + 저장 후 번들 목록 refetch
+
 ---
 
 ## [1.9.2] - 2026-04-15
