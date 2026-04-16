@@ -138,11 +138,20 @@ const Location = () => {
               </InfoTextWrapper>
 
               <ButtonGroup>
-                <OutlineButton onClick={() => window.open("https://naver.me/FLe0V59M", "_blank")}>
-                  {t("location.rightButton1")}
-                </OutlineButton>
+                {language === "ko" && (
+                  <OutlineButton onClick={() => window.open("https://naver.me/FLe0V59M", "_blank")}>
+                    {t("location.rightButton1")}
+                  </OutlineButton>
+                )}
                 <OutlineButton
-                  onClick={() => window.open("https://kko.kakao.com/LK40uI5cBA", "_blank")}>
+                  onClick={() =>
+                    window.open(
+                      language === "ko"
+                        ? "https://kko.kakao.com/LK40uI5cBA"
+                        : "https://share.google/0PU8WvI2UEiQpfAjt",
+                      "_blank",
+                    )
+                  }>
                   {t("location.rightButton2")}
                 </OutlineButton>
               </ButtonGroup>
