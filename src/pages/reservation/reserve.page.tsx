@@ -438,10 +438,12 @@ const Reserve = () => {
       return
     }
 
-    // 이벤트 기간 체크 — 지났으면 확정 모달 대신 기간 모달 바로 표시
+    // 이벤트 기간 체크 — 체크된 항목만, 지났으면 확정 모달 대신 기간 모달 바로 표시
     const selected = dayjs(selectedDatetime.replace("Z", ""))
     const expiredMap = new Map<string, string>()
     cart.forEach((item) => {
+      const itemId = item.event?.id || item.product?.id || ""
+      if (!checkedList.includes(itemId)) return
       const endDate = (item.event as any)?.bundle?.endDate || item.event?.category?.endDate
       if (!endDate) return
       if (selected.isAfter(dayjs(endDate), "day")) {
