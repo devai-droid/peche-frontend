@@ -279,7 +279,7 @@
     "reservationComplete": "予約完了",
     "reservationCompleteTitle": "ご予約が完了しました。",
     "reservationCompleteText": "ご予約確定後、すぐに確認のテキストメッセージをお送りいたします。\n\n 1分以内に重複してご予約された場合、自動処理されない場合がございますのでご了承ください。",
-    "kakaoConsult": "カカオトークへのお問い合わせ",
+    "kakaoConsult": "LINEでお問い合わせ",
     "checkConfirmationText": "予約確定文字を必ずご確認ください。",
     "contactMessage": "予約内容により施術進行ができない場合は個別連絡させていただきます。",
     "reservationCheckChangeCancel": "予約確認/変更/キャンセル",

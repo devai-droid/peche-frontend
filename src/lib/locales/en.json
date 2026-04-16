@@ -279,7 +279,7 @@
     "reservationComplete": "Reservation Complete",
     "reservationCompleteTitle": "Your reservation has been completed.",
     "reservationCompleteText": "After confirming your schedule, we’ll quickly\n send you a confirmation text message.\n\nPlease note that duplicate reservations made \n within one minute of each other may not be \n processed automatically.",
-    "kakaoConsult": "Contact KakaoTalk",
+    "kakaoConsult": "Contact WhatsApp",
     "checkConfirmationText": "Please check your confirmation text.",
     "contactMessage": "If your treatment cannot be performed, we will contact you individually.",
     "reservationCheckChangeCancel": "Check my reservation",

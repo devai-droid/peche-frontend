@@ -11,7 +11,7 @@ const ReservationComplete = () => {
   const { language } = i18n
   const HELP_LINKS: Record<Language, string> = {
     ko: "https://pf.kakao.com/_dxoiLn",
-    en: "https://wa.me/message/3ARKGGTBNAY2M1",
+    en: "https://wa.me/message/4Y5JC2HX6OH5H1",
     ja: "https://line.me/R/ti/p/@235wfyao",
     th: "https://line.me/R/ti/p/@892druai",
     "zh-TW": "https://line.me/R/ti/p/@683jgqmd",
@@ -19,14 +19,8 @@ const ReservationComplete = () => {
   }
 
   const handleHelpClick = () => {
-    if (language === Language.ENG) {
-      window.open("https://wa.me/message/4Y5JC2HX6OH5H1", "_blank")
-      return
-    }
-
     const url = HELP_LINKS[language as Language]
     if (!url) return
-
     window.open(url, "_blank")
   }
 
