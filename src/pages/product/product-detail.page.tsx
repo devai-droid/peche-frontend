@@ -328,11 +328,11 @@ const ProductDetail = () => {
               const langReferenceUrl =
                 (productDetail as unknown as Record<string, string | undefined>)[
                   `referenceUrl${suffix}`
-                ] || productDetail.referenceUrl
+                ]
               const langImage =
                 (productDetail as unknown as Record<string, { url?: string } | undefined>)[
                   `image${suffix}`
-                ] || productDetail.image
+                ]
               return (
                 <>
                   {langReferenceUrl && (
