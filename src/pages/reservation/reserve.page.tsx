@@ -524,8 +524,18 @@ const Reserve = () => {
       restored?.selectedDatetime || localStorage.getItem("reservation:selectedDatetime")
     const savedToday = restored?.today || localStorage.getItem("reservation:today")
 
-    if (savedDatetime) setSelectedDatetime(savedDatetime)
-    if (savedToday) setToday(dayjs(savedToday))
+    if (savedToday) {
+      const saved = dayjs(savedToday)
+      if (saved.isBefore(dayjs(), "day")) {
+        // 저장된 날짜가 과거면 무시하고 오늘로
+        localStorage.removeItem("reservation:today")
+        localStorage.removeItem("reservation:selectedDatetime")
+        setToday(dayjs())
+      } else {
+        setToday(saved)
+        if (savedDatetime) setSelectedDatetime(savedDatetime)
+      }
+    }
   }, [])
 
   /* -------- 캘린더 변경 시 조회 -------- */
