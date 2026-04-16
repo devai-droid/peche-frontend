@@ -4,24 +4,40 @@ import { useTranslation } from "react-i18next"
 import useCustomNavigate from "@/lib/hooks/use-custom-navigate"
 import { Language } from "@/lib/locales/i18n.config"
 import React from "react"
+import Modal from "@/lib/components/modal/modal.component"
+import wechatQrImg from "@/assets/images/wechat-qr.jpg"
+import { CloseIcon } from "@/assets/icon"
 
 const ReservationComplete = () => {
   const { t, i18n } = useTranslation()
   const navigate = useCustomNavigate()
   const { language } = i18n
-  const HELP_LINKS: Record<Language, string> = {
-    ko: "https://pf.kakao.com/_dxoiLn",
-    en: "https://wa.me/message/4Y5JC2HX6OH5H1",
-    ja: "https://line.me/R/ti/p/@235wfyao",
-    th: "https://line.me/R/ti/p/@892druai",
-    "zh-TW": "https://line.me/R/ti/p/@683jgqmd",
-    zh: "https://pf.kakao.com/_dxoiLn",
-  }
+  const [openWeChatModal, setOpenWeChatModal] = React.useState(false)
 
   const handleHelpClick = () => {
-    const url = HELP_LINKS[language as Language]
-    if (!url) return
-    window.open(url, "_blank")
+    if (language === "ko") {
+      window.open("https://pf.kakao.com/_dxoiLn", "_blank")
+      return
+    }
+    if (language === "en") {
+      window.open("https://wa.me/message/4Y5JC2HX6OH5H1", "_blank")
+      return
+    }
+    if (language === "zh") {
+      setOpenWeChatModal(true)
+      return
+    }
+    if (language === "ja") {
+      window.open("https://line.me/R/ti/p/@235wfyao", "_blank")
+      return
+    }
+    if (language === "th") {
+      window.open("https://line.me/R/ti/p/@892druai", "_blank")
+      return
+    }
+    if (language === "zh-TW") {
+      window.open("https://line.me/R/ti/p/@683jgqmd", "_blank")
+    }
   }
 
   return (
@@ -58,6 +74,23 @@ const ReservationComplete = () => {
           </div>
         </div>
       </div>
+
+      {/* WeChat QR 모달 */}
+      <Modal open={openWeChatModal} onClose={() => setOpenWeChatModal(false)} width="max-w-md">
+        <div tw="-mx-10 -my-8">
+          <div tw="bg-[#F3F3F3] w-full relative">
+            <div tw="px-4 pb-3 pt-12">
+              <div tw="text-[24px] font-time text-neutral90">Peche clinic</div>
+            </div>
+            <button tw="absolute top-3 right-4" onClick={() => setOpenWeChatModal(false)}>
+              <CloseIcon width={22} height={22} />
+            </button>
+          </div>
+          <div tw="p-6 flex justify-center bg-white">
+            <img src={wechatQrImg} alt="wechat qr" tw="w-[240px] h-[240px] object-contain" />
+          </div>
+        </div>
+      </Modal>
     </Page>
   )
 }
