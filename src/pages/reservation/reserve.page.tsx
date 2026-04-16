@@ -458,6 +458,25 @@ const Reserve = () => {
       return
     }
 
+    // 이벤트 기간 체크
+    const expiredMap = new Map<string, string>()
+    cart.forEach((item) => {
+      const endDate = (item.event as any)?.bundle?.endDate || item.event?.category?.endDate
+      if (!endDate) return
+      if (selected.isAfter(dayjs(endDate), "day")) {
+        const name = (item.event as any)?.bundle?.name || ""
+        if (name && !expiredMap.has(name)) {
+          expiredMap.set(name, dayjs(endDate).format("YYYY년 MM월 DD일"))
+        }
+      }
+    })
+    if (expiredMap.size > 0) {
+      setExpiredBundles(Array.from(expiredMap, ([name, endDate]) => ({ name, endDate })))
+      setConfirmOpen(false)
+      setEventPeriodAlert(true)
+      return
+    }
+
     try {
       await userControllerUpdateMine({ languageLocale: language })
 
