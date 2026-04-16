@@ -794,7 +794,7 @@ const Intro = () => {
                           window.open(
                             language === "ko"
                               ? "https://kko.kakao.com/LK40uI5cBA"
-                              : "https://www.google.com/maps/search/?api=1&query=37.49556,127.0294",
+                              : "https://share.google/0PU8WvI2UEiQpfAjt",
                             "_blank",
                           )
                         }>

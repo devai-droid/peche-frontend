@@ -538,7 +538,7 @@ const WhyPechePage = () => {
                 <ContactCardLink
                   onClick={() =>
                     window.open(
-                      "https://maps.google.com/?q=37.49556,127.0294",
+                      "https://share.google/0PU8WvI2UEiQpfAjt",
                       "_blank",
                     )
                   }
