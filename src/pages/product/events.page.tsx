@@ -524,7 +524,7 @@ const Events = () => {
                       const p = product as typeof product & { discountPrice?: number }
                       return (
                         <Event
-                          addToCart={() => handleAddToCart({ event: product })}
+                          addToCart={() => handleAddToCart({ product })}
                           id={product.detailPage?.id}
                           key={index}
                           name={tv(product, "name")}
