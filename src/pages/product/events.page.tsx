@@ -96,10 +96,7 @@ const Event = ({
       </div>
 
       {/* 제목 */}
-      <div tw="text-[16px] md:text-[18px] font-semibold">
-        {bundleName && <span tw="text-[#DA7F67]">{bundleName} </span>}
-        <span tw="text-neutralBlack">{name}</span>
-      </div>
+      <div tw="text-neutralBlack text-[16px] md:text-[18px] font-semibold">{name}</div>
 
       {/* 설명 */}
       <div tw="text-[13px] md:text-[14px] text-neutral70" style={{ whiteSpace: "pre-line" }}>

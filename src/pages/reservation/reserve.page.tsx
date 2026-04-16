@@ -83,12 +83,7 @@ const SurgeryItem = ({ item, updateCartItem, checked, onCheck }: SurgeryItemProp
 
         <div tw="flex-1 flex flex-col gap-2">
           {/* 이름 */}
-          <div tw="font-semibold text-[14px] md:text-[16px] leading-snug">
-            {item.event?.category && (
-              <span tw="text-[#DA7F67]">{tv(item.event.category, "name")} </span>
-            )}
-            <span>{name}</span>
-          </div>
+          <div tw="font-semibold text-[14px] md:text-[16px] leading-snug">{name}</div>
 
           {/* 기간 (이벤트에만 존재) */}
           {item.event?.category?.startDate && (
@@ -385,6 +380,7 @@ const Reserve = () => {
   const [todaySlots, setTodaySlots] = React.useState<AvailableReservationResultDto[]>([])
   const [selectedDatetime, setSelectedDatetime] = React.useState("")
   const [confirmOpen, setConfirmOpen] = React.useState(false)
+  const [eventPeriodAlert, setEventPeriodAlert] = React.useState(false)
 
   /* -------- Auth 상태 -------- */
   interface AuthInfo {
@@ -686,6 +682,16 @@ const Reserve = () => {
                       localStorage.setItem("reservation:today", value.toISOString())
                     }
                   }}
+                  onMonthChange={(month: typeof dayjs.prototype) => {
+                    const monthStart = dayjs(month).startOf("month")
+                    const hasExpiredEvent = cart.some((item) => {
+                      if (!item.event?.category?.endDate) return false
+                      return dayjs(item.event.category.endDate).isBefore(monthStart)
+                    })
+                    if (hasExpiredEvent) {
+                      setEventPeriodAlert(true)
+                    }
+                  }}
                   footer={<div>{renderTimeSlots()}</div>}
                 />
               </div>
@@ -758,6 +764,23 @@ const Reserve = () => {
               {t("reservePage.reservationModalReserveButton")}
             </Button>
           </div>
+        </div>
+      </Modal>
+
+      <Modal open={eventPeriodAlert} onClose={() => setEventPeriodAlert(false)} width="max-w-[400px]">
+        <div tw="font-pretendard">
+          <div tw="text-[16px] md:text-[18px] font-semibold mb-4 leading-snug">
+            이달의 이벤트 상품의 예약 가능 날짜는 당월 말일까지입니다.
+          </div>
+          <div tw="text-neutral70 text-[14px] md:text-[16px] mb-6">
+            예약 날짜를 다시 확인해주세요.
+          </div>
+          <Button
+            tw="w-full h-[40px] text-[13px] md:text-[15px]"
+            style={{ variant: "filled", color: "point", size: "sm" }}
+            onClick={() => setEventPeriodAlert(false)}>
+            확인
+          </Button>
         </div>
       </Modal>
     </Page>
