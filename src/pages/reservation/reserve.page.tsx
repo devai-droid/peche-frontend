@@ -381,6 +381,7 @@ const Reserve = () => {
   const [selectedDatetime, setSelectedDatetime] = React.useState("")
   const [confirmOpen, setConfirmOpen] = React.useState(false)
   const [eventPeriodAlert, setEventPeriodAlert] = React.useState(false)
+  const [expiredBundleName, setExpiredBundleName] = React.useState("")
 
   /* -------- Auth 상태 -------- */
   interface AuthInfo {
@@ -684,12 +685,14 @@ const Reserve = () => {
                   }}
                   onMonthChange={(month: typeof dayjs.prototype) => {
                     const monthStart = dayjs(month).startOf("month")
-                    const hasExpiredEvent = cart.some((item) => {
+                    const expired = cart.find((item) => {
                       const endDate = (item.event as any)?.bundle?.endDate || item.event?.category?.endDate
                       if (!endDate) return false
                       return dayjs(endDate).isBefore(monthStart)
                     })
-                    if (hasExpiredEvent) {
+                    if (expired) {
+                      const name = (expired.event as any)?.bundle?.name || ""
+                      setExpiredBundleName(name)
                       setEventPeriodAlert(true)
                     }
                   }}
@@ -771,7 +774,7 @@ const Reserve = () => {
       <Modal open={eventPeriodAlert} onClose={() => setEventPeriodAlert(false)} width="max-w-[400px]">
         <div tw="font-pretendard">
           <div tw="text-[16px] md:text-[18px] font-semibold mb-4 leading-snug">
-            이달의 이벤트 상품의 예약 가능 날짜는
+            {expiredBundleName} 상품의 예약 가능 날짜는
             <br />
             당월 말일까지입니다.
           </div>
