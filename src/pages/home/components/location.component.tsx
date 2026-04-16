@@ -138,11 +138,9 @@ const Location = () => {
               </InfoTextWrapper>
 
               <ButtonGroup>
-                {language === "ko" && (
-                  <OutlineButton onClick={() => window.open("https://naver.me/FLe0V59M", "_blank")}>
-                    {t("location.rightButton1")}
-                  </OutlineButton>
-                )}
+                <OutlineButton onClick={() => window.open("https://naver.me/FLe0V59M", "_blank")}>
+                  {t("location.rightButton1")}
+                </OutlineButton>
                 <OutlineButton
                   onClick={() =>
                     window.open("https://maps.app.goo.gl/bkkdJBLVdT7UkKtg9", "_blank")

@@ -310,10 +310,14 @@ const ContactCardsCol = styled.div`
   }
 `
 const ContactCard = styled.div`
-  ${tw`flex flex-col justify-between w-full`}
+  ${tw`flex flex-col justify-between w-full transition-colors duration-200 cursor-pointer`}
   padding: 20px;
   gap: 24px;
   border: 1.5px solid #da7f67;
+
+  &:hover {
+    background-color: #f3e8e2;
+  }
 
   @media (min-width: 1025px) {
     width: 250px;
