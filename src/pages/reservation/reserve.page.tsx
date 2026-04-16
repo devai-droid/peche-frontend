@@ -386,7 +386,7 @@ const Reserve = () => {
   const [selectedDatetime, setSelectedDatetime] = React.useState("")
   const [confirmOpen, setConfirmOpen] = React.useState(false)
   const [eventPeriodAlert, setEventPeriodAlert] = React.useState(false)
-  const [expiredBundleName, setExpiredBundleName] = React.useState("")
+  const [expiredBundles, setExpiredBundles] = React.useState<{ name: string; endDate: string }[]>([])
 
   /* -------- Auth 상태 -------- */
   interface AuthInfo {
@@ -690,17 +690,19 @@ const Reserve = () => {
                   }}
                   onMonthChange={(month: typeof dayjs.prototype) => {
                     const monthStart = dayjs(month).startOf("month")
-                    const expiredNames = new Set<string>()
+                    const expiredMap = new Map<string, string>()
                     cart.forEach((item) => {
                       const endDate = (item.event as any)?.bundle?.endDate || item.event?.category?.endDate
                       if (!endDate) return
                       if (dayjs(endDate).isBefore(monthStart)) {
                         const name = (item.event as any)?.bundle?.name || ""
-                        if (name) expiredNames.add(name)
+                        if (name && !expiredMap.has(name)) {
+                          expiredMap.set(name, dayjs(endDate).format("YYYY년 MM월 DD일"))
+                        }
                       }
                     })
-                    if (expiredNames.size > 0) {
-                      setExpiredBundleName(Array.from(expiredNames).join(", "))
+                    if (expiredMap.size > 0) {
+                      setExpiredBundles(Array.from(expiredMap, ([name, endDate]) => ({ name, endDate })))
                       setEventPeriodAlert(true)
                     }
                   }}
