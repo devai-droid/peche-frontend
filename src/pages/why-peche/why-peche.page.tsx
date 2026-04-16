@@ -310,14 +310,10 @@ const ContactCardsCol = styled.div`
   }
 `
 const ContactCard = styled.div`
-  ${tw`flex flex-col justify-between w-full transition-colors duration-200 cursor-pointer`}
+  ${tw`flex flex-col justify-between w-full`}
   padding: 20px;
   gap: 24px;
   border: 1.5px solid #da7f67;
-
-  &:hover {
-    background-color: #f3e8e2;
-  }
 
   @media (min-width: 1025px) {
     width: 250px;
@@ -346,7 +342,7 @@ const ContactCardDesc = tw.p`
   text-[#2A2A2A]
 `
 const ContactCardLink = styled.button`
-  ${tw`flex flex-row items-center cursor-pointer bg-transparent`}
+  ${tw`flex flex-row items-center cursor-pointer bg-transparent transition-colors duration-200`}
   gap: 12px;
   color: #da7f67;
   font-family: Pretendard;
@@ -356,6 +352,10 @@ const ContactCardLink = styled.button`
   letter-spacing: -0.02em;
   border: none;
   padding: 0;
+
+  &:hover {
+    color: #b5604a;
+  }
 `
 const MapContainerLarge = styled.div`
   ${tw`w-full`}
