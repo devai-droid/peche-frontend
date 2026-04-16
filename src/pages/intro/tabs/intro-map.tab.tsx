@@ -39,7 +39,9 @@ const IntroMap = () => {
   return (
     <AppMaxWidth>
       <div tw="mx-auto max-w-3xl">
-        <div tw="aspect-video">
+        <div
+          tw="aspect-video cursor-pointer"
+          onClick={() => window.open("https://maps.app.goo.gl/bkkdJBLVdT7UkKtg9", "_blank")}>
           <img src={mapImg} alt="페슈의원 위치" tw="w-full h-full object-cover" />
         </div>
         <div tw="mt-6 bg-[#f8efe4] rounded-lg min-h-[3.5rem] font-nanumgothic text-black flex items-center justify-center p-2">

@@ -148,7 +148,7 @@ const Location = () => {
                     window.open(
                       language === "ko"
                         ? "https://kko.kakao.com/LK40uI5cBA"
-                        : "https://share.google/0PU8WvI2UEiQpfAjt",
+                        : "https://maps.app.goo.gl/bkkdJBLVdT7UkKtg9",
                       "_blank",
                     )
                   }>
@@ -161,7 +161,9 @@ const Location = () => {
 
         {/* Right side */}
         <MapColumn>
-          <GoogleMapWrapper>
+          <GoogleMapWrapper
+            onClick={() => window.open("https://maps.app.goo.gl/bkkdJBLVdT7UkKtg9", "_blank")}
+            tw="cursor-pointer">
             <img src={mapImg} alt="페슈의원 위치" tw="w-full h-full object-cover" />
           </GoogleMapWrapper>
         </MapColumn>
