@@ -52,7 +52,7 @@ const SurgeryItem = ({
         <div tw="flex flex-col gap-2 flex-1">
           {/* 이름 */}
           <div tw="font-semibold text-[14px] md:text-[16px] leading-snug">
-            {item.event?.category && (
+            {(item.event as any)?.bundle?.name && item.event?.category && (
               <span tw="text-[#DA7F67]">{tv(item.event.category, "name")} </span>
             )}
             <span>{name}</span>

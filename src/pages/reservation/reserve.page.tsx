@@ -84,19 +84,19 @@ const SurgeryItem = ({ item, updateCartItem, checked, onCheck }: SurgeryItemProp
         <div tw="flex-1 flex flex-col gap-2">
           {/* 이름 */}
           <div tw="font-semibold text-[14px] md:text-[16px] leading-snug">
-            {item.event?.category && (
+            {(item.event as any)?.bundle?.name && item.event?.category && (
               <span tw="text-[#DA7F67]">{tv(item.event.category, "name")} </span>
             )}
             <span>{name}</span>
           </div>
 
-          {/* 기간 (이벤트에만 존재) */}
-          {item.event?.category?.startDate && (
+          {/* 기간 (번들 이벤트에만 존재) */}
+          {(item.event as any)?.bundle?.endDate && (
             <div tw="flex text-[#999] text-sm items-center gap-1 ml-1">
               <Icon icon={CalendarSimpleIcon} size={16} />
               <p>
-                {formatDate(item.event.category.startDate)} ~{" "}
-                {formatDate(item.event.category.endDate)}
+                {formatDate((item.event as any).bundle.startDate)} ~{" "}
+                {formatDate((item.event as any).bundle.endDate)}
               </p>
             </div>
           )}
@@ -497,11 +497,6 @@ const Reserve = () => {
             resetCart()
             navigate("/reservation/complete")
           },
-          onError: () => {
-            setConfirmOpen(false)
-            setExpiredBundles([])
-            setEventPeriodAlert(true)
-          },
         },
       )
     } catch (e) {
@@ -653,7 +648,15 @@ const Reserve = () => {
   }
 
   /* -------- 예약하기 -------- */
-  const { mutate } = useReservationControllerCreate()
+  const { mutate } = useReservationControllerCreate({
+    mutation: {
+      onError: () => {
+        setConfirmOpen(false)
+        setExpiredBundles([])
+        setEventPeriodAlert(true)
+      },
+    },
+  })
 
   // 장바구니에 시술이 있으면 상담하기는 항상 false
   // React.useEffect(() => {
