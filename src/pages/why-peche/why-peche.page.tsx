@@ -547,7 +547,9 @@ const WhyPechePage = () => {
                 </ContactCardLink>
               </ContactCard>
             </ContactCardsCol>
-            <MapContainerLarge>
+            <MapContainerLarge
+              onClick={() => window.open("https://maps.app.goo.gl/bkkdJBLVdT7UkKtg9", "_blank")}
+              tw="cursor-pointer">
               <img
                 src={whyPecheMap}
                 alt="페슈의원 위치"
