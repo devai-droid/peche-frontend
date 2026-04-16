@@ -713,6 +713,8 @@ const Reserve = () => {
                     const monthStart = dayjs(month).startOf("month")
                     const expiredMap = new Map<string, string>()
                     cart.forEach((item) => {
+                      const itemId = item.event?.id || item.product?.id || ""
+                      if (!checkedList.includes(itemId)) return
                       const endDate = (item.event as any)?.bundle?.endDate || item.event?.category?.endDate
                       if (!endDate) return
                       if (dayjs(endDate).isBefore(monthStart)) {
