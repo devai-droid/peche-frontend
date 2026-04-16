@@ -438,6 +438,25 @@ const Reserve = () => {
       return
     }
 
+    // 이벤트 기간 체크 — 지났으면 확정 모달 대신 기간 모달 바로 표시
+    const selected = dayjs(selectedDatetime.replace("Z", ""))
+    const expiredMap = new Map<string, string>()
+    cart.forEach((item) => {
+      const endDate = (item.event as any)?.bundle?.endDate || item.event?.category?.endDate
+      if (!endDate) return
+      if (selected.isAfter(dayjs(endDate), "day")) {
+        const name = (item.event as any)?.bundle?.name || ""
+        if (name && !expiredMap.has(name)) {
+          expiredMap.set(name, dayjs(endDate).format("YYYY년 MM월 DD일"))
+        }
+      }
+    })
+    if (expiredMap.size > 0) {
+      setExpiredBundles(Array.from(expiredMap, ([name, endDate]) => ({ name, endDate })))
+      setEventPeriodAlert(true)
+      return
+    }
+
     setConfirmOpen(true)
   }
 
@@ -455,25 +474,6 @@ const Reserve = () => {
       alert(t("reservePage.timeExpired"))
       setSelectedDatetime("")
       localStorage.removeItem("reservation:selectedDatetime")
-      return
-    }
-
-    // 이벤트 기간 체크
-    const expiredMap = new Map<string, string>()
-    cart.forEach((item) => {
-      const endDate = (item.event as any)?.bundle?.endDate || item.event?.category?.endDate
-      if (!endDate) return
-      if (selected.isAfter(dayjs(endDate), "day")) {
-        const name = (item.event as any)?.bundle?.name || ""
-        if (name && !expiredMap.has(name)) {
-          expiredMap.set(name, dayjs(endDate).format("YYYY년 MM월 DD일"))
-        }
-      }
-    })
-    if (expiredMap.size > 0) {
-      setExpiredBundles(Array.from(expiredMap, ([name, endDate]) => ({ name, endDate })))
-      setConfirmOpen(false)
-      setEventPeriodAlert(true)
       return
     }
 
