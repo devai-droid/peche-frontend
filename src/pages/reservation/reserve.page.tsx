@@ -90,16 +90,7 @@ const SurgeryItem = ({ item, updateCartItem, checked, onCheck }: SurgeryItemProp
             <span>{name}</span>
           </div>
 
-          {/* 기간 (번들 이벤트에만 존재) */}
-          {(item.event as any)?.bundle?.endDate && (
-            <div tw="flex text-[#999] text-sm items-center gap-1 ml-1">
-              <Icon icon={CalendarSimpleIcon} size={16} />
-              <p>
-                {formatDate((item.event as any).bundle.startDate)} ~{" "}
-                {formatDate((item.event as any).bundle.endDate)}
-              </p>
-            </div>
-          )}
+          {/* 기간 서브텍스트 제거 */}
 
           {/* 설명 */}
           {description && (
