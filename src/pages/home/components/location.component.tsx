@@ -145,12 +145,7 @@ const Location = () => {
                 )}
                 <OutlineButton
                   onClick={() =>
-                    window.open(
-                      language === "ko"
-                        ? "https://kko.kakao.com/LK40uI5cBA"
-                        : "https://maps.app.goo.gl/bkkdJBLVdT7UkKtg9",
-                      "_blank",
-                    )
+                    window.open("https://maps.app.goo.gl/bkkdJBLVdT7UkKtg9", "_blank")
                   }>
                   {t("location.rightButton2")}
                 </OutlineButton>
