@@ -83,7 +83,12 @@ const SurgeryItem = ({ item, updateCartItem, checked, onCheck }: SurgeryItemProp
 
         <div tw="flex-1 flex flex-col gap-2">
           {/* 이름 */}
-          <div tw="font-semibold text-[14px] md:text-[16px] leading-snug">{name}</div>
+          <div tw="font-semibold text-[14px] md:text-[16px] leading-snug">
+            {item.event?.category && (
+              <span tw="text-[#DA7F67]">{tv(item.event.category, "name")} </span>
+            )}
+            <span>{name}</span>
+          </div>
 
           {/* 기간 (이벤트에만 존재) */}
           {item.event?.category?.startDate && (
