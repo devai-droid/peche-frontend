@@ -771,7 +771,9 @@ const Reserve = () => {
       <Modal open={eventPeriodAlert} onClose={() => setEventPeriodAlert(false)} width="max-w-[400px]">
         <div tw="font-pretendard">
           <div tw="text-[16px] md:text-[18px] font-semibold mb-4 leading-snug">
-            이달의 이벤트 상품의 예약 가능 날짜는 당월 말일까지입니다.
+            이달의 이벤트 상품의 예약 가능 날짜는
+            <br />
+            당월 말일까지입니다.
           </div>
           <div tw="text-neutral70 text-[14px] md:text-[16px] mb-6">
             예약 날짜를 다시 확인해주세요.
