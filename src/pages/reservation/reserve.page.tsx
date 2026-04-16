@@ -497,6 +497,11 @@ const Reserve = () => {
             resetCart()
             navigate("/reservation/complete")
           },
+          onError: () => {
+            setConfirmOpen(false)
+            setExpiredBundles([])
+            setEventPeriodAlert(true)
+          },
         },
       )
     } catch (e) {
