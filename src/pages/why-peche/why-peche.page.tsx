@@ -354,7 +354,7 @@ const ContactCardLink = styled.button`
   padding: 0;
 
   &:hover {
-    color: #b5604a;
+    color: #AB6655;
   }
 `
 const MapContainerLarge = styled.div`
