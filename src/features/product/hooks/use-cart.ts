@@ -46,7 +46,16 @@ function slimCartItem(item: CartItem) {
       price: e.price,
       discountPrice: e.discountPrice,
       category: e.category
-        ? { startDate: e.category.startDate, endDate: e.category.endDate }
+        ? {
+            name: e.category.name,
+            nameEN: e.category.nameEN,
+            nameZH: e.category.nameZH,
+            nameZHTW: e.category.nameZHTW,
+            nameJA: e.category.nameJA,
+            nameTH: e.category.nameTH,
+            startDate: e.category.startDate,
+            endDate: e.category.endDate,
+          }
         : undefined,
     }
   }
