@@ -690,14 +690,17 @@ const Reserve = () => {
                   }}
                   onMonthChange={(month: typeof dayjs.prototype) => {
                     const monthStart = dayjs(month).startOf("month")
-                    const expired = cart.find((item) => {
+                    const expiredNames = new Set<string>()
+                    cart.forEach((item) => {
                       const endDate = (item.event as any)?.bundle?.endDate || item.event?.category?.endDate
-                      if (!endDate) return false
-                      return dayjs(endDate).isBefore(monthStart)
+                      if (!endDate) return
+                      if (dayjs(endDate).isBefore(monthStart)) {
+                        const name = (item.event as any)?.bundle?.name || ""
+                        if (name) expiredNames.add(name)
+                      }
                     })
-                    if (expired) {
-                      const name = (expired.event as any)?.bundle?.name || ""
-                      setExpiredBundleName(name)
+                    if (expiredNames.size > 0) {
+                      setExpiredBundleName(Array.from(expiredNames).join(", "))
                       setEventPeriodAlert(true)
                     }
                   }}
