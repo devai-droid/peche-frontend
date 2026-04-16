@@ -57,6 +57,13 @@ function slimCartItem(item: CartItem) {
             endDate: e.category.endDate,
           }
         : undefined,
+      bundle: e.bundle
+        ? {
+            name: e.bundle.name,
+            startDate: e.bundle.startDate,
+            endDate: e.bundle.endDate,
+          }
+        : undefined,
     }
   }
   if (p) {

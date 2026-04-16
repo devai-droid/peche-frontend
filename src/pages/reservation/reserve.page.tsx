@@ -685,8 +685,9 @@ const Reserve = () => {
                   onMonthChange={(month: typeof dayjs.prototype) => {
                     const monthStart = dayjs(month).startOf("month")
                     const hasExpiredEvent = cart.some((item) => {
-                      if (!item.event?.category?.endDate) return false
-                      return dayjs(item.event.category.endDate).isBefore(monthStart)
+                      const endDate = (item.event as any)?.bundle?.endDate || item.event?.category?.endDate
+                      if (!endDate) return false
+                      return dayjs(endDate).isBefore(monthStart)
                     })
                     if (hasExpiredEvent) {
                       setEventPeriodAlert(true)
