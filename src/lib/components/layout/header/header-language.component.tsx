@@ -141,6 +141,10 @@ const HeaderLanguage = () => {
         i18n.changeLanguage(lang)
       }
     })
+
+    // html lang 속성을 현재 페이지 언어로 설정
+    const htmlLang = resolved === "zh-TW" ? "zh-TW" : resolved
+    document.documentElement.lang = htmlLang
   }, [urlValue])
 
   useEffect(() => {
