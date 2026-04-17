@@ -24,8 +24,7 @@ const BannerImage = styled.img`
 
 const LogoWrapper = styled.div`
   ${tw`absolute`}
-  left: 50%;
-  transform: translateX(-420px);
+  left: 24px;
   top: 211px;
 
   svg {
@@ -33,7 +32,8 @@ const LogoWrapper = styled.div`
     height: 28px;
   }
 
-  @media (max-width: 1024px) {
+  @media (min-width: 768px) and (max-width: 1024px) {
+    left: 50%;
     transform: translateX(-220px);
   }
 
