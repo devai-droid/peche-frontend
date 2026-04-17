@@ -33,15 +33,25 @@ const router = createBrowserRouter([
   },
   {
     path: "/",
-    element: (
-      <Navigate
-        replace
-        to={{
-          pathname: "/ko",
-          search: window.location.search,
-        }}
-      />
-    ),
+    element: (() => {
+      const browserLang = (navigator.language || "ko").toLowerCase()
+      let lang = "ko"
+      if (browserLang.startsWith("en")) lang = "en"
+      else if (browserLang.startsWith("zh-tw") || browserLang.startsWith("zh-hant")) lang = "tw"
+      else if (browserLang.startsWith("zh")) lang = "zh"
+      else if (browserLang.startsWith("ja")) lang = "ja"
+      else if (browserLang.startsWith("th")) lang = "th"
+      else if (browserLang.startsWith("ko")) lang = "ko"
+      return (
+        <Navigate
+          replace
+          to={{
+            pathname: `/${lang}`,
+            search: window.location.search,
+          }}
+        />
+      )
+    })(),
   },
   {
     path: "/auth/kakao/redirect",
