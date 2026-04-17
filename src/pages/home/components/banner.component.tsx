@@ -24,17 +24,13 @@ const BannerImage = styled.img`
 
 const LogoWrapper = styled.div`
   ${tw`absolute`}
-  left: 24px;
+  left: 50%;
+  transform: translateX(-140px);
   top: 211px;
 
   svg {
     width: 110px;
     height: 28px;
-  }
-
-  @media (min-width: 768px) and (max-width: 1024px) {
-    left: 50%;
-    transform: translateX(-220px);
   }
 
   @media (min-width: 1025px) {
