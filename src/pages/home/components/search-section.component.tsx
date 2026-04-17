@@ -12,16 +12,24 @@ const Section = tw.section`
   w-full bg-white py-12 md:py-20 font-pretendard tracking-tight
 `
 
-const Inner = tw.div`
-  max-w-[1440px] mx-auto px-0 md:px-10 flex flex-col md:flex-row items-stretch overflow-hidden rounded-none
+const Inner = styled.div`
+  ${tw`max-w-[1440px] mx-auto px-0 flex flex-col items-stretch overflow-hidden rounded-none`}
+
+  @media (min-width: 1025px) {
+    ${tw`px-10 flex-row`}
+  }
 `
 
 const ImageBox = styled.div`
-  ${tw`w-full md:w-1/2 bg-gray-100`}
+  ${tw`w-full bg-gray-100`}
   height: 192px;
 
   @media (min-width: 500px) {
     height: 350px;
+  }
+
+  @media (min-width: 1025px) {
+    ${tw`w-1/2`}
   }
 
   img {
@@ -31,12 +39,13 @@ const ImageBox = styled.div`
 
 const SearchBox = styled.div`
   ${tw`
-    w-full md:w-1/2 flex flex-col justify-center
-    bg-[#FFF6EE] px-6 md:px-16 py-6 md:py-0
+    w-full flex flex-col justify-center
+    bg-[#FFF6EE] px-6 py-6
   `}
   height: 192px;
 
-  @media (min-width: 768px) {
+  @media (min-width: 1025px) {
+    ${tw`w-1/2 px-16 py-0`}
     height: 350px;
   }
 `
