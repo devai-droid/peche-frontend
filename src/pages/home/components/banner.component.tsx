@@ -1,50 +1,51 @@
 import tw, { styled } from "twin.macro"
-import bannerImg from "@/assets/images/landing-page/landing.jpeg"
-import bannerMobileImg from "@/assets/images/landing-page/mobile-landing.jpeg"
-import bannerLogo from "@/assets/images/landing-page/banner-logo.png"
+import bannerImg from "@/assets/images/hero-banner-pc.png"
+import bannerMobileImg from "@/assets/images/hero-banner-mo.png"
+import { ReactComponent as HeroLogo } from "@/assets/images/hero-logo.svg"
 
 const BannerWrapper = styled.section`
   ${tw`w-full relative overflow-hidden bg-white`}
-  height: 600px;
+  height: 450px;
 
-  @media (min-width: 768px) {
+  @media (min-width: 1025px) {
     height: 700px;
   }
 `
 
-// 이미지 중앙에 고정 + max-width 제한
 const BannerImageContainer = styled.div`
   ${tw`absolute inset-0 flex justify-center bg-neutral`}
 `
 
 const BannerImage = styled.img`
   ${tw`h-full w-auto object-cover`}
-  max-width: 1440px;
+  max-width: 3000px;
   width: 100%;
 `
 
-// 이 컨테이너가 로고 포함 (1440px 제한)
 const BannerContentWrapper = styled.div`
-  ${tw`
-    absolute inset-0 flex flex-col justify-center
-    text-black px-6 md:px-16
-  `}
-`
+  ${tw`absolute inset-0 flex flex-col justify-center px-6`}
 
-const BannerContent = styled.div`
-  ${tw`
-    flex justify-start
-  `}
-  max-width: 1440px;
-  padding-left: 5%; /* 이미지 안에서 얼굴 기준 여백 조절 */
-
-  @media (max-width: 768px) {
-    padding-left: 0;
+  @media (min-width: 1025px) {
+    padding-left: 260px;
   }
 `
 
-const BannerLogo = styled.img`
-  ${tw`w-[100px] md:w-[210px] h-[25px] md:h-[54px]`}
+const LogoWrapper = styled.div`
+  ${tw`flex justify-end`}
+
+  @media (min-width: 1025px) {
+    ${tw`justify-start`}
+  }
+
+  svg {
+    width: 110px;
+    height: 28px;
+
+    @media (min-width: 1025px) {
+      width: 300px;
+      height: 76px;
+    }
+  }
 `
 
 const Banner = () => {
@@ -52,16 +53,15 @@ const Banner = () => {
     <BannerWrapper>
       <BannerImageContainer>
         <picture>
-          <source media="(max-width: 450px)" srcSet={bannerMobileImg} />
+          <source media="(max-width: 1024px)" srcSet={bannerMobileImg} />
           <BannerImage src={bannerImg} alt="Pêche Clinic banner" />
         </picture>
       </BannerImageContainer>
 
-      {/* ✅ max-width:1440px 컨테이너 내부에 로고 고정 */}
       <BannerContentWrapper>
-        <BannerContent>
-          <BannerLogo src={bannerLogo} alt="Pêche Logo" loading="lazy" />
-        </BannerContent>
+        <LogoWrapper>
+          <HeroLogo />
+        </LogoWrapper>
       </BannerContentWrapper>
     </BannerWrapper>
   )
