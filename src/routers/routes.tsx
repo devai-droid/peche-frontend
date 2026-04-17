@@ -54,10 +54,6 @@ const router = createBrowserRouter([
     })(),
   },
   {
-    path: "/zh-TW/*",
-    element: <Navigate replace to={window.location.pathname.replace("/zh-TW", "/tw") + window.location.search} />,
-  },
-  {
     path: "/auth/kakao/redirect",
     element: <KakaoRedirectedOauthPage />,
   },

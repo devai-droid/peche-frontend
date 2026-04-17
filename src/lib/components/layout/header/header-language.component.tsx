@@ -131,6 +131,13 @@ const HeaderLanguage = () => {
   const urlValue = location.pathname.split("/")[1]
 
   useEffect(() => {
+    // /zh-TW → /tw 리다이렉트
+    if (urlValue === "zh-TW") {
+      const newPath = location.pathname.replace("/zh-TW", "/tw") + location.search
+      navigate(newPath, { replace: true })
+      return
+    }
+
     const urlToLang: Record<string, string> = {
       tw: Language.TWN,
     }
