@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next"
 import { Language } from "@/lib/locales/i18n.config"
 import Modal from "@/lib/components/modal/modal.component"
 
-import whyPeche01 from "@/assets/images/why-peche-01.png"
+import whyPeche01 from "@/assets/images/trust-interior.png"
 import whyPeche02 from "@/assets/images/why-peche-02.png"
 import whyPeche03 from "@/assets/images/why-peche-03.png"
 import whyPeche04 from "@/assets/images/why-peche-04.png"

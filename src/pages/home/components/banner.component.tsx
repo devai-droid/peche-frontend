@@ -22,26 +22,27 @@ const BannerImage = styled.img`
   width: 100%;
 `
 
-const BannerContentWrapper = styled.div`
-  ${tw`absolute inset-0 flex flex-col justify-center px-6`}
-
-  @media (min-width: 1025px) {
-    padding-left: 260px;
-  }
-`
-
 const LogoWrapper = styled.div`
-  ${tw`flex justify-end`}
-
-  @media (min-width: 1025px) {
-    ${tw`justify-start`}
-  }
+  ${tw`absolute`}
+  left: 50%;
+  transform: translateX(-420px);
+  top: 211px;
 
   svg {
     width: 110px;
     height: 28px;
+  }
 
-    @media (min-width: 1025px) {
+  @media (max-width: 1024px) {
+    transform: translateX(-220px);
+  }
+
+  @media (min-width: 1025px) {
+    left: 50%;
+    transform: translateX(-460px);
+    top: 312px;
+
+    svg {
       width: 300px;
       height: 76px;
     }
@@ -58,11 +59,9 @@ const Banner = () => {
         </picture>
       </BannerImageContainer>
 
-      <BannerContentWrapper>
-        <LogoWrapper>
-          <HeroLogo />
-        </LogoWrapper>
-      </BannerContentWrapper>
+      <LogoWrapper>
+        <HeroLogo />
+      </LogoWrapper>
     </BannerWrapper>
   )
 }
