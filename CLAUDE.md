@@ -15,9 +15,12 @@
 ## 슬랙 알림
 
 - Webhook URL: AWS SSM `/peche/prod/base/slack/webhook-url` (SecureString)
+- Bot Token: AWS SSM `/peche/prod/base/slack/bot-token` (SecureString) — 쓰레드 답글용 (`chat:write`)
+- 봇 이름: 개발도우미
 - 알림 스크립트: `./scripts/slack-notify.sh`
 - 업데이트 템플릿: `./scripts/slack-notify.sh update "" "변경사항1" "변경사항2"` (버전 빈값이면 package.json에서 자동 읽기)
 - 자유 메시지: `./scripts/slack-notify.sh msg "내용"`
+- 쓰레드 답글: 슬랙 메시지 링크(`/archives/<channel>/p<ts>`) + 답글 내용 → bot-token으로 `chat.postMessage` 호출 (`thread_ts` 파라미터)
 
 ## 버전 관리 루틴
 
