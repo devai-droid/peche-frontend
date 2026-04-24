@@ -49,10 +49,10 @@
     "saturdayLastReservation": "Last Reservation at 4:00 PM",
     "openTimeDescription": "หยุด วันอาทิตย์",
     "doNotShowToday": "ปิดหน้าต่างนี้",
-    "consultationKoreanTitle": "상담 방법을 선택해주세요",
-    "consultationKoreanDescription": "*유선응대보다 원활한 카카오톡 상담을 추천드립니다.",
-    "consultationKoreanPhone": "전화",
-    "consultationKoreanKakao": "카카오톡"
+    "consultationKoreanTitle": "กรุณาเลือกวิธีการปรึกษา",
+    "consultationKoreanDescription": "*เราขอแนะนำการปรึกษาผ่าน KakaoTalk เพื่อความสะดวกมากกว่าทางโทรศัพท์",
+    "consultationKoreanPhone": "โทรศัพท์",
+    "consultationKoreanKakao": "KakaoTalk"
   },
   "specialEvents": {
     "title": "ข่าวสารกิจกรรมล่าสุด",
@@ -66,7 +66,7 @@
     "full": "คุณสนใจที่จะเรียนรู้เกี่ยวกับขั้นตอนใด?",
     "placeholder": "ค้นหาตามชื่อการรักษาหรือผลการรักษา",
     "suggestion": "การค้นหาที่แนะนำ",
-    "noResult": "검색 결과가 없습니다"
+    "noResult": "ไม่พบผลการค้นหา"
   },
   "mostPopular": {
     "title": "การรักษาที่ได้รับความนิยมมากที่สุด",
@@ -93,12 +93,12 @@
   },
   "footer": {
     "title": "ซีเนียร์คลีนิก คังนัม",
-    "nameOfCEO": "ประธาน : มินวอนจุน",
+    "nameOfCEO": "CEO : Min Won-jun",
     "companyNumber": "หมายเลขจดทะเบียนบริษัท: 671-12-02176",
     "copyright": "Copyright 2023 PECHE Corporation. All Rights Reserved.",
     "contact": "เบอร์โทรศัพท์",
     "tel": "1661-2365",
-    "openTime": "(월-금 09:00-18:00 / 주말, 공휴일 휴무)",
+    "openTime": "(จันทร์-ศุกร์ 09:00-18:00 / วันหยุดสุดสัปดาห์และวันหยุดนักขัตฤกษ์ปิดทำการ)",
     "email": "E-Mail",
     "hospitalEmail": "Peche@gmail.com",
     "address": "ตึกหลักของซีเนียร์คลีนิก",
@@ -203,7 +203,7 @@
     "qAndA": "Q&A",
     "caution": "คำเตือน",
     "noEvents": "ไม่มีสินค้ากิจกรรม",
-    "moreProcedures": "시술 더보기",
+    "moreProcedures": "ดูหัตถการเพิ่มเติม",
     "treatmentVideo": "วิดีโอแนะนำขั้นตอน",
     "eventsTitle": "ราคาและกิจกรรม",
     "eventsSubtitle": "ราคาและกิจกรรม"
@@ -227,8 +227,8 @@
     "selectAll": "เลือกทั้งหมด",
     "inquiry": "ปรึกษา",
     "inquiryButton": {
-      "call": "전화상담",
-      "kakao": "카톡상담",
+      "call": "ปรึกษาทางโทรศัพท์",
+      "kakao": "ปรึกษาทาง KakaoTalk",
       "channelTalk": "Kakao",
       "line": "LINE",
       "weChat": "WeChat",
@@ -268,7 +268,7 @@
     "memo": "บันทึก",
     "guardianConsentText": "* สำหรับผู้ทำการจองที่ยังไม่บรรนุนิติภาวะ กรุณากรอกแบบฟอร์มยินยอมการเข้ารับการทำหัตถการจากผู้ปกครองก่อนเข้ารับการรักษาที่โรงพยาบาล",
     "guardianConsent": "แบบฟอร์มยินยอมของผู้ปกครอง",
-    "authTitle": "본인인증",
+    "authTitle": "ยืนยันตัวตน",
     "agreementTitle": "ข้อกำหนดและเงื่อนไข",
     "agreeToAll": "เห็นด้วยทั้งหมด",
     "termsOfService": "(จำเป็น) ฉันยอมรับข้อกำหนดในการให้บริการ",
@@ -286,7 +286,7 @@
     "noAvailableTime": "ไม่มีเวลาว่าง",
     "loadingAvailableTime": "กำลังโหลดเวลาที่ว่าง...",
     "needAuth": "ำเป็นต้องมีการยืนยันส่วนบุคคล",
-    "eventDateOutOfRange": "이벤트 예약은 이벤트 기간 내에만 가능합니다.",
+    "eventDateOutOfRange": "การจองอีเวนต์สามารถทำได้ภายในช่วงอีเวนต์เท่านั้น",
     "smsCodeTerms": "ข้อความและอัตราข้อมูลที่อาจนำไปใช้. หากคุณเลือกที่จะรับรหัสยืนยันของเราเป็นข้อความ เราจะส่งข้อความถึงคุณหนึ่งข้อความต่อการเข้าสู่ระบบ/การพยายามจอง คุณยังจะได้รับข้อความยืนยันเกี่ยวกับการนัดหมายของคุณหลังจากเสร็จสิ้นขั้นตอนการจองแล้ว.",
     "appointmentTime": "เวลาที่จอง",
     "customer": "Customer",
@@ -327,9 +327,9 @@
     "emptyCartText": "กรุณาเคลียร์การรักษาที่เลือกทั้งหมดก่อนจองการปรึกษา",
     "cancel": "ยกเลิก",
     "emptyCart": "ล้างทั้งหมด",
-    "emptyVisitThenSelectText1": "방문 상담이 담겨있는 상태에서는 시술 선택이 어렵습니다.",
-    "emptyVisitThenSelectText2": "방문 상담을 비운 후 시술을 담아주세요.",
-    "emptyVisitThenSelectButton": "방문 상담 비우기"
+    "emptyVisitThenSelectText1": "ไม่สามารถเลือกหัตถการได้ขณะที่มีการปรึกษาเข้ารับบริการอยู่ในตะกร้า",
+    "emptyVisitThenSelectText2": "กรุณาลบการปรึกษาเข้ารับบริการก่อนเพิ่มหัตถการ",
+    "emptyVisitThenSelectButton": "ลบการปรึกษาเข้ารับบริการ"
   },
   "reservationCheckPage": {
     "reservationCheck": "การยืนยัน/เปลี่ยนแปลงการจอง",
@@ -343,7 +343,7 @@
     "reservationDate": "วันที่และเวลาการจอง",
     "treatmentList": "ชื่อการรักษาการจอง",
     "totalPrice": "จำนวนเงินทั้งหมด",
-    "vatNotIncluded": "원(부가세별도)",
+    "vatNotIncluded": "วอน (ไม่รวม VAT)",
     "reservationCancel": "ยกเลิกการจอง",
     "reservationChange": "เปลี่ยนแปลงการจอง",
     "rebook": "จองใหม่โดยใช้ข้อมูลเดิม",
@@ -362,7 +362,7 @@
     "authSent": "หมายเลขยืนยันได้ถูกส่งไปแล้ว",
     "authSuccess": "การยืนยันตัวตนของคุณเสร็จสมบูรณ์แล้ว",
     "name": "ชื่อลูกค้า",
-    "phone": "연락처",
+    "phone": "เบอร์ติดต่อ",
     "email": "",
     "auth": "การยืนยัน อีเมล",
     "emailAddress": "ที่อยู่อีเมล",
@@ -376,8 +376,8 @@
     "authButton": "ยืนยันตัวตน",
     "authError": "❗ หมายเลขยืนยันตัวตนไม่ตรงกัน",
     "authComplete": "การตรวจสอบตัวตนเสร็จสมบูรณ์",
-    "emailConfirmLine1": "이메일 인증은 해외 거주 고객 및\n외국인 고객을 위한 인증 방식입니다.\n국내 고객의 경우 카카오톡 인증을 이용해 주세요.",
-    "emailConfirmLine2": "국내 고객이 이메일 인증을 진행할 경우\n예약 확인 및 처리에 어려움이 있을 수 있습니다.",
+    "emailConfirmLine1": "การยืนยันตัวตนทางอีเมลสำหรับลูกค้าที่อาศัยอยู่ต่างประเทศและลูกค้าต่างชาติ\nลูกค้าในประเทศกรุณาใช้การยืนยันผ่าน KakaoTalk",
+    "emailConfirmLine2": "หากลูกค้าในประเทศใช้การยืนยันทางอีเมล อาจพบปัญหาในการยืนยันและดำเนินการจอง",
     "codeSentText1": "รหัสยืนยันได้ถูกส่งไปยังอีเมลที่คุณป้อนแล้ว",
     "codeSentText2": "",
     "confirm": "ตรวจสอบ",

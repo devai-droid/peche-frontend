@@ -49,10 +49,10 @@
     "saturdayLastReservation": "Last Reservation at 4:00 PM",
     "openTimeDescription": "日 休診日",
     "doNotShowToday": "今日は表示しないでください",
-    "consultationKoreanTitle": "상담 방법을 선택해주세요",
-    "consultationKoreanDescription": "*유선응대보다 원활한 카카오톡 상담을 추천드립니다.",
-    "consultationKoreanPhone": "전화",
-    "consultationKoreanKakao": "카카오톡"
+    "consultationKoreanTitle": "相談方法をお選びください",
+    "consultationKoreanDescription": "*お電話よりも、よりスムーズなカカオトークでのご相談をおすすめします。",
+    "consultationKoreanPhone": "電話",
+    "consultationKoreanKakao": "カカオトーク"
   },
   "specialEvents": {
     "title": "最新イベントニュース",
@@ -66,7 +66,7 @@
     "full": "どのような施術について知りたいですか?",
     "placeholder": "治療名または効果で検索",
     "suggestion": "Suggested searches",
-    "noResult": "검색 결과가 없습니다"
+    "noResult": "検索結果がありません"
   },
   "mostPopular": {
     "title": "人気の治療法",
@@ -93,12 +93,12 @@
   },
   "footer": {
     "title": "美しさを感覚する、PECHEクリニック",
-    "nameOfCEO": "代表者名:ミン·ウォンジュン",
+    "nameOfCEO": "代表者：ミン・ウォンジュン",
     "companyNumber": "事業者番号:671-12-02176",
     "copyright": "Copyright 2023 PECHE Corporation. All Rights Reserved.",
     "contact": "電話番号",
     "tel": "1661-2365",
-    "openTime": "(월-금 09:00-18:00 / 주말, 공휴일 휴무)",
+    "openTime": "(月〜金 09:00-18:00 / 土日祝休診)",
     "email": "E-Mail",
     "hospitalEmail": "Peche@gmail.com",
     "address": "1館住所",
@@ -203,7 +203,7 @@
     "qAndA": "Q&A",
     "caution": "注意事項",
     "noEvents": "イベント商品はありません",
-    "moreProcedures": "시술 더보기",
+    "moreProcedures": "施術をもっと見る",
     "treatmentVideo": "施術紹介動画",
     "eventsTitle": "価格とイベント",
     "eventsSubtitle": "料金・イベント"
@@ -227,8 +227,8 @@
     "selectAll": "一括選択",
     "inquiry": "相談する",
     "inquiryButton": {
-      "call": "전화상담",
-      "kakao": "카톡상담",
+      "call": "電話相談",
+      "kakao": "カカオトーク相談",
       "channelTalk": "Kakao",
       "line": "LINE",
       "weChat": "WeChat",
@@ -268,7 +268,7 @@
     "memo": "メモ",
     "guardianConsentText": "* 未成年者の予約の際、保護者施術同意書を作成してご来院ください。",
     "guardianConsent": "保護者施術同意書",
-    "authTitle": "본인인증",
+    "authTitle": "本人認証",
     "agreementTitle": "利用規約",
     "agreeToAll": "すべてに同意する",
     "termsOfService": "(必須) 利用規約に同意します。",
@@ -286,7 +286,7 @@
     "noAvailableTime": "利用可能な時間はありません。",
     "loadingAvailableTime": "利用可能な時間を読み込み中...",
     "needAuth": "本人確認が必要です。",
-    "eventDateOutOfRange": "이벤트 예약은 이벤트 기간 내에만 가능합니다.",
+    "eventDateOutOfRange": "イベント予約はイベント期間内のみ可能です。",
     "smsCodeTerms": "メッセージ料金とデータ料金が適用される場合があります。確認コードをテキスト メッセージとして受信することを選択した場合、ログイン/予約の試行ごとに 1 つのテキスト メッセージが送信されます。予約手続きが完了した後も、予約に関する確認メッセージが届きます。",
     "appointmentTime": "予約時間",
     "customer": "Customer",
@@ -327,9 +327,9 @@
     "emptyCartText": "相談予約をする前に、選択中のトリートメントをすべて解除してください。",
     "cancel": "キャンセル",
     "emptyCart": "すべてクリア",
-    "emptyVisitThenSelectText1": "방문 상담이 담겨있는 상태에서는 시술 선택이 어렵습니다.",
-    "emptyVisitThenSelectText2": "방문 상담을 비운 후 시술을 담아주세요.",
-    "emptyVisitThenSelectButton": "방문 상담 비우기"
+    "emptyVisitThenSelectText1": "来院相談が入っている状態では施術を選択できません。",
+    "emptyVisitThenSelectText2": "来院相談を削除してから施術を追加してください。",
+    "emptyVisitThenSelectButton": "来院相談を削除"
   },
   "reservationCheckPage": {
     "reservationCheck": "予約確認・変更",
@@ -343,7 +343,7 @@
     "reservationDate": "予約日時",
     "treatmentList": "予約治療名",
     "totalPrice": "合計金額",
-    "vatNotIncluded": "원(부가세별도)",
+    "vatNotIncluded": "ウォン(税別)",
     "reservationCancel": "予約をキャンセルする",
     "reservationChange": "予約の変更",
     "rebook": "同じ情報で再予約する",
@@ -362,7 +362,7 @@
     "authSent": "認証番号が送信されました。",
     "authSuccess": "本人認証が完了しました。",
     "name": "お名前",
-    "phone": "연락처",
+    "phone": "連絡先",
     "email": "メール",
     "auth": "認証",
     "emailAddress": "電子メールアドレス",
@@ -376,8 +376,8 @@
     "authButton": "認証",
     "authError": "❗ 認証番号が一致しません。",
     "authComplete": "本人確認完了",
-    "emailConfirmLine1": "이메일 인증은 해외 거주 고객 및\n외국인 고객을 위한 인증 방식입니다.\n국내 고객의 경우 카카오톡 인증을 이용해 주세요.",
-    "emailConfirmLine2": "국내 고객이 이메일 인증을 진행할 경우\n예약 확인 및 처리에 어려움이 있을 수 있습니다.",
+    "emailConfirmLine1": "メール認証は海外在住のお客様および外国人のお客様向けの認証方法です。\n国内のお客様はカカオトーク認証をご利用ください。",
+    "emailConfirmLine2": "国内のお客様がメール認証を行われる場合、予約確認および処理に支障が生じる可能性があります。",
     "codeSentText1": "入力したメールアドレスに確認コードが送信されました。",
     "codeSentText2": "",
     "confirm": "チェック",
