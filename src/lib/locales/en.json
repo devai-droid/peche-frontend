@@ -218,7 +218,8 @@
     "pop": "event",
     "reservation": "Appointment",
     "save": "Add",
-    "vatNotIncluded": "*VAT 10% not included"
+    "vatNotIncluded": "*VAT 10% not included",
+    "confirm": "Confirm"
   },
   "button": {
     "reserve": "Reservation",
@@ -309,7 +310,12 @@
     "reservationModalText2": "- If you do not receive treatment on the same day as the consultation, a separate treatment fee may be charged.",
     "reservationModalCancelButton": "Cancel",
     "reservationModalReserveButton": "Make a reservation",
-    "timeExpired": "Reservation time has already passed or is within 30 minutes. Please choose again."
+    "timeExpired": "Reservation time has already passed or is within 30 minutes. Please choose again.",
+    "agreementRequired": "Please agree to the required terms.",
+    "selectTimeRequired": "Please select a reservation time.",
+    "eventPeriodNotAvailable": "This is not an available reservation date for the event product.",
+    "bundleUntilFormat": "{{name}}: until {{endDate}}",
+    "endDateFormat": "MMM DD, YYYY"
   },
   "cart": {
     "shoppingCart": "Shopping Cart",
@@ -350,7 +356,8 @@
     "cancel": "Cancel",
     "cancelConfirm": "Are you sure you want to cancel your reservation?",
     "back": "Go back",
-    "reservationCanceled": "Reservation canceled"
+    "reservationCanceled": "Reservation canceled",
+    "cancelError": "An error occurred during cancellation."
   },
   "error": {
     "verificationNeeded": "Identity verification is required.",

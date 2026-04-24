@@ -218,7 +218,8 @@
     "pop": "event",
     "reservation": "预约",
     "save": "预约",
-    "vatNotIncluded": "*附加税另算（+10％）"
+    "vatNotIncluded": "*附加税另算（+10％）",
+    "confirm": "確認"
   },
   "button": {
     "reserve": "预约",
@@ -309,7 +310,12 @@
     "reservationModalText2": "-如果您未在諮詢當天接受治療，可能需要另行支付治療費用。",
     "reservationModalCancelButton": "取消",
     "reservationModalReserveButton": "進行預訂",
-    "timeExpired": "預約時間已過或距離現在不足 30 分鐘，請重新選擇。"
+    "timeExpired": "預約時間已過或距離現在不足 30 分鐘，請重新選擇。",
+    "agreementRequired": "請同意必要的條款。",
+    "selectTimeRequired": "請選擇預約時間。",
+    "eventPeriodNotAvailable": "不是活動商品的可預約日期。",
+    "bundleUntilFormat": "{{name}}: 截至 {{endDate}}",
+    "endDateFormat": "YYYY年MM月DD日"
   },
   "cart": {
     "shoppingCart": "購物車",
@@ -350,7 +356,8 @@
     "cancel": "取消",
     "cancelConfirm": "您確定要取消預訂嗎？",
     "back": "回去",
-    "reservationCanceled": "預訂已取消"
+    "reservationCanceled": "預訂已取消",
+    "cancelError": "取消過程中發生錯誤。"
   },
   "error": {
     "verificationNeeded": "需要本人认证。",

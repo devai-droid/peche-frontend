@@ -218,7 +218,8 @@
     "pop": "event",
     "reservation": "การจอง",
     "save": "เพิ่ม",
-    "vatNotIncluded": "*ราคาไม่รวม Vat10%"
+    "vatNotIncluded": "*ราคาไม่รวม Vat10%",
+    "confirm": "ยืนยัน"
   },
   "button": {
     "reserve": "ทำการจอง",
@@ -309,7 +310,12 @@
     "reservationModalText2": "- หากคุณไม่ได้รับการรักษาในวันเดียวกับวันที่ปรึกษาแพทย์อาจมีการเรียกเก็บ ค่ารักษาเพิ่มเติม",
     "reservationModalCancelButton": "ยกเลิก",
     "reservationModalReserveButton": "ทำการสำรองที่นั่ง",
-    "timeExpired": "Reservation time has already passed or is within 30 minutes. Please choose again."
+    "timeExpired": "Reservation time has already passed or is within 30 minutes. Please choose again.",
+    "agreementRequired": "กรุณายอมรับข้อกำหนดที่จำเป็น",
+    "selectTimeRequired": "กรุณาเลือกเวลาจอง",
+    "eventPeriodNotAvailable": "ไม่ใช่วันที่สามารถจองอีเวนต์ได้",
+    "bundleUntilFormat": "{{name}}: ถึง {{endDate}}",
+    "endDateFormat": "DD MMM YYYY"
   },
   "cart": {
     "shoppingCart": "รถเข็นสินค้า",
@@ -350,7 +356,8 @@
     "cancel": "ยกเลิก",
     "cancelConfirm": "คุณแน่ใจหรือไม่ว่าต้องการยกเลิกการจอง?",
     "back": "กลับไป",
-    "reservationCanceled": "การจองถูกยกเลิก"
+    "reservationCanceled": "การจองถูกยกเลิก",
+    "cancelError": "เกิดข้อผิดพลาดระหว่างการยกเลิก"
   },
   "error": {
     "verificationNeeded": "จำเป็นต้องมีการยืนยันส่วนบุคคล",

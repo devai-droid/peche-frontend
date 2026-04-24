@@ -275,7 +275,7 @@ const Reservations = () => {
     if (!selectedDatetime) return
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     await updateReservation({ id: changeId!, data: { datetime: selectedDatetime } })
-    alert("예약이 변경되었습니다.")
+    alert(t("reservePage.reservationChangeConfirm"))
     setChangeId(null)
   }
 
@@ -284,9 +284,9 @@ const Reservations = () => {
 
     try {
       await removeReservation({ id: cancelId })
-      alert("예약이 취소되었습니다.")
+      alert(t("reservePage.reservationCancelConfirm"))
     } catch (e) {
-      alert("취소 중 오류가 발생했습니다.")
+      alert(t("reservationCheckPage.cancelError"))
     }
 
     setCancelId(null)
@@ -703,7 +703,7 @@ const Reservations = () => {
       </div>
 
       {/* ---------------- 변경 모달 ---------------- */}
-      <Modal open={!!changeId} title="예약 변경" onClose={() => setChangeId(null)}>
+      <Modal open={!!changeId} title={t("reservationCheckPage.reservationChange")} onClose={() => setChangeId(null)}>
         <div
           tw="p-4 overflow-y-auto font-pretendard"
           css={{

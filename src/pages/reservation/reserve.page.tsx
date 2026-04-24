@@ -415,17 +415,17 @@ const Reserve = () => {
   // 예약 버튼 클릭 시 모달만 여는 함수
   const openConfirmModal = () => {
     if (!authInfo) {
-      alert("본인인증이 필요합니다.")
+      alert(t("reservePage.needAuth"))
       return
     }
 
     if (!agree.terms || !agree.privacy) {
-      alert("필수 약관을 동의해주세요.")
+      alert(t("reservePage.agreementRequired"))
       return
     }
 
     if (!selectedDatetime) {
-      alert("예약 시간을 선택해주세요.")
+      alert(t("reservePage.selectTimeRequired"))
       return
     }
 
@@ -440,7 +440,7 @@ const Reserve = () => {
       if (selected.isAfter(dayjs(endDate), "day")) {
         const name = (item.event as any)?.bundle?.name || ""
         if (name && !expiredMap.has(name)) {
-          expiredMap.set(name, dayjs(endDate).format("YYYY년 MM월 DD일"))
+          expiredMap.set(name, dayjs(endDate).format(t("reservePage.endDateFormat")))
         }
       }
     })
@@ -729,7 +729,7 @@ const Reserve = () => {
                       if (dayjs(endDate).isBefore(monthStart)) {
                         const name = (item.event as any)?.bundle?.name || ""
                         if (name && !expiredMap.has(name)) {
-                          expiredMap.set(name, dayjs(endDate).format("YYYY년 MM월 DD일"))
+                          expiredMap.set(name, dayjs(endDate).format(t("reservePage.endDateFormat")))
                         }
                       }
                     })
@@ -816,18 +816,20 @@ const Reserve = () => {
       <Modal open={eventPeriodAlert} onClose={() => setEventPeriodAlert(false)} width="max-w-[400px]">
         <div tw="font-pretendard">
           <div tw="text-[16px] md:text-[18px] font-semibold mb-4 leading-snug">
-            이벤트 상품의 예약 가능 날짜가 아닙니다.
+            {t("reservePage.eventPeriodNotAvailable")}
           </div>
           <div tw="text-neutral70 text-[14px] md:text-[16px] mb-6 leading-relaxed">
             {expiredBundles.map((b, i) => (
-              <div key={i}>{b.name}: ~{b.endDate}까지</div>
+              <div key={i}>
+                {t("reservePage.bundleUntilFormat", { name: b.name, endDate: b.endDate })}
+              </div>
             ))}
           </div>
           <Button
             tw="w-full h-[40px] text-[13px] md:text-[15px]"
             style={{ variant: "filled", color: "point", size: "sm" }}
             onClick={() => setEventPeriodAlert(false)}>
-            확인
+            {t("common.confirm")}
           </Button>
         </div>
       </Modal>

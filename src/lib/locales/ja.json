@@ -218,7 +218,8 @@
     "pop": "event",
     "reservation": "予約",
     "save": "追加",
-    "vatNotIncluded": "*消費税別途（+10％）"
+    "vatNotIncluded": "*消費税別途（+10％）",
+    "confirm": "確認"
   },
   "button": {
     "reserve": "ご予約はこちら",
@@ -309,7 +310,12 @@
     "reservationModalText2": "・診察当日に施術を受けられなかった場合は、別途施術料がかかる場合がございます。",
     "reservationModalCancelButton": "キャンセル",
     "reservationModalReserveButton": "予約する",
-    "timeExpired": "選択された予約時間はすでに過ぎているか、現在時刻から30分以内です。もう一度お選びください。"
+    "timeExpired": "選択された予約時間はすでに過ぎているか、現在時刻から30分以内です。もう一度お選びください。",
+    "agreementRequired": "必須の利用規約に同意してください。",
+    "selectTimeRequired": "予約時間を選択してください。",
+    "eventPeriodNotAvailable": "イベント商品の予約可能日ではありません。",
+    "bundleUntilFormat": "{{name}}: {{endDate}}まで",
+    "endDateFormat": "YYYY年MM月DD日"
   },
   "cart": {
     "shoppingCart": "ショッピングカート",
@@ -350,7 +356,8 @@
     "cancel": "キャンセル",
     "cancelConfirm": "本当に予約をキャンセルしますか？",
     "back": "戻る",
-    "reservationCanceled": "予約をキャンセルしました"
+    "reservationCanceled": "予約をキャンセルしました",
+    "cancelError": "キャンセル中にエラーが発生しました。"
   },
   "error": {
     "verificationNeeded": "本人確認が必要です。",
