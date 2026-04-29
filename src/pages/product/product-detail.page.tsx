@@ -214,7 +214,10 @@ const ProductDetail = () => {
     type: "normal" as const,
     name: tv(product, "name"),
     description: tv(product, "description"),
-    price: `${product.price.toLocaleString()} ${t("reservePage.won")}`,
+    price: `${(product.discountPrice || product.price).toLocaleString()} ${t("reservePage.won")}`,
+    originalPrice: product.discountPrice
+      ? `${product.price.toLocaleString()} ${t("reservePage.won")}`
+      : undefined,
     addToCart: () => {
       const result = addToCart({ product })
       if (result?.blockedByInquiry) {

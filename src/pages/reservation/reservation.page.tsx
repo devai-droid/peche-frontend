@@ -354,7 +354,7 @@ const Reservations = () => {
     const events = r.events.map((e) => e.event.name)
 
     const totalPrice =
-      r.products.reduce((a, p) => a + p.product.price, 0) +
+      r.products.reduce((a, p) => a + (p.product.discountPrice || p.product.price), 0) +
       r.events.reduce((a, e) => a + (e.event.discountPrice || e.event.price), 0)
 
     // 지난 예약인지 계산
