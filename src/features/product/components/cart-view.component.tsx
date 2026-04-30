@@ -256,6 +256,7 @@ const SurgeryList = () => {
 
             <div tw="text-[18px] md:text-[22px] font-semibold text-primary">
               {cart
+                .filter((cur) => checkedList.includes(cur.event?.id || cur.product?.id || ""))
                 .reduce(
                   (acc, cur) =>
                     acc +
@@ -378,17 +379,19 @@ const BottomSheet = () => {
     setInquiry(checked)
   }
 
-  const totalPrice = cart.reduce(
-    (acc, cur) =>
-      acc +
-      cur.count *
-        (cur.event?.discountPrice ||
-          cur.event?.price ||
-          cur.product?.discountPrice ||
-          cur.product?.price ||
-          0),
-    0,
-  )
+  const totalPrice = cart
+    .filter((cur) => checkedList.includes(cur.event?.id || cur.product?.id || ""))
+    .reduce(
+      (acc, cur) =>
+        acc +
+        cur.count *
+          (cur.event?.discountPrice ||
+            cur.event?.price ||
+            cur.product?.discountPrice ||
+            cur.product?.price ||
+            0),
+      0,
+    )
 
   return (
     <div

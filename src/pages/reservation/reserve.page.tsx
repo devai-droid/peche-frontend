@@ -312,6 +312,7 @@ const SurgeryList = ({
           </div>
           <div tw="text-[18px] md:text-[22px] font-bold">
             {cart
+              .filter((cur) => checkedList.includes(cur.event?.id || cur.product?.id || ""))
               .reduce(
                 (acc, cur) =>
                   acc +
