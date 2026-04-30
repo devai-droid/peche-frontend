@@ -41,7 +41,7 @@ const SurgeryItem = ({
   const tv = useLanguageValue()
   const name = tv(item.product ?? (item.event as Event), "name")
   const description = tv(item.product ?? (item.event as Event), "description")
-  const discount = item.event?.discountPrice
+  const discount = item.event?.discountPrice ?? item.product?.discountPrice
   const price = item.event?.price || item.product?.price
 
   return (
@@ -260,7 +260,11 @@ const SurgeryList = () => {
                   (acc, cur) =>
                     acc +
                     cur.count *
-                      (cur.event?.discountPrice || cur.event?.price || cur.product?.price || 0),
+                      (cur.event?.discountPrice ||
+                        cur.event?.price ||
+                        cur.product?.discountPrice ||
+                        cur.product?.price ||
+                        0),
                   0,
                 )
                 .toLocaleString()}
@@ -376,7 +380,13 @@ const BottomSheet = () => {
 
   const totalPrice = cart.reduce(
     (acc, cur) =>
-      acc + cur.count * (cur.event?.discountPrice || cur.event?.price || cur.product?.price || 0),
+      acc +
+      cur.count *
+        (cur.event?.discountPrice ||
+          cur.event?.price ||
+          cur.product?.discountPrice ||
+          cur.product?.price ||
+          0),
     0,
   )
 

@@ -76,6 +76,7 @@ function slimCartItem(item: CartItem) {
       nameZH: p.nameZH,
       nameZHTW: p.nameZHTW,
       price: p.price,
+      discountPrice: p.discountPrice,
     }
   }
   return slim

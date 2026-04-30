@@ -4,6 +4,21 @@
 
 ---
 
+## [1.9.8] - 2026-04-28
+
+### Fixed
+
+- 상시상품(이벤트 외 일반상품) 장바구니에 담을 때 할인가가 빠지고 정상가만 적용되던 버그 수정
+  - 사이드 카트 / 예약 페이지 / 예약 확인 페이지에서 product 항목도 discountPrice 우선 적용
+  - 합계 계산식에 product.discountPrice fallback 추가
+  - 쿠키 백업(slimCartItem)에 product.discountPrice 포함 (Safari ITP 대응)
+
+### Added
+
+- 예약 페이지 하단에 "총 금액 (부가세 별도)" 섹션 신규 추가
+
+---
+
 ## [1.9.7] - 2026-04-20
 
 ### Fixed

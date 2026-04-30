@@ -64,7 +64,7 @@ const SurgeryItem = ({ item, updateCartItem, checked, onCheck }: SurgeryItemProp
   const name = tv(item.product ?? item.event!, "name")
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const description = tv(item.product ?? item.event!, "description")
-  const discount = item.event?.discountPrice
+  const discount = item.event?.discountPrice ?? item.product?.discountPrice
   const price = item.event?.price || item.product?.price
 
   const formatDate = (value: string) => {
@@ -301,6 +301,31 @@ const SurgeryList = ({
             onChange={(e) => handleInquiryCheckbox(e.target.checked)}
             label={t("reservePage.bookConsultation")}
           />
+        </div>
+
+        <div tw="mt-3 px-5 py-4 bg-primary text-white flex justify-between items-center">
+          <div tw="text-[16px] md:text-[20px] font-semibold">
+            {t("cart.totalPrice")}{" "}
+            <span tw="text-[12px] md:text-[14px] font-normal">
+              {t("cart.vatNotIncluded")}
+            </span>
+          </div>
+          <div tw="text-[18px] md:text-[22px] font-bold">
+            {cart
+              .reduce(
+                (acc, cur) =>
+                  acc +
+                  cur.count *
+                    (cur.event?.discountPrice ||
+                      cur.event?.price ||
+                      cur.product?.discountPrice ||
+                      cur.product?.price ||
+                      0),
+                0,
+              )
+              .toLocaleString()}
+            {t("cart.won")}
+          </div>
         </div>
       </div>
 
