@@ -27,10 +27,54 @@
 - **버전 규칙**: Semantic Versioning
   - `x.Y.0` (minor): 새 기능 추가 (새 페이지, 새 메뉴 등)
   - `x.y.Z` (patch): 버그 수정, UI 수정, 텍스트/이미지 변경
-- **배포 시 필수 순서**:
-  1. `package.json` 버전 올리기
-  2. `CHANGELOG.md`에 변경사항 기록
-  3. 커밋 → `STAGE=prod make shoot` → 슬랙 알림
+
+## 작업 프로세스 (코드 수정 → 배포)
+
+⚠️ 이 프로젝트는 **여러 PC(회사/집)에서 번갈아 작업**되므로, 아래 순서를 매번 동일하게 따라야 환경 차이·동기화 누락이 안 생깁니다. 한 단계라도 빼먹으면 다른 PC와 갈라져서 머지 지옥 발생.
+
+### 1) 작업 시작 전 (필수)
+
+```bash
+git fetch origin
+git status              # 미커밋 변경 / 다른 PC 작업 흔적 확인
+git pull origin develop # 다른 PC가 push한 게 있으면 가져오기
+yarn install            # lockfile이 변경됐으면 반드시 실행
+```
+
+- 미커밋 변경이 있으면 먼저 commit 또는 stash 후 pull
+- `develop`이 `origin/develop`보다 앞서있으면 → 이전 작업이 push 누락된 것. 그것부터 push하고 시작
+
+### 2) 작업 중
+
+- 의미 단위로 작은 커밋 (영역별 분리 — 나중에 문제 시 `git revert`로 그 커밋만 되돌릴 수 있어 안전)
+- 커밋 메시지 컨벤션: `feat: ...`, `fix: ...`, `chore: ...`, `docs: ...`
+- 의존성 변경했으면 `yarn.lock`도 같이 커밋
+
+### 3) 작업 종료 시 (반드시 이 순서)
+
+1. `package.json` 버전 올리기 (patch/minor는 위 「버전 관리 루틴」 참조)
+2. `CHANGELOG.md`에 해당 버전 entry 추가
+3. `git add <변경 파일들>` → `git commit -m "feat/fix: ..."`
+4. **`git push origin develop`** ← 이 단계 빠뜨리면 다른 PC와 동기화 즉시 깨짐
+5. `STAGE=prod make shoot` (orval → webpack build → S3 sync → CloudFront 무효화)
+6. CloudFront 무효화 완료 대기 (보통 1~2분)
+7. **시크릿 창**으로 https://pecheskin.clinic 열어서 검증 (브라우저 캐시 우회)
+8. 슬랙 알림: `./scripts/slack-notify.sh update "" "변경사항1" "변경사항2"`
+
+### 4) 검증 체크리스트
+
+- [ ] 변경한 영역의 핵심 동작
+- [ ] 인접 페이지 회귀 (예: 카트 변경 → 시술 페이지 + 예약 페이지 + 예약 확인 페이지 모두 확인)
+- [ ] 모바일 + PC 양쪽
+- [ ] 외국어 사이트 (locales 변경했을 때만)
+- [ ] 시크릿 창 (캐시 우회)
+
+### 5) 금지사항
+
+- ❌ **작업 후 push 안 한 채 다른 PC에서 새 작업 시작** — 양 PC가 갈라져서 추후 머지 지옥
+- ❌ `origin/develop`과 동기화 안 된 채로 운영 배포 — 운영은 항상 push된 상태와 일치해야 함
+- ❌ 의존성 변경 후 `yarn.lock` 커밋 누락
+- ❌ `package.json` 버전·`CHANGELOG.md` 업데이트 빠뜨린 채 배포
 
 ## 배포
 
