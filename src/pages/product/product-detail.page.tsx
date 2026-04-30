@@ -292,7 +292,7 @@ const ProductDetail = () => {
             {/* 리스트 */}
             <div>
               {displayedList.length === 0 && activeTab === "event" && (
-                <div tw="text-center text-neutral70 py-12 bg-white text-[15px] md:text-[17px]">
+                <div tw="text-center text-neutral70 py-12 text-[15px] md:text-[17px]">
                   {t("productDetail.noEvents")}
                 </div>
               )}
