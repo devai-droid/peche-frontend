@@ -52,6 +52,10 @@ yarn install            # lockfile이 변경됐으면 반드시 실행
 
 ### 3) 작업 종료 시 (반드시 이 순서)
 
+⚠️ **대원칙: 배포는 반드시 `develop` 브랜치에서.** 작업 브랜치를 직접 빌드/배포하면 develop에 있는 다른 변경이 빠진 채 운영에 올라가 페이지가 깨집니다.
+
+#### Case A — `develop`에 직접 작업한 경우
+
 1. `package.json` 버전 올리기 (patch/minor는 위 「버전 관리 루틴」 참조)
 2. `CHANGELOG.md`에 해당 버전 entry 추가
 3. `git add <변경 파일들>` → `git commit -m "feat/fix: ..."`
@@ -60,6 +64,21 @@ yarn install            # lockfile이 변경됐으면 반드시 실행
 6. CloudFront 무효화 완료 대기 (보통 1~2분)
 7. **시크릿 창**으로 https://pecheskin.clinic 열어서 검증 (브라우저 캐시 우회)
 8. 슬랙 알림: `./scripts/slack-notify.sh update "" "변경사항1" "변경사항2"`
+
+#### Case B — 작업 브랜치(`fix/xxx`, `feature/xxx`)를 만들어 작업한 경우
+
+1. `package.json` 버전 올리기
+2. `CHANGELOG.md`에 해당 버전 entry 추가
+3. `git add <변경 파일들>` → `git commit -m "feat/fix: ..."`
+4. `git push origin <브랜치명>`
+5. GitHub에서 PR 생성 (필요 시 리뷰)
+6. ★ **PR 머지** — 이 단계 빠뜨리면 `develop`에 fix 코드가 안 들어감 (어제 깨진 원인)
+7. `git checkout develop && git pull origin develop` ← 머지된 결과를 로컬로 받아오기
+8. `STAGE=prod make shoot` ← 반드시 `develop`에서. 작업 브랜치 직접 배포 금지
+9. CloudFront 무효화 완료 대기 (1~2분)
+10. **시크릿 창**으로 https://pecheskin.clinic 검증
+11. 슬랙 알림: `./scripts/slack-notify.sh update "" "변경사항1" "변경사항2"`
+12. 머지된 작업 브랜치 삭제: `git push origin --delete <브랜치명>`
 
 ### 4) 검증 체크리스트
 
