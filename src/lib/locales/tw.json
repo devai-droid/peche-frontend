@@ -332,6 +332,7 @@
     "duplicateModalTitle": "不能同時選擇",
     "duplicateModalText": "“到診後選擇”和“使用現有套餐”不能同時選擇。請先取消其他選項。",
     "memoRequired": "請輸入備註",
+    "clearPackage": "清除套餐使用",
     "selectTimeRequired": "請選擇預約時間。",
     "eventPeriodNotAvailable": "不是活動商品的可預約日期。",
     "bundleUntilFormat": "{{name}}: 截至 {{endDate}}",

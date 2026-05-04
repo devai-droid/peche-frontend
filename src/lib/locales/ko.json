@@ -335,7 +335,8 @@
     "packageCartConflictText": "선택한 시술을 모두 비운 후 보유권 사용을 선택해주세요.",
     "duplicateModalTitle": "중복 선택 불가",
     "duplicateModalText": "“방문 상담 후 시술 선택”과 “기존 시술 보유권 사용”은 동시에 선택할 수 없습니다. 기존 선택을 해제 후 다시 선택해주세요.",
-    "memoRequired": "메모를 입력해주세요"
+    "memoRequired": "메모를 입력해주세요",
+    "clearPackage": "보유권 사용 비우기"
   },
   "cart": {
     "shoppingCart": "장바구니",

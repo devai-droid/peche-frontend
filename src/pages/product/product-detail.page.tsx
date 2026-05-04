@@ -114,7 +114,7 @@ const ProductItem = ({
 
 const ProductDetail = () => {
   const { t, i18n } = useTranslation()
-  const { addToCart, inquiry, setInquiry, setInquiryMemo, setUsePackageChecked } = useCart()
+  const { addToCart, inquiry, setInquiry, setInquiryMemo, usePackageChecked, setUsePackageChecked } = useCart()
   const { id } = useParams<{ id: string }>()
   const langQuery = useLanguageQuery()
   const tv = useLanguageValue()
@@ -167,6 +167,13 @@ const ProductDetail = () => {
       setPendingAddItem(null)
     }
   }, [inquiry])
+
+  React.useEffect(() => {
+    if (!usePackageChecked && pendingAddItem) {
+      addToCart(pendingAddItem)
+      setPendingAddItem(null)
+    }
+  }, [usePackageChecked])
 
   if (!productDetail || !products) return <Page />
 
@@ -449,7 +456,7 @@ const ProductDetail = () => {
                 setUsePackageChecked(false)
                 setShowPackageBlockModal(false)
               }}>
-              {t("cart.emptyCart")}
+              {t("reservePage.clearPackage")}
             </Button>
           </div>
         </div>

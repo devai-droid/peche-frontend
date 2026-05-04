@@ -161,7 +161,7 @@ const Events = () => {
   const { i18n } = useTranslation()
   const lang = i18n.language as keyof typeof keyMatch
 
-  const { addToCart, inquiry, setInquiry, setInquiryMemo, setUsePackageChecked } = useCart()
+  const { addToCart, inquiry, setInquiry, setInquiryMemo, usePackageChecked, setUsePackageChecked } = useCart()
   const [showPackageBlockModal, setShowPackageBlockModal] = React.useState(false)
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -311,6 +311,13 @@ const Events = () => {
       setPendingAddEvent(null)
     }
   }, [inquiry])
+
+  React.useEffect(() => {
+    if (!usePackageChecked && pendingAddEvent) {
+      addToCart(pendingAddEvent)
+      setPendingAddEvent(null)
+    }
+  }, [usePackageChecked])
 
   useLayoutEffect(() => {
     if (
@@ -625,7 +632,7 @@ const Events = () => {
                 setUsePackageChecked(false)
                 setShowPackageBlockModal(false)
               }}>
-              {t("cart.emptyCart")}
+              {t("reservePage.clearPackage")}
             </Button>
           </div>
         </div>

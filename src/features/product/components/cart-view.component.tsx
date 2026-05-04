@@ -312,7 +312,7 @@ const SurgeryList = () => {
         </div>
       </div>
       <Button
-        disabled={cart.length === 0 && !inquiryChecked}
+        disabled={cart.length === 0 && !inquiryChecked && !usePackageChecked}
         onClick={() => {
           navigate("/reservation/new", {
             state: {
