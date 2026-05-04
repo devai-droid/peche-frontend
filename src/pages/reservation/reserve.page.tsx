@@ -274,6 +274,10 @@ const SurgeryList = ({
           onClick={() => {
             removeFromCart(checkedList)
             setCheckedList([])
+            setInquiryChecked(false)
+            setInquiry(false)
+            setInquiryMemo("")
+            setUsePackageChecked(false)
           }}>
           {t("button.deleteSelection")}
         </Button>
