@@ -117,6 +117,8 @@ const SurgeryList = () => {
     resetCart,
     inquiryMemo,
     setInquiryMemo,
+    usePackageChecked,
+    setUsePackageChecked,
   } = useCart()
 
   const navigate = useCustomNavigate()
@@ -141,7 +143,14 @@ const SurgeryList = () => {
     setInquiryChecked(inquiry)
   }, [inquiry])
 
+  const [showDuplicateModal, setShowDuplicateModal] = React.useState(false)
+  const [showPackageCartModal, setShowPackageCartModal] = React.useState(false)
+
   const handleInquiryCheckbox = (checked: boolean) => {
+    if (checked && usePackageChecked) {
+      setShowDuplicateModal(true)
+      return
+    }
     if (checked && cart.length > 0) {
       setShowInquiryModal(true)
       return
@@ -149,6 +158,19 @@ const SurgeryList = () => {
 
     setInquiryChecked(checked)
     setInquiry(checked)
+  }
+
+  const handlePackageCheckbox = (checked: boolean) => {
+    if (checked && inquiryChecked) {
+      setShowDuplicateModal(true)
+      return
+    }
+    if (checked && cart.length > 0) {
+      setShowPackageCartModal(true)
+      return
+    }
+
+    setUsePackageChecked(checked)
   }
 
   return (
@@ -197,7 +219,7 @@ const SurgeryList = () => {
             />
           ))}
           {/* 장바구니 비어있을 때 보여줄 메시지 */}
-          {cart.length === 0 && !inquiryChecked && (
+          {cart.length === 0 && !inquiryChecked && !usePackageChecked && (
             <div tw="py-6 text-neutral50 text-[14px] md:text-[16px]">{t("cart.noSelection")}</div>
           )}
         </div>
@@ -221,27 +243,41 @@ const SurgeryList = () => {
                 </span>
               </div>
             </div>
-            <div tw="text-primary text-[10px] md:text-[12px] font-semibold">
-              {t("cart.request")}
-            </div>
-
-            <textarea
-              tw="w-full mt-2 p-3 border border-neutral20 rounded-[1px] text-[14px] h-32"
-              placeholder={t("cart.writeRequest")}
-              value={inquiryMemo}
-              maxLength={200}
-              onChange={(e) => setInquiryMemo(e.target.value)}
-            />
-
-            <div tw="text-right text-neutral50 text-[12px] mt-1">{inquiryMemo.length}/200</div>
           </div>
         )}
 
-        <div tw="pt-4 border-t border-t-[0.5px] border-neutralBlack text-[14px] md:text-[16px] font-semibold">
+        {usePackageChecked && cart.length === 0 && (
+          <div tw="mt-6">
+            <div tw="flex flex-col gap-3 font-pretendard mb-4">
+              <div tw="text-[14px] md:text-[16px] font-semibold">
+                <Checkbox
+                  checked={usePackageChecked}
+                  onChange={(event) => handlePackageCheckbox(event.target.checked)}
+                  label={t("reservePage.usePackage")}
+                />
+              </div>
+              <div tw="flex items-center gap-2 mt-1 ml-8">
+                <span tw="text-neutral50 line-through text-[13px] md:text-[14px]">
+                  {t("cart.freePrice")}
+                </span>
+                <span tw="text-[16px] md:text-[18px] font-bold text-neutralBlack">
+                  {t("cart.freePrice")}
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div tw="pt-4 border-t border-t-[0.5px] border-neutralBlack text-[14px] md:text-[16px] font-semibold flex flex-col gap-2">
           <Checkbox
             checked={inquiryChecked}
             onChange={(event) => handleInquiryCheckbox(event.target.checked)}
             label={t("cart.visitThenSelect")}
+          />
+          <Checkbox
+            checked={usePackageChecked}
+            onChange={(event) => handlePackageCheckbox(event.target.checked)}
+            label={t("reservePage.usePackage")}
           />
         </div>
 
@@ -330,6 +366,62 @@ const SurgeryList = () => {
                 setShowInquiryModal(false)
               }}>
               {t("cart.emptyCart")}
+            </Button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* 보유권 사용 + 카트 시술 동시 선택 모달 */}
+      <Modal
+        open={showPackageCartModal}
+        width="max-w-[400px]"
+        onClose={() => setShowPackageCartModal(false)}>
+        <div tw="flex flex-col items-start justify-center h-full font-pretendard">
+          <div tw="text-left text-[16px] lg:text-[18px] font-semibold leading-snug">
+            {t("reservePage.packageCartConflictTitle")}
+          </div>
+          <div tw="text-neutral70 text-[14px] lg:text-[16px] text-left mt-3">
+            {t("reservePage.packageCartConflictText")}
+          </div>
+          <div tw="flex justify-end gap-2 mt-8">
+            <Button
+              tw="w-[150px]"
+              style={{ variant: "outlined", color: "point", size: "sm" }}
+              onClick={() => setShowPackageCartModal(false)}>
+              {t("cart.cancel")}
+            </Button>
+            <Button
+              tw="w-[150px]"
+              style={{ variant: "filled", color: "point", size: "sm" }}
+              onClick={() => {
+                resetCart()
+                setUsePackageChecked(true)
+                setShowPackageCartModal(false)
+              }}>
+              {t("cart.emptyCart")}
+            </Button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* 중복 선택 불가 모달 */}
+      <Modal
+        open={showDuplicateModal}
+        width="max-w-[400px]"
+        onClose={() => setShowDuplicateModal(false)}>
+        <div tw="flex flex-col items-start justify-center h-full font-pretendard">
+          <div tw="text-left text-[16px] lg:text-[18px] font-semibold leading-snug">
+            {t("reservePage.duplicateModalTitle")}
+          </div>
+          <div tw="text-neutral70 text-[14px] lg:text-[16px] text-left mt-3">
+            {t("reservePage.duplicateModalText")}
+          </div>
+          <div tw="mt-8 w-full">
+            <Button
+              tw="w-full"
+              style={{ variant: "filled", color: "point", size: "sm" }}
+              onClick={() => setShowDuplicateModal(false)}>
+              {t("common.confirm")}
             </Button>
           </div>
         </div>

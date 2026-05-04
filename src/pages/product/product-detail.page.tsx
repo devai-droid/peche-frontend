@@ -114,7 +114,7 @@ const ProductItem = ({
 
 const ProductDetail = () => {
   const { t, i18n } = useTranslation()
-  const { addToCart, inquiry, setInquiry, setInquiryMemo } = useCart()
+  const { addToCart, inquiry, setInquiry, setInquiryMemo, setUsePackageChecked } = useCart()
   const { id } = useParams<{ id: string }>()
   const langQuery = useLanguageQuery()
   const tv = useLanguageValue()
@@ -157,6 +157,7 @@ const ProductDetail = () => {
   const [showAllProducts, setShowAllProducts] = React.useState(false)
   const [activeTab, setActiveTab] = React.useState<"event" | "product">("event")
   const [showInquiryModal, setShowInquiryModal] = React.useState(false)
+  const [showPackageBlockModal, setShowPackageBlockModal] = React.useState(false)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [pendingAddItem, setPendingAddItem] = React.useState<any>(null)
 
@@ -192,6 +193,9 @@ const ProductDetail = () => {
         if (result?.blockedByInquiry) {
           setPendingAddItem({ event })
           setShowInquiryModal(true)
+        } else if (result?.blockedByPackage) {
+          setPendingAddItem({ event })
+          setShowPackageBlockModal(true)
         }
       },
     })) ?? []
@@ -218,6 +222,9 @@ const ProductDetail = () => {
         if (result?.blockedByInquiry) {
           setPendingAddItem({ product })
           setShowInquiryModal(true)
+        } else if (result?.blockedByPackage) {
+          setPendingAddItem({ product })
+          setShowPackageBlockModal(true)
         }
       },
     }
@@ -408,6 +415,41 @@ const ProductDetail = () => {
                 setShowInquiryModal(false)
               }}>
               {t("cart.emptyVisitThenSelectButton")}
+            </Button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* 보유권 사용 활성 상태에서 시술 담기 차단 모달 (기존 비우기 모달과 동일) */}
+      <Modal
+        open={showPackageBlockModal}
+        width="max-w-[400px] font-pretendard"
+        onClose={() => setShowPackageBlockModal(false)}>
+        <div tw="flex flex-col items-start justify-center h-full">
+          <div tw="text-left text-[16px] lg:text-[18px] font-semibold leading-snug">
+            {t("reservePage.packageCartConflictTitle")}
+          </div>
+          <div tw="text-neutral70 text-[14px] lg:text-[16px] text-left mt-3">
+            {t("reservePage.packageCartConflictText")}
+          </div>
+          <div tw="flex w-full gap-2 mt-8">
+            <Button
+              tw="w-[150px] text-[13px] md:text-[15px]"
+              style={{ variant: "outlined", color: "point", size: "sm" }}
+              onClick={() => {
+                setShowPackageBlockModal(false)
+                setPendingAddItem(null)
+              }}>
+              {t("cart.cancel")}
+            </Button>
+            <Button
+              tw="w-[150px] text-[13px] md:text-[15px] px-[10px]"
+              style={{ variant: "filled", color: "point", size: "sm" }}
+              onClick={() => {
+                setUsePackageChecked(false)
+                setShowPackageBlockModal(false)
+              }}>
+              {t("cart.emptyCart")}
             </Button>
           </div>
         </div>

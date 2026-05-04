@@ -99,6 +99,19 @@ const useCart = () => {
   const [checkedList, setCheckedList] = useLocalStorage<string[]>("checkedList", [])
   const [openBottomSheet, setOpenBottomSheet] = useLocalStorage<boolean>("openBottomSheet", false)
   const [inquiryMemo, setInquiryMemo] = useLocalStorage<string>("inquiryMemo", "")
+  const [consultCategories, setConsultCategories] = useLocalStorage<string[]>(
+    "consultCategories",
+    [],
+  )
+  const [usePackageChecked, setUsePackageChecked] = useLocalStorage<boolean>(
+    "usePackageChecked",
+    false,
+  )
+  const [packageCategories, setPackageCategories] = useLocalStorage<string[]>(
+    "packageCategories",
+    [],
+  )
+  const [packageMemo, setPackageMemo] = useLocalStorage<string>("packageMemo", "")
 
   // hydrate 완료 여부
   const hasHydratedRef = useRef(false)
@@ -136,6 +149,12 @@ const useCart = () => {
         pendingItem: { event, product },
       }
     }
+    if (usePackageChecked) {
+      return {
+        blockedByPackage: true,
+        pendingItem: { event, product },
+      }
+    }
 
     // if (cart.length === 0) {
     //   setInquiry(true)
@@ -160,7 +179,7 @@ const useCart = () => {
     setJustAddedId(event?.id || product?.id || "")
     setOpenBottomSheet(true)
 
-    return { blockedByInquiry: false }
+    return { blockedByInquiry: false, blockedByPackage: false }
   }
   const removeFromCart = (targetIds = [] as string[]) => {
     // justAddedId 에 해당하는 아이템이 삭제되는 경우, justAddedId를 초기화
@@ -246,6 +265,14 @@ const useCart = () => {
     setOpenBottomSheet,
     inquiryMemo,
     setInquiryMemo,
+    consultCategories,
+    setConsultCategories,
+    usePackageChecked,
+    setUsePackageChecked,
+    packageCategories,
+    setPackageCategories,
+    packageMemo,
+    setPackageMemo,
     hasHydrated: hasHydratedRef,
     backupToCookie,
     restoreFromCookie,

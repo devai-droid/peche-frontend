@@ -20,7 +20,10 @@ import {
   reservationControllerGetAvailableReservationByDayPublic,
   useReservationControllerCreate,
 } from "@/lib/orval/reservations/reservations"
-import { DEFAULT_CONSULTATION_PRODUCT_ID } from "@/lib/constants/reservation.constants"
+import {
+  DEFAULT_CONSULTATION_PRODUCT_ID,
+  DEFAULT_PACKAGE_USE_PRODUCT_ID,
+} from "@/lib/constants/reservation.constants"
 import { env } from "@/lib/env"
 import { Language } from "@/lib/locales/i18n.config"
 import { useTranslation } from "react-i18next"
@@ -147,7 +150,30 @@ interface SurgeryListProps {
   inquiryMemo: string
   setInquiryMemo: (value: string) => void
   removeFromCart: (ids: string[]) => void
+  consultCategories: string[]
+  setConsultCategories: (v: string[]) => void
+  usePackageChecked: boolean
+  setUsePackageChecked: (v: boolean) => void
+  packageCategories: string[]
+  setPackageCategories: (v: string[]) => void
+  packageMemo: string
+  setPackageMemo: (v: string) => void
 }
+
+const CONSULT_CATEGORIES = [
+  { key: "윤곽/탄력", labelKey: "reservePage.categoryContour" },
+  { key: "색소", labelKey: "reservePage.categoryPigment" },
+  { key: "모공/흉터", labelKey: "reservePage.categoryPores" },
+  { key: "제모", labelKey: "reservePage.categoryHairRemoval" },
+  { key: "기타", labelKey: "reservePage.categoryOther" },
+]
+const PACKAGE_CATEGORIES = [
+  { key: "토닝", labelKey: "reservePage.packageToning" },
+  { key: "제모", labelKey: "reservePage.categoryHairRemoval" },
+  { key: "여드름/모공", labelKey: "reservePage.packageAcne" },
+  { key: "스킨부스터", labelKey: "reservePage.packageSkinBooster" },
+  { key: "기타", labelKey: "reservePage.categoryOther" },
+]
 
 const SurgeryList = ({
   cart,
@@ -157,6 +183,14 @@ const SurgeryList = ({
   inquiryMemo,
   setInquiryMemo,
   removeFromCart,
+  consultCategories,
+  setConsultCategories,
+  usePackageChecked,
+  setUsePackageChecked,
+  packageCategories,
+  setPackageCategories,
+  packageMemo,
+  setPackageMemo,
 }: SurgeryListProps) => {
   const { checkedList, setCheckedList, resetCart, hasHydrated } = useCart()
   const { t } = useTranslation()
@@ -183,8 +217,15 @@ const SurgeryList = ({
     setInquiryChecked(inquiry)
   }, [inquiry])
 
+  const [showDuplicateModal, setShowDuplicateModal] = React.useState(false)
+  const [showPackageCartModal, setShowPackageCartModal] = React.useState(false)
+
   // cart 페이지와 동일한 체크 로직
   const handleInquiryCheckbox = (checked: boolean) => {
+    if (checked && usePackageChecked) {
+      setShowDuplicateModal(true)
+      return
+    }
     if (checked && cart.length > 0) {
       // 장바구니에 시술이 있는데 방문 상담을 켜려는 경우 → 모달 띄움
       setShowInquiryModal(true)
@@ -193,6 +234,18 @@ const SurgeryList = ({
 
     setInquiryChecked(checked)
     setInquiry(checked)
+  }
+
+  const handlePackageCheckbox = (checked: boolean) => {
+    if (checked && inquiryChecked) {
+      setShowDuplicateModal(true)
+      return
+    }
+    if (checked && cart.length > 0) {
+      setShowPackageCartModal(true)
+      return
+    }
+    setUsePackageChecked(checked)
   }
 
   return (
@@ -245,15 +298,45 @@ const SurgeryList = ({
             <span tw="text-[16px] font-bold text-neutralBlack">{t("cart.freePrice")}</span>
           </div>
 
-          {/* 상담 요청사항 */}
+          {/* 관심 분야 (최소 1개) */}
           <div tw="text-primary text-[10px] md:text-[12px] font-semibold mb-2 pl-10">
-            {t("cart.request")}
+            {t("reservePage.consultCategoriesTitle")}
+          </div>
+          <div tw="flex flex-wrap gap-2 mx-10 mb-4">
+            {CONSULT_CATEGORIES.map((cat) => {
+              const checked = consultCategories.includes(cat.key)
+              return (
+                <button
+                  key={cat.key}
+                  type="button"
+                  onClick={() => {
+                    if (checked) {
+                      setConsultCategories(consultCategories.filter((c) => c !== cat.key))
+                    } else {
+                      setConsultCategories([...consultCategories, cat.key])
+                    }
+                  }}
+                  css={[
+                    tw`px-4 py-2 text-[13px] border rounded-sm`,
+                    checked
+                      ? tw`bg-primary text-white border-primary`
+                      : tw`bg-white text-neutral70 border-neutral20`,
+                  ]}>
+                  {t(cat.labelKey)}
+                </button>
+              )
+            })}
+          </div>
+
+          {/* 상담 내용 (필수) */}
+          <div tw="text-primary text-[10px] md:text-[12px] font-semibold mb-2 pl-10">
+            {t("reservePage.consultDetailRequired")}
           </div>
 
           <div tw="flex items-end gap-2 mx-10 w-[85%] md:w-[92%]">
             <textarea
               tw="flex-1 p-3 border border-neutral20 rounded-[1px] text-[14px] h-32"
-              placeholder={t("cart.writeRequest")}
+              placeholder={t("reservePage.consultMemoPlaceholder")}
               value={inquiryMemo}
               maxLength={200}
               onChange={(e) => setInquiryMemo(e.target.value)}
@@ -261,6 +344,72 @@ const SurgeryList = ({
 
             <div tw="text-neutral50 text-[12px] mb-1">{inquiryMemo.length}/200</div>
           </div>
+        </div>
+      )}
+
+      {/* 기존 시술 보유권 사용 - 체크됐을 때만 노출 */}
+      {usePackageChecked && cart.length === 0 && (
+        <div tw="mt-4 px-1 flex-none">
+          <div tw="flex items-center text-[14px] font-semibold mb-2">
+            <Checkbox
+              checked={usePackageChecked}
+              onChange={(e) => handlePackageCheckbox(e.target.checked)}
+              label={t("reservePage.usePackage")}
+            />
+          </div>
+
+          {/* 가격 (0원) */}
+          <div tw="flex items-center gap-2 mb-4 ml-10">
+            <span tw="text-neutral50 line-through text-[13px]">{t("cart.freePrice")}</span>
+            <span tw="text-[16px] font-bold text-neutralBlack">{t("cart.freePrice")}</span>
+          </div>
+
+          <div tw="text-primary text-[10px] md:text-[12px] font-semibold mb-2 pl-10">
+            {t("reservePage.packageCategoriesTitle")}
+          </div>
+          <div tw="flex flex-wrap gap-2 mx-10 mb-4">
+            {PACKAGE_CATEGORIES.map((cat) => {
+              const checked = packageCategories.includes(cat.key)
+              return (
+                <button
+                  key={cat.key}
+                  type="button"
+                  onClick={() => {
+                    if (checked) {
+                      setPackageCategories(packageCategories.filter((c) => c !== cat.key))
+                    } else {
+                      setPackageCategories([...packageCategories, cat.key])
+                    }
+                  }}
+                  css={[
+                    tw`px-4 py-2 text-[13px] border rounded-sm`,
+                    checked
+                      ? tw`bg-primary text-white border-primary`
+                      : tw`bg-white text-neutral70 border-neutral20`,
+                  ]}>
+                  {t(cat.labelKey)}
+                </button>
+              )
+            })}
+          </div>
+
+          {packageCategories.includes("기타") && (
+            <>
+              <div tw="text-primary text-[10px] md:text-[12px] font-semibold mb-2 pl-10">
+                {t("reservePage.packageMemoRequired")}
+              </div>
+              <div tw="flex items-end gap-2 mx-10 w-[85%] md:w-[92%] mb-4">
+                <textarea
+                  tw="flex-1 p-3 border border-neutral20 rounded-[1px] text-[14px] h-24"
+                  placeholder={t("reservePage.packageMemoPlaceholder")}
+                  value={packageMemo}
+                  maxLength={200}
+                  onChange={(e) => setPackageMemo(e.target.value)}
+                />
+                <div tw="text-neutral50 text-[12px] mb-1">{packageMemo.length}/200</div>
+              </div>
+            </>
+          )}
         </div>
       )}
 
@@ -294,12 +443,17 @@ const SurgeryList = ({
           </LinkButton>
         </div>
 
-        <div tw="-ml-3 my-3 text-[14px] md:text-[16px] font-semibold">
+        <div tw="-ml-3 my-3 text-[14px] md:text-[16px] font-semibold flex flex-col gap-2">
           {/* cart와 동일한 체크박스 로직 */}
           <Checkbox
             checked={inquiryChecked}
             onChange={(e) => handleInquiryCheckbox(e.target.checked)}
             label={t("reservePage.bookConsultation")}
+          />
+          <Checkbox
+            checked={usePackageChecked}
+            onChange={(e) => handlePackageCheckbox(e.target.checked)}
+            label={t("reservePage.usePackage")}
           />
         </div>
 
@@ -370,6 +524,62 @@ const SurgeryList = ({
           </div>
         </div>
       </Modal>
+
+      {/* 보유권 사용 + 카트 시술 동시 선택 모달 */}
+      <Modal
+        open={showPackageCartModal}
+        width="max-w-[400px]"
+        onClose={() => setShowPackageCartModal(false)}>
+        <div tw="flex flex-col items-start justify-center h-full font-pretendard">
+          <div tw="text-left text-[16px] lg:text-[18px] font-semibold leading-snug">
+            {t("reservePage.packageCartConflictTitle")}
+          </div>
+          <div tw="text-neutral70 text-left text-[14px] lg:text-[16px] mt-3">
+            {t("reservePage.packageCartConflictText")}
+          </div>
+          <div tw="flex justify-end gap-2 mt-8">
+            <Button
+              tw="w-[150px] text-[13px] md:text-[15px]"
+              style={{ variant: "outlined", color: "point", size: "sm" }}
+              onClick={() => setShowPackageCartModal(false)}>
+              {t("cart.cancel")}
+            </Button>
+            <Button
+              tw="w-[150px] text-[13px] md:text-[15px] px-[10px]"
+              style={{ variant: "filled", color: "point", size: "sm" }}
+              onClick={() => {
+                resetCart()
+                setUsePackageChecked(true)
+                setShowPackageCartModal(false)
+              }}>
+              {t("cart.emptyCart")}
+            </Button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* 중복 선택 불가 모달 */}
+      <Modal
+        open={showDuplicateModal}
+        width="max-w-[400px]"
+        onClose={() => setShowDuplicateModal(false)}>
+        <div tw="flex flex-col items-start justify-center h-full font-pretendard">
+          <div tw="text-left text-[16px] lg:text-[18px] font-semibold leading-snug">
+            {t("reservePage.duplicateModalTitle")}
+          </div>
+          <div tw="text-neutral70 text-left text-[14px] lg:text-[16px] mt-3">
+            {t("reservePage.duplicateModalText")}
+          </div>
+          <div tw="mt-8 w-full">
+            <Button
+              tw="w-full text-[13px] md:text-[15px]"
+              style={{ variant: "filled", color: "point", size: "sm" }}
+              onClick={() => setShowDuplicateModal(false)}>
+              {t("common.confirm")}
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </>
   )
 }
@@ -380,6 +590,24 @@ const Reserve = () => {
   const navigate = useCustomNavigate()
   const language = i18n.language as Language
   const { user: me } = useMe()
+
+
+  const buildExtraMemo = (baseMemo: string) => {
+    const parts: string[] = []
+    if (inquiry && consultCategories.length > 0) {
+      parts.push(`[관심 분야] ${consultCategories.join(", ")}`)
+    }
+    if (inquiry && baseMemo) {
+      parts.push(`[상담 내용] ${baseMemo}`)
+    }
+    if (usePackageChecked && packageCategories.length > 0) {
+      parts.push(`[보유권 종류] ${packageCategories.join(", ")}`)
+      if (packageCategories.includes("기타") && packageMemo) {
+        parts.push(`[기타 메모] ${packageMemo}`)
+      }
+    }
+    return parts.join("\n")
+  }
 
   const {
     inquiry,
@@ -396,6 +624,14 @@ const Reserve = () => {
     hasHydrated,
     backupToCookie,
     restoreFromCookie,
+    consultCategories,
+    setConsultCategories,
+    usePackageChecked,
+    setUsePackageChecked,
+    packageCategories,
+    setPackageCategories,
+    packageMemo,
+    setPackageMemo,
   } = useCart()
 
   const [today, setToday] = React.useState(dayjs())
@@ -434,9 +670,13 @@ const Reserve = () => {
   const getProductIdsWithInquiry = () => {
     const ids = [...(getCheckedProductIds() ?? [])]
     const inquiryId = DEFAULT_CONSULTATION_PRODUCT_ID[env.STAGE]
+    const packageId = DEFAULT_PACKAGE_USE_PRODUCT_ID[env.STAGE]
     if (inquiry && !ids.includes(inquiryId)) ids.push(inquiryId)
+    if (usePackageChecked && !ids.includes(packageId)) ids.push(packageId)
     return ids
   }
+
+  const [showMemoRequiredModal, setShowMemoRequiredModal] = React.useState(false)
 
   // 예약 버튼 클릭 시 모달만 여는 함수
   const openConfirmModal = () => {
@@ -452,6 +692,16 @@ const Reserve = () => {
 
     if (!selectedDatetime) {
       alert(t("reservePage.selectTimeRequired"))
+      return
+    }
+
+    // 메모 필수 검증
+    if (inquiry && !inquiryMemo.trim()) {
+      setShowMemoRequiredModal(true)
+      return
+    }
+    if (usePackageChecked && packageCategories.includes("기타") && !packageMemo.trim()) {
+      setShowMemoRequiredModal(true)
       return
     }
 
@@ -505,7 +755,7 @@ const Reserve = () => {
             datetime: selectedDatetime.replace("Z", ""),
             productIds: getProductIdsWithInquiry(),
             eventIds: getCheckedEventIds(),
-            userMemo: inquiryMemo || undefined,
+            userMemo: buildExtraMemo(inquiryMemo) || undefined,
           },
         },
         {
@@ -728,6 +978,14 @@ const Reserve = () => {
                   inquiryMemo={inquiryMemo}
                   setInquiryMemo={setInquiryMemo}
                   removeFromCart={removeFromCart}
+                  consultCategories={consultCategories}
+                  setConsultCategories={setConsultCategories}
+                  usePackageChecked={usePackageChecked}
+                  setUsePackageChecked={setUsePackageChecked}
+                  packageCategories={packageCategories}
+                  setPackageCategories={setPackageCategories}
+                  packageMemo={packageMemo}
+                  setPackageMemo={setPackageMemo}
                 />
               </div>
 
@@ -857,6 +1115,26 @@ const Reserve = () => {
             onClick={() => setEventPeriodAlert(false)}>
             {t("common.confirm")}
           </Button>
+        </div>
+      </Modal>
+
+      {/* 메모 필수 입력 모달 */}
+      <Modal
+        open={showMemoRequiredModal}
+        width="max-w-[400px]"
+        onClose={() => setShowMemoRequiredModal(false)}>
+        <div tw="flex flex-col items-start justify-center h-full font-pretendard">
+          <div tw="text-left text-[16px] lg:text-[18px] font-semibold leading-snug">
+            {t("reservePage.memoRequired")}
+          </div>
+          <div tw="mt-8 w-full">
+            <Button
+              tw="w-full text-[13px] md:text-[15px]"
+              style={{ variant: "filled", color: "point", size: "sm" }}
+              onClick={() => setShowMemoRequiredModal(false)}>
+              {t("common.confirm")}
+            </Button>
+          </div>
         </div>
       </Modal>
     </Page>
