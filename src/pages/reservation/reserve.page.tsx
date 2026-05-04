@@ -807,7 +807,12 @@ const Reserve = () => {
 
   /* -------- 캘린더 변경 시 조회 -------- */
   React.useEffect(() => {
-    if (getCheckedEventIds().length > 0 || getCheckedProductIds().length > 0 || inquiry) {
+    if (
+      getCheckedEventIds().length > 0 ||
+      getCheckedProductIds().length > 0 ||
+      inquiry ||
+      usePackageChecked
+    ) {
       getAvailableReservationsPublic(today.year(), today.month() + 1, today.date()).then((res) => {
         // UTC → KST (+9h) 변환 패치
         const patched = res.map((slot) => ({
@@ -819,7 +824,7 @@ const Reserve = () => {
         setTodaySlots(patched)
       })
     }
-  }, [today, inquiry, checkedList])
+  }, [today, inquiry, usePackageChecked, checkedList])
 
   dayjs.extend(utc)
 
@@ -937,7 +942,10 @@ const Reserve = () => {
     if (cart.length > 0 && inquiry) {
       setInquiry(false)
     }
-  }, [cart, inquiry])
+    if (cart.length > 0 && usePackageChecked) {
+      setUsePackageChecked(false)
+    }
+  }, [cart, inquiry, usePackageChecked])
 
   /* -------- 예약 버튼 disabled -------- */
   const reservationDisabled = !authInfo || !agree.terms || !agree.privacy || !selectedDatetime
