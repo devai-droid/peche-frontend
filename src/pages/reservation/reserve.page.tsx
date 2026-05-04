@@ -303,7 +303,7 @@ const SurgeryList = ({
           </div>
 
           {/* 관심 분야 (최소 1개) */}
-          <div tw="text-primary text-[10px] md:text-[12px] font-semibold mb-2 pl-10">
+          <div tw="text-primary text-[13px] md:text-[14px] font-semibold mb-2 pl-10">
             {t("reservePage.consultCategoriesTitle")}
           </div>
           <div tw="flex flex-wrap gap-2 mx-10 mb-4">
@@ -335,7 +335,7 @@ const SurgeryList = ({
           {/* 상담 내용 (필수) + 글자수 카운터 — textarea와 같은 width */}
           <div tw="mx-10 w-[85%] md:w-[92%]">
             <div tw="flex justify-between items-center mb-2">
-              <div tw="text-primary text-[10px] md:text-[12px] font-semibold">
+              <div tw="text-primary text-[13px] md:text-[14px] font-semibold">
                 {t("reservePage.consultDetailRequired")}
               </div>
               <div tw="text-neutral50 text-[12px]">{inquiryMemo.length}/200</div>
@@ -368,7 +368,7 @@ const SurgeryList = ({
             <span tw="text-[16px] font-bold text-neutralBlack">{t("cart.freePrice")}</span>
           </div>
 
-          <div tw="text-primary text-[10px] md:text-[12px] font-semibold mb-2 pl-10">
+          <div tw="text-primary text-[13px] md:text-[14px] font-semibold mb-2 pl-10">
             {t("reservePage.packageCategoriesTitle")}
           </div>
           <div tw="flex flex-wrap gap-2 mx-10 mb-4">
@@ -401,7 +401,7 @@ const SurgeryList = ({
             <>
               <div tw="mx-10 w-[85%] md:w-[92%] mb-4">
                 <div tw="flex justify-between items-center mb-2">
-                  <div tw="text-primary text-[10px] md:text-[12px] font-semibold">
+                  <div tw="text-primary text-[13px] md:text-[14px] font-semibold">
                     {t("reservePage.packageMemoRequired")}
                   </div>
                   <div tw="text-neutral50 text-[12px]">{packageMemo.length}/200</div>
