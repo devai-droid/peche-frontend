@@ -191,6 +191,7 @@ const SurgeryList = () => {
               setInquiryChecked(false)
               setInquiry(false)
               setInquiryMemo("")
+              setUsePackageChecked(false)
             }}
             style={{ variant: "outlined", color: "point", size: "sm" }}>
             {t("cart.deleteSelection")}
@@ -557,6 +558,7 @@ const BottomSheet = () => {
                     setInquiryChecked(false)
                     setInquiry(false)
                     setInquiryMemo("")
+                    setUsePackageChecked(false)
                   }}>
                   {t("cart.deleteSelection")}
                 </Button>
