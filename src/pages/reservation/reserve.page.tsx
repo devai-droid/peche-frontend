@@ -339,7 +339,7 @@ const SurgeryList = ({
 
           <div tw="flex items-end gap-2 mx-10 w-[85%] md:w-[92%]">
             <textarea
-              tw="flex-1 p-3 border border-neutral20 rounded-[1px] text-[14px] h-32"
+              tw="flex-1 p-3 border border-neutral20 rounded-[1px] text-[16px] md:text-[14px] h-32"
               placeholder={t("reservePage.consultMemoPlaceholder")}
               value={inquiryMemo}
               maxLength={200}
@@ -404,7 +404,7 @@ const SurgeryList = ({
               </div>
               <div tw="flex items-end gap-2 mx-10 w-[85%] md:w-[92%] mb-4">
                 <textarea
-                  tw="flex-1 p-3 border border-neutral20 rounded-[1px] text-[14px] h-24"
+                  tw="flex-1 p-3 border border-neutral20 rounded-[1px] text-[16px] md:text-[14px] h-24"
                   placeholder={t("reservePage.packageMemoPlaceholder")}
                   value={packageMemo}
                   maxLength={200}

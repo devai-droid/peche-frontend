@@ -4,6 +4,14 @@
 
 ---
 
+## [1.10.9] - 2026-05-04
+
+### Fixed
+
+- 모바일에서 메모 textarea 클릭 시 화면이 자동 확대(zoom)되던 문제 수정 — iOS Safari는 `font-size`가 16px 미만인 input/textarea에 자동 확대를 적용. 모바일 `text-[16px]`, 데스크탑 `md:text-[14px]`로 분기.
+
+---
+
 ## [1.10.8] - 2026-05-04
 
 ### Changed
