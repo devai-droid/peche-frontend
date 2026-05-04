@@ -870,7 +870,6 @@ const BottomButtons = ({
         <BottomButton
           onClick={() => {
             navigate("/reservation/new")
-            setInquiry(true)
           }}>
           {t("button.reserve")}
         </BottomButton>
