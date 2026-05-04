@@ -332,6 +332,8 @@
     "duplicateModalTitle": "ไม่สามารถเลือกพร้อมกัน",
     "duplicateModalText": "“ปรึกษาหลังการเยี่ยม” และ “ใช้แพ็คเกจที่มีอยู่” ไม่สามารถเลือกพร้อมกัน กรุณายกเลิกตัวเลือกก่อนหน้า",
     "memoRequired": "กรุณากรอกหมายเหตุ",
+    "consultMemoRequiredAlert": "กรุณากรอก ‘รายละเอียดการปรึกษา’",
+    "packageMemoRequiredAlert": "กรุณากรอก ‘หมายเหตุอื่นๆ’",
     "clearPackage": "ล้างการใช้แพ็คเกจ",
     "selectTimeRequired": "กรุณาเลือกเวลาจอง",
     "eventPeriodNotAvailable": "ไม่ใช่วันที่สามารถจองอีเวนต์ได้",

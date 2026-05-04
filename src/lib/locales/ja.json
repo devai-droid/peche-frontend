@@ -332,6 +332,8 @@
     "duplicateModalTitle": "重複選択不可",
     "duplicateModalText": "「来院後の施術選択」と「既存施術パッケージ使用」は同時に選択できません。先に他のオプションを解除してください。",
     "memoRequired": "メモを入力してください",
+    "consultMemoRequiredAlert": "「相談内容」を入力してください",
+    "packageMemoRequiredAlert": "「その他メモ」を入力してください",
     "clearPackage": "パッケージ使用を解除",
     "selectTimeRequired": "予約時間を選択してください。",
     "eventPeriodNotAvailable": "イベント商品の予約可能日ではありません。",

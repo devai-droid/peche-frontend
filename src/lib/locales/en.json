@@ -332,6 +332,8 @@
     "duplicateModalTitle": "Cannot Select Both",
     "duplicateModalText": "“Visit Consultation” and “Use Existing Package” cannot be selected at the same time. Please uncheck the other option first.",
     "memoRequired": "Please enter a memo",
+    "consultMemoRequiredAlert": "Please enter ‘Consultation Details’",
+    "packageMemoRequiredAlert": "Please enter ‘Other Notes’",
     "clearPackage": "Clear Package Use",
     "selectTimeRequired": "Please select a reservation time.",
     "eventPeriodNotAvailable": "This is not an available reservation date for the event product.",

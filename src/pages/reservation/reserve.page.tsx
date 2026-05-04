@@ -676,7 +676,9 @@ const Reserve = () => {
     return ids
   }
 
-  const [showMemoRequiredModal, setShowMemoRequiredModal] = React.useState(false)
+  const [memoRequiredType, setMemoRequiredType] = React.useState<"consult" | "package" | null>(
+    null,
+  )
 
   // 예약 버튼 클릭 시 모달만 여는 함수
   const openConfirmModal = () => {
@@ -697,11 +699,11 @@ const Reserve = () => {
 
     // 메모 필수 검증
     if (inquiry && !inquiryMemo.trim()) {
-      setShowMemoRequiredModal(true)
+      setMemoRequiredType("consult")
       return
     }
     if (usePackageChecked && packageCategories.includes("기타") && !packageMemo.trim()) {
-      setShowMemoRequiredModal(true)
+      setMemoRequiredType("package")
       return
     }
 
@@ -1128,18 +1130,20 @@ const Reserve = () => {
 
       {/* 메모 필수 입력 모달 */}
       <Modal
-        open={showMemoRequiredModal}
+        open={memoRequiredType !== null}
         width="max-w-[400px]"
-        onClose={() => setShowMemoRequiredModal(false)}>
+        onClose={() => setMemoRequiredType(null)}>
         <div tw="flex flex-col items-start justify-center h-full font-pretendard">
           <div tw="text-left text-[16px] lg:text-[18px] font-semibold leading-snug">
-            {t("reservePage.memoRequired")}
+            {memoRequiredType === "consult"
+              ? t("reservePage.consultMemoRequiredAlert")
+              : t("reservePage.packageMemoRequiredAlert")}
           </div>
           <div tw="mt-8 w-full">
             <Button
               tw="w-full text-[13px] md:text-[15px]"
               style={{ variant: "filled", color: "point", size: "sm" }}
-              onClick={() => setShowMemoRequiredModal(false)}>
+              onClick={() => setMemoRequiredType(null)}>
               {t("common.confirm")}
             </Button>
           </div>
