@@ -332,21 +332,21 @@ const SurgeryList = ({
             })}
           </div>
 
-          {/* 상담 내용 (필수) */}
-          <div tw="text-primary text-[10px] md:text-[12px] font-semibold mb-2 pl-10">
-            {t("reservePage.consultDetailRequired")}
-          </div>
-
-          <div tw="flex items-end gap-2 mx-10 w-[85%] md:w-[92%]">
+          {/* 상담 내용 (필수) + 글자수 카운터 — textarea와 같은 width */}
+          <div tw="mx-10 w-[85%] md:w-[92%]">
+            <div tw="flex justify-between items-center mb-2">
+              <div tw="text-primary text-[10px] md:text-[12px] font-semibold">
+                {t("reservePage.consultDetailRequired")}
+              </div>
+              <div tw="text-neutral50 text-[12px]">{inquiryMemo.length}/200</div>
+            </div>
             <textarea
-              tw="flex-1 p-3 border border-neutral20 rounded-[1px] text-[16px] md:text-[14px] h-32"
+              tw="w-full p-3 border border-neutral20 rounded-[1px] text-[16px] md:text-[14px] h-32"
               placeholder={t("reservePage.consultMemoPlaceholder")}
               value={inquiryMemo}
               maxLength={200}
               onChange={(e) => setInquiryMemo(e.target.value)}
             />
-
-            <div tw="text-neutral50 text-[12px] mb-1">{inquiryMemo.length}/200</div>
           </div>
         </div>
       )}
@@ -399,18 +399,20 @@ const SurgeryList = ({
 
           {packageCategories.includes("기타") && (
             <>
-              <div tw="text-primary text-[10px] md:text-[12px] font-semibold mb-2 pl-10">
-                {t("reservePage.packageMemoRequired")}
-              </div>
-              <div tw="flex items-end gap-2 mx-10 w-[85%] md:w-[92%] mb-4">
+              <div tw="mx-10 w-[85%] md:w-[92%] mb-4">
+                <div tw="flex justify-between items-center mb-2">
+                  <div tw="text-primary text-[10px] md:text-[12px] font-semibold">
+                    {t("reservePage.packageMemoRequired")}
+                  </div>
+                  <div tw="text-neutral50 text-[12px]">{packageMemo.length}/200</div>
+                </div>
                 <textarea
-                  tw="flex-1 p-3 border border-neutral20 rounded-[1px] text-[16px] md:text-[14px] h-24"
+                  tw="w-full p-3 border border-neutral20 rounded-[1px] text-[16px] md:text-[14px] h-24"
                   placeholder={t("reservePage.packageMemoPlaceholder")}
                   value={packageMemo}
                   maxLength={200}
                   onChange={(e) => setPackageMemo(e.target.value)}
                 />
-                <div tw="text-neutral50 text-[12px] mb-1">{packageMemo.length}/200</div>
               </div>
             </>
           )}
