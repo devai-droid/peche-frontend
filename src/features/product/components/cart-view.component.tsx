@@ -948,10 +948,8 @@ const CartView = ({ children, isHome }: { children?: React.ReactNode; isHome: bo
           showInquiryButtons={showInquiryButtons}
           setShowInquiryButtons={setShowInquiryButtons}
         />
-        {/* 목록이 추가되면 보이게 */}
-        <div tw="absolute bottom-0 inset-x-0">
-          {!isHome && (inquiry || cart.length > 0) ? <BottomSheet /> : null}
-        </div>
+        {/* 시술/방문상담/보유권 페이지에선 항상 노출 */}
+        <div tw="absolute bottom-0 inset-x-0">{!isHome ? <BottomSheet /> : null}</div>
       </div>
     </>
   )

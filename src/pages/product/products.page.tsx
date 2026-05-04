@@ -190,7 +190,7 @@ const Products = () => {
               />
             </div>
           </div>
-          <CartView isHome>
+          <CartView isHome={false}>
             <div tw="flex flex-col gap-4 max-lg:p-4 mb-16">
               {products?.pages
                 .flatMap((p) => p.items)
