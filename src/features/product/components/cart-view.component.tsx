@@ -13,7 +13,7 @@ import LineImg from "@/assets/images/sns/line.png"
 import WhatsAppImg from "@/assets/images/sns/whatsapp.png"
 import WeChatImg from "@/assets/images/sns/wechat.png"
 import InstaImg from "@/assets/images/sns/instagram.png"
-import wechatQrImg from "@/assets/images/wechat-qr.jpg"
+import wechatQrImg from "@/assets/images/wechat-qr.png"
 import useCustomNavigate from "@/lib/hooks/use-custom-navigate"
 import Modal from "@/lib/components/modal/modal.component"
 

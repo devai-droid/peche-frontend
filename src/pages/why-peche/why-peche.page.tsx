@@ -21,7 +21,7 @@ import KakaoHelp from "@/assets/images/sns/icon_kakao_help.png"
 import WhatsAppHelp from "@/assets/images/sns/icon_WhatsApp_help.png"
 import LineHelp from "@/assets/images/sns/icon_LINE_help.png"
 import WeChatHelp from "@/assets/images/sns/icon_WeChat_help.png"
-import wechatQrImg from "@/assets/images/wechat-qr.jpg"
+import wechatQrImg from "@/assets/images/wechat-qr.png"
 
 const PageContainer = tw.div`w-full flex flex-col items-center bg-white`
 

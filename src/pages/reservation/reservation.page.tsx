@@ -14,7 +14,7 @@ import WhatsAppHelp from "@/assets/images/sns/icon_WhatsApp_help.png"
 import LineHelp from "@/assets/images/sns/icon_LINE_help.png"
 import WeChatHelp from "@/assets/images/sns/icon_WeChat_help.png"
 import InstaHelpIcon from "@/assets/images/sns/icon_instagram_help.png"
-import wechatQrImg from "@/assets/images/wechat-qr.jpg"
+import wechatQrImg from "@/assets/images/wechat-qr.png"
 import EmailAuthModal from "@/features/auth/components/email-auth-modal.component"
 
 

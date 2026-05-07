@@ -1,7 +1,7 @@
 import React from "react"
 import tw, { styled } from "twin.macro"
 import { CloseIcon } from "@/assets/icon"
-import wechatQrImg from "@/assets/images/wechat-qr.jpg"
+import wechatQrImg from "@/assets/images/wechat-qr.png"
 import mapImg from "@/assets/images/why-peche-map.png"
 import { useTranslation } from "react-i18next"
 import useCustomNavigate from "@/lib/hooks/use-custom-navigate"

@@ -4,6 +4,14 @@
 
 ---
 
+## [1.10.14] - 2026-05-07
+
+### Changed
+
+- 위챗 QR 이미지 교체 (Figma 디자인 반영) — `wechat-qr.jpg` → `wechat-qr.png`. 헤더·푸터·예약·예약완료·인증·홈 위치·CartView·why-peche 등 9개 import 경로 일괄 변경.
+
+---
+
 ## [1.10.13] - 2026-05-07
 
 ### Removed

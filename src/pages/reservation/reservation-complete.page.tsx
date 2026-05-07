@@ -5,7 +5,7 @@ import useCustomNavigate from "@/lib/hooks/use-custom-navigate"
 import { Language } from "@/lib/locales/i18n.config"
 import React from "react"
 import Modal from "@/lib/components/modal/modal.component"
-import wechatQrImg from "@/assets/images/wechat-qr.jpg"
+import wechatQrImg from "@/assets/images/wechat-qr.png"
 import { CloseIcon } from "@/assets/icon"
 
 const ReservationComplete = () => {

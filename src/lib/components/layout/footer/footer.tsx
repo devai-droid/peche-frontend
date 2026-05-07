@@ -18,7 +18,7 @@ import { ReactComponent as FooterLogo } from "@/assets/icons/peche-footer-logo.s
 import { useTranslation } from "react-i18next"
 import { Language } from "@/lib/locales/i18n.config"
 import Modal from "@/lib/components/modal/modal.component"
-import wechatQrImg from "@/assets/images/wechat-qr.jpg"
+import wechatQrImg from "@/assets/images/wechat-qr.png"
 
 
 const FooterWrapper = tw.footer`

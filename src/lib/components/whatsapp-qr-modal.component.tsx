@@ -1,7 +1,7 @@
 import React from "react"
 import Modal from "@/lib/components/modal/modal.component"
 import { CloseIcon } from "@/assets/icon"
-import whatsappQrImg from "@/assets/images/wechat-qr.jpg"
+import whatsappQrImg from "@/assets/images/wechat-qr.png"
 
 interface Props {
   open: boolean

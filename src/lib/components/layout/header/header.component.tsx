@@ -17,7 +17,7 @@ import {
   LineIcon,
   WhatsappIcon,
 } from "@/assets/icon"
-import wechatQrImg from "@/assets/images/wechat-qr.jpg"
+import wechatQrImg from "@/assets/images/wechat-qr.png"
 import { IconButton, Logo, MobileLogo } from "@/design-system/components"
 import AppMaxWidth from "../app-max-width.component"
 import useResponsive from "@/lib/hooks/use-responsive"
