@@ -1,6 +1,6 @@
 import React from "react"
 import { Helmet } from "react-helmet-async"
-import { BlogV2Post } from "../blog-v2.api"
+import { BlogV2Doctor, BlogV2Post } from "../blog-v2.api"
 import { BLOG_SITE, HOSPITAL_JSON_LD_ID } from "../blog-site.config"
 
 interface FaqItem {
@@ -16,6 +16,8 @@ interface TocItem {
 
 interface BlogSeoProps {
   post: BlogV2Post
+  /** 글 지정 의료진이 없을 때 대표 의료진으로 채워진 카드용 의료진 (author/reviewedBy 통일) */
+  doctor?: BlogV2Doctor
   title: string
   summary: string
   lang: string
@@ -81,6 +83,7 @@ function extractArticleBody(html: string): string {
 
 const BlogSeo = ({
   post,
+  doctor,
   title,
   summary,
   lang,
@@ -93,7 +96,14 @@ const BlogSeo = ({
   const pageUrl = `${baseUrl}/${lang}/blog/${slug}`
   const siteName = BLOG_SITE.hospitalName
 
-  const doc = post.authorDoctor
+  // 글 지정 의료진 우선, 없으면 대표 의료진 — 카드와 JSON-LD(author/reviewedBy) 동일 인물로 통일
+  const doc = post.authorDoctor ?? doctor
+  // profileUrl이 상대경로면 절대 URL로 보정(SEO용). 내부 의료진 소개 페이지는 /:lang 하위.
+  const docProfileUrl = doc?.profileUrl
+    ? doc.profileUrl.startsWith("http")
+      ? doc.profileUrl
+      : `${baseUrl}/${lang}${doc.profileUrl.startsWith("/") ? "" : "/"}${doc.profileUrl}`
+    : undefined
   const keywords = [post.mainKeyword, ...(post.subKeywords ?? [])].filter(Boolean).join(", ")
   const metaTitle = title.length > TITLE_MAX ? title.slice(0, TITLE_MAX).trim() : title
 
@@ -118,7 +128,7 @@ const BlogSeo = ({
           "@type": "Person",
           name: doc.name,
           jobTitle: doc.jobTitle,
-          url: doc.profileUrl,
+          url: docProfileUrl,
           worksFor: { "@id": HOSPITAL_JSON_LD_ID },
         }
       : { "@type": "Organization", "@id": HOSPITAL_JSON_LD_ID },

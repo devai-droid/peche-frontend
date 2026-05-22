@@ -334,6 +334,7 @@ const BlogDetail = () => {
     <Page hiddenFooter={false} bottomCartExists={false} hideOnScroll>
       <BlogSeo
         post={post}
+        doctor={cardDoctor}
         title={title}
         summary={summary}
         lang={lang}
@@ -658,7 +659,7 @@ const BlogDetail = () => {
                     )}
                     <div tw="flex items-center gap-3 text-[13px] text-neutral50 mt-[6px]">
                       <CustomLink
-                        to="/doctor"
+                        to={cardDoctor?.profileUrl || "/doctor"}
                         tw="font-medium transition-colors duration-200"
                         css={[{ color: "#DA7F67" }]}>
                         의료진 소개 보기
