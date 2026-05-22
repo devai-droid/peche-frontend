@@ -49,7 +49,9 @@ export interface BlogV2Post {
   summaryText?: string
   mainKeyword?: string
   subKeywords?: string[]
-  /** 주제 키워드(blog.keywords) — 헤딩 "OO와 관련 글 더보기"에 사용 */
+  /** 주제 키워드 원본(frontmatter topic_keyword) — CTA 버튼명·"관련글 더보기" 헤딩에 사용 */
+  topicKeyword?: string
+  /** 주제 키워드 마스터(blog.keywords) 매칭 시 */
   keyword?: { id: string; keyword: string }
   /** CTA 대상 상세페이지명 (예: "울쎄라피 프라임") — 이름으로 상세페이지 매칭. 없으면 productCategoryId로 fallback */
   productPage?: string

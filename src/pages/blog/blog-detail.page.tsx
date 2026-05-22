@@ -207,8 +207,8 @@ const BlogDetail = () => {
   const title = post?.title ?? ""
   const subtitle = post?.subtitle ?? ""
   const summary = post?.summaryText ?? ""
-  // 헤딩용 주제 키워드 — keyword(주제) 우선, 없으면 main_keyword 폴백
-  const topicKeyword = post?.keyword?.keyword || post?.mainKeyword || ""
+  // 주제 키워드(CTA 버튼명·"관련글 더보기" 헤딩) — frontmatter topic_keyword 원본 우선, 마스터 매칭값 폴백
+  const topicKeyword = post?.topicKeyword || post?.keyword?.keyword || ""
   const content = rewriteBlogHtml(post?.bodyHtml)
   // 의료진 카드: 글의 author_doctor 우선, 없으면 대표 의료진(공통)으로 채움
   // 카드는 어드민에서 관리하는 대표 의료진을 우선 사용 → 한 곳 수정으로 모든 글에 반영
