@@ -13,10 +13,25 @@ import BlogCard from "./components/blog-card.component"
 import BlogPagination from "./components/blog-pagination.component"
 import tw from "twin.macro"
 import { useProductCategoryControllerFindMany } from "@/lib/orval/product-categories/product-categories"
+import { useProductDetailPageControllerFindMany } from "@/lib/orval/product-detail-pages/product-detail-pages"
+import { ProductDetailPageControllerFindManyStatus } from "@/lib/orval/model"
 import useLanguageValue from "@/lib/hooks/use-language-key"
 import useLanguageQuery from "@/lib/hooks/use-language-query"
 
 const POSTS_PER_PAGE = 12
+
+// 대분류별 상세페이지 칩 특수 규칙 (라벨 ≠ 매칭어, 부분 일치). 없는 대분류는 DB 상세페이지로 자동 생성.
+const SPECIAL_DETAIL_CHIPS: Record<string, { label: string; contains: string }[]> = {
+  여성제모: [
+    { label: "젠틀맥스 프로 플러스", contains: "젠틀맥스" },
+    { label: "클라리티2", contains: "클라리티" },
+  ],
+  남성제모: [{ label: "젠틀맥스 프로 플러스", contains: "젠틀맥스" }], // 젠틀맥스만
+}
+
+const ALL_CHIP_KEY = "__all__"
+
+type DetailChip = { key: string; label: string; productPage?: string; productPageContains?: string }
 
 const item = tw`w-full font-semibold font-pretendard text-center h-14 flex items-center justify-center bg-white`
 
@@ -28,6 +43,7 @@ const Blog = () => {
   const tv = useLanguageValue()
   const [page, setPage] = useState(1)
   const [selectedProductCatId, setSelectedProductCatId] = useState<string | null>(null)
+  const [selectedChipKey, setSelectedChipKey] = useState<string>(ALL_CHIP_KEY)
 
   const lang = i18n.language
   const langQuery = useLanguageQuery()
@@ -44,14 +60,53 @@ const Blog = () => {
     id: cat.id,
     name: tv(cat, "name"),
   }))
+  const selectedCatName = productCategories.find((c) => c.id === selectedProductCatId)?.name ?? ""
+
+  // 선택된 대분류의 상세페이지 (칩 출처: 어드민 등록 DB). 특수 대분류(여성/남성 제모)는 config 사용.
+  // 대분류명은 띄어쓰기 차이("남성 제모" vs "남성제모") 무시하고 매칭.
+  const specialChips = SPECIAL_DETAIL_CHIPS[selectedCatName.replace(/\s+/g, "")]
+  const isSpecialCat = !!specialChips
+  const { data: detailPagesData } = useProductDetailPageControllerFindMany(
+    {
+      status: ProductDetailPageControllerFindManyStatus.ACTIVE,
+      categoryId: selectedProductCatId ?? undefined,
+      limit: 100,
+      ...langQuery,
+    },
+    { query: { enabled: !!selectedProductCatId && !isSpecialCat } },
+  )
+
+  // 상세페이지 칩 목록 (대분류 선택 시에만). 맨 앞 '전체' 칩.
+  const detailChips: DetailChip[] = (() => {
+    if (!selectedProductCatId) return []
+    let chips: DetailChip[]
+    if (specialChips) {
+      chips = specialChips.map((c) => ({
+        key: c.label,
+        label: c.label,
+        productPageContains: c.contains,
+      }))
+    } else {
+      chips = (detailPagesData?.items ?? []).map((dp) => {
+        const name = tv(dp, "name")
+        return { key: dp.id, label: name, productPage: name }
+      })
+    }
+    if (chips.length === 0) return []
+    return [{ key: ALL_CHIP_KEY, label: t("blog.allCategory") }, ...chips]
+  })()
+
+  const selectedChip = detailChips.find((c) => c.key === selectedChipKey)
 
   // 글 목록: v2 공개 API
   const { data, isLoading } = useQuery({
-    queryKey: ["blog-v2-public", page, lang, selectedProductCatId],
+    queryKey: ["blog-v2-public", page, lang, selectedProductCatId, selectedChipKey],
     queryFn: () =>
       blogV2PublicApi.list({
         lang,
         productCategoryId: selectedProductCatId ?? undefined,
+        productPage: selectedChip?.productPage,
+        productPageContains: selectedChip?.productPageContains,
         page,
         limit: POSTS_PER_PAGE,
       }),
@@ -67,6 +122,12 @@ const Blog = () => {
 
   const handleTabClick = (productCatId: string | null) => {
     setSelectedProductCatId(productCatId)
+    setSelectedChipKey(ALL_CHIP_KEY) // 대분류 바뀌면 상세페이지 칩 초기화
+    setPage(1)
+  }
+
+  const handleChipClick = (chipKey: string) => {
+    setSelectedChipKey(chipKey)
     setPage(1)
   }
 
@@ -141,6 +202,28 @@ const Blog = () => {
                   }}
                 />
               </div>
+            </div>
+          )}
+
+          {/* 상세페이지(product_page) 필터 — 밑줄형 텍스트 탭. 대분류 선택 시 노출 */}
+          {detailChips.length > 0 && (
+            <div tw="flex flex-wrap justify-start gap-x-6 gap-y-2 mb-8 lg:mb-12 px-4">
+              {detailChips.map((chip) => {
+                const isSelected = selectedChipKey === chip.key
+                return (
+                  <button
+                    key={chip.key}
+                    onClick={() => handleChipClick(chip.key)}
+                    tw="pb-1 text-[15px] lg:text-[17px] border-b-2 transition-colors duration-200"
+                    css={[
+                      isSelected
+                        ? tw`text-[#DA7F67] border-[#DA7F67] font-semibold`
+                        : tw`text-neutral70 border-transparent hover:text-[#DA7F67]`,
+                    ]}>
+                    {chip.label}
+                  </button>
+                )
+              })}
             </div>
           )}
 

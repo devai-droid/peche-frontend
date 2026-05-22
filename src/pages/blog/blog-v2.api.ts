@@ -70,7 +70,14 @@ export interface BlogV2ListResponse {
 }
 
 export const blogV2PublicApi = {
-  list: (params: { lang?: string; productCategoryId?: string; page?: number; limit?: number }) =>
+  list: (params: {
+    lang?: string
+    productCategoryId?: string
+    productPage?: string
+    productPageContains?: string
+    page?: number
+    limit?: number
+  }) =>
     request<BlogV2ListResponse>({
       method: "GET",
       url: "/api/blog-v2/posts/public/list",
