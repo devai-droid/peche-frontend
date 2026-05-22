@@ -4,6 +4,14 @@
 
 ---
 
+## [1.11.0] - 2026-05-22
+
+### Added
+
+- **블로그 v2 도입** — 기존 사이트 디자인(헤더·푸터·목록 카드·상세)으로 블로그 목록/상세 페이지 추가. 시술 대분류(product_category) 필터 탭(전체시술과 자동 동기화), 상세 목차(TOC)·관련 글 자동 수집·CTA(시술 상세페이지 연결).
+- **GEO/AEO 구조화 데이터** — BlogPosting·MedicalClinic(@id 단일 병원 통합)·BreadcrumbList·FAQPage·MedicalProcedure JSON-LD, hreflang/canonical/OG, 인용 출처 링크.
+- 블로그 메뉴 노출.
+
 ## [1.10.14] - 2026-05-07
 
 ### Changed

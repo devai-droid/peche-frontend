@@ -1,6 +1,7 @@
 import React from "react"
 import { Helmet } from "react-helmet-async"
-import { BlogPost } from "../blog.types"
+import { BlogV2Post } from "../blog-v2.api"
+import { BLOG_SITE, HOSPITAL_JSON_LD_ID } from "../blog-site.config"
 
 interface FaqItem {
   question: string
@@ -14,13 +15,67 @@ interface TocItem {
 }
 
 interface BlogSeoProps {
-  post: BlogPost
+  post: BlogV2Post
   title: string
   summary: string
   lang: string
   slug: string
   sanitizedContent?: string
   tocItems?: TocItem[]
+}
+
+const TITLE_MAX = 38 // 검색 결과 제목 잘림 방지(병원명 suffix 제외 기준)
+
+/** 본문 HTML의 "FAQ" 섹션에서 Q/A 추출 (백엔드 extractFaqs와 동일 규칙). */
+function extractFaqs(html: string): FaqItem[] {
+  if (!html) return []
+  const doc = new DOMParser().parseFromString(html, "text/html")
+  const headings = Array.from(doc.querySelectorAll("h2, h3"))
+  const faqHeading = headings.find((h) => /FAQ|자주\s*묻는/i.test(h.textContent ?? ""))
+  if (!faqHeading) return []
+
+  const faqs: FaqItem[] = []
+  let node = faqHeading.nextElementSibling
+  while (node && node.tagName !== "H2") {
+    if (node.tagName === "P") {
+      const strong = node.querySelector("strong")
+      const qRaw = (strong?.textContent ?? "").trim()
+      if (qRaw) {
+        const full = node.textContent ?? ""
+        const question = qRaw.replace(/^Q[:.]?\s*/i, "").trim()
+        const answer = full
+          .replace(qRaw, "")
+          .replace(/^\s*A[:.]?\s*/i, "")
+          .trim()
+        if (question && answer) faqs.push({ question, answer })
+      }
+    }
+    node = node.nextElementSibling
+  }
+  return faqs
+}
+
+/**
+ * articleBody(AEO): 순수 본문 텍스트만. FAQ 섹션·의학고지·이미지 캡션은 제외
+ * (감수자카드·예약 등은 본문 HTML에 없음). JSON-LD articleBody에 본문이 깨끗하게 담기도록.
+ */
+function extractArticleBody(html: string): string {
+  if (!html) return ""
+  const doc = new DOMParser().parseFromString(html, "text/html")
+  doc.querySelectorAll(".blog-disclaimer, .blog-caption").forEach((el) => el.remove())
+  // FAQ 헤딩부터 끝까지 제거(FAQPage 스키마가 별도로 커버)
+  const faqHeading = Array.from(doc.querySelectorAll("h2, h3")).find((h) =>
+    /FAQ|자주\s*묻는/i.test(h.textContent ?? ""),
+  )
+  if (faqHeading) {
+    let node: Element | null = faqHeading
+    while (node) {
+      const next: Element | null = node.nextElementSibling
+      node.remove()
+      node = next
+    }
+  }
+  return (doc.body.textContent ?? "").replace(/\s+/g, " ").trim()
 }
 
 const BlogSeo = ({
@@ -32,9 +87,13 @@ const BlogSeo = ({
   sanitizedContent,
   tocItems,
 }: BlogSeoProps) => {
-  const siteUrl = "https://pecheskin.clinic"
-  const pageUrl = `${siteUrl}/${lang}/blog/${slug}`
-  const siteName = "페슈의원"
+  const { baseUrl } = BLOG_SITE
+  const pageUrl = `${baseUrl}/${lang}/blog/${slug}`
+  const siteName = BLOG_SITE.hospitalName
+
+  const doc = post.authorDoctor
+  const keywords = [post.mainKeyword, ...(post.subKeywords ?? [])].filter(Boolean).join(", ")
+  const metaTitle = title.length > TITLE_MAX ? title.slice(0, TITLE_MAX).trim() : title
 
   const hasPart =
     tocItems && tocItems.length > 0
@@ -45,73 +104,81 @@ const BlogSeo = ({
         }))
       : undefined
 
-  const articleJsonLd = {
+  // 1. BlogPosting — author/reviewedBy/publisher가 루트 병원(@id)을 참조해 단일 엔티티로 통합
+  const articleJsonLd: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
     headline: title,
     description: summary,
     image: post.thumbnailUrl || undefined,
-    author: {
-      "@type": "Person",
-      name: post.author,
-    },
+    author: doc
+      ? {
+          "@type": "Person",
+          name: doc.name,
+          jobTitle: doc.jobTitle,
+          url: doc.profileUrl,
+          worksFor: { "@id": HOSPITAL_JSON_LD_ID },
+        }
+      : { "@type": "Organization", "@id": HOSPITAL_JSON_LD_ID },
+    ...(doc
+      ? {
+          reviewedBy: {
+            "@type": "Physician",
+            name: doc.name,
+            medicalSpecialty: doc.specialty,
+            worksFor: { "@id": HOSPITAL_JSON_LD_ID },
+          },
+        }
+      : {}),
     datePublished: post.publishedAt,
     dateModified: post.updatedAt,
-    publisher: {
-      "@type": "Organization",
-      name: siteName,
-      url: siteUrl,
-    },
-    mainEntityOfPage: {
-      "@type": "WebPage",
-      "@id": pageUrl,
-    },
+    publisher: { "@id": HOSPITAL_JSON_LD_ID },
+    mainEntityOfPage: { "@type": "MedicalWebPage", "@id": pageUrl },
+    articleBody: extractArticleBody(sanitizedContent ?? "") || undefined,
     ...(hasPart ? { hasPart } : {}),
   }
 
+  // 2. 병원 단일 엔티티(루트) — @id로 위 author/reviewedBy/publisher와 통합
+  const hospitalJsonLd: Record<string, unknown> = {
+    "@context": "https://schema.org",
+    "@type": BLOG_SITE.organizationType,
+    "@id": HOSPITAL_JSON_LD_ID,
+    name: siteName,
+    url: baseUrl,
+    telephone: BLOG_SITE.telephone || undefined,
+    medicalSpecialty: BLOG_SITE.medicalSpecialty || undefined,
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: BLOG_SITE.address.locality,
+      addressRegion: BLOG_SITE.address.region,
+      addressCountry: BLOG_SITE.address.country,
+    },
+    geo: BLOG_SITE.geo
+      ? {
+          "@type": "GeoCoordinates",
+          latitude: BLOG_SITE.geo.latitude,
+          longitude: BLOG_SITE.geo.longitude,
+        }
+      : undefined,
+    sameAs: BLOG_SITE.sameAs,
+    knowsAbout: BLOG_SITE.knowsAbout,
+    hasCredential:
+      BLOG_SITE.credentials && BLOG_SITE.credentials.length > 0 ? BLOG_SITE.credentials : undefined,
+  }
+
+  // 3. BreadcrumbList
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      {
-        "@type": "ListItem",
-        position: 1,
-        name: "Home",
-        item: `${siteUrl}/${lang}`,
-      },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: "Blog",
-        item: `${siteUrl}/${lang}/blog`,
-      },
-      {
-        "@type": "ListItem",
-        position: 3,
-        name: title,
-        item: pageUrl,
-      },
+      { "@type": "ListItem", position: 1, name: "Home", item: `${baseUrl}/${lang}` },
+      { "@type": "ListItem", position: 2, name: "Blog", item: `${baseUrl}/${lang}/blog` },
+      { "@type": "ListItem", position: 3, name: title, item: pageUrl },
     ],
   }
 
-  // Parse FAQ items from content HTML
-  const faqItems: FaqItem[] = []
-  if (sanitizedContent) {
-    const parser = new DOMParser()
-    const doc = parser.parseFromString(sanitizedContent, "text/html")
-    const questions = doc.querySelectorAll(".schema-faq-question")
-    questions.forEach((q) => {
-      const questionEl = q.querySelector("strong")
-      const answerEl = q.querySelector(".schema-faq-answer")
-      if (questionEl && answerEl) {
-        faqItems.push({
-          question: (questionEl.textContent ?? "").replace(/^Q\.\s*/, ""),
-          answer: answerEl.textContent?.trim() ?? "",
-        })
-      }
-    })
-  }
-
+  // 4. FAQPage (본문 FAQ 섹션 파싱)
+  const faqItems = extractFaqs(sanitizedContent ?? "")
   const faqJsonLd =
     faqItems.length > 0
       ? {
@@ -120,43 +187,41 @@ const BlogSeo = ({
           mainEntity: faqItems.map((item) => ({
             "@type": "Question",
             name: item.question,
-            acceptedAnswer: {
-              "@type": "Answer",
-              text: item.answer,
-            },
+            acceptedAnswer: { "@type": "Answer", text: item.answer },
           })),
         }
       : null
 
-  const supportedLangs = ["ko", "en", "zh", "zh-TW", "ja", "th"]
+  // 5. medical_schema (글 주인공 JSON-LD, 마케터 작성 — MedicalProcedure 등)
+  const extraJsonLd =
+    post.extraJsonld && typeof post.extraJsonld === "object" ? post.extraJsonld : null
 
   return (
     <Helmet>
-      <title>{`${title} | ${siteName}`}</title>
+      <title>{`${metaTitle} | ${siteName}`}</title>
       <meta name="description" content={summary} />
-      {post.keywords && <meta name="keywords" content={post.keywords} />}
+      {keywords && <meta name="keywords" content={keywords} />}
 
-      {/* OG Tags */}
+      {/* OG — article:* 메타는 의도적으로 넣지 않음(OG가 Article 엔티티 자동 생성해 JSON-LD와 중복되는 것 방지) */}
       <meta property="og:type" content="article" />
       <meta property="og:title" content={title} />
       <meta property="og:description" content={summary} />
       <meta property="og:url" content={pageUrl} />
       <meta property="og:site_name" content={siteName} />
       {post.thumbnailUrl && <meta property="og:image" content={post.thumbnailUrl} />}
-      <meta property="article:published_time" content={post.publishedAt} />
-      <meta property="article:modified_time" content={post.updatedAt} />
-      <meta property="article:author" content={post.author} />
 
       {/* hreflang */}
-      {supportedLangs.map((l) => (
-        <link key={l} rel="alternate" hrefLang={l} href={`${siteUrl}/${l}/blog/${slug}`} />
+      {BLOG_SITE.supportedLangs.map((l) => (
+        <link key={l} rel="alternate" hrefLang={l} href={`${baseUrl}/${l}/blog/${slug}`} />
       ))}
       <link rel="canonical" href={pageUrl} />
 
-      {/* JSON-LD */}
+      {/* JSON-LD: BlogPosting + 병원(@id) + Breadcrumb + FAQPage + medical_schema */}
       <script type="application/ld+json">{JSON.stringify(articleJsonLd)}</script>
+      <script type="application/ld+json">{JSON.stringify(hospitalJsonLd)}</script>
       <script type="application/ld+json">{JSON.stringify(breadcrumbJsonLd)}</script>
       {faqJsonLd && <script type="application/ld+json">{JSON.stringify(faqJsonLd)}</script>}
+      {extraJsonLd && <script type="application/ld+json">{JSON.stringify(extraJsonLd)}</script>}
     </Helmet>
   )
 }

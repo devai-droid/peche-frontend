@@ -22,6 +22,10 @@ module.exports = merge(common, {
         target: "http://localhost:3007",
         changeOrigin: true,
       },
+      "/uploads": {
+        target: "http://localhost:3007",
+        changeOrigin: true,
+      },
     },
   },
   output: {

@@ -7,18 +7,18 @@ import useResponsive from "@/lib/hooks/use-responsive"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 import { useAdminAuth } from "@/lib/hooks/use-admin-auth"
-import { useBlogList } from "./use-blog"
+import { useQuery } from "@tanstack/react-query"
+import { blogV2PublicApi } from "./blog-v2.api"
 import BlogCard from "./components/blog-card.component"
 import BlogPagination from "./components/blog-pagination.component"
 import tw from "twin.macro"
-import { useEventCategoryControllerFindManyWithPaginationQuery } from "@/lib/orval/event-categories/event-categories"
-import { EventCategoryControllerFindManyWithPaginationQueryStatus } from "@/lib/orval/model"
+import { useProductCategoryControllerFindMany } from "@/lib/orval/product-categories/product-categories"
 import useLanguageValue from "@/lib/hooks/use-language-key"
+import useLanguageQuery from "@/lib/hooks/use-language-query"
 
 const POSTS_PER_PAGE = 12
 
 const item = tw`w-full font-semibold font-pretendard text-center h-14 flex items-center justify-center bg-white`
-
 
 const Blog = () => {
   const { t, i18n } = useTranslation()
@@ -27,42 +27,52 @@ const Blog = () => {
   const { isAdmin } = useAdminAuth()
   const tv = useLanguageValue()
   const [page, setPage] = useState(1)
-  const [selectedEventCatId, setSelectedEventCatId] = useState<string | null>(null)
+  const [selectedProductCatId, setSelectedProductCatId] = useState<string | null>(null)
 
   const lang = i18n.language
+  const langQuery = useLanguageQuery()
 
-  const { data: eventCategoriesData } = useEventCategoryControllerFindManyWithPaginationQuery({
-    status: EventCategoryControllerFindManyWithPaginationQueryStatus.ACTIVE,
+  // 대분류: 전체시술 페이지와 동일 파라미터로 조회 → 순서·갯수 자동 일치 (어드민서 추가 시 함께 반영)
+  const { data: productCategoriesData } = useProductCategoryControllerFindMany({
+    status: "ACTIVE",
     sortBy: ["order"],
     sortOrder: ["ASC"],
     limit: 100,
+    ...langQuery,
+  })
+  const productCategories = (productCategoriesData?.items ?? []).map((cat) => ({
+    id: cat.id,
+    name: tv(cat, "name"),
+  }))
+
+  // 글 목록: v2 공개 API
+  const { data, isLoading } = useQuery({
+    queryKey: ["blog-v2-public", page, lang, selectedProductCatId],
+    queryFn: () =>
+      blogV2PublicApi.list({
+        lang,
+        productCategoryId: selectedProductCatId ?? undefined,
+        page,
+        limit: POSTS_PER_PAGE,
+      }),
   })
 
-  const eventCategories = eventCategoriesData?.items ?? []
-
-  const { data, isLoading } = useBlogList(
-    page,
-    POSTS_PER_PAGE,
-    lang,
-    selectedEventCatId ?? undefined,
-  )
-
-  const posts = data?.data ?? []
-  const lastPage = data?.lastPage ?? 1
+  const posts = data?.items ?? []
+  const lastPage = data ? Math.max(1, Math.ceil(data.total / POSTS_PER_PAGE)) : 1
 
   const handlePageChange = (newPage: number) => {
     setPage(newPage)
     window.scrollTo({ top: 0, behavior: "smooth" })
   }
 
-  const handleTabClick = (eventCatId: string | null) => {
-    setSelectedEventCatId(eventCatId)
+  const handleTabClick = (productCatId: string | null) => {
+    setSelectedProductCatId(productCatId)
     setPage(1)
   }
 
   const tabs = [
     { id: null, label: t("blog.allCategory") },
-    ...eventCategories.map((cat) => ({ id: cat.id, label: tv(cat, "name") })),
+    ...productCategories.map((cat) => ({ id: cat.id, label: cat.name })),
   ]
 
   return (
@@ -90,24 +100,21 @@ const Blog = () => {
 
       <div tw="bg-white min-h-screen font-pretendard tracking-tight leading-[150%]">
         <AppMaxWidth tw="max-lg:px-0 max-lg:pt-0 pb-20 lg:pb-32">
-          {/* Event Category Tabs */}
-          {eventCategories.length > 0 && (
+          {/* 시술 대분류 탭 (product_category) */}
+          {productCategories.length > 0 && (
             <div tw="flex justify-center mt-8 lg:mt-16 mb-4 lg:mb-12 max-lg:p-4">
               <div tw="grid justify-center bg-neutral30 gap-px p-px grid-cols-3 lg:grid-cols-5 w-full">
-                {tabs.map((tab, index) => {
-                  const isSelected = selectedEventCatId === tab.id
-                  const isFirstRow = index < 5
+                {tabs.map((tab) => {
+                  const isSelected = selectedProductCatId === tab.id
                   return (
                     <button
                       key={tab.id ?? "__all__"}
                       onClick={() => handleTabClick(tab.id)}
                       css={[
                         item,
-                        isSelected && tw`bg-[#DA7F67] text-white`,
-                        !isSelected &&
-                          (isFirstRow
-                            ? tw`bg-[#FEF5EA] hover:(bg-tertiary) text-black hover:(text-primary)`
-                            : tw`bg-white font-normal text-black hover:(text-primary)`),
+                        isSelected
+                          ? tw`text-white bg-primary`
+                          : tw`font-normal text-neutralBlack hover:(text-primary)`,
                       ]}>
                       <div tw="px-2 overflow-hidden text-ellipsis text-[13px] sm:text-[15px] md:text-[17px]">
                         {tab.label}
@@ -184,7 +191,7 @@ const Blog = () => {
                   !isDesktop && !isMobile && tw`grid-cols-2`,
                 ]}>
                 {posts.map((post) => (
-                  <BlogCard key={post.id} post={post} eventCategories={eventCategories} />
+                  <BlogCard key={post.id} post={post} productCategories={productCategories} />
                 ))}
               </div>
 
