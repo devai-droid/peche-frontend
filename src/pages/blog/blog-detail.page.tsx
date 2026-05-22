@@ -278,7 +278,8 @@ const BlogDetail = () => {
     // 스크롤 위치 기반: 헤더 라인(HEADER_OFFSET)을 지난 마지막 제목을 활성. 최상단이면 첫 제목.
     const handler = () => {
       if (isScrollingRef.current) return
-      const line = HEADER_OFFSET + 24
+      // 활성 판정선: 화면 위쪽 1/3 지점(읽는 위치)에 맞춤 — 너무 위(헤더 근처)면 목차가 뒤로 밀려 보임
+      const line = Math.max(HEADER_OFFSET + 24, Math.round(window.innerHeight / 3))
       let current = tocItems[0]?.id ?? ""
       tocItems.forEach((item) => {
         const el = document.getElementById(item.id)
