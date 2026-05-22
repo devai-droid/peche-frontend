@@ -58,7 +58,7 @@ const BlogCard = ({ post, productCategories }: BlogCardProps) => {
             {title}
           </h3>
 
-          <p tw="text-[15px] lg:text-[14px] text-neutral70 mb-2 leading-[1.5]" css={[lineClamp2]}>
+          <p tw="text-[15px] lg:text-[14px] text-neutral70 mb-4 leading-[1.5]" css={[lineClamp2]}>
             {summary}
           </p>
 
