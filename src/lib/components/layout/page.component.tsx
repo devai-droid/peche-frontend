@@ -6,6 +6,7 @@ import AppDrawer from "./drawer.component"
 interface Props {
   children?: React.ReactNode
   header?: HeaderProps
+  hiddenHeader?: boolean
   hiddenFooter?: boolean
   hideOnScroll?: boolean
   bottomCartExists?: boolean
@@ -16,6 +17,7 @@ interface Props {
 const Page = ({
   children,
   header,
+  hiddenHeader = false,
   hiddenFooter = true,
   hideOnScroll = false,
   bottomCartExists = false,
@@ -27,13 +29,15 @@ const Page = ({
   return (
     <div tw="min-h-screen flex flex-col relative">
       <AppDrawer open={openDrawer} onClose={() => setOpenDrawer(false)} />
-      <Header
-        {...header}
-        hideOnScroll={hideOnScroll}
-        onClickDrawer={() => setOpenDrawer(true)}
-        clickedKeyword={clickedKeyword}
-        setClickedKeyword={setClickedKeyword}
-      />
+      {!hiddenHeader && (
+        <Header
+          {...header}
+          hideOnScroll={hideOnScroll}
+          onClickDrawer={() => setOpenDrawer(true)}
+          clickedKeyword={clickedKeyword}
+          setClickedKeyword={setClickedKeyword}
+        />
+      )}
       <main tw="flex-1 md:min-h-[70rem]">{children}</main>
       {!hiddenFooter && <Footer bottomCartExists={bottomCartExists} />}
     </div>

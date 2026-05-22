@@ -300,7 +300,7 @@ const BlogDetail = () => {
 
   if (isLoading) {
     return (
-      <Page hiddenFooter={false} bottomCartExists={false} hideOnScroll>
+      <Page hiddenHeader={isPreview} hiddenFooter={isPreview} bottomCartExists={false} hideOnScroll>
         <div tw="min-h-screen flex items-center justify-center">
           <div tw="text-neutral50 text-[16px]">...</div>
         </div>
@@ -310,7 +310,7 @@ const BlogDetail = () => {
 
   if (!post) {
     return (
-      <Page hiddenFooter={false} bottomCartExists={false} hideOnScroll>
+      <Page hiddenHeader={isPreview} hiddenFooter={isPreview} bottomCartExists={false} hideOnScroll>
         <div tw="min-h-screen flex flex-col items-center justify-center gap-4 font-pretendard">
           <div tw="text-[18px] text-neutral70">{t("blog.noPosts")}</div>
           <CustomLink
@@ -336,7 +336,7 @@ const BlogDetail = () => {
     : ""
 
   return (
-    <Page hiddenFooter={false} bottomCartExists={false} hideOnScroll>
+    <Page hiddenHeader={isPreview} hiddenFooter={isPreview} bottomCartExists={false} hideOnScroll>
       <BlogSeo
         post={post}
         doctor={cardDoctor}
@@ -351,8 +351,8 @@ const BlogDetail = () => {
 
       <div tw="bg-white min-h-screen font-pretendard tracking-tight leading-[150%]">
         <AppMaxWidth>
-          {/* 제목 위 여백 — 모바일은 고정 헤더(약 64px) + 여유, 데스크톱도 헤더와 간격 확보 */}
-          <div tw="pt-32 lg:pt-24" />
+          {/* 제목 위 여백 — 모바일은 고정 헤더(약 64px) + 여유, 데스크톱도 헤더와 간격 확보. 미리보기(헤더 없음)는 축소 */}
+          <div css={[isPreview ? tw`pt-6` : tw`pt-32 lg:pt-24`]} />
           {/* Layout: TOC sidebar + Article */}
           <div
             css={[
