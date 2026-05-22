@@ -29,6 +29,8 @@ export interface BlogV2Doctor {
   name: string
   specialty?: string
   jobTitle?: string
+  /** 의료진 소개글 — 모든 글 하단 의료진 카드 공통 노출 */
+  bio?: string
   associations?: string[]
   photoUrl?: string
   profileUrl?: string
@@ -93,5 +95,11 @@ export const blogV2PublicApi = {
     request<BlogV2Post>({
       method: "GET",
       url: `/api/blog-v2/posts/public/preview/${id}`,
+    }),
+  // 대표 의료진 — 글에 author_doctor가 없을 때 하단 의료진 카드 공통 채움
+  representativeDoctor: () =>
+    request<BlogV2Doctor | null>({
+      method: "GET",
+      url: "/api/blog-v2/doctors/public/representative",
     }),
 }

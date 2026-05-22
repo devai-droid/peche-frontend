@@ -173,6 +173,13 @@ const BlogDetail = () => {
     retry: false,
   })
 
+  // 대표 의료진 — 글에 author_doctor가 없을 때 하단 의료진 카드 공통 채움
+  const { data: representativeDoctor } = useQuery({
+    queryKey: ["blog-v2-representative-doctor"],
+    queryFn: () => blogV2PublicApi.representativeDoctor(),
+    staleTime: 1000 * 60 * 30,
+  })
+
   // 시술 대분류(product_category)명 표시용
   const { data: productCategoriesData } = useProductCategoryControllerFindMany({ limit: 100 })
   const productCategory = (productCategoriesData?.items ?? []).find(
@@ -202,7 +209,9 @@ const BlogDetail = () => {
   // 헤딩용 주제 키워드 — keyword(주제) 우선, 없으면 main_keyword 폴백
   const topicKeyword = post?.keyword?.keyword || post?.mainKeyword || ""
   const content = rewriteBlogHtml(post?.bodyHtml)
-  const authorName = post?.authorDoctor?.name ?? "페슈의원"
+  // 의료진 카드: 글의 author_doctor 우선, 없으면 대표 의료진(공통)으로 채움
+  const cardDoctor = post?.authorDoctor ?? representativeDoctor ?? undefined
+  const authorName = cardDoctor?.name ?? "페슈의원"
   const processedContent = useMemo(() => preprocessContent(content, lang), [content, lang])
   const sanitizedContent = useMemo(() => DOMPurify.sanitize(processedContent), [processedContent])
 
@@ -632,21 +641,24 @@ const BlogDetail = () => {
                   tw="flex items-center gap-6 py-5 px-6 rounded-sm"
                   css={[{ backgroundColor: "#fafafa", border: "1px solid #f0f0f0" }]}>
                   <img
-                    src={resolveBlogAsset(post.authorDoctor?.photoUrl) || avatarImg}
+                    src={resolveBlogAsset(cardDoctor?.photoUrl) || avatarImg}
                     alt={authorName}
                     tw="w-[72px] h-[72px] rounded-full object-cover flex-shrink-0"
                   />
                   <div tw="w-px self-stretch bg-neutral30 flex-shrink-0" />
-                  {/* 페슈의원(위, 연하게) / 안태언 대표원장(아래, 강조) */}
+                  {/* 페슈의원(위, 연하게) / 안태언 대표원장(아래, 강조) + 소개글 */}
                   <div tw="flex flex-col gap-[3px]">
                     <p tw="text-[13px] text-neutral50 leading-[1.3]">{t("blog.profileClinic")}</p>
                     <p tw="text-[15px] font-semibold text-neutralBlack leading-[1.3]">
                       {authorName}
+                      {cardDoctor?.jobTitle ? ` ${cardDoctor.jobTitle}` : ""}
                     </p>
-                    <p tw="text-[13px] text-neutral50 mt-[6px]">의료진 소개문구를 써주세요.</p>
-                    <div tw="flex items-center gap-3 text-[13px] text-neutral50">
+                    {cardDoctor?.bio && (
+                      <p tw="text-[13px] text-neutral50 mt-[6px] leading-[1.6]">{cardDoctor.bio}</p>
+                    )}
+                    <div tw="flex items-center gap-3 text-[13px] text-neutral50 mt-[6px]">
                       <CustomLink
-                        to="/reservation"
+                        to="/doctor"
                         tw="font-medium transition-colors duration-200"
                         css={[{ color: "#DA7F67" }]}>
                         의료진 소개 보기
