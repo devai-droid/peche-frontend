@@ -10,6 +10,7 @@ import { useAdminAuth } from "@/lib/hooks/use-admin-auth"
 import { useQuery } from "@tanstack/react-query"
 import { blogV2PublicApi } from "./blog-v2.api"
 import BlogCard from "./components/blog-card.component"
+import { BottomButtons } from "@/features/product/components/cart-view.component"
 import BlogPagination from "./components/blog-pagination.component"
 import tw from "twin.macro"
 import { useProductCategoryControllerFindMany } from "@/lib/orval/product-categories/product-categories"
@@ -42,6 +43,7 @@ const Blog = () => {
   const { isAdmin } = useAdminAuth()
   const tv = useLanguageValue()
   const [page, setPage] = useState(1)
+  const [showInquiryButtons, setShowInquiryButtons] = useState(false)
   const [selectedProductCatId, setSelectedProductCatId] = useState<string | null>(null)
   const [selectedChipKey, setSelectedChipKey] = useState<string>(ALL_CHIP_KEY)
 
@@ -311,6 +313,11 @@ const Blog = () => {
           )}
         </AppMaxWidth>
       </div>
+      {/* 모바일 하단 상담/예약 탭바 (다른 페이지와 동일) — lg:hidden 자체 처리 */}
+      <BottomButtons
+        showInquiryButtons={showInquiryButtons}
+        setShowInquiryButtons={setShowInquiryButtons}
+      />
     </Page>
   )
 }

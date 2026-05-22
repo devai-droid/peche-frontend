@@ -13,6 +13,7 @@ import { ProductDetailPageControllerFindManyStatus } from "@/lib/orval/model"
 import { blogV2PublicApi, resolveBlogAsset, rewriteBlogHtml } from "./blog-v2.api"
 import BlogSeo from "./components/blog-seo.component"
 import CustomLink from "@/lib/components/custom-link.component"
+import { BottomButtons } from "@/features/product/components/cart-view.component"
 import tw, { css } from "twin.macro"
 import avatarImg from "@/assets/images/avatar.png"
 
@@ -251,6 +252,7 @@ const BlogDetail = () => {
   }, [sanitizedContent])
 
   const [activeId, setActiveId] = useState("")
+  const [showInquiryButtons, setShowInquiryButtons] = useState(false)
   const isScrollingRef = useRef(false)
   const scrollTimerRef = useRef<ReturnType<typeof setTimeout>>()
 
@@ -701,7 +703,7 @@ const BlogDetail = () => {
           </div>
 
           {/* Back to list */}
-          <div tw="flex justify-center mt-16 mb-28 lg:mt-20 lg:mb-20">
+          <div tw="flex justify-center mt-16 mb-44 lg:mt-20 lg:mb-20">
             <button
               onClick={() => navigate(`/${lang}/blog`)}
               tw="
@@ -723,14 +725,19 @@ const BlogDetail = () => {
         </AppMaxWidth>
       </div>
 
-      {/* 모바일 전용 하단 고정 CTA — 전체 코랄 배경, 스크롤 내내 노출 */}
+      {/* 모바일 전용 하단 고정 CTA — 상담/예약 탭바(높이 64px) 바로 위에 노출 */}
       {!isDesktop && (
         <CustomLink
           to={ctaTo}
-          tw="fixed bottom-0 left-0 right-0 z-50 block w-full text-center text-[15px] py-4 bg-primary text-white font-semibold">
+          tw="fixed bottom-16 left-0 right-0 z-50 block w-full text-center text-[15px] py-4 bg-primary text-white font-semibold">
           {topicKeyword ? `${topicKeyword} 시술 가격 보기` : "시술 가격 보기"}
         </CustomLink>
       )}
+      {/* 모바일 하단 상담/예약 탭바 (다른 페이지와 동일) — lg:hidden 자체 처리 */}
+      <BottomButtons
+        showInquiryButtons={showInquiryButtons}
+        setShowInquiryButtons={setShowInquiryButtons}
+      />
     </Page>
   )
 }

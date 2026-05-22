@@ -758,7 +758,7 @@ const BottomSheet = () => {
   )
 }
 
-const BottomButtons = ({
+export const BottomButtons = ({
   showInquiryButtons,
   setShowInquiryButtons,
 }: {
