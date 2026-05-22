@@ -173,11 +173,12 @@ const BlogDetail = () => {
     retry: false,
   })
 
-  // 대표 의료진 — 글에 author_doctor가 없을 때 하단 의료진 카드 공통 채움
+  // 대표 의료진(어드민 '의료진 정보'에서 관리) — 모든 글 하단 의료진 카드 공통 소스.
+  // 어드민에서 수정하면 짧은 캐시 후 전체 글에 자동 반영.
   const { data: representativeDoctor } = useQuery({
     queryKey: ["blog-v2-representative-doctor"],
     queryFn: () => blogV2PublicApi.representativeDoctor(),
-    staleTime: 1000 * 60 * 30,
+    staleTime: 1000 * 30,
   })
 
   // 시술 대분류(product_category)명 표시용
@@ -210,8 +211,9 @@ const BlogDetail = () => {
   const topicKeyword = post?.keyword?.keyword || post?.mainKeyword || ""
   const content = rewriteBlogHtml(post?.bodyHtml)
   // 의료진 카드: 글의 author_doctor 우선, 없으면 대표 의료진(공통)으로 채움
-  const cardDoctor = post?.authorDoctor ?? representativeDoctor ?? undefined
-  const authorName = cardDoctor?.name ?? "페슈의원"
+  // 카드는 어드민에서 관리하는 대표 의료진을 우선 사용 → 한 곳 수정으로 모든 글에 반영
+  const cardDoctor = representativeDoctor ?? post?.authorDoctor ?? undefined
+  const authorName = cardDoctor?.name ?? "안태언"
   const processedContent = useMemo(() => preprocessContent(content, lang), [content, lang])
   const sanitizedContent = useMemo(() => DOMPurify.sanitize(processedContent), [processedContent])
 
@@ -639,19 +641,18 @@ const BlogDetail = () => {
               {/* 의료진 카드 */}
               <div className="profile-meta" css={[{ marginTop: "4em" }]}>
                 <div
-                  tw="flex flex-col lg:flex-row items-stretch lg:items-start rounded-sm overflow-hidden"
+                  tw="flex flex-col lg:flex-row items-stretch rounded-sm overflow-hidden"
                   css={[{ backgroundColor: "#fafafa", border: "1px solid #f0f0f0" }]}>
-                  {/* 정사각형 사진 — 모바일: 위(전체폭) / 데스크톱: 왼쪽 1/4 */}
+                  {/* 사진 — 모바일: 위(전체폭 정사각) / 데스크톱: 카드 세로에 꽉 차고 가로는 세로에 맞춰 자동 */}
                   <img
                     src={resolveBlogAsset(cardDoctor?.photoUrl) || avatarImg}
                     alt={authorName}
-                    tw="w-full lg:w-1/4 aspect-square object-cover object-top flex-shrink-0"
+                    tw="w-full aspect-square lg:w-auto lg:h-auto lg:self-stretch lg:aspect-square object-cover object-top flex-shrink-0"
                   />
-                  {/* 페슈의원(위, 연하게) / 안태언 대표원장(아래, 강조) + 소개글 */}
+                  {/* pêche + 안태언 대표원장(같은 줄, 동일 크기·색) + 소개글 */}
                   <div tw="flex flex-col justify-center gap-[3px] py-5 px-6 flex-1 min-w-0">
-                    <p tw="text-[15px] text-neutral50 leading-[1.3]">{t("blog.profileClinic")}</p>
                     <p tw="text-[19px] font-semibold text-neutralBlack leading-[1.3]">
-                      {authorName}
+                      pêche {authorName}
                       {cardDoctor?.jobTitle ? ` ${cardDoctor.jobTitle}` : ""}
                     </p>
                     {cardDoctor?.bio && (
