@@ -53,12 +53,12 @@ const BlogCard = ({ post, productCategories }: BlogCardProps) => {
         {/* Content */}
         <div tw="pt-3">
           <h3
-            tw="text-[16px] lg:text-[18px] font-semibold text-neutralBlack mb-1 leading-[1.4]"
+            tw="text-[18px] lg:text-[18px] font-semibold text-neutralBlack mb-1 leading-[1.4]"
             css={[lineClamp2]}>
             {title}
           </h3>
 
-          <p tw="text-[13px] lg:text-[14px] text-neutral70 mb-2 leading-[1.5]" css={[lineClamp2]}>
+          <p tw="text-[15px] lg:text-[14px] text-neutral70 mb-2 leading-[1.5]" css={[lineClamp2]}>
             {summary}
           </p>
 
@@ -66,19 +66,19 @@ const BlogCard = ({ post, productCategories }: BlogCardProps) => {
           <div tw="flex items-center gap-2">
             {productCategory && (
               <span
-                tw="text-[11px] px-[6px] py-[1px] rounded-sm font-medium"
+                tw="text-[13px] lg:text-[11px] px-[6px] py-[1px] rounded-sm font-medium"
                 css={[{ color: "#DA7F67", backgroundColor: "rgba(218, 127, 103, 0.1)" }]}>
                 {productCategory.name}
               </span>
             )}
             {post.productPage && (
-              <span tw="text-[11px] font-medium" css={[{ color: "#AB6655" }]}>
+              <span tw="text-[13px] lg:text-[11px] font-medium" css={[{ color: "#AB6655" }]}>
                 {post.productPage}
               </span>
             )}
-            <span tw="text-[12px] text-neutral50">{publishedDate}</span>
+            <span tw="text-[14px] lg:text-[12px] text-neutral50">{publishedDate}</span>
             {post.viewCount != null && (
-              <span tw="text-[11px] text-neutral50 ml-auto flex items-center gap-[3px]">
+              <span tw="text-[13px] lg:text-[11px] text-neutral50 ml-auto flex items-center gap-[3px]">
                 <svg
                   width="12"
                   height="12"
