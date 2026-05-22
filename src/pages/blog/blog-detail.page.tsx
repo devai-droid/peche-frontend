@@ -659,7 +659,7 @@ const BlogDetail = () => {
                   {/* pêche + 안태언 대표원장(같은 줄, 동일 크기·색) + 소개글 */}
                   <div tw="flex flex-col justify-center gap-[3px] py-5 px-6 flex-1 min-w-0">
                     <p tw="text-[19px] font-semibold text-neutralBlack leading-[1.3]">
-                      pêche {authorName}
+                      {authorName}
                       {cardDoctor?.jobTitle ? ` ${cardDoctor.jobTitle}` : ""}
                     </p>
                     {cardDoctor?.bio && (
