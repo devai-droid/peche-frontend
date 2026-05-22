@@ -644,11 +644,17 @@ const BlogDetail = () => {
                 <div
                   tw="flex flex-col lg:flex-row items-stretch rounded-sm overflow-hidden"
                   css={[{ backgroundColor: "#fafafa", border: "1px solid #f0f0f0" }]}>
-                  {/* 사진 — 모바일: 위(전체폭 정사각) / 데스크톱: 카드 세로에 꽉 차고 가로는 세로에 맞춰 자동 */}
-                  <img
-                    src={resolveBlogAsset(cardDoctor?.photoUrl) || avatarImg}
-                    alt={authorName}
-                    tw="w-full aspect-square lg:w-auto lg:h-auto lg:self-stretch lg:aspect-square object-cover object-top flex-shrink-0"
+                  {/* 사진 — 모바일: 위(전체폭 정사각) / 데스크톱: 왼쪽 고정폭으로 카드 세로 높이에 꽉 참(여백 없음) */}
+                  <div
+                    role="img"
+                    aria-label={authorName}
+                    tw="w-full aspect-square lg:w-[200px] lg:aspect-auto lg:self-stretch bg-center bg-cover bg-no-repeat flex-shrink-0"
+                    css={[
+                      {
+                        backgroundImage: `url("${resolveBlogAsset(cardDoctor?.photoUrl) || avatarImg}")`,
+                        backgroundPosition: "center top",
+                      },
+                    ]}
                   />
                   {/* pêche + 안태언 대표원장(같은 줄, 동일 크기·색) + 소개글 */}
                   <div tw="flex flex-col justify-center gap-[3px] py-5 px-6 flex-1 min-w-0">
