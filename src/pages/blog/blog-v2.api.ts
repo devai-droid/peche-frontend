@@ -88,4 +88,10 @@ export const blogV2PublicApi = {
       method: "GET",
       url: `/api/blog-v2/posts/public/detail/${lang}/${encodeURIComponent(slug)}`,
     }),
+  // 미리보기(초안 포함) — 어드민 iframe 전용. 페이지는 noindex 처리.
+  preview: (id: string) =>
+    request<BlogV2Post>({
+      method: "GET",
+      url: `/api/blog-v2/posts/public/preview/${id}`,
+    }),
 }

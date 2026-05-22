@@ -22,6 +22,7 @@ interface BlogSeoProps {
   slug: string
   sanitizedContent?: string
   tocItems?: TocItem[]
+  noindex?: boolean // 미리보기 등 색인 금지 페이지
 }
 
 const TITLE_MAX = 38 // 검색 결과 제목 잘림 방지(병원명 suffix 제외 기준)
@@ -86,6 +87,7 @@ const BlogSeo = ({
   slug,
   sanitizedContent,
   tocItems,
+  noindex,
 }: BlogSeoProps) => {
   const { baseUrl } = BLOG_SITE
   const pageUrl = `${baseUrl}/${lang}/blog/${slug}`
@@ -199,6 +201,7 @@ const BlogSeo = ({
   return (
     <Helmet>
       <title>{`${metaTitle} | ${siteName}`}</title>
+      {noindex && <meta name="robots" content="noindex,nofollow" />}
       <meta name="description" content={summary} />
       {keywords && <meta name="keywords" content={keywords} />}
 

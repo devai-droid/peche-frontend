@@ -156,17 +156,20 @@ function preprocessContent(html: string, lang: string): string {
 
 const BlogDetail = () => {
   const { t, i18n } = useTranslation()
-  const { slug } = useParams<{ slug: string }>()
+  // 일반: /:lang/blog/:slug, 미리보기(어드민 iframe): /:lang/blog/preview/:id (초안 포함, noindex)
+  const { slug, id: previewId } = useParams<{ slug?: string; id?: string }>()
+  const isPreview = !!previewId
   const navigate = useNavigate()
   const { isDesktop } = useResponsive()
   const tv = useLanguageValue()
   const lang = i18n.language
 
-  // 글 상세: v2 공개 API (발행 글만)
+  // 글 상세: v2 공개 API (발행 글만) / 미리보기는 id로 초안까지 조회
   const { data: post, isLoading } = useQuery({
-    queryKey: ["blog-v2-detail", lang, slug],
-    queryFn: () => blogV2PublicApi.detail(lang, slug ?? ""),
-    enabled: !!slug,
+    queryKey: ["blog-v2-detail", lang, slug, previewId],
+    queryFn: () =>
+      isPreview ? blogV2PublicApi.preview(previewId as string) : blogV2PublicApi.detail(lang, slug ?? ""),
+    enabled: isPreview ? !!previewId : !!slug,
     retry: false,
   })
 
@@ -325,9 +328,10 @@ const BlogDetail = () => {
         title={title}
         summary={summary}
         lang={lang}
-        slug={slug ?? ""}
+        slug={isPreview ? post.slug : (slug ?? "")}
         sanitizedContent={sanitizedContent}
         tocItems={tocItems}
+        noindex={isPreview}
       />
 
       <div tw="bg-white min-h-screen font-pretendard tracking-tight leading-[150%]">
