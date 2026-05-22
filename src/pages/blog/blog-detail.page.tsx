@@ -639,16 +639,16 @@ const BlogDetail = () => {
               {/* 의료진 카드 */}
               <div className="profile-meta" css={[{ marginTop: "4em" }]}>
                 <div
-                  tw="flex items-stretch min-h-[140px] rounded-sm overflow-hidden"
+                  tw="flex items-start rounded-sm overflow-hidden"
                   css={[{ backgroundColor: "#fafafa", border: "1px solid #f0f0f0" }]}>
-                  {/* 정사각형 사진이 카드 왼쪽을 가득 채움 (카드 높이에 맞춰 정사각) */}
+                  {/* 정사각형 사진 — 카드 가로의 1/4 차지, 왼쪽 상단 정렬 */}
                   <img
                     src={resolveBlogAsset(cardDoctor?.photoUrl) || avatarImg}
                     alt={authorName}
-                    tw="self-stretch aspect-square object-cover object-top flex-shrink-0"
+                    tw="w-1/4 aspect-square object-cover object-top flex-shrink-0"
                   />
                   {/* 페슈의원(위, 연하게) / 안태언 대표원장(아래, 강조) + 소개글 */}
-                  <div tw="flex flex-col justify-center gap-[3px] py-5 px-6 min-w-0">
+                  <div tw="flex flex-col justify-center gap-[3px] py-5 px-6 flex-1 min-w-0">
                     <p tw="text-[13px] text-neutral50 leading-[1.3]">{t("blog.profileClinic")}</p>
                     <p tw="text-[15px] font-semibold text-neutralBlack leading-[1.3]">
                       {authorName}
