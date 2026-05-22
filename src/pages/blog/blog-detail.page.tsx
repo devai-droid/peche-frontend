@@ -352,7 +352,7 @@ const BlogDetail = () => {
       <div tw="bg-white min-h-screen font-pretendard tracking-tight leading-[150%]">
         <AppMaxWidth>
           {/* 제목 위 여백 — 모바일은 고정 헤더(약 64px) + 여유, 데스크톱도 헤더와 간격 확보 */}
-          <div tw="pt-24 lg:pt-16" />
+          <div tw="pt-32 lg:pt-24" />
           {/* Layout: TOC sidebar + Article */}
           <div
             css={[
@@ -486,6 +486,10 @@ const BlogDetail = () => {
                           <li key={item.id} css={[item.level === 3 && tw`pl-3`]}>
                             <a
                               href={`#${item.id}`}
+                              onClick={(e) => {
+                                e.preventDefault()
+                                handleTocClick(item.id)
+                              }}
                               tw="block py-[4px] text-[13px] leading-[1.5] no-underline"
                               css={[{ color: "#555" }]}>
                               {item.text}
