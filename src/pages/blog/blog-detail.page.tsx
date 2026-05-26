@@ -677,7 +677,7 @@ const BlogDetail = () => {
                         {
                           color: "#8a8a8a",
                           fontStyle: "italic",
-                          fontSize: "14px",
+                          fontSize: "0.9rem",
                           lineHeight: 1.8,
                           marginBottom: "0.4em",
                         },
