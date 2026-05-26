@@ -182,6 +182,27 @@ const BlogDetail = () => {
     staleTime: 1000 * 30,
   })
 
+  // 공통 고지문구(어드민 '의료 고지 문구' 관리) — 글 하단 결합. 일반 면책=항상, 나머지=글별 선택(post.notices)
+  const { data: commonTexts } = useQuery({
+    queryKey: ["blog-v2-common-texts"],
+    queryFn: () => blogV2PublicApi.commonTexts(),
+    staleTime: 1000 * 60,
+  })
+  const disclaimers = useMemo<string[]>(() => {
+    if (!commonTexts) return []
+    const byType = new Map(
+      commonTexts.filter((t) => t.isActive && t.body).map((t) => [t.type, t.body as string]),
+    )
+    const out: string[] = []
+    const general = byType.get("general_disclaimer")
+    if (general) out.push(general)
+    for (const t of post?.notices ?? []) {
+      const b = byType.get(t)
+      if (b) out.push(b)
+    }
+    return out
+  }, [commonTexts, post?.notices])
+
   // 시술 대분류(product_category)명 표시용
   const { data: productCategoriesData } = useProductCategoryControllerFindMany({ limit: 100 })
   const productCategory = (productCategoriesData?.items ?? []).find(
@@ -638,6 +659,34 @@ const BlogDetail = () => {
                 // eslint-disable-next-line react/no-danger
                 dangerouslySetInnerHTML={{ __html: sanitizedContent }}
               />
+
+              {/* 공통 고지문구 — 어드민 '의료 고지 문구'에서 관리. 일반 면책=항상, 나머지=글별 선택 */}
+              {disclaimers.length > 0 && (
+                <div
+                  css={[
+                    {
+                      marginTop: "3.5em",
+                      paddingTop: "1.5em",
+                      borderTop: "1px solid #eee",
+                    },
+                  ]}>
+                  {disclaimers.map((d, i) => (
+                    <p
+                      key={i}
+                      css={[
+                        {
+                          color: "#999",
+                          fontSize: "13px",
+                          lineHeight: 1.7,
+                          fontStyle: "italic",
+                          margin: "0.3em 0",
+                        },
+                      ]}>
+                      {d}
+                    </p>
+                  ))}
+                </div>
+              )}
             </article>
           </div>
 

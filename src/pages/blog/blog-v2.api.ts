@@ -55,6 +55,8 @@ export interface BlogV2Post {
   keyword?: { id: string; keyword: string }
   /** CTA 대상 상세페이지명 (예: "울쎄라피 프라임") — 이름으로 상세페이지 매칭. 없으면 productCategoryId로 fallback */
   productPage?: string
+  /** 이 글에 적용할 추가 고지문구 type 목록 (일반 면책 제외) */
+  notices?: string[]
   productCategoryId?: string
   authorDoctor?: BlogV2Doctor
   publishedAt?: string
@@ -104,4 +106,16 @@ export const blogV2PublicApi = {
       method: "GET",
       url: "/api/blog-v2/doctors/public/representative",
     }),
+  // 공통 고지문구(활성만) — 글 하단 결합용
+  commonTexts: () =>
+    request<BlogV2CommonText[]>({
+      method: "GET",
+      url: "/api/blog-v2/common-texts/public",
+    }),
+}
+
+export interface BlogV2CommonText {
+  type: string
+  body?: string
+  isActive: boolean
 }
