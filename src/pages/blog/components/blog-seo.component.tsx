@@ -1,7 +1,8 @@
 import React from "react"
 import { Helmet } from "react-helmet-async"
-import { BlogV2Doctor, BlogV2Post } from "../blog-v2.api"
-import { BLOG_SITE, HOSPITAL_JSON_LD_ID } from "../blog-site.config"
+import { useQuery } from "@tanstack/react-query"
+import { blogV2PublicApi, BlogV2Doctor, BlogV2Post } from "../blog-v2.api"
+import { BLOG_SITE } from "../blog-site.config"
 
 interface FaqItem {
   question: string
@@ -92,9 +93,36 @@ const BlogSeo = ({
   tocItems,
   noindex,
 }: BlogSeoProps) => {
-  const { baseUrl } = BLOG_SITE
+  // 사이트 공통 정보 — 어드민 '기본 정보 관리'(DB) 우선, 아직 못 받았으면 코드 상수로 폴백
+  const { data: cfg } = useQuery({
+    queryKey: ["blog-v2-site-config"],
+    queryFn: () => blogV2PublicApi.siteConfig(),
+    staleTime: 1000 * 60 * 5,
+  })
+  const site = {
+    hospitalName: cfg?.hospitalName || BLOG_SITE.hospitalName,
+    baseUrl: cfg?.baseUrl || BLOG_SITE.baseUrl,
+    organizationType: cfg?.organizationType || BLOG_SITE.organizationType,
+    telephone: cfg?.telephone || BLOG_SITE.telephone,
+    medicalSpecialty: cfg?.medicalSpecialty || BLOG_SITE.medicalSpecialty,
+    address: {
+      locality: cfg?.addressLocality || BLOG_SITE.address.locality,
+      region: cfg?.addressRegion || BLOG_SITE.address.region,
+      country: cfg?.addressCountry || BLOG_SITE.address.country,
+    },
+    geo:
+      cfg && cfg.latitude != null && cfg.longitude != null
+        ? { latitude: cfg.latitude, longitude: cfg.longitude }
+        : BLOG_SITE.geo,
+    sameAs: cfg?.sameAs?.length ? cfg.sameAs : BLOG_SITE.sameAs,
+    knowsAbout: cfg?.knowsAbout?.length ? cfg.knowsAbout : BLOG_SITE.knowsAbout,
+    credentials: cfg?.certifications?.length ? cfg.certifications : BLOG_SITE.credentials,
+    supportedLangs: BLOG_SITE.supportedLangs,
+  }
+  const baseUrl = site.baseUrl
   const pageUrl = `${baseUrl}/${lang}/blog/${slug}`
-  const siteName = BLOG_SITE.hospitalName
+  const siteName = site.hospitalName
+  const hospitalId = `${baseUrl}/#hospital`
 
   // 글 지정 의료진 우선, 없으면 대표 의료진 — 카드와 JSON-LD(author/reviewedBy) 동일 인물로 통일
   const doc = post.authorDoctor ?? doctor
@@ -129,22 +157,22 @@ const BlogSeo = ({
           name: doc.name,
           jobTitle: doc.jobTitle,
           url: docProfileUrl,
-          worksFor: { "@id": HOSPITAL_JSON_LD_ID },
+          worksFor: { "@id": hospitalId },
         }
-      : { "@type": "Organization", "@id": HOSPITAL_JSON_LD_ID },
+      : { "@type": "Organization", "@id": hospitalId },
     ...(doc
       ? {
           reviewedBy: {
             "@type": "Physician",
             name: doc.name,
             medicalSpecialty: doc.specialty,
-            worksFor: { "@id": HOSPITAL_JSON_LD_ID },
+            worksFor: { "@id": hospitalId },
           },
         }
       : {}),
     datePublished: post.publishedAt,
     dateModified: post.updatedAt,
-    publisher: { "@id": HOSPITAL_JSON_LD_ID },
+    publisher: { "@id": hospitalId },
     mainEntityOfPage: { "@type": "MedicalWebPage", "@id": pageUrl },
     articleBody: extractArticleBody(sanitizedContent ?? "") || undefined,
     ...(hasPart ? { hasPart } : {}),
@@ -153,29 +181,29 @@ const BlogSeo = ({
   // 2. 병원 단일 엔티티(루트) — @id로 위 author/reviewedBy/publisher와 통합
   const hospitalJsonLd: Record<string, unknown> = {
     "@context": "https://schema.org",
-    "@type": BLOG_SITE.organizationType,
-    "@id": HOSPITAL_JSON_LD_ID,
+    "@type": site.organizationType,
+    "@id": hospitalId,
     name: siteName,
     url: baseUrl,
-    telephone: BLOG_SITE.telephone || undefined,
-    medicalSpecialty: BLOG_SITE.medicalSpecialty || undefined,
+    telephone: site.telephone || undefined,
+    medicalSpecialty: site.medicalSpecialty || undefined,
     address: {
       "@type": "PostalAddress",
-      addressLocality: BLOG_SITE.address.locality,
-      addressRegion: BLOG_SITE.address.region,
-      addressCountry: BLOG_SITE.address.country,
+      addressLocality: site.address.locality,
+      addressRegion: site.address.region,
+      addressCountry: site.address.country,
     },
-    geo: BLOG_SITE.geo
+    geo: site.geo
       ? {
           "@type": "GeoCoordinates",
-          latitude: BLOG_SITE.geo.latitude,
-          longitude: BLOG_SITE.geo.longitude,
+          latitude: site.geo.latitude,
+          longitude: site.geo.longitude,
         }
       : undefined,
-    sameAs: BLOG_SITE.sameAs,
-    knowsAbout: BLOG_SITE.knowsAbout,
+    sameAs: site.sameAs,
+    knowsAbout: site.knowsAbout,
     hasCredential:
-      BLOG_SITE.credentials && BLOG_SITE.credentials.length > 0 ? BLOG_SITE.credentials : undefined,
+      site.credentials && site.credentials.length > 0 ? site.credentials : undefined,
   }
 
   // 3. BreadcrumbList
@@ -224,7 +252,7 @@ const BlogSeo = ({
       {post.thumbnailUrl && <meta property="og:image" content={post.thumbnailUrl} />}
 
       {/* hreflang */}
-      {BLOG_SITE.supportedLangs.map((l) => (
+      {site.supportedLangs.map((l) => (
         <link key={l} rel="alternate" hrefLang={l} href={`${baseUrl}/${l}/blog/${slug}`} />
       ))}
       <link rel="canonical" href={pageUrl} />

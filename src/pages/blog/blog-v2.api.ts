@@ -112,10 +112,34 @@ export const blogV2PublicApi = {
       method: "GET",
       url: "/api/blog-v2/common-texts/public",
     }),
+  // 사이트 공통 정보(병원) — JSON-LD/메타 결합용
+  siteConfig: () =>
+    request<BlogV2SiteConfig>({
+      method: "GET",
+      url: "/api/blog-v2/site-config/public",
+    }),
 }
 
 export interface BlogV2CommonText {
   type: string
   body?: string
   isActive: boolean
+}
+
+export interface BlogV2SiteConfig {
+  hospitalName?: string
+  baseUrl?: string
+  organizationType?: string
+  telephone?: string
+  addressStreet?: string
+  addressLocality?: string
+  addressRegion?: string
+  addressPostalCode?: string
+  addressCountry?: string
+  latitude?: number
+  longitude?: number
+  medicalSpecialty?: string
+  sameAs?: string[]
+  knowsAbout?: string[]
+  certifications?: string[]
 }
