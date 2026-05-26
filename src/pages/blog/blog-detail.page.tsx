@@ -667,26 +667,19 @@ const BlogDetail = () => {
                 dangerouslySetInnerHTML={{ __html: sanitizedContent }}
               />
 
-              {/* 공통 고지문구 — 어드민 '의료 고지 문구'에서 관리. 일반 면책=항상, 나머지=글별 선택 */}
+              {/* 공통 고지문구 — 어드민 '의료 고지 문구'에서 관리. 기존 본문 고지 스타일과 동일(가로선 없음) */}
               {disclaimers.length > 0 && (
-                <div
-                  css={[
-                    {
-                      marginTop: "3.5em",
-                      paddingTop: "1.5em",
-                      borderTop: "1px solid #eee",
-                    },
-                  ]}>
+                <div css={[{ marginTop: "4em" }]}>
                   {disclaimers.map((d, i) => (
                     <p
                       key={i}
                       css={[
                         {
-                          color: "#999",
-                          fontSize: "13px",
-                          lineHeight: 1.7,
+                          color: "#8a8a8a",
                           fontStyle: "italic",
-                          margin: "0.3em 0",
+                          fontSize: "14px",
+                          lineHeight: 1.8,
+                          marginBottom: "0.4em",
                         },
                       ]}>
                       {d}
