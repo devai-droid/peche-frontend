@@ -669,7 +669,7 @@ const BlogDetail = () => {
 
               {/* 공통 고지문구 — 어드민 '의료 고지 문구'에서 관리. 기존 본문 고지 스타일과 동일(가로선 없음) */}
               {disclaimers.length > 0 && (
-                <div css={[{ marginTop: "4em" }]}>
+                <div tw="text-[15px] lg:text-[16px]" css={[{ marginTop: "4em" }]}>
                   {disclaimers.map((d, i) => (
                     <p
                       key={i}
@@ -677,7 +677,7 @@ const BlogDetail = () => {
                         {
                           color: "#8a8a8a",
                           fontStyle: "italic",
-                          fontSize: "0.9rem",
+                          fontSize: "0.9em",
                           lineHeight: 1.8,
                           marginBottom: "0.4em",
                         },
