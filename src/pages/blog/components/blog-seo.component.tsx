@@ -106,8 +106,10 @@ const BlogSeo = ({
     telephone: cfg?.telephone || BLOG_SITE.telephone,
     medicalSpecialty: cfg?.medicalSpecialty || BLOG_SITE.medicalSpecialty,
     address: {
+      street: cfg?.addressStreet || undefined,
       locality: cfg?.addressLocality || BLOG_SITE.address.locality,
       region: cfg?.addressRegion || BLOG_SITE.address.region,
+      postalCode: cfg?.addressPostalCode || undefined,
       country: cfg?.addressCountry || BLOG_SITE.address.country,
     },
     geo:
@@ -189,8 +191,10 @@ const BlogSeo = ({
     medicalSpecialty: site.medicalSpecialty || undefined,
     address: {
       "@type": "PostalAddress",
+      streetAddress: site.address.street || undefined,
       addressLocality: site.address.locality,
       addressRegion: site.address.region,
+      postalCode: site.address.postalCode || undefined,
       addressCountry: site.address.country,
     },
     geo: site.geo
