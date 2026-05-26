@@ -5,7 +5,7 @@ import Page from "@/lib/components/layout/page.component"
 import useResponsive from "@/lib/hooks/use-responsive"
 import useLanguageValue from "@/lib/hooks/use-language-key"
 import { useTranslation } from "react-i18next"
-import { useParams, useNavigate } from "react-router-dom"
+import { useParams, useNavigate, useSearchParams } from "react-router-dom"
 import { useQuery } from "@tanstack/react-query"
 import { useProductCategoryControllerFindMany } from "@/lib/orval/product-categories/product-categories"
 import { useProductDetailPageControllerFindMany } from "@/lib/orval/product-detail-pages/product-detail-pages"
@@ -160,6 +160,9 @@ const BlogDetail = () => {
   // 일반: /:lang/blog/:slug, 미리보기(어드민 iframe): /:lang/blog/preview/:id (초안 포함, noindex)
   const { slug, id: previewId } = useParams<{ slug?: string; id?: string }>()
   const isPreview = !!previewId
+  const [searchParams] = useSearchParams()
+  // 미리보기에서 어드민이 체크박스로 넘긴 고지문구(저장 전에도 라이브 반영). 없으면 글에 저장된 값 사용.
+  const noticesParam = searchParams.get("notices")
   const navigate = useNavigate()
   const { isDesktop } = useResponsive()
   const tv = useLanguageValue()
@@ -196,12 +199,16 @@ const BlogDetail = () => {
     const out: string[] = []
     const general = byType.get("general_disclaimer")
     if (general) out.push(general)
-    for (const t of post?.notices ?? []) {
+    const selected =
+      isPreview && noticesParam !== null
+        ? noticesParam.split(",").filter(Boolean)
+        : post?.notices ?? []
+    for (const t of selected) {
       const b = byType.get(t)
       if (b) out.push(b)
     }
     return out
-  }, [commonTexts, post?.notices])
+  }, [commonTexts, post?.notices, isPreview, noticesParam])
 
   // 시술 대분류(product_category)명 표시용
   const { data: productCategoriesData } = useProductCategoryControllerFindMany({ limit: 100 })
