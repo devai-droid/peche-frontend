@@ -95,8 +95,8 @@ const BlogSeo = ({
 }: BlogSeoProps) => {
   // 사이트 공통 정보 — 어드민 '기본 정보 관리'(DB) 우선, 아직 못 받았으면 코드 상수로 폴백
   const { data: cfg } = useQuery({
-    queryKey: ["blog-v2-site-config"],
-    queryFn: () => blogV2PublicApi.siteConfig(),
+    queryKey: ["blog-v2-site-config", lang],
+    queryFn: () => blogV2PublicApi.siteConfig(lang),
     staleTime: 1000 * 60 * 5,
   })
   const site = {

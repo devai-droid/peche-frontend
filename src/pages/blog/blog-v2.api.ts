@@ -100,23 +100,26 @@ export const blogV2PublicApi = {
       method: "GET",
       url: `/api/blog-v2/posts/public/preview/${id}`,
     }),
-  // 대표 의료진 — 글에 author_doctor가 없을 때 하단 의료진 카드 공통 채움
-  representativeDoctor: () =>
+  // 대표 의료진(글 언어 기준, 없으면 ko 폴백) — 글에 author_doctor가 없을 때 하단 카드 채움
+  representativeDoctor: (lang?: string) =>
     request<BlogV2Doctor | null>({
       method: "GET",
       url: "/api/blog-v2/doctors/public/representative",
+      params: lang ? { lang } : undefined,
     }),
-  // 공통 고지문구(활성만) — 글 하단 결합용
-  commonTexts: () =>
+  // 공통 고지문구(활성만, 글 언어 기준) — 글 하단 결합용
+  commonTexts: (lang?: string) =>
     request<BlogV2CommonText[]>({
       method: "GET",
       url: "/api/blog-v2/common-texts/public",
+      params: lang ? { lang } : undefined,
     }),
-  // 사이트 공통 정보(병원) — JSON-LD/메타 결합용
-  siteConfig: () =>
+  // 사이트 공통 정보(병원, 글 언어 기준 병합) — JSON-LD/메타 결합용
+  siteConfig: (lang?: string) =>
     request<BlogV2SiteConfig>({
       method: "GET",
       url: "/api/blog-v2/site-config/public",
+      params: lang ? { lang } : undefined,
     }),
 }
 

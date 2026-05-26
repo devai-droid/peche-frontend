@@ -180,15 +180,17 @@ const BlogDetail = () => {
   // 대표 의료진(어드민 '의료진 정보'에서 관리) — 모든 글 하단 의료진 카드 공통 소스.
   // 어드민에서 수정하면 짧은 캐시 후 전체 글에 자동 반영.
   const { data: representativeDoctor } = useQuery({
-    queryKey: ["blog-v2-representative-doctor"],
-    queryFn: () => blogV2PublicApi.representativeDoctor(),
+    queryKey: ["blog-v2-representative-doctor", post?.lang ?? lang],
+    queryFn: () => blogV2PublicApi.representativeDoctor(post?.lang ?? lang),
+    enabled: !!post,
     staleTime: 1000 * 30,
   })
 
   // 공통 고지문구(어드민 '의료 고지 문구' 관리) — 글 하단 결합. 일반 면책=항상, 나머지=글별 선택(post.notices)
   const { data: commonTexts } = useQuery({
-    queryKey: ["blog-v2-common-texts"],
-    queryFn: () => blogV2PublicApi.commonTexts(),
+    queryKey: ["blog-v2-common-texts", post?.lang ?? lang],
+    queryFn: () => blogV2PublicApi.commonTexts(post?.lang ?? lang),
+    enabled: !!post,
     staleTime: 1000 * 60,
   })
   const disclaimers = useMemo<string[]>(() => {
