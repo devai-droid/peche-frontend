@@ -68,6 +68,10 @@ module.exports = {
         { from: "public/favicon.ico", to: "favicon.ico" },
         { from: "public/favicon-32x32.png", to: "favicon-32x32.png" },
         { from: "public/favicon-16x16.png", to: "favicon-16x16.png" },
+        // IndexNow 공개 키 (네이버·Bing 색인 즉시 통보용) — 사이트 루트에 호스팅
+        { from: "public/9f26df7c8f4d2d0ea8ddf7ac5da0dd82.txt", to: "9f26df7c8f4d2d0ea8ddf7ac5da0dd82.txt" },
+        // 네이버 서치어드바이저 사이트 소유확인 파일
+        { from: "public/naver85b69026b0142a2c09f1a5a53d3d24e9.html", to: "naver85b69026b0142a2c09f1a5a53d3d24e9.html" },
       ],
     }),
     new ESLintPlugin({
