@@ -85,12 +85,19 @@ function preprocessContent(html: string, lang: string): string {
   })
 
   // 본문 내부 링크(우리 다른 글 slug 링크)를 블로그 URL로 보정 + 관련 글 수집용 마킹.
-  // 인용(.blog-citation)·외부 URL·mailto/tel·페이지 내 앵커(#id)는 제외.
+  // 인용(.blog-citation)·페이지 내 앵커(#id)는 제외. 외부(http) 링크는 출처/인용으로 보고 회색 이태릭 처리.
   doc.querySelectorAll("a").forEach((anchor) => {
     const el = anchor as HTMLAnchorElement
     if (el.classList.contains("blog-citation")) return
     const href = el.getAttribute("href") ?? ""
-    if (/^https?:\/\//i.test(href) || /^(mailto|tel):/i.test(href)) return
+    // 외부 링크 = 출처/인용 → 붉은 링크가 아니라 회색 이태릭(.blog-citation)
+    if (/^https?:\/\//i.test(href)) {
+      el.classList.add("blog-citation")
+      el.setAttribute("target", "_blank")
+      el.setAttribute("rel", "noopener noreferrer")
+      return
+    }
+    if (/^(mailto|tel):/i.test(href)) return
     if (href.length > 1 && href.startsWith("#")) return // 페이지 내 앵커(#id)는 관련 글 아님
     // slug: 실제 slug 링크면 그대로 사용. 빈/'#' placeholder면 앵커 텍스트로 생성
     // (실제 글은 본문에 진짜 slug가 있으므로 생성 분기는 거의 안 탐 — placeholder 대비용)
