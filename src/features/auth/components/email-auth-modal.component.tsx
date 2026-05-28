@@ -58,9 +58,7 @@ const EmailAuthModal = ({ open, onClose, onComplete }: Props) => {
       onSuccess: () => {
         setSentModalOpen(true)
       },
-      onError: (err) => {
-        console.log(err)
-      },
+      onError: () => {},
     },
   })
 

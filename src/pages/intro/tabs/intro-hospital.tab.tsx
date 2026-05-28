@@ -1,5 +1,3 @@
-// import { Logo } from "@/design-system/components"
-// import AppMaxWidth from "@/lib/components/layout/app-max-width.component"
 import React from "react"
 import img1 from "@/assets/images/intro/intro1.webp"
 import img2 from "@/assets/images/intro/intro2.webp"

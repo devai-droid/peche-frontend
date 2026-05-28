@@ -774,8 +774,8 @@ const Reserve = () => {
           },
         },
       )
-    } catch (e) {
-      console.error(e)
+    } catch {
+      // swallow error
     }
   }
 

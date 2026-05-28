@@ -84,10 +84,6 @@ const router = createBrowserRouter([
         element: <Intro />,
         children: [
           { path: "", element: <IntroHospital /> },
-          // { path: "doctor", element: <IntroDoctor /> },
-          // { path: "worker", element: <IntroWorker /> },
-          // { path: "machine", element: <IntroMachine /> },
-          // { path: "way", element: <IntroMap /> },
         ],
       },
       { path: "doctor", element: <DoctorPage /> },

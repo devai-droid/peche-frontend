@@ -122,15 +122,6 @@ const Footer = ({ bottomCartExists = false }: FooterProps) => {
 
   const socialLinks = FOOTER_SOCIAL_LINKS[language] ?? FOOTER_SOCIAL_LINKS.ko
 
-  // const socialLinks = [
-  //   { icon: NaverPlaceGrayIcon, url: "https://blog.naver.com/" },
-  //   { icon: NaverBlogGrayIcon, url: "https://blog.naver.com/" },
-  //   { icon: InstaLogoGrayIcon, url: "https://www.instagram.com/" },
-  //   { icon: KakaoFriendsGrayIcon, url: "https://www.kakaocorp.com/" },
-  //   { icon: YoutubeGrayIcon, url: "https://www.youtube.com/" },
-  //   { icon: TiktokGrayIcon, url: "https://www.tiktok.com/" },
-  // ]
-
   return (
     <FooterWrapper>
       <FooterInner>

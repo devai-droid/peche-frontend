@@ -5,9 +5,6 @@ import useResponsive from "@/lib/hooks/use-responsive"
 import { useTranslation } from "react-i18next"
 import { menuLinks } from "@/routers/links"
 import CustomLink from "@/lib/components/custom-link.component"
-// import AllTreatmentDropdown from "@/pages/treatment/all-treatment-dropdown"
-// 나중에 수정
-// import { dummyTreatments } from "@/pages/treatment/dummyTreatments"
 
 const Container = tw.nav`
 relative

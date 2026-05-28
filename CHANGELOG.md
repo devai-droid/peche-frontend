@@ -4,6 +4,18 @@
 
 ---
 
+## [1.16.1] - 2026-05-28
+
+### Removed (코드 정리)
+
+- 죽은 페이지 파일 4개 삭제(`src/pages/intro/tabs/intro-{doctor,worker,machine,map}.tab.tsx`) — 라우터에서 이미 주석 처리돼 미사용. `routes.tsx`의 해당 주석 라우트도 정리.
+- 사용 안 하는 의존성 `lorem-ipsum` 제거.
+- 운영 코드의 `console.log/warn/error` 잔재 5곳 제거(인증 모달·장바구니 쿠키 백업/복원·예약 페이지 등).
+- 옛 `socialLinks` 주석 배열(footer), 주석 처리된 미사용 import 라인 정리.
+- 사용자 체감 변화 0, typecheck 회귀 0.
+
+---
+
 ## [1.16.0] - 2026-05-28
 
 ### Added

@@ -54,8 +54,8 @@ const KakaoRedirectedOauthPage = () => {
               }
               const domain = window.location.hostname.replace(/^www\./, "")
               document.cookie = `__cart_backup=;path=/;max-age=0;domain=.${domain}`
-            } catch (e) {
-              console.warn("[cart] cookie restore failed", e)
+            } catch {
+              // ignore cookie restore failure
             }
           }
 

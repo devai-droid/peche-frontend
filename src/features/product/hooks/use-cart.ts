@@ -214,8 +214,8 @@ const useCart = () => {
         td: localStorage.getItem("reservation:today") || "",
       }
       setCookie(BACKUP_COOKIE, JSON.stringify(backup), BACKUP_MAX_AGE)
-    } catch (e) {
-      console.warn("[cart] cookie backup failed", e)
+    } catch {
+      // ignore cookie backup failure
     }
   }
 
@@ -242,8 +242,7 @@ const useCart = () => {
       }
       deleteCookie(BACKUP_COOKIE)
       return { selectedDatetime: backup.dt, today: backup.td }
-    } catch (e) {
-      console.warn("[cart] cookie restore failed", e)
+    } catch {
       return null
     }
   }
