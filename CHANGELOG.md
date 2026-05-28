@@ -4,6 +4,19 @@
 
 ---
 
+## [1.16.0] - 2026-05-28
+
+### Added
+
+- **블로그 봇/사람 자동 분기 라우팅** — 검색엔진·AI 크롤러(GPTBot·ClaudeBot·Googlebot·Perplexity 등) 방문 시 정본 도메인에서 SSR(BlogPosting·FAQPage·MedicalProcedure·Breadcrumb·병원·감수의사·citation 풀세트 JSON-LD) HTML로 응답. 사람 방문은 기존 SPA 그대로(예약·메뉴·인터랙션 유지). AEO·GEO·SEO 노출 강화.
+- **블로그 본문 외부링크 자동 출처 수집** — 본문의 http(s) 외부 링크를 `citation`(CreativeWork) JSON-LD로 자동 변환. 마케터는 본문에 링크만 자연스럽게 넣으면 출처 구조화데이터 자동 생성(내부 상대링크·자사 도메인 제외).
+
+### Infrastructure
+
+- CloudFront 정본 배포(`E30SAPRYE84C3M`)에 블로그 경로(`/*/blog`, `/*/blog/*`) 비헤이비어 2개 추가: viewer-request CloudFront 함수(`peche-blog-bot-tag`)가 UA→`x-bot` 딱지 부여, Lambda@Edge(`peche-blog-edge-router:1`, us-east-1)가 `x-bot=1`이면 origin을 `peche-backend-origin`으로 전환. 캐시는 `x-bot` 키로 봇/사람 분리. 롤백 = 비헤이비어 2개 제거로 즉시 원상복구.
+
+---
+
 ## [1.15.2] - 2026-05-27
 
 ### Added
