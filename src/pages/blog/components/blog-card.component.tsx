@@ -25,8 +25,9 @@ const BlogCard = ({ post, productCategories }: BlogCardProps) => {
 
   const { title } = post
   const summary = post.subtitle ?? post.summaryText ?? ""
-  const publishedDate = post.publishedAt
-    ? new Date(post.publishedAt)
+  // 목록 노출 날짜 = 최근 수정일(updatedAt). JSON-LD의 dateModified와 일관.
+  const displayDate = post.updatedAt
+    ? new Date(post.updatedAt)
         .toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit" })
         .replace(/\. /g, ".")
         .replace(/\.$/, "")
@@ -78,7 +79,7 @@ const BlogCard = ({ post, productCategories }: BlogCardProps) => {
                 {post.productPage}
               </span>
             )}
-            <span tw="text-[14px] lg:text-[12px] text-neutral50">{publishedDate}</span>
+            <span tw="text-[14px] lg:text-[12px] text-neutral50">{displayDate}</span>
             {post.viewCount != null && (
               <span tw="text-[13px] lg:text-[11px] text-neutral50 ml-auto flex items-center gap-[3px]">
                 <svg
