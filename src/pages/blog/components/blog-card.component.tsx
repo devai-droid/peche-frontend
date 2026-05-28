@@ -53,12 +53,14 @@ const BlogCard = ({ post, productCategories }: BlogCardProps) => {
         {/* Content */}
         <div tw="pt-3">
           <h3
-            tw="text-[18px] lg:text-[18px] font-semibold text-neutralBlack mb-1 leading-[1.4]"
+            tw="text-[18px] lg:text-[18px] font-semibold text-neutralBlack mb-1 leading-[1.4] min-h-[2.8em]"
             css={[lineClamp2]}>
             {title}
           </h3>
 
-          <p tw="text-[15px] lg:text-[14px] text-neutral70 mb-4 leading-[1.5]" css={[lineClamp2]}>
+          <p
+            tw="text-[15px] lg:text-[14px] text-neutral70 mb-4 leading-[1.5] min-h-[3em]"
+            css={[lineClamp2]}>
             {summary}
           </p>
 
