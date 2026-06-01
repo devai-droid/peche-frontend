@@ -112,6 +112,9 @@ function preprocessContent(html: string, lang: string): string {
     el.setAttribute("href", `/${lang}/blog/${slug}`)
     el.setAttribute("data-slug", slug)
     el.classList.add("blog-related-link")
+    // 본문 인라인 내부 링크는 새 창에서 — 원본 글 읽기 흐름 보존
+    el.setAttribute("target", "_blank")
+    el.setAttribute("rel", "noopener noreferrer")
   })
 
   // FAQ: 한 단락에 붙은 Q(strong)와 A를 줄 분리
@@ -752,6 +755,8 @@ const BlogDetail = () => {
                       <li key={link.slug}>
                         <CustomLink
                           to={`/blog/${link.slug}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
                           tw="text-[14px] lg:text-[15px] leading-[1.6] no-underline transition-colors duration-200"
                           css={[{ color: "#555" }, tw`hover:text-[#DA7F67]`]}>
                           {link.anchor}
