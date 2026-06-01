@@ -256,7 +256,12 @@ const BlogDetail = () => {
   const cardDoctor = representativeDoctor ?? post?.authorDoctor ?? undefined
   const authorName = cardDoctor?.name ?? "안태언"
   const processedContent = useMemo(() => preprocessContent(content, lang), [content, lang])
-  const sanitizedContent = useMemo(() => DOMPurify.sanitize(processedContent), [processedContent])
+  // ADD_ATTR: ['target'] — DOMPurify 3.x가 기본적으로 a 태그의 target 속성을 제거하므로
+  // 내부·외부 링크의 새 창 열기(target="_blank")가 살아남도록 명시적으로 허용.
+  const sanitizedContent = useMemo(
+    () => DOMPurify.sanitize(processedContent, { ADD_ATTR: ["target"] }),
+    [processedContent],
+  )
 
   // 관련 글 = 본문 내부 링크 자동 수집 (인용·외부·# 제외, slug 중복 제거, 본문 등장 순서)
   const relatedPosts = useMemo<{ slug: string; anchor: string }[]>(() => {

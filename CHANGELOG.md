@@ -4,6 +4,14 @@
 
 ---
 
+## [1.16.5] - 2026-06-01
+
+### Fixed
+
+- 블로그 본문 링크가 새 창에서 안 열리던 문제 해결. DOMPurify 3.x가 기본 정책으로 `<a>` 태그의 `target` 속성을 제거하고 있어, 1.16.4에서 추가한 `target="_blank"`가 sanitize 단계에서 사라지고 있었음. `DOMPurify.sanitize(html, { ADD_ATTR: ["target"] })`로 명시적으로 보존. 인용 출처 링크(`.blog-citation`)와 내부 슬러그 링크(`.blog-related-link`) 모두 정상적으로 새 창에서 열림.
+
+---
+
 ## [1.16.4] - 2026-06-01
 
 ### Changed
