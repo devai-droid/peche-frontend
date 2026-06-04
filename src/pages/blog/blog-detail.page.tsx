@@ -505,16 +505,7 @@ const BlogDetail = () => {
                 </div>
               )}
 
-              {/* Thumbnail */}
-              {post.thumbnailUrl && (
-                <div tw="mb-8 lg:mb-10">
-                  <img
-                    src={resolveBlogAsset(post.thumbnailUrl)}
-                    alt={title}
-                    tw="w-full max-h-[500px] object-cover rounded-sm"
-                  />
-                </div>
-              )}
+              {/* 썸네일은 목록 카드에서만 노출 — 상세 인트로에는 중복 노출 방지 위해 표시하지 않음 */}
 
               {/* Mobile TOC + Products Button */}
               {!isDesktop && (
