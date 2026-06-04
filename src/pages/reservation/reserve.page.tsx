@@ -168,8 +168,8 @@ const CONSULT_CATEGORIES = [
   { key: "기타", labelKey: "reservePage.categoryOther" },
 ]
 const PACKAGE_CATEGORIES = [
-  { key: "토닝", labelKey: "reservePage.packageToning" },
   { key: "제모", labelKey: "reservePage.categoryHairRemoval" },
+  { key: "토닝", labelKey: "reservePage.packageToning" },
   { key: "여드름/모공", labelKey: "reservePage.packageAcne" },
   { key: "스킨부스터", labelKey: "reservePage.packageSkinBooster" },
   { key: "기타", labelKey: "reservePage.categoryOther" },
@@ -670,6 +670,7 @@ const Reserve = () => {
       day: d,
       productIds: getProductIdsWithInquiry(),
       eventIds: getCheckedEventIds(),
+      category: getReservationCategory(),
     })
   }
 
@@ -680,6 +681,17 @@ const Reserve = () => {
     if (inquiry && !ids.includes(inquiryId)) ids.push(inquiryId)
     if (usePackageChecked && !ids.includes(packageId)) ids.push(packageId)
     return ids
+  }
+
+  // 홈페이지 예약 → 닥터팔레트 스케줄 분류
+  // 보유권 사용: 사용예정보유권에 "제모" 포함 → C(제모 보유권), 아니면 B(재진 보유권)
+  // 그 외(방문상담/장바구니 시술) → A(초진)
+  // 방문상담/장바구니/보유권은 폼에서 상호배제 처리됨
+  const getReservationCategory = (): "A" | "B" | "C" => {
+    if (usePackageChecked) {
+      return packageCategories.includes("제모") ? "C" : "B"
+    }
+    return "A"
   }
 
   const [memoRequiredType, setMemoRequiredType] = React.useState<"consult" | "package" | null>(
@@ -764,6 +776,7 @@ const Reserve = () => {
             productIds: getProductIdsWithInquiry(),
             eventIds: getCheckedEventIds(),
             userMemo: buildExtraMemo(inquiryMemo) || undefined,
+            category: getReservationCategory(),
           },
         },
         {
@@ -832,7 +845,8 @@ const Reserve = () => {
         setTodaySlots(patched)
       })
     }
-  }, [today, inquiry, usePackageChecked, checkedList])
+    // packageCategories: 제모 토글(B↔C)로 분류가 바뀌면 해당 스케줄 슬롯을 다시 조회
+  }, [today, inquiry, usePackageChecked, packageCategories, checkedList])
 
   dayjs.extend(utc)
 
