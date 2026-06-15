@@ -1,6 +1,6 @@
 {
   "name": "peche-frontend",
-  "version": "1.17.2",
+  "version": "1.17.3",
   "main": "index.js",
   "repository": "https://github.com/fatkat-projects/peche-frontend.git",
   "author": "kmjmn <kmjmn@mesquad.co>",

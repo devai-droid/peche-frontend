@@ -206,12 +206,18 @@ const useCart = () => {
   const reconcileCartEvents = (
     freshById: Map<string, Event>,
     isExpired: (event: Event) => boolean,
+    validProductIds?: Set<string>,
   ) => {
     const newCart = cart
       .filter((i) => {
-        if (!i.event) return true // 일반 상품은 유지
-        const fresh = freshById.get(i.event.id)
-        return !!fresh && !isExpired(fresh) // 목록에 없거나 만료면 제거
+        if (i.event) {
+          const fresh = freshById.get(i.event.id)
+          return !!fresh && !isExpired(fresh) // 목록에 없거나 만료면 제거
+        }
+        if (i.product && validProductIds) {
+          return validProductIds.has(i.product.id) // 삭제된 상품 제거 (목록 확보 시에만)
+        }
+        return true
       })
       .map((i) => {
         if (!i.event) return i

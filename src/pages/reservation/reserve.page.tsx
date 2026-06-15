@@ -15,6 +15,7 @@ import useCart, { CartItem } from "@/features/product/hooks/use-cart"
 import useLanguageValue from "@/lib/hooks/use-language-key"
 import useLanguageQuery from "@/lib/hooks/use-language-query"
 import { useEventControllerFindMany } from "@/lib/orval/events/events"
+import { useProductControllerFindMany } from "@/lib/orval/products/products"
 import { AvailableReservationResultDto, Event } from "@/lib/orval/model"
 import dayjs from "dayjs"
 import utc from "dayjs/plugin/utc"
@@ -605,6 +606,9 @@ const Reserve = () => {
     limit: 1000,
     ...langQuery,
   })
+  const { data: liveProducts, refetch: refetchProducts } = useProductControllerFindMany({
+    limit: 1000,
+  })
 
 
   const buildExtraMemo = (baseMemo: string) => {
@@ -714,30 +718,42 @@ const Reserve = () => {
     return !!endDate && selected.isAfter(dayjs(endDate), "day")
   }
 
-  // 최신 이벤트 목록 기준으로 체크된 항목 중 만료/삭제된 이벤트 id 추출
-  const getInvalidEventItemIds = (freshById: Map<string, Event>, selected: typeof dayjs.prototype) => {
+  // 최신 목록 기준으로 체크된 항목 중 만료/삭제된 이벤트·상품 id 추출
+  const getInvalidItemIds = (
+    freshEventById: Map<string, Event>,
+    validProductIds: Set<string> | null,
+    selected: typeof dayjs.prototype,
+  ) => {
     const ids: string[] = []
     cart.forEach((item) => {
-      if (!item.event) return
-      const id = item.event.id
+      const id = item.event?.id || item.product?.id || ""
       if (!checkedList.includes(id)) return
-      const fresh = freshById.get(id)
-      if (!fresh) {
-        ids.push(id) // 목록에서 사라진 상품
-        return
+      if (item.event) {
+        const fresh = freshEventById.get(id)
+        if (!fresh) ids.push(id) // 삭제된 이벤트
+        else if (isEventExpired(selected)(fresh)) ids.push(id) // 만료된 이벤트
+      } else if (item.product && validProductIds && !validProductIds.has(id)) {
+        ids.push(id) // 삭제된 상품 (목록 확보 시에만 판정)
       }
-      if (isEventExpired(selected)(fresh)) ids.push(id) // 만료
     })
     return ids
   }
 
-  // '상품 새로고침' — 최신 정보로 갱신 + 만료/없는 이벤트 자동 제거
+  // 최신 이벤트/상품 목록 조회 (예약 클릭·A모달 확인 공용)
+  const fetchFresh = async () => {
+    const [evRes, prRes] = await Promise.all([refetchEvents(), refetchProducts()])
+    const freshEventById = new Map((evRes.data?.items ?? liveEvents?.items ?? []).map((e) => [e.id, e]))
+    const prItems = prRes.data?.items ?? liveProducts?.items ?? []
+    // 상품 목록을 못 받았으면(빈 배열) 상품은 건드리지 않음 — 정상 상품 오삭제 방지
+    const validProductIds = prItems.length > 0 ? new Set(prItems.map((p) => p.id)) : null
+    return { freshEventById, validProductIds }
+  }
+
+  // 'A모달 확인' — 최신 정보로 갱신 + 만료/삭제된 이벤트·상품 자동 제거
   const handleRefreshCart = async () => {
     const selected = selectedDatetime ? dayjs(selectedDatetime.replace("Z", "")) : dayjs()
-    const res = await refetchEvents()
-    const freshItems = res.data?.items ?? liveEvents?.items ?? []
-    const freshById = new Map(freshItems.map((e) => [e.id, e]))
-    reconcileCartEvents(freshById, isEventExpired(selected))
+    const { freshEventById, validProductIds } = await fetchFresh()
+    reconcileCartEvents(freshEventById, isEventExpired(selected), validProductIds ?? undefined)
     setEventPeriodAlert(false)
   }
 
@@ -768,13 +784,33 @@ const Reserve = () => {
       return
     }
 
-    // 이벤트 유효성 체크 — 최신 정보 기준 (만료/삭제된 이벤트 차단). 옛 장바구니 값이 아닌 서버 최신값으로 판정
+    // 1) 이벤트·상품 유효성 체크 — 옛 장바구니 값이 아닌 서버 최신값으로 (만료/삭제 차단)
     const selected = dayjs(selectedDatetime.replace("Z", ""))
-    const res = await refetchEvents()
-    const freshItems = res.data?.items ?? liveEvents?.items ?? []
-    const freshById = new Map(freshItems.map((e) => [e.id, e]))
-    if (getInvalidEventItemIds(freshById, selected).length > 0) {
+    const { freshEventById, validProductIds } = await fetchFresh()
+    if (getInvalidItemIds(freshEventById, validProductIds, selected).length > 0) {
       setEventPeriodAlert(true)
+      return
+    }
+
+    // 2) 슬롯 재검증 — 선택한 시간이 아직 닥팔에서 열려있는지 (조회~제출 사이 마감 레이스 방지)
+    const freshSlots = await getAvailableReservationsPublic(
+      today.year(),
+      today.month() + 1,
+      today.date(),
+    )
+    const patchedSlots = freshSlots.map((slot) => ({
+      ...slot,
+      datetime: dayjs(slot.datetime).add(9, "hour").toISOString(),
+      building: "BUILDING_1",
+    }))
+    setTodaySlots(patchedSlots) // 버튼도 최신화 (마감된 시간 사라짐)
+    const openTimes = new Set(
+      patchedSlots.map((s) => dayjs(s.datetime.replace("Z", "")).format("HH:mm")),
+    )
+    if (!openTimes.has(dayjs(selectedDatetime.replace("Z", "")).format("HH:mm"))) {
+      setSelectedDatetime("")
+      localStorage.removeItem("reservation:selectedDatetime")
+      setScheduleChangedAlert(true)
       return
     }
 
@@ -979,8 +1015,11 @@ const Reserve = () => {
       onError: (error: any) => {
         setConfirmOpen(false)
         const msg: string = error?.response?.data?.message ?? ""
-        if (typeof msg === "string" && msg.includes("Event is not available")) {
-          setEventPeriodAlert(true) // 상황 A: 만료/유효하지 않은 이벤트 → 새로고침 모달
+        const isInvalidItem =
+          typeof msg === "string" &&
+          (msg.includes("Event is not available") || msg.includes("Product not found"))
+        if (isInvalidItem) {
+          setEventPeriodAlert(true) // 상황 A: 만료/삭제된 이벤트·상품 → 정리 모달
         } else {
           setScheduleChangedAlert(true) // 상황 B: 시간 마감/일시 오류 → 일정 재선택 안내
         }
