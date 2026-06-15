@@ -337,6 +337,10 @@
     "clearPackage": "ล้างการใช้แพ็คเกจ",
     "selectTimeRequired": "กรุณาเลือกเวลาจอง",
     "eventPeriodNotAvailable": "ไม่ใช่วันที่สามารถจองอีเวนต์ได้",
+    "eventExpiredTitle": "มีสินค้าอีเวนต์ที่สิ้นสุดแล้วอยู่ในรายการ",
+    "eventExpiredDesc": "จะเก็บเฉพาะสินค้าที่จองได้ ส่วนสินค้าที่สิ้นสุดแล้วจะถูกลบออกจากตะกร้า",
+    "scheduleChangedTitle": "ไม่สามารถยืนยันเวลาจองที่คุณเลือกได้",
+    "scheduleChangedDesc": "กรุณาเลือกวันที่และเวลาอีกครั้ง",
     "bundleUntilFormat": "{{name}}: ถึง {{endDate}}",
     "endDateFormat": "DD MMM YYYY"
   },

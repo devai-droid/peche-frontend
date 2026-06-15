@@ -337,6 +337,10 @@
     "clearPackage": "清除套餐使用",
     "selectTimeRequired": "请选择预约时间。",
     "eventPeriodNotAvailable": "不是活动商品的可预约日期。",
+    "eventExpiredTitle": "购物车中包含已结束的活动商品。",
+    "eventExpiredDesc": "仅保留可预约的商品，已结束的商品将从购物车中删除。",
+    "scheduleChangedTitle": "无法确认您所选的预约时间。",
+    "scheduleChangedDesc": "请重新选择日期和时间。",
     "bundleUntilFormat": "{{name}}: 截至 {{endDate}}",
     "endDateFormat": "YYYY年MM月DD日"
   },

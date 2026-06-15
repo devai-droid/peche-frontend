@@ -13,7 +13,9 @@ import tw from "twin.macro"
 import useCustomNavigate from "@/lib/hooks/use-custom-navigate"
 import useCart, { CartItem } from "@/features/product/hooks/use-cart"
 import useLanguageValue from "@/lib/hooks/use-language-key"
-import { AvailableReservationResultDto } from "@/lib/orval/model"
+import useLanguageQuery from "@/lib/hooks/use-language-query"
+import { useEventControllerFindMany } from "@/lib/orval/events/events"
+import { AvailableReservationResultDto, Event } from "@/lib/orval/model"
 import dayjs from "dayjs"
 import utc from "dayjs/plugin/utc"
 import {
@@ -597,6 +599,13 @@ const Reserve = () => {
   const language = i18n.language as Language
   const { user: me } = useMe()
 
+  // 카트 항목 유효성 판정을 위한 최신 이벤트 목록 (예약 클릭/새로고침 시 refetch)
+  const langQuery = useLanguageQuery()
+  const { data: liveEvents, refetch: refetchEvents } = useEventControllerFindMany({
+    limit: 1000,
+    ...langQuery,
+  })
+
 
   const buildExtraMemo = (baseMemo: string) => {
     const parts: string[] = []
@@ -623,6 +632,7 @@ const Reserve = () => {
     cart,
     updateCartItem,
     removeFromCart,
+    reconcileCartEvents,
     checkedList,
     resetCart,
     getCheckedEventIds,
@@ -645,7 +655,7 @@ const Reserve = () => {
   const [selectedDatetime, setSelectedDatetime] = React.useState("")
   const [confirmOpen, setConfirmOpen] = React.useState(false)
   const [eventPeriodAlert, setEventPeriodAlert] = React.useState(false)
-  const [expiredBundles, setExpiredBundles] = React.useState<{ name: string; endDate: string }[]>([])
+  const [scheduleChangedAlert, setScheduleChangedAlert] = React.useState(false)
 
   /* -------- Auth 상태 -------- */
   interface AuthInfo {
@@ -698,8 +708,41 @@ const Reserve = () => {
     null,
   )
 
+  // 이벤트의 (최신) 종료일이 선택일 이후면 만료로 판정
+  const isEventExpired = (selected: typeof dayjs.prototype) => (event: Event) => {
+    const endDate = (event as any)?.bundle?.endDate || event.category?.endDate
+    return !!endDate && selected.isAfter(dayjs(endDate), "day")
+  }
+
+  // 최신 이벤트 목록 기준으로 체크된 항목 중 만료/삭제된 이벤트 id 추출
+  const getInvalidEventItemIds = (freshById: Map<string, Event>, selected: typeof dayjs.prototype) => {
+    const ids: string[] = []
+    cart.forEach((item) => {
+      if (!item.event) return
+      const id = item.event.id
+      if (!checkedList.includes(id)) return
+      const fresh = freshById.get(id)
+      if (!fresh) {
+        ids.push(id) // 목록에서 사라진 상품
+        return
+      }
+      if (isEventExpired(selected)(fresh)) ids.push(id) // 만료
+    })
+    return ids
+  }
+
+  // '상품 새로고침' — 최신 정보로 갱신 + 만료/없는 이벤트 자동 제거
+  const handleRefreshCart = async () => {
+    const selected = selectedDatetime ? dayjs(selectedDatetime.replace("Z", "")) : dayjs()
+    const res = await refetchEvents()
+    const freshItems = res.data?.items ?? liveEvents?.items ?? []
+    const freshById = new Map(freshItems.map((e) => [e.id, e]))
+    reconcileCartEvents(freshById, isEventExpired(selected))
+    setEventPeriodAlert(false)
+  }
+
   // 예약 버튼 클릭 시 모달만 여는 함수
-  const openConfirmModal = () => {
+  const openConfirmModal = async () => {
     if (!authInfo) {
       alert(t("reservePage.needAuth"))
       return
@@ -725,23 +768,12 @@ const Reserve = () => {
       return
     }
 
-    // 이벤트 기간 체크 — 체크된 항목만, 지났으면 확정 모달 대신 기간 모달 바로 표시
+    // 이벤트 유효성 체크 — 최신 정보 기준 (만료/삭제된 이벤트 차단). 옛 장바구니 값이 아닌 서버 최신값으로 판정
     const selected = dayjs(selectedDatetime.replace("Z", ""))
-    const expiredMap = new Map<string, string>()
-    cart.forEach((item) => {
-      const itemId = item.event?.id || item.product?.id || ""
-      if (!checkedList.includes(itemId)) return
-      const endDate = (item.event as any)?.bundle?.endDate || item.event?.category?.endDate
-      if (!endDate) return
-      if (selected.isAfter(dayjs(endDate), "day")) {
-        const name = (item.event as any)?.bundle?.name || ""
-        if (name && !expiredMap.has(name)) {
-          expiredMap.set(name, dayjs(endDate).format(t("reservePage.endDateFormat")))
-        }
-      }
-    })
-    if (expiredMap.size > 0) {
-      setExpiredBundles(Array.from(expiredMap, ([name, endDate]) => ({ name, endDate })))
+    const res = await refetchEvents()
+    const freshItems = res.data?.items ?? liveEvents?.items ?? []
+    const freshById = new Map(freshItems.map((e) => [e.id, e]))
+    if (getInvalidEventItemIds(freshById, selected).length > 0) {
       setEventPeriodAlert(true)
       return
     }
@@ -944,10 +976,14 @@ const Reserve = () => {
   /* -------- 예약하기 -------- */
   const { mutate } = useReservationControllerCreate({
     mutation: {
-      onError: () => {
+      onError: (error: any) => {
         setConfirmOpen(false)
-        setExpiredBundles([])
-        setEventPeriodAlert(true)
+        const msg: string = error?.response?.data?.message ?? ""
+        if (typeof msg === "string" && msg.includes("Event is not available")) {
+          setEventPeriodAlert(true) // 상황 A: 만료/유효하지 않은 이벤트 → 새로고침 모달
+        } else {
+          setScheduleChangedAlert(true) // 상황 B: 시간 마감/일시 오류 → 일정 재선택 안내
+        }
       },
     },
   })
@@ -1034,23 +1070,16 @@ const Reserve = () => {
                   }}
                   onMonthChange={(month: typeof dayjs.prototype) => {
                     const monthStart = dayjs(month).startOf("month")
-                    const expiredMap = new Map<string, string>()
-                    cart.forEach((item) => {
-                      const itemId = item.event?.id || item.product?.id || ""
-                      if (!checkedList.includes(itemId)) return
-                      const endDate = (item.event as any)?.bundle?.endDate || item.event?.category?.endDate
-                      if (!endDate) return
-                      if (dayjs(endDate).isBefore(monthStart)) {
-                        const name = (item.event as any)?.bundle?.name || ""
-                        if (name && !expiredMap.has(name)) {
-                          expiredMap.set(name, dayjs(endDate).format(t("reservePage.endDateFormat")))
-                        }
-                      }
+                    const freshById = new Map((liveEvents?.items ?? []).map((e) => [e.id, e]))
+                    const hasExpired = cart.some((item) => {
+                      if (!item.event) return false
+                      const id = item.event.id
+                      if (!checkedList.includes(id)) return false
+                      const fresh = freshById.get(id)
+                      const endDate = (fresh as any)?.bundle?.endDate || fresh?.category?.endDate
+                      return !!endDate && dayjs(endDate).isBefore(monthStart)
                     })
-                    if (expiredMap.size > 0) {
-                      setExpiredBundles(Array.from(expiredMap, ([name, endDate]) => ({ name, endDate })))
-                      setEventPeriodAlert(true)
-                    }
+                    if (hasExpired) setEventPeriodAlert(true)
                   }}
                   footer={<div>{renderTimeSlots()}</div>}
                 />
@@ -1130,19 +1159,39 @@ const Reserve = () => {
       <Modal open={eventPeriodAlert} onClose={() => setEventPeriodAlert(false)} width="max-w-[400px]">
         <div tw="font-pretendard">
           <div tw="text-[16px] md:text-[18px] font-semibold mb-4 leading-snug">
-            {t("reservePage.eventPeriodNotAvailable")}
+            {t("reservePage.eventExpiredTitle")}
           </div>
           <div tw="text-neutral70 text-[14px] md:text-[16px] mb-6 leading-relaxed">
-            {expiredBundles.map((b, i) => (
-              <div key={i}>
-                {t("reservePage.bundleUntilFormat", { name: b.name, endDate: b.endDate })}
-              </div>
-            ))}
+            {t("reservePage.eventExpiredDesc")}
           </div>
           <Button
             tw="w-full h-[40px] text-[13px] md:text-[15px]"
             style={{ variant: "filled", color: "point", size: "sm" }}
-            onClick={() => setEventPeriodAlert(false)}>
+            onClick={handleRefreshCart}>
+            {t("common.confirm")}
+          </Button>
+        </div>
+      </Modal>
+
+      <Modal
+        open={scheduleChangedAlert}
+        onClose={() => setScheduleChangedAlert(false)}
+        width="max-w-[400px]">
+        <div tw="font-pretendard">
+          <div tw="text-[16px] md:text-[18px] font-semibold mb-4 leading-snug">
+            {t("reservePage.scheduleChangedTitle")}
+          </div>
+          <div tw="text-neutral70 text-[14px] md:text-[16px] mb-6 leading-relaxed">
+            {t("reservePage.scheduleChangedDesc")}
+          </div>
+          <Button
+            tw="w-full h-[40px] text-[13px] md:text-[15px]"
+            style={{ variant: "filled", color: "point", size: "sm" }}
+            onClick={() => {
+              setScheduleChangedAlert(false)
+              setSelectedDatetime("")
+              localStorage.removeItem("reservation:selectedDatetime")
+            }}>
             {t("common.confirm")}
           </Button>
         </div>

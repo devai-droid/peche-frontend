@@ -202,6 +202,27 @@ const useCart = () => {
     })
     setCart(newCart)
   }
+  // 최신 이벤트 목록 기준으로 카트 정리: 유효 항목은 최신 데이터로 갱신, 만료/삭제 항목은 제거 (단일 setCart)
+  const reconcileCartEvents = (
+    freshById: Map<string, Event>,
+    isExpired: (event: Event) => boolean,
+  ) => {
+    const newCart = cart
+      .filter((i) => {
+        if (!i.event) return true // 일반 상품은 유지
+        const fresh = freshById.get(i.event.id)
+        return !!fresh && !isExpired(fresh) // 목록에 없거나 만료면 제거
+      })
+      .map((i) => {
+        if (!i.event) return i
+        const fresh = freshById.get(i.event.id)
+        return fresh ? { ...i, event: fresh } : i // 최신값으로 갱신
+      })
+    setCart(newCart)
+    const remaining = new Set(newCart.map((i) => i.event?.id || i.product?.id || ""))
+    setCheckedList(checkedList.filter((id) => remaining.has(id)))
+    if (justAddedId && !remaining.has(justAddedId)) setJustAddedId("")
+  }
 
   const backupToCookie = () => {
     try {
@@ -254,6 +275,7 @@ const useCart = () => {
     addToCart,
     removeFromCart,
     updateCartItem,
+    reconcileCartEvents,
     justAddedId,
     checkedList,
     setCheckedList,

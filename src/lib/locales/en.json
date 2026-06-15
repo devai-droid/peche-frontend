@@ -337,6 +337,10 @@
     "clearPackage": "Clear Package Use",
     "selectTimeRequired": "Please select a reservation time.",
     "eventPeriodNotAvailable": "This is not an available reservation date for the event product.",
+    "eventExpiredTitle": "Your cart contains an event product that has ended.",
+    "eventExpiredDesc": "Only reservable products will be kept; ended products will be removed from your cart.",
+    "scheduleChangedTitle": "The reservation time you selected cannot be confirmed.",
+    "scheduleChangedDesc": "Please select a date and time again.",
     "bundleUntilFormat": "{{name}}: until {{endDate}}",
     "endDateFormat": "MMM DD, YYYY"
   },

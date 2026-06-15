@@ -337,6 +337,10 @@
     "clearPackage": "パッケージ使用を解除",
     "selectTimeRequired": "予約時間を選択してください。",
     "eventPeriodNotAvailable": "イベント商品の予約可能日ではありません。",
+    "eventExpiredTitle": "終了したイベント商品が含まれています。",
+    "eventExpiredDesc": "予約可能な商品のみ残し、終了した商品はカートから削除されます。",
+    "scheduleChangedTitle": "選択された予約時間を確定できません。",
+    "scheduleChangedDesc": "日付と時間をもう一度選択してください。",
     "bundleUntilFormat": "{{name}}: {{endDate}}まで",
     "endDateFormat": "YYYY年MM月DD日"
   },
