@@ -24,6 +24,18 @@ export const resolveBlogAsset = (url?: string): string =>
 export const rewriteBlogHtml = (html?: string): string =>
   (html ?? "").replace(/https?:\/\/localhost:3007/g, BLOG_V2_BASE)
 
+/**
+ * 카드에 표시할 조회수 = 글마다 고정된 자연스러운 베이스 + 실제 조회수.
+ * DB엔 실제 조회수만 저장하고, 표시값에만 베이스를 얹는다(봇/SSR·구조화데이터엔 미포함).
+ * 베이스는 글 id 해시로 deterministic(글마다 다르고 항상 동일). 범위는 필요시 조정.
+ */
+export const displayViewCount = (post: { id: string; viewCount?: number }): number => {
+  let h = 0
+  for (let i = 0; i < post.id.length; i += 1) h = (h * 31 + post.id.charCodeAt(i)) >>> 0
+  const base = 180 + (h % 640) // 180~819
+  return base + (post.viewCount ?? 0)
+}
+
 export interface BlogV2Doctor {
   id: string
   name: string
@@ -94,6 +106,9 @@ export const blogV2PublicApi = {
       method: "GET",
       url: `/api/blog-v2/posts/public/detail/${lang}/${encodeURIComponent(slug)}`,
     }),
+  // 조회수 +1 (글 열람 시 1회). 실패해도 무시.
+  incrementView: (id: string) =>
+    request<{ ok: boolean }>({ method: "POST", url: `/api/blog-v2/posts/public/${id}/view` }),
   // 미리보기(초안 포함) — 어드민 iframe 전용. 페이지는 noindex 처리.
   preview: (id: string) =>
     request<BlogV2Post>({
