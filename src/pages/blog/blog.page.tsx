@@ -246,7 +246,7 @@ const Blog = () => {
                         : tw`text-neutral70 border-transparent hover:text-[#DA7F67]`,
                     ]}>
                     {chip.label}
-                    {chip.key !== ALL_CHIP_KEY && chipCountByKey.get(chip.key) !== undefined && (
+                    {chipCountByKey.get(chip.key) !== undefined && (
                       <span
                         tw="text-[13px] lg:text-[14px] font-semibold"
                         css={[{ color: "#DA7F67" }]}>
