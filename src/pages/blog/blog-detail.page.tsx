@@ -422,7 +422,7 @@ const BlogDetail = () => {
                   `,
                 ]}>
                 {tocItems.length > 0 && (
-                  <nav>
+                  <nav aria-label={t("blog.toc") || "목차"}>
                     <div
                       tw="text-[15px] font-semibold text-neutralBlack mb-3 pb-2 border-b"
                       css={[{ borderColor: "#DA7F67" }]}>
@@ -511,7 +511,10 @@ const BlogDetail = () => {
               {!isDesktop && (
                 <div tw="mb-6">
                   {tocItems.length > 0 && (
-                    <nav tw="p-4 border border-neutral30" css={[{ backgroundColor: "#fafafa" }]}>
+                    <nav
+                      aria-label={t("blog.toc") || "목차"}
+                      tw="p-4 border border-neutral30"
+                      css={[{ backgroundColor: "#fafafa" }]}>
                       <div
                         tw="text-[14px] font-semibold text-neutralBlack mb-2 pb-2 border-b"
                         css={[{ borderColor: "#DA7F67" }]}>
