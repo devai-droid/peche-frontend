@@ -79,7 +79,7 @@ const BlogCard = ({ post, productCategories }: BlogCardProps) => {
                 {post.productPage}
               </span>
             )}
-            <span tw="text-[14px] lg:text-[12px] text-neutral50">{displayDate}</span>
+            <span tw="text-[14px] lg:text-[12px] text-neutral50 ml-auto">{displayDate}</span>
           </div>
         </div>
       </div>
