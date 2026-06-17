@@ -7,7 +7,7 @@ import useResponsive from "@/lib/hooks/use-responsive"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 import { useAdminAuth } from "@/lib/hooks/use-admin-auth"
-import { useQuery } from "@tanstack/react-query"
+import { useQueries, useQuery } from "@tanstack/react-query"
 import { blogV2PublicApi } from "./blog-v2.api"
 import BlogCard from "./components/blog-card.component"
 import { BottomButtons } from "@/features/product/components/cart-view.component"
@@ -99,6 +99,29 @@ const Blog = () => {
   })()
 
   const selectedChip = detailChips.find((c) => c.key === selectedChipKey)
+
+  // 중분류(상세페이지)별 등록 글 개수 — 각 칩의 필터로 total만 조회 (limit:1)
+  const chipCountQueries = useQueries({
+    queries: detailChips.map((chip) => ({
+      queryKey: ["blog-v2-count", lang, selectedProductCatId, chip.key],
+      queryFn: () =>
+        blogV2PublicApi.list({
+          lang,
+          productCategoryId: selectedProductCatId ?? undefined,
+          productPage: chip.productPage,
+          productPageContains: chip.productPageContains,
+          page: 1,
+          limit: 1,
+        }),
+      enabled: !!selectedProductCatId,
+      staleTime: 1000 * 60 * 5,
+    })),
+  })
+  const chipCountByKey = new Map<string, number>()
+  detailChips.forEach((chip, idx) => {
+    const total = chipCountQueries[idx]?.data?.total
+    if (typeof total === "number") chipCountByKey.set(chip.key, total)
+  })
 
   // 글 목록: v2 공개 API
   const { data, isLoading } = useQuery({
@@ -223,6 +246,13 @@ const Blog = () => {
                         : tw`text-neutral70 border-transparent hover:text-[#DA7F67]`,
                     ]}>
                     {chip.label}
+                    {chip.key !== ALL_CHIP_KEY && chipCountByKey.get(chip.key) !== undefined && (
+                      <span
+                        tw="ml-0.5 align-super text-[10px] lg:text-[11px] font-semibold"
+                        css={[{ color: "#DA7F67" }]}>
+                        {chipCountByKey.get(chip.key)}
+                      </span>
+                    )}
                   </button>
                 )
               })}
