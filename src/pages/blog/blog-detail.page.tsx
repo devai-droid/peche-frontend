@@ -187,16 +187,6 @@ const BlogDetail = () => {
     retry: false,
   })
 
-  // 조회수 +1 — 실제 열람 1회(미리보기 제외). strict mode·재렌더 중복은 ref로 방지.
-  const viewCountedRef = useRef<string | null>(null)
-  useEffect(() => {
-    if (isPreview) return
-    const id = post?.id
-    if (!id || viewCountedRef.current === id) return
-    viewCountedRef.current = id
-    blogV2PublicApi.incrementView(id).catch(() => undefined)
-  }, [post?.id, isPreview])
-
   // 대표 의료진(어드민 '의료진 정보'에서 관리) — 모든 글 하단 의료진 카드 공통 소스.
   // 어드민에서 수정하면 짧은 캐시 후 전체 글에 자동 반영.
   const { data: representativeDoctor } = useQuery({

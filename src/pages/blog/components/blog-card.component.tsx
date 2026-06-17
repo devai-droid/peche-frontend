@@ -1,7 +1,7 @@
 import React from "react"
 import CustomLink from "@/lib/components/custom-link.component"
 import { css } from "twin.macro"
-import { BlogV2Post, displayViewCount, resolveBlogAsset } from "../blog-v2.api"
+import { BlogV2Post, resolveBlogAsset } from "../blog-v2.api"
 
 interface ProductCat {
   id: string
@@ -80,23 +80,6 @@ const BlogCard = ({ post, productCategories }: BlogCardProps) => {
               </span>
             )}
             <span tw="text-[14px] lg:text-[12px] text-neutral50">{displayDate}</span>
-            {post.viewCount != null && (
-              <span tw="text-[13px] lg:text-[11px] text-neutral50 ml-auto flex items-center gap-[3px]">
-                <svg
-                  width="12"
-                  height="12"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round">
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                  <circle cx="12" cy="12" r="3" />
-                </svg>
-                {displayViewCount(post).toLocaleString()}
-              </span>
-            )}
           </div>
         </div>
       </div>
