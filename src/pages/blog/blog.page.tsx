@@ -239,7 +239,7 @@ const Blog = () => {
                   <button
                     key={chip.key}
                     onClick={() => handleChipClick(chip.key)}
-                    tw="pb-1 text-[15px] lg:text-[17px] border-b-2 transition-colors duration-200"
+                    tw="inline-flex items-center gap-1 pb-1 text-[15px] lg:text-[17px] border-b-2 transition-colors duration-200"
                     css={[
                       isSelected
                         ? tw`text-[#DA7F67] border-[#DA7F67] font-semibold`
@@ -248,7 +248,7 @@ const Blog = () => {
                     {chip.label}
                     {chip.key !== ALL_CHIP_KEY && chipCountByKey.get(chip.key) !== undefined && (
                       <span
-                        tw="ml-0.5 align-super text-[10px] lg:text-[11px] font-semibold"
+                        tw="text-[13px] lg:text-[14px] font-semibold"
                         css={[{ color: "#DA7F67" }]}>
                         {chipCountByKey.get(chip.key)}
                       </span>
