@@ -5,7 +5,7 @@ import bannerImg from "@/assets/images/products-banner.jpg"
 import mobileBannerImg from "@/assets/images/products-mobile-banner.jpg"
 import useResponsive from "@/lib/hooks/use-responsive"
 import { useTranslation } from "react-i18next"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useSearchParams } from "react-router-dom"
 import { useAdminAuth } from "@/lib/hooks/use-admin-auth"
 import { useQueries, useQuery } from "@tanstack/react-query"
 import { blogV2PublicApi } from "./blog-v2.api"
@@ -42,10 +42,20 @@ const Blog = () => {
   const navigate = useNavigate()
   const { isAdmin } = useAdminAuth()
   const tv = useLanguageValue()
-  const [page, setPage] = useState(1)
   const [showInquiryButtons, setShowInquiryButtons] = useState(false)
-  const [selectedProductCatId, setSelectedProductCatId] = useState<string | null>(null)
-  const [selectedChipKey, setSelectedChipKey] = useState<string>(ALL_CHIP_KEY)
+
+  // 목록 상태(페이지·대분류·중분류칩)를 URL 쿼리에 보관 → 글 보고 뒤로가기 시 보던 페이지/필터 그대로 복원
+  const [searchParams, setSearchParams] = useSearchParams()
+  const page = Math.max(1, Number(searchParams.get("page")) || 1)
+  const selectedProductCatId = searchParams.get("cat")
+  const selectedChipKey = searchParams.get("chip") ?? ALL_CHIP_KEY
+
+  // 쿼리 갱신 헬퍼 — replace로 히스토리 안 쌓고, 뒤로가기 한 번에 직전 화면으로
+  const updateParams = (mutate: (p: URLSearchParams) => void) => {
+    const next = new URLSearchParams(searchParams)
+    mutate(next)
+    setSearchParams(next, { replace: true })
+  }
 
   const lang = i18n.language
   const langQuery = useLanguageQuery()
@@ -141,19 +151,28 @@ const Blog = () => {
   const lastPage = data ? Math.max(1, Math.ceil(data.total / POSTS_PER_PAGE)) : 1
 
   const handlePageChange = (newPage: number) => {
-    setPage(newPage)
+    updateParams((p) => {
+      if (newPage <= 1) p.delete("page")
+      else p.set("page", String(newPage))
+    })
     window.scrollTo({ top: 0, behavior: "smooth" })
   }
 
   const handleTabClick = (productCatId: string | null) => {
-    setSelectedProductCatId(productCatId)
-    setSelectedChipKey(ALL_CHIP_KEY) // 대분류 바뀌면 상세페이지 칩 초기화
-    setPage(1)
+    updateParams((p) => {
+      if (productCatId) p.set("cat", productCatId)
+      else p.delete("cat")
+      p.delete("chip") // 대분류 바뀌면 상세페이지 칩 초기화
+      p.delete("page")
+    })
   }
 
   const handleChipClick = (chipKey: string) => {
-    setSelectedChipKey(chipKey)
-    setPage(1)
+    updateParams((p) => {
+      if (chipKey && chipKey !== ALL_CHIP_KEY) p.set("chip", chipKey)
+      else p.delete("chip")
+      p.delete("page")
+    })
   }
 
   const tabs = [
