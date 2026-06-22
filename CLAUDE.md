@@ -22,6 +22,12 @@
 - 자유 메시지: `./scripts/slack-notify.sh msg "내용"`
 - 쓰레드 답글: 슬랙 메시지 링크(`/archives/<channel>/p<ts>`) + 답글 내용 → bot-token으로 `chat.postMessage` 호출 (`thread_ts` 파라미터)
 
+### 슬랙 메시지 작성 규칙 (중요)
+
+- **읽는 사람은 개발자가 아니라 마케터.** 기술 용어·코드·버전번호·내부 구현 설명 금지.
+- **간결하게.** 주절주절 X. 변경 1건당 한 줄, "무엇이 좋아졌는지(역할·효과)" 중심으로. 마케터가 자기 업무에 어떻게 도움되는지가 핵심.
+- **보내기 전 반드시 사용자에게 문구를 먼저 보여주고 OK 받은 뒤에만 전송** (자동 전송 금지).
+
 ## 버전 관리 루틴
 
 - **버전 규칙**: Semantic Versioning (앞자리일수록 큰 변화)
@@ -68,7 +74,7 @@ yarn install            # lockfile이 변경됐으면 반드시 실행
 5. `STAGE=prod make shoot` (orval → webpack build → S3 sync → CloudFront 무효화)
 6. CloudFront 무효화 완료 대기 (보통 1~2분)
 7. **시크릿 창**으로 https://pecheskin.clinic 열어서 검증 (브라우저 캐시 우회)
-8. 슬랙 알림: `./scripts/slack-notify.sh update "" "변경사항1" "변경사항2"`
+8. ⚠️ **슬랙 알림은 보내기 전에 반드시 사용자에게 "보낼지" 확인받고 전송** — 메시지 문구를 먼저 보여주고 OK 받은 뒤에만 `./scripts/slack-notify.sh update "" "변경사항1" "변경사항2"` 실행 (자동 전송 금지)
 
 #### Case B — 작업 브랜치(`fix/xxx`, `feature/xxx`)를 만들어 작업한 경우
 
@@ -82,7 +88,7 @@ yarn install            # lockfile이 변경됐으면 반드시 실행
 8. `STAGE=prod make shoot` ← 반드시 `develop`에서. 작업 브랜치 직접 배포 금지
 9. CloudFront 무효화 완료 대기 (1~2분)
 10. **시크릿 창**으로 https://pecheskin.clinic 검증
-11. 슬랙 알림: `./scripts/slack-notify.sh update "" "변경사항1" "변경사항2"`
+11. ⚠️ **슬랙 알림은 보내기 전에 반드시 사용자에게 "보낼지" 확인받고 전송** — 메시지 문구를 먼저 보여주고 OK 받은 뒤에만 `./scripts/slack-notify.sh update "" "변경사항1" "변경사항2"` 실행 (자동 전송 금지)
 12. 머지된 작업 브랜치 삭제: `git push origin --delete <브랜치명>`
 
 ### 4) 검증 체크리스트
