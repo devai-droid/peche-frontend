@@ -141,6 +141,15 @@ const useCart = () => {
       .map((i) => i.event?.id || "")
       .filter((i) => checkedList.includes(i))
   }
+  // 체크된 시술의 수량 맵 { [상품/이벤트 id]: 개수 } — 닥팔 예약메모 단가·소계 계산용
+  const getCheckedQuantities = (): Record<string, number> => {
+    const map: Record<string, number> = {}
+    cart.forEach((i) => {
+      const id = i.event?.id || i.product?.id || ""
+      if (id && checkedList.includes(id)) map[id] = i.count
+    })
+    return map
+  }
 
   const addToCart = ({ event, product }: { event?: Event; product?: Product }) => {
     if (inquiry) {
@@ -288,6 +297,7 @@ const useCart = () => {
     resetCart,
     getCheckedProductIds,
     getCheckedEventIds,
+    getCheckedQuantities,
     openBottomSheet,
     setOpenBottomSheet,
     inquiryMemo,

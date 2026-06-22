@@ -641,6 +641,7 @@ const Reserve = () => {
     resetCart,
     getCheckedEventIds,
     getCheckedProductIds,
+    getCheckedQuantities,
     hasHydrated,
     backupToCookie,
     restoreFromCookie,
@@ -845,6 +846,7 @@ const Reserve = () => {
             eventIds: getCheckedEventIds(),
             userMemo: buildExtraMemo(inquiryMemo) || undefined,
             category: getReservationCategory(),
+            quantities: getCheckedQuantities(),
           },
         },
         {
