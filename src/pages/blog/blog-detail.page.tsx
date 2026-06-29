@@ -279,12 +279,12 @@ const BlogDetail = () => {
     return out
   }, [sanitizedContent])
 
-  // Extract TOC from h2/h3 headings with id attributes
+  // Extract TOC from h2 headings with id attributes (h3 제외 — 목차는 대제목만)
   const tocItems = useMemo<TocItem[]>(() => {
     if (!sanitizedContent) return []
     const parser = new DOMParser()
     const doc = parser.parseFromString(sanitizedContent, "text/html")
-    const headings = doc.querySelectorAll("h2[id], h3[id]")
+    const headings = doc.querySelectorAll("h2[id]")
     const items: TocItem[] = []
     headings.forEach((h) => {
       items.push({
