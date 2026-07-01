@@ -713,10 +713,20 @@ const Reserve = () => {
     null,
   )
 
-  // 이벤트의 (최신) 종료일이 선택일 이후면 만료로 판정
-  const isEventExpired = (selected: typeof dayjs.prototype) => (event: Event) => {
-    const endDate = (event as any)?.bundle?.endDate || event.category?.endDate
-    return !!endDate && selected.isAfter(dayjs(endDate), "day")
+  // 예약 가능 기준: 방문일이 아니라 "지금 이 이벤트가 노출(게시)기간 중인지"로 판정
+  // 노출 중이면 방문일과 무관하게 예약 가능, 노출이 끝났거나 아직 시작 전이면 만료(예약 불가) 처리
+  const isEventExpired = (_selected: typeof dayjs.prototype) => (event: Event) => {
+    const bundle = (event as any)?.bundle
+    const postStart = bundle?.postStartDate ? new Date(bundle.postStartDate).getTime() : null
+    const postEnd = bundle?.postEndDate ? new Date(bundle.postEndDate).getTime() : null
+    // 게시기간은 날짜만 의미 → 저장된 시각은 무시하고 KST(UTC+9) 날짜 단위로 비교
+    const KST = 9 * 60 * 60 * 1000
+    const DAY = 24 * 60 * 60 * 1000
+    const todayStart = Math.floor((Date.now() + KST) / DAY) * DAY - KST
+    const tomorrowStart = todayStart + DAY
+    if (postStart !== null && postStart >= tomorrowStart) return true // 아직 시작 전
+    if (postEnd !== null && postEnd < todayStart) return true // 이미 종료
+    return false
   }
 
   // 최신 목록 기준으로 체크된 항목 중 만료/삭제된 이벤트·상품 id 추출
@@ -1109,18 +1119,8 @@ const Reserve = () => {
                       localStorage.setItem("reservation:today", value.toISOString())
                     }
                   }}
-                  onMonthChange={(month: typeof dayjs.prototype) => {
-                    const monthStart = dayjs(month).startOf("month")
-                    const freshById = new Map((liveEvents?.items ?? []).map((e) => [e.id, e]))
-                    const hasExpired = cart.some((item) => {
-                      if (!item.event) return false
-                      const id = item.event.id
-                      if (!checkedList.includes(id)) return false
-                      const fresh = freshById.get(id)
-                      const endDate = (fresh as any)?.bundle?.endDate || fresh?.category?.endDate
-                      return !!endDate && dayjs(endDate).isBefore(monthStart)
-                    })
-                    if (hasExpired) setEventPeriodAlert(true)
+                  onMonthChange={() => {
+                    // 노출기간 중이면 방문일(월)은 자유 — 미래 월로 이동해도 만료로 차단하지 않음
                   }}
                   footer={<div>{renderTimeSlots()}</div>}
                 />
