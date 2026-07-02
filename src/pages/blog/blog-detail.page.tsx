@@ -234,11 +234,14 @@ const BlogDetail = () => {
     limit: 100,
   })
 
-  // CTA 링크: product_page(상세페이지명) 이름 매칭 → 상세페이지. 없으면 글의 대분류로 fallback.
+  // CTA 링크: product_page(콤마로 여러 상세페이지명 가능) 각각 이름 매칭 → 첫 매칭 상세페이지. 없으면 대분류로 fallback.
   const ctaTo = (() => {
-    const dpName = (post?.productPage ?? "").trim()
-    if (dpName) {
-      const dp = (detailPagesData?.items ?? []).find((p) => (tv(p, "name") ?? "").trim() === dpName)
+    const dpNames = (post?.productPage ?? "")
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean)
+    for (const nm of dpNames) {
+      const dp = (detailPagesData?.items ?? []).find((p) => (tv(p, "name") ?? "").trim() === nm)
       if (dp) return `/products/${dp.id}`
     }
     if (post?.productCategoryId) return `/products?category=${post.productCategoryId}`
