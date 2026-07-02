@@ -37,7 +37,8 @@ const Header = ({
   const appBar = (
     <AppBar sx={{ background: "transparent", boxShadow: "none", color: "black" }}>
       {/* 모바일 */}
-      <DropShadow>
+      {/* id: 장바구니 sticky 패널이 헤더 높이를 재서 top 오프셋으로 사용 (cart-view) */}
+      <DropShadow id="header-height">
         <HeaderComponent
           onClickDrawer={onClickDrawer}
           clickedKeyword={clickedKeyword}
