@@ -938,7 +938,9 @@ const CartView = ({ children, isHome }: { children?: React.ReactNode; isHome: bo
         {isHome && <div tw="w-full">{children}</div>}
 
         {!isHome && (
-          <div tw="w-2/6 sticky h-full hidden lg:block" css={{ top: headerHeight }}>
+          <div
+            tw="w-2/6 sticky self-start hidden lg:block overflow-y-auto"
+            css={{ top: headerHeight, maxHeight: `calc(100vh - ${headerHeight + 24}px)` }}>
             <SurgeryList />
           </div>
         )}
