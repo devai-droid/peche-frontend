@@ -24,10 +24,10 @@ const POSTS_PER_PAGE = 12
 // 대분류별 상세페이지 칩 특수 규칙 (라벨 ≠ 매칭어, 부분 일치). 없는 대분류는 DB 상세페이지로 자동 생성.
 const SPECIAL_DETAIL_CHIPS: Record<string, { label: string; contains: string }[]> = {
   여성제모: [
-    { label: "젠틀맥스 프로 플러스", contains: "젠틀맥스" },
+    { label: "젠틀맥스프로플러스", contains: "젠틀맥스" },
     { label: "클라리티2", contains: "클라리티" },
   ],
-  남성제모: [{ label: "젠틀맥스 프로 플러스", contains: "젠틀맥스" }], // 젠틀맥스만
+  남성제모: [{ label: "젠틀맥스프로플러스", contains: "젠틀맥스" }], // 젠틀맥스만
 }
 
 const ALL_CHIP_KEY = "__all__"
