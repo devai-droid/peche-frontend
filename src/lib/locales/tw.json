@@ -339,6 +339,8 @@
     "eventPeriodNotAvailable": "不是活動商品的可預約日期。",
     "eventExpiredTitle": "購物車中包含無法預約的商品。",
     "eventExpiredDesc": "僅保留可預約的商品，無法預約的商品將從購物車中移除。",
+    "productChangedTitle": "商品資訊已變更。",
+    "productChangedDesc": "請確認變更後的內容後再繼續預約。",
     "scheduleChangedTitle": "無法確認您所選的預約時間。",
     "scheduleChangedDesc": "請重新選擇日期和時間。",
     "bundleUntilFormat": "{{name}}: 截至 {{endDate}}",

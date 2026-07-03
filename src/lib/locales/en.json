@@ -339,6 +339,8 @@
     "eventPeriodNotAvailable": "This is not an available reservation date for the event product.",
     "eventExpiredTitle": "Your cart contains an item that can't be reserved.",
     "eventExpiredDesc": "Only reservable items will be kept; items that can't be reserved will be removed from your cart.",
+    "productChangedTitle": "Product information has changed.",
+    "productChangedDesc": "Please review the updated details before proceeding with your reservation.",
     "scheduleChangedTitle": "The reservation time you selected cannot be confirmed.",
     "scheduleChangedDesc": "Please select a date and time again.",
     "bundleUntilFormat": "{{name}}: until {{endDate}}",

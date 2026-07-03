@@ -339,6 +339,8 @@
     "eventPeriodNotAvailable": "ไม่ใช่วันที่สามารถจองอีเวนต์ได้",
     "eventExpiredTitle": "มีสินค้าที่ไม่สามารถจองได้อยู่ในรายการ",
     "eventExpiredDesc": "จะเก็บเฉพาะสินค้าที่จองได้ ส่วนสินค้าที่จองไม่ได้จะถูกลบออกจากตะกร้า",
+    "productChangedTitle": "ข้อมูลสินค้ามีการเปลี่ยนแปลง",
+    "productChangedDesc": "กรุณาตรวจสอบรายละเอียดที่อัปเดตก่อนดำเนินการจอง",
     "scheduleChangedTitle": "ไม่สามารถยืนยันเวลาจองที่คุณเลือกได้",
     "scheduleChangedDesc": "กรุณาเลือกวันที่และเวลาอีกครั้ง",
     "bundleUntilFormat": "{{name}}: ถึง {{endDate}}",

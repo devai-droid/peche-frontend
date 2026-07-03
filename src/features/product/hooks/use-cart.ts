@@ -213,25 +213,31 @@ const useCart = () => {
   }
   // 최신 이벤트 목록 기준으로 카트 정리: 유효 항목은 최신 데이터로 갱신, 만료/삭제 항목은 제거 (단일 setCart)
   const reconcileCartEvents = (
-    freshById: Map<string, Event>,
+    freshEventById: Map<string, Event>,
     isExpired: (event: Event) => boolean,
-    validProductIds?: Set<string>,
+    freshProductById?: Map<string, Product>,
   ) => {
     const newCart = cart
       .filter((i) => {
         if (i.event) {
-          const fresh = freshById.get(i.event.id)
+          const fresh = freshEventById.get(i.event.id)
           return !!fresh && !isExpired(fresh) // 목록에 없거나 만료면 제거
         }
-        if (i.product && validProductIds) {
-          return validProductIds.has(i.product.id) // 삭제된 상품 제거 (목록 확보 시에만)
+        if (i.product && freshProductById) {
+          return freshProductById.has(i.product.id) // 삭제된 상품 제거 (목록 확보 시에만)
         }
         return true
       })
       .map((i) => {
-        if (!i.event) return i
-        const fresh = freshById.get(i.event.id)
-        return fresh ? { ...i, event: fresh } : i // 최신값으로 갱신
+        if (i.event) {
+          const fresh = freshEventById.get(i.event.id)
+          return fresh ? { ...i, event: fresh } : i // 이벤트 최신값으로 갱신
+        }
+        if (i.product && freshProductById) {
+          const fresh = freshProductById.get(i.product.id)
+          return fresh ? { ...i, product: fresh } : i // 상품도 최신값(가격·이름·설명 등)으로 갱신
+        }
+        return i
       })
     setCart(newCart)
     const remaining = new Set(newCart.map((i) => i.event?.id || i.product?.id || ""))

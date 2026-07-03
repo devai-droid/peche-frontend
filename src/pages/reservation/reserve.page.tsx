@@ -16,7 +16,7 @@ import useLanguageValue from "@/lib/hooks/use-language-key"
 import useLanguageQuery from "@/lib/hooks/use-language-query"
 import { useEventControllerFindMany } from "@/lib/orval/events/events"
 import { useProductControllerFindMany } from "@/lib/orval/products/products"
-import { AvailableReservationResultDto, Event } from "@/lib/orval/model"
+import { AvailableReservationResultDto, Event, Product } from "@/lib/orval/model"
 import dayjs from "dayjs"
 import utc from "dayjs/plugin/utc"
 import {
@@ -660,6 +660,8 @@ const Reserve = () => {
   const [selectedDatetime, setSelectedDatetime] = React.useState("")
   const [confirmOpen, setConfirmOpen] = React.useState(false)
   const [eventPeriodAlert, setEventPeriodAlert] = React.useState(false)
+  // 장바구니 안내 모달 종류: removed(예약 불가 삭제) / changed(가격·정보 변경)
+  const [cartAlertMode, setCartAlertMode] = React.useState<"removed" | "changed">("removed")
   const [scheduleChangedAlert, setScheduleChangedAlert] = React.useState(false)
 
   /* -------- Auth 상태 -------- */
@@ -732,7 +734,7 @@ const Reserve = () => {
   // 최신 목록 기준으로 체크된 항목 중 만료/삭제된 이벤트·상품 id 추출
   const getInvalidItemIds = (
     freshEventById: Map<string, Event>,
-    validProductIds: Set<string> | null,
+    freshProductById: Map<string, Product> | null,
     selected: typeof dayjs.prototype,
   ) => {
     const ids: string[] = []
@@ -743,28 +745,52 @@ const Reserve = () => {
         const fresh = freshEventById.get(id)
         if (!fresh) ids.push(id) // 삭제된 이벤트
         else if (isEventExpired(selected)(fresh)) ids.push(id) // 만료된 이벤트
-      } else if (item.product && validProductIds && !validProductIds.has(id)) {
+      } else if (item.product && freshProductById && !freshProductById.has(id)) {
         ids.push(id) // 삭제된 상품 (목록 확보 시에만 판정)
       }
     })
     return ids
   }
 
-  // 최신 이벤트/상품 목록 조회 (예약 클릭·A모달 확인 공용)
+  // 담을 때 값과 최신 값이 다른(가격·이름·설명 등 변경된) 체크 항목 id — 같은 id로 정보만 바뀐 경우
+  const getChangedItemIds = (
+    freshEventById: Map<string, Event>,
+    freshProductById: Map<string, Product> | null,
+  ) => {
+    const FIELDS = ["price", "discountPrice", "name", "description"] as const
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const isDiff = (a: any, b: any) => FIELDS.some((k) => (a?.[k] ?? null) !== (b?.[k] ?? null))
+    const ids: string[] = []
+    cart.forEach((item) => {
+      const id = item.event?.id || item.product?.id || ""
+      if (!checkedList.includes(id)) return
+      if (item.event) {
+        const fresh = freshEventById.get(id)
+        if (fresh && isDiff(item.event, fresh)) ids.push(id)
+      } else if (item.product && freshProductById) {
+        const fresh = freshProductById.get(id)
+        if (fresh && isDiff(item.product, fresh)) ids.push(id)
+      }
+    })
+    return ids
+  }
+
+  // 최신 이벤트/상품 목록 조회 (예약 클릭·모달 확인 공용)
   const fetchFresh = async () => {
     const [evRes, prRes] = await Promise.all([refetchEvents(), refetchProducts()])
     const freshEventById = new Map((evRes.data?.items ?? liveEvents?.items ?? []).map((e) => [e.id, e]))
     const prItems = prRes.data?.items ?? liveProducts?.items ?? []
     // 상품 목록을 못 받았으면(빈 배열) 상품은 건드리지 않음 — 정상 상품 오삭제 방지
-    const validProductIds = prItems.length > 0 ? new Set(prItems.map((p) => p.id)) : null
-    return { freshEventById, validProductIds }
+    const freshProductById =
+      prItems.length > 0 ? new Map(prItems.map((p) => [p.id, p] as [string, Product])) : null
+    return { freshEventById, freshProductById }
   }
 
-  // 'A모달 확인' — 최신 정보로 갱신 + 만료/삭제된 이벤트·상품 자동 제거
+  // '모달 확인' — 최신 정보로 갱신(가격·이름·설명) + 만료/삭제된 이벤트·상품 자동 제거
   const handleRefreshCart = async () => {
     const selected = selectedDatetime ? dayjs(selectedDatetime.replace("Z", "")) : dayjs()
-    const { freshEventById, validProductIds } = await fetchFresh()
-    reconcileCartEvents(freshEventById, isEventExpired(selected), validProductIds ?? undefined)
+    const { freshEventById, freshProductById } = await fetchFresh()
+    reconcileCartEvents(freshEventById, isEventExpired(selected), freshProductById ?? undefined)
     setEventPeriodAlert(false)
   }
 
@@ -797,8 +823,15 @@ const Reserve = () => {
 
     // 1) 이벤트·상품 유효성 체크 — 옛 장바구니 값이 아닌 서버 최신값으로 (만료/삭제 차단)
     const selected = dayjs(selectedDatetime.replace("Z", ""))
-    const { freshEventById, validProductIds } = await fetchFresh()
-    if (getInvalidItemIds(freshEventById, validProductIds, selected).length > 0) {
+    const { freshEventById, freshProductById } = await fetchFresh()
+    if (getInvalidItemIds(freshEventById, freshProductById, selected).length > 0) {
+      setCartAlertMode("removed") // 예약 불가(삭제) 안내
+      setEventPeriodAlert(true)
+      return
+    }
+    // 삭제는 없지만 가격·정보가 바뀐 상품이 있으면 → 변경 안내 후 최신값으로 갱신
+    if (getChangedItemIds(freshEventById, freshProductById).length > 0) {
+      setCartAlertMode("changed")
       setEventPeriodAlert(true)
       return
     }
@@ -1031,6 +1064,7 @@ const Reserve = () => {
           typeof msg === "string" &&
           (msg.includes("Event is not available") || msg.includes("Product not found"))
         if (isInvalidItem) {
+          setCartAlertMode("removed")
           setEventPeriodAlert(true) // 상황 A: 만료/삭제된 이벤트·상품 → 정리 모달
         } else {
           setScheduleChangedAlert(true) // 상황 B: 시간 마감/일시 오류 → 일정 재선택 안내
@@ -1200,10 +1234,14 @@ const Reserve = () => {
       <Modal open={eventPeriodAlert} onClose={() => setEventPeriodAlert(false)} width="max-w-[400px]">
         <div tw="font-pretendard">
           <div tw="text-[16px] md:text-[18px] font-semibold mb-4 leading-snug">
-            {t("reservePage.eventExpiredTitle")}
+            {cartAlertMode === "changed"
+              ? t("reservePage.productChangedTitle")
+              : t("reservePage.eventExpiredTitle")}
           </div>
           <div tw="text-neutral70 text-[14px] md:text-[16px] mb-6 leading-relaxed">
-            {t("reservePage.eventExpiredDesc")}
+            {cartAlertMode === "changed"
+              ? t("reservePage.productChangedDesc")
+              : t("reservePage.eventExpiredDesc")}
           </div>
           <Button
             tw="w-full h-[40px] text-[13px] md:text-[15px]"

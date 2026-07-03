@@ -339,6 +339,8 @@
     "eventPeriodNotAvailable": "イベント商品の予約可能日ではありません。",
     "eventExpiredTitle": "予約できない商品が含まれています。",
     "eventExpiredDesc": "予約可能な商品のみ残し、予約できない商品はカートから削除されます。",
+    "productChangedTitle": "商品情報が変更されました。",
+    "productChangedDesc": "変更内容をご確認のうえ、ご予約をお進めください。",
     "scheduleChangedTitle": "選択された予約時間を確定できません。",
     "scheduleChangedDesc": "日付と時間をもう一度選択してください。",
     "bundleUntilFormat": "{{name}}: {{endDate}}まで",
