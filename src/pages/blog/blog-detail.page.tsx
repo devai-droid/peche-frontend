@@ -433,10 +433,10 @@ const BlogDetail = () => {
                     width: 300px;
                     flex-shrink: 0;
                     position: sticky;
-                    top: 190px;
+                    top: 32px;
                     align-self: flex-start;
                     overflow-y: auto;
-                    max-height: calc(100vh - 170px);
+                    max-height: calc(100vh - 56px);
                   `,
                 ]}>
                 {tocItems.length > 0 && (
