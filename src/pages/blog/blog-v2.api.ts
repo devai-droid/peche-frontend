@@ -96,6 +96,13 @@ export const blogV2PublicApi = {
       method: "GET",
       url: `/api/blog-v2/posts/public/detail/${lang}/${encodeURIComponent(slug)}`,
     }),
+  // 내부링크 치환용 — slug들 중 발행된 글의 slug→제목 맵(미발행/미존재는 미포함)
+  slugTitles: (lang: string, slugs: string[]) =>
+    request<Record<string, string>>({
+      method: "GET",
+      url: "/api/blog-v2/posts/public/slug-titles",
+      params: { lang, slugs: slugs.join(",") },
+    }),
   // 미리보기(초안 포함) — 어드민 iframe 전용. 페이지는 noindex 처리.
   preview: (id: string) =>
     request<BlogV2Post>({

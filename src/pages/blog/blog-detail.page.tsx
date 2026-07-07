@@ -298,6 +298,29 @@ const BlogDetail = () => {
     return out
   }, [sanitizedContent])
 
+  // 내부링크 치환: 관련 slug 중 "발행된" 글의 제목 맵(미발행/미존재는 미포함)
+  const relatedSlugs = useMemo(() => relatedPosts.map((r) => r.slug), [relatedPosts])
+  const { data: slugTitleMap } = useQuery({
+    queryKey: ["blog-slug-titles", lang, relatedSlugs],
+    queryFn: () => blogV2PublicApi.slugTitles(lang, relatedSlugs),
+    enabled: relatedSlugs.length > 0,
+    staleTime: 1000 * 60,
+  })
+  // 본문: 미발행 내부링크는 링크 제거하고 텍스트만(빈 페이지 링크 방지). 발행 전엔 원본 유지(로딩 중)
+  const finalContent = useMemo(() => {
+    if (!sanitizedContent || !slugTitleMap) return sanitizedContent
+    const doc = new DOMParser().parseFromString(sanitizedContent, "text/html")
+    doc.querySelectorAll("a.blog-related-link").forEach((a) => {
+      const s = a.getAttribute("data-slug") ?? ""
+      if (s && !slugTitleMap[s]) {
+        const span = doc.createElement("span")
+        span.textContent = a.textContent ?? ""
+        a.replaceWith(span)
+      }
+    })
+    return doc.body.innerHTML
+  }, [sanitizedContent, slugTitleMap])
+
   // Extract TOC from h2 headings with id attributes (h3 제외 — 목차는 대제목만)
   const tocItems = useMemo<TocItem[]>(() => {
     if (!sanitizedContent) return []
@@ -683,7 +706,7 @@ const BlogDetail = () => {
                   `,
                 ]}
                 // eslint-disable-next-line react/no-danger
-                dangerouslySetInnerHTML={{ __html: sanitizedContent }}
+                dangerouslySetInnerHTML={{ __html: finalContent }}
               />
 
               {/* 공통 고지문구 — 어드민 '의료 고지 문구'에서 관리. 기존 본문 고지 스타일과 동일(가로선 없음) */}
@@ -767,18 +790,30 @@ const BlogDetail = () => {
                     {topicKeyword ? `${topicKeyword} 시술 관련글 더보기` : "관련글 더보기"}
                   </h2>
                   <ul tw="list-none p-0 m-0 flex flex-col gap-[2px]">
-                    {relatedPosts.map((link) => (
-                      <li key={link.slug}>
-                        <CustomLink
-                          to={`/blog/${link.slug}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          tw="text-[15px] lg:text-[16px] leading-[1.6] no-underline transition-colors duration-200"
-                          css={[{ color: "#555" }, tw`hover:text-[#DA7F67]`]}>
-                          {link.anchor}
-                        </CustomLink>
-                      </li>
-                    ))}
+                    {relatedPosts.map((link) => {
+                      // 발행된 글이면 실제 제목+링크, 미발행이면 미리 적어둔 텍스트만(링크 X)
+                      const title = slugTitleMap?.[link.slug]
+                      return (
+                        <li key={link.slug}>
+                          {title ? (
+                            <CustomLink
+                              to={`/blog/${link.slug}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              tw="text-[15px] lg:text-[16px] leading-[1.6] no-underline transition-colors duration-200"
+                              css={[{ color: "#555" }, tw`hover:text-[#DA7F67]`]}>
+                              {title}
+                            </CustomLink>
+                          ) : (
+                            <span
+                              tw="text-[15px] lg:text-[16px] leading-[1.6]"
+                              css={[{ color: "#999" }]}>
+                              {link.anchor}
+                            </span>
+                          )}
+                        </li>
+                      )
+                    })}
                   </ul>
                 </aside>
               )}
