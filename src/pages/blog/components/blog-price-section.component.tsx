@@ -5,7 +5,6 @@ import useLanguageValue from "@/lib/hooks/use-language-key"
 import useLanguageQuery from "@/lib/hooks/use-language-query"
 import { useProductControllerFindMany } from "@/lib/orval/products/products"
 import { useEventControllerFindMany } from "@/lib/orval/events/events"
-import { Chip } from "@/design-system/components"
 import CustomLink from "@/lib/components/custom-link.component"
 
 const keyMatch = { ko: "", en: "EN", ja: "JA", th: "TH", zh: "ZH", "zh-TW": "ZHTW" } as const
@@ -15,18 +14,10 @@ export interface PriceDetailPageRef {
   name: string
 }
 
-interface Labels {
-  pop?: boolean
-  isNew?: boolean
-  kakao?: boolean
-  best?: boolean
-}
 interface Row {
   name: string
   price: string
   original?: string
-  category?: string
-  labels?: Labels
 }
 
 // 3번째(초과) 카드 페이드 — 세로 레이아웃, 제목 높이에서 잘라 흰여백 없이 페이드
@@ -48,43 +39,11 @@ const peekCss = css`
   }
 `
 
-const chipTw = tw`h-[24px] px-2 text-[14px] leading-[1] flex items-center`
-
-/** 가격 카드 — 칩·코랄 대분류·정가 취소선+할인가 (사이트 상품카드 스타일) */
+/** 가격 카드 — 상품명 + 가격(정가 취소선+할인가)만 */
 const PriceCard = ({ row, faded }: { row: Row; faded?: boolean }) => {
-  const { t } = useTranslation()
-  const l = row.labels
-  const hasChip = l && (l.pop || l.isNew || l.kakao || l.best)
   return (
     <div css={[tw`flex flex-col gap-[6px] py-[11px] border-b border-neutral30`, faded && peekCss]}>
-      {hasChip && (
-        <div tw="flex gap-1 mb-1">
-          {l?.pop && (
-            <Chip color="primary" css={[chipTw]}>
-              {t("common.pop")}
-            </Chip>
-          )}
-          {l?.isNew && (
-            <Chip color="gray" css={[chipTw]}>
-              {t("common.new")}
-            </Chip>
-          )}
-          {l?.kakao && (
-            <Chip color="pink" css={[chipTw]}>
-              {t("common.kakaoFriend")}
-            </Chip>
-          )}
-          {l?.best && (
-            <Chip color="darkgray" css={[chipTw]}>
-              {t("common.best")}
-            </Chip>
-          )}
-        </div>
-      )}
-      <div tw="text-[15px] font-semibold leading-[1.4]">
-        {row.category && <span css={[{ color: "#DA7F67" }]}>{row.category} </span>}
-        <span tw="text-neutralBlack">{row.name}</span>
-      </div>
+      <div tw="text-[15px] font-semibold text-neutralBlack leading-[1.4]">{row.name}</div>
       <div tw="flex items-baseline gap-2 whitespace-nowrap">
         {row.original && <span tw="text-[12px] text-neutral50 line-through">{row.original}</span>}
         <span tw="text-[15px] font-semibold" css={[{ color: "#AB6655" }]}>
@@ -118,13 +77,6 @@ const PriceGroup = ({ detailPageId }: { detailPageId: string }) => {
     name: tv(e, "name"),
     price: money(e.discountPrice || e.price),
     original: e.discountPrice ? money(e.price) : undefined,
-    category: e.category ? tv(e.category, "name") : undefined,
-    labels: {
-      pop: e.label?.includes("POP"),
-      isNew: e.label?.includes("NEW"),
-      kakao: e.label?.includes("KAKAO"),
-      best: e.label?.includes("BEST"),
-    },
   }))
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const productRows: Row[] = (products?.items ?? []).map((p: any) => ({
