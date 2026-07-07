@@ -149,7 +149,7 @@ const BlogPriceSection = ({ detailPages }: { detailPages: PriceDetailPageRef[] }
     <div tw="mt-6">
       {/* '가격 보기' 제목 — 목차와 동일 스타일(코랄 밑줄) */}
       <div
-        tw="text-[16px] font-semibold text-neutralBlack pb-2 mb-5 lg:mb-3"
+        tw="text-[16px] font-semibold text-neutralBlack pb-2 mb-7 lg:mb-3"
         css={[{ borderBottom: "1px solid #DA7F67" }]}>
         가격 보기
       </div>
@@ -192,7 +192,7 @@ const BlogPriceSection = ({ detailPages }: { detailPages: PriceDetailPageRef[] }
       {/* 가격 박스 — 흰 배경 + 얇은 선, 열린 탭과 연결 */}
       <div
         css={[
-          tw`px-3.5 pt-6 pb-3.5 lg:pt-3.5`,
+          tw`px-3.5 pt-6 pb-5 lg:pt-3.5 lg:pb-3.5`,
           css`
             background: #fff;
             border: 1px solid ${LINE};
