@@ -161,7 +161,7 @@ const BlogPriceSection = ({ detailPages }: { detailPages: PriceDetailPageRef[] }
             type="button"
             onClick={() => setActiveDp(i)}
             css={[
-              tw`whitespace-nowrap text-[15px] font-bold px-4 pt-3 pb-1 lg:pt-1 lg:pb-1`,
+              tw`whitespace-nowrap text-[15px] font-bold px-4 pt-3 pb-2 lg:pt-1 lg:pb-1`,
               // 모든 탭 하단을 박스 상단선과 겹쳐 단일 선으로. 탭끼리는 세로선 겹쳐 간격 0
               css`
                 border: 1px solid ${LINE};
