@@ -745,7 +745,7 @@ const BlogDetail = () => {
 
               {/* 관련 글 — 본문 내부 링크 자동 수집 */}
               {relatedPosts.length > 0 && (
-                <aside tw="pt-8 mt-10 border-t border-neutral30">
+                <aside tw="mt-10">
                   {/* 모바일: '가격 보기' 제목과 동일 스타일(16px + 코랄 밑줄)로 통일 */}
                   <h2
                     tw="font-semibold text-neutralBlack"
