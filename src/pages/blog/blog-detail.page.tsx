@@ -412,10 +412,10 @@ const BlogDetail = () => {
         <AppMaxWidth>
           {/* 제목 위 여백 — 모바일은 고정 헤더(약 64px) + 여유, 데스크톱도 헤더와 간격 확보. 미리보기(헤더 없음)는 축소 */}
           <div css={[isPreview ? tw`pt-6` : tw`pt-32 lg:pt-24`]} />
-          {/* Layout: TOC sidebar + Article */}
+          {/* Layout: Article(좌) + TOC·가격 사이드바(우) — flex-row-reverse로 사이드바를 오른쪽에 */}
           <div
             css={[
-              isDesktop ? tw`flex gap-10` : undefined,
+              isDesktop ? tw`flex flex-row-reverse gap-10` : undefined,
               isDesktop &&
                 css`
                   overflow: clip;
@@ -701,7 +701,7 @@ const BlogDetail = () => {
           </div>
 
           {/* 본문 하단(의료진 카드 + 관련 글) — 데스크톱에선 우측 본문 컬럼에 정렬. TOC sticky 범위 밖 */}
-          <div css={[isDesktop ? tw`flex gap-10` : undefined]}>
+          <div css={[isDesktop ? tw`flex flex-row-reverse gap-10` : undefined]}>
             {isDesktop && <div css={[{ width: "300px", flexShrink: 0 }]} />}
             <div css={[isDesktop ? tw`max-w-[800px] flex-1 min-w-0` : undefined]}>
               {/* 의료진 카드 */}
