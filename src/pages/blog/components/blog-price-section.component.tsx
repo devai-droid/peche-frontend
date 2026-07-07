@@ -56,7 +56,7 @@ const PriceCard = ({ row, faded }: { row: Row; faded?: boolean }) => {
   const l = row.labels
   const hasChip = l && (l.pop || l.isNew || l.kakao || l.best)
   return (
-    <div css={[tw`flex flex-col gap-2 py-4 border-b border-neutral30`, faded && peekCss]}>
+    <div css={[tw`flex flex-col gap-[6px] py-[11px] border-b border-neutral30`, faded && peekCss]}>
       {hasChip && (
         <div tw="flex gap-1">
           {l?.pop && (
@@ -146,7 +146,7 @@ const PriceGroup = ({ detailPageId }: { detailPageId: string }) => {
   return (
     <div>
       {hasEvent && hasProduct && (
-        <div tw="flex mb-3 rounded-sm overflow-hidden border border-neutral30">
+        <div tw="flex mb-2 rounded-sm overflow-hidden border border-neutral30">
           {(["event", "product"] as const).map((k) => (
             <button
               key={k}
@@ -181,41 +181,66 @@ const PriceGroup = ({ detailPageId }: { detailPageId: string }) => {
  * 블로그 가격 섹션 — 상세페이지가 여러 개면 상위 탭(상세페이지)으로 전환, 1개면 바로 표시.
  * 각 상세페이지 안은 가격이벤트/전체 시술 반반 탭.
  */
+const LINE = "#e5ded9"
+
 const BlogPriceSection = ({ detailPages }: { detailPages: PriceDetailPageRef[] }) => {
   const [activeDp, setActiveDp] = useState(0)
   if (!detailPages.length) return null
   const current = Math.min(activeDp, detailPages.length - 1)
 
   return (
-    <div tw="pt-5 mt-5 border-t border-neutral30">
-      {/* 상세페이지 탭 — 1개여도 동일하게 노출(제목 겸용). 회색선·스크롤 없음, active만 밑줄 */}
-      <div tw="flex flex-wrap gap-x-3 gap-y-1 mb-3">
+    <div tw="mt-6">
+      {/* '가격 보기' 제목 — 목차와 동일 스타일(코랄 밑줄) */}
+      <div
+        tw="text-[16px] font-semibold text-neutralBlack pb-2 mb-3"
+        css={[{ borderBottom: "1px solid #DA7F67" }]}>
+        가격 보기
+      </div>
+      {/* 폴더 탭(상세페이지) — 열린 탭 흰 배경, 나머지는 선으로만 구분, 박스와 연결 */}
+      <div tw="flex gap-[5px] pl-0.5 relative z-[1]">
         {detailPages.map((dp, i) => (
           <button
             key={dp.id}
             type="button"
             onClick={() => setActiveDp(i)}
             css={[
-              tw`flex-none whitespace-nowrap pt-1 pb-[6px] text-[16px] font-bold border-b-2 transition`,
+              tw`whitespace-nowrap text-[15px] font-bold px-4 py-2`,
+              css`
+                border: 1px solid ${LINE};
+                border-radius: 9px 9px 0 0;
+              `,
               current === i
                 ? css`
+                    background: #fff;
                     color: #da7f67;
-                    border-bottom-color: #da7f67;
+                    border-bottom-color: #fff;
+                    margin-bottom: -1px;
                   `
                 : css`
+                    background: transparent;
                     color: #9b9b9b;
-                    border-bottom-color: transparent;
                   `,
             ]}>
             {dp.name}
           </button>
         ))}
       </div>
-      {detailPages.map((dp, i) => (
-        <div key={dp.id} css={[current !== i && tw`hidden`]}>
-          <PriceGroup detailPageId={dp.id} />
-        </div>
-      ))}
+      {/* 가격 박스 — 흰 배경 + 얇은 선, 열린 탭과 연결 */}
+      <div
+        css={[
+          tw`px-3.5 pt-3.5 pb-2.5`,
+          css`
+            background: #fff;
+            border: 1px solid ${LINE};
+            border-radius: 0 10px 10px 10px;
+          `,
+        ]}>
+        {detailPages.map((dp, i) => (
+          <div key={dp.id} css={[current !== i && tw`hidden`]}>
+            <PriceGroup detailPageId={dp.id} />
+          </div>
+        ))}
+      </div>
     </div>
   )
 }
