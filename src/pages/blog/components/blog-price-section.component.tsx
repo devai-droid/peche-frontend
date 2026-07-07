@@ -81,13 +81,13 @@ const PriceCard = ({ row, faded }: { row: Row; faded?: boolean }) => {
           )}
         </div>
       )}
-      <div tw="text-[17px] font-semibold leading-[1.4]">
+      <div tw="text-[15px] font-semibold leading-[1.4]">
         {row.category && <span css={[{ color: "#DA7F67" }]}>{row.category} </span>}
         <span tw="text-neutralBlack">{row.name}</span>
       </div>
       <div tw="flex items-baseline gap-2 whitespace-nowrap">
-        {row.original && <span tw="text-[14px] text-neutral50 line-through">{row.original}</span>}
-        <span tw="text-[17px] font-semibold" css={[{ color: "#AB6655" }]}>
+        {row.original && <span tw="text-[12px] text-neutral50 line-through">{row.original}</span>}
+        <span tw="text-[15px] font-semibold" css={[{ color: "#AB6655" }]}>
           {row.price}
         </span>
       </div>
@@ -153,7 +153,7 @@ const PriceGroup = ({ detailPageId }: { detailPageId: string }) => {
               type="button"
               onClick={() => setTab(k)}
               css={[
-                tw`flex-1 py-[4px] text-[14px] font-medium transition [&:not(:last-child)]:border-r border-neutral30`,
+                tw`flex-1 py-[4px] text-[12px] font-medium transition [&:not(:last-child)]:border-r border-neutral30`,
                 activeTab === k ? tw`bg-primary text-white` : tw`bg-white text-neutral70`,
               ]}>
               {k === "event" ? "가격이벤트" : "전체 시술"}
@@ -169,7 +169,7 @@ const PriceGroup = ({ detailPageId }: { detailPageId: string }) => {
       {showFade && (
         <CustomLink
           to={`/products/${detailPageId}`}
-          tw="flex items-center justify-center gap-1 mt-3 py-[7px] bg-white border border-primary text-primary text-[15px] font-medium">
+          tw="flex items-center justify-center gap-1 mt-3 py-[7px] bg-white border border-primary text-primary text-[13px] font-medium">
           가격 더보기 →
         </CustomLink>
       )}
