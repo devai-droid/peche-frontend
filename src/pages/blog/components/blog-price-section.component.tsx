@@ -204,7 +204,7 @@ const BlogPriceSection = ({ detailPages }: { detailPages: PriceDetailPageRef[] }
             type="button"
             onClick={() => setActiveDp(i)}
             css={[
-              tw`whitespace-nowrap text-[15px] font-bold px-4 py-1.5`,
+              tw`whitespace-nowrap text-[15px] font-bold px-4 py-1`,
               css`
                 border: 1px solid ${LINE};
                 border-radius: 9px 9px 0 0;
