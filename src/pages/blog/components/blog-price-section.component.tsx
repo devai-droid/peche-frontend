@@ -86,9 +86,6 @@ const PriceCard = ({ row, faded }: { row: Row; faded?: boolean }) => {
         {row.category && <span css={[{ color: "#DA7F67" }]}>{row.category} </span>}
         <span tw="text-neutralBlack">{row.name}</span>
       </div>
-      {row.description && (
-        <div tw="text-[13px] text-neutral70 leading-[1.5] whitespace-pre-line">{row.description}</div>
-      )}
       <div tw="flex items-baseline gap-2 whitespace-nowrap">
         {row.original && <span tw="text-[13px] text-neutral50 line-through">{row.original}</span>}
         <span tw="text-[16px] font-semibold" css={[{ color: "#AB6655" }]}>
@@ -151,19 +148,17 @@ const PriceGroup = ({ detailPageId, detailPageName }: { detailPageId: string; de
 
   return (
     <section tw="mb-[52px] last:mb-0">
-      <h2 tw="text-[17px] font-semibold text-neutralBlack mb-3">{detailPageName} 가격</h2>
+      <h2 tw="text-[21px] font-bold text-neutralBlack mb-3">{detailPageName} 가격</h2>
       {hasEvent && hasProduct && (
-        <div tw="flex gap-2 mb-1.5">
+        <div tw="flex mb-3 rounded-sm overflow-hidden border border-neutral30">
           {(["event", "product"] as const).map((k) => (
             <button
               key={k}
               type="button"
               onClick={() => setTab(k)}
               css={[
-                tw`px-3 py-2 text-[13px] font-medium rounded-sm border transition`,
-                activeTab === k
-                  ? tw`bg-primary text-white border-primary`
-                  : tw`bg-white text-neutral70 border-neutral30`,
+                tw`flex-1 py-[7px] text-[13px] font-medium transition [&:not(:last-child)]:border-r border-neutral30`,
+                activeTab === k ? tw`bg-primary text-white` : tw`bg-white text-neutral70`,
               ]}>
               {k === "event" ? "가격이벤트" : "전체 시술"}
             </button>
@@ -191,7 +186,7 @@ const PriceGroup = ({ detailPageId, detailPageName }: { detailPageId: string; de
 const BlogPriceSection = ({ detailPages }: { detailPages: PriceDetailPageRef[] }) => {
   if (!detailPages.length) return null
   return (
-    <div tw="pt-8 mt-10 border-t border-neutral30">
+    <div tw="pt-5 mt-5 border-t border-neutral30">
       {detailPages.map((dp) => (
         <PriceGroup key={dp.id} detailPageId={dp.id} detailPageName={dp.name} />
       ))}
