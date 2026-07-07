@@ -245,7 +245,12 @@ const BlogDetail = () => {
 
   // 가격 섹션용 — product_page(콤마 여러 개) 이름 → 상세페이지(id,name) 매칭. 중복 상세페이지는 1회만.
   const priceDetailPages = useMemo<PriceDetailPageRef[]>(() => {
-    const names = (post?.productPage ?? "").split(",").map((s) => s.trim()).filter(Boolean)
+    const raw = post?.productPage ?? ""
+    // product_page 구분자: 이름에 콤마가 든 상세페이지를 위해 '|'도 지원(있으면 '|', 없으면 기존 ',')
+    const names = raw
+      .split(raw.includes("|") ? "|" : ",")
+      .map((s) => s.trim())
+      .filter(Boolean)
     const items = detailPagesData?.items ?? []
     const seen = new Set<string>()
     const out: PriceDetailPageRef[] = []
