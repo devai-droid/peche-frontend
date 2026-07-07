@@ -431,6 +431,12 @@ const BlogDetail = () => {
                     position: sticky;
                     top: ${tocTop}px;
                     align-self: flex-start;
+                    max-height: calc(100vh - ${tocTop + 24}px);
+                    overflow-y: auto;
+                    scrollbar-width: none;
+                    &::-webkit-scrollbar {
+                      display: none;
+                    }
                     transition: top 0.2s ease;
                   `,
                 ]}>
