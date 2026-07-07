@@ -96,15 +96,7 @@ const PriceCard = ({ row, faded }: { row: Row; faded?: boolean }) => {
 }
 
 /** 상세페이지 1개의 가격 블록 — 가격이벤트(게시중)·전체 시술 반반 탭. 3개 초과 시 2개+페이드+더보기 */
-const PriceGroup = ({
-  detailPageId,
-  detailPageName,
-  showHeading,
-}: {
-  detailPageId: string
-  detailPageName: string
-  showHeading: boolean
-}) => {
+const PriceGroup = ({ detailPageId }: { detailPageId: string }) => {
   const { t, i18n } = useTranslation()
   const tv = useLanguageValue()
   const langQuery = useLanguageQuery()
@@ -153,9 +145,6 @@ const PriceGroup = ({
 
   return (
     <div>
-      {showHeading && (
-        <h2 tw="text-[21px] font-bold text-neutralBlack mb-3">{detailPageName} 가격</h2>
-      )}
       {hasEvent && hasProduct && (
         <div tw="flex mb-3 rounded-sm overflow-hidden border border-neutral30">
           {(["event", "product"] as const).map((k) => (
@@ -195,38 +184,36 @@ const PriceGroup = ({
 const BlogPriceSection = ({ detailPages }: { detailPages: PriceDetailPageRef[] }) => {
   const [activeDp, setActiveDp] = useState(0)
   if (!detailPages.length) return null
-  const multi = detailPages.length > 1
   const current = Math.min(activeDp, detailPages.length - 1)
 
   return (
     <div tw="pt-5 mt-5 border-t border-neutral30">
-      {multi && (
-        <div tw="flex gap-1 mb-3 border-b border-neutral30 overflow-x-auto">
-          {detailPages.map((dp, i) => (
-            <button
-              key={dp.id}
-              type="button"
-              onClick={() => setActiveDp(i)}
-              css={[
-                tw`flex-none whitespace-nowrap px-1.5 pt-2 pb-[9px] text-[14px] font-semibold border-b-2 -mb-px transition`,
-                current === i
-                  ? css`
-                      color: #121212;
-                      border-bottom-color: #da7f67;
-                    `
-                  : css`
-                      color: #9b9b9b;
-                      border-bottom-color: transparent;
-                    `,
-              ]}>
-              {dp.name}
-            </button>
-          ))}
-        </div>
-      )}
+      {/* 상세페이지 탭 — 1개여도 동일하게 노출(제목 겸용) */}
+      <div tw="flex gap-1 mb-3 border-b border-neutral30 overflow-x-auto">
+        {detailPages.map((dp, i) => (
+          <button
+            key={dp.id}
+            type="button"
+            onClick={() => setActiveDp(i)}
+            css={[
+              tw`flex-none whitespace-nowrap px-1.5 pt-2 pb-[9px] text-[15px] font-bold border-b-2 -mb-px transition`,
+              current === i
+                ? css`
+                    color: #121212;
+                    border-bottom-color: #da7f67;
+                  `
+                : css`
+                    color: #9b9b9b;
+                    border-bottom-color: transparent;
+                  `,
+            ]}>
+            {dp.name}
+          </button>
+        ))}
+      </div>
       {detailPages.map((dp, i) => (
-        <div key={dp.id} css={[multi && current !== i && tw`hidden`]}>
-          <PriceGroup detailPageId={dp.id} detailPageName={dp.name} showHeading={!multi} />
+        <div key={dp.id} css={[current !== i && tw`hidden`]}>
+          <PriceGroup detailPageId={dp.id} />
         </div>
       ))}
     </div>
