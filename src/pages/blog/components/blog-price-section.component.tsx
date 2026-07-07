@@ -181,7 +181,7 @@ const BlogPriceSection = ({ detailPages }: { detailPages: PriceDetailPageRef[] }
                     z-index: 1;
                   `
                 : css`
-                    background: transparent;
+                    background: #f3efeb;
                     color: #9b9b9b;
                   `,
             ]}>
