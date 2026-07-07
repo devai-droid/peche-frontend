@@ -521,7 +521,7 @@ const BlogDetail = () => {
               )}
 
               {/* 작성일 (대분류·상세페이지 표시는 제거) */}
-              <div tw="flex items-center text-[14px] lg:text-[15px] text-neutral50 mb-6 lg:mb-8 pb-6 lg:pb-8 border-b border-neutral30">
+              <div tw="flex items-center text-[14px] lg:text-[15px] text-neutral50 mb-6 lg:mb-8 pb-2 border-b border-neutral30">
                 <span>{publishedDate}</span>
               </div>
 
@@ -774,8 +774,12 @@ const BlogDetail = () => {
                 </div>
               </div>
 
-              {/* 가격 섹션 — 모바일: 의료진 카드 다음 (PC는 왼쪽 목차 아래에 배치) */}
-              {!isDesktop && <BlogPriceSection detailPages={priceDetailPages} />}
+              {/* 가격 섹션 — 모바일: 의료진 카드 다음 (PC는 왼쪽 목차 아래에 배치). 관련글 위 여백만큼 띄움 */}
+              {!isDesktop && (
+                <div tw="pt-4">
+                  <BlogPriceSection detailPages={priceDetailPages} />
+                </div>
+              )}
 
               {/* 관련 글 — 본문 내부 링크 자동 수집 */}
               {relatedPosts.length > 0 && (

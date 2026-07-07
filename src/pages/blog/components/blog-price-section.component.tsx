@@ -164,7 +164,7 @@ const BlogPriceSection = ({ detailPages }: { detailPages: PriceDetailPageRef[] }
               tw`whitespace-nowrap text-[15px] font-bold px-4 py-1`,
               css`
                 border: 1px solid ${LINE};
-                border-radius: 9px 9px 0 0;
+                border-radius: 0;
               `,
               current === i
                 ? css`
@@ -189,7 +189,7 @@ const BlogPriceSection = ({ detailPages }: { detailPages: PriceDetailPageRef[] }
           css`
             background: #fff;
             border: 1px solid ${LINE};
-            border-radius: 0 10px 10px 10px;
+            border-radius: 0;
           `,
         ]}>
         {detailPages.map((dp, i) => (
