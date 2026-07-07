@@ -48,7 +48,7 @@ const peekCss = css`
   }
 `
 
-const chipTw = tw`h-[24px] px-2 text-[13px] leading-[1] flex items-center`
+const chipTw = tw`h-[24px] px-2 text-[14px] leading-[1] flex items-center`
 
 /** 가격 카드 — 칩·코랄 대분류·정가 취소선+할인가 (사이트 상품카드 스타일) */
 const PriceCard = ({ row, faded }: { row: Row; faded?: boolean }) => {
@@ -81,13 +81,13 @@ const PriceCard = ({ row, faded }: { row: Row; faded?: boolean }) => {
           )}
         </div>
       )}
-      <div tw="text-[16px] font-semibold leading-[1.4]">
+      <div tw="text-[17px] font-semibold leading-[1.4]">
         {row.category && <span css={[{ color: "#DA7F67" }]}>{row.category} </span>}
         <span tw="text-neutralBlack">{row.name}</span>
       </div>
       <div tw="flex items-baseline gap-2 whitespace-nowrap">
-        {row.original && <span tw="text-[13px] text-neutral50 line-through">{row.original}</span>}
-        <span tw="text-[16px] font-semibold" css={[{ color: "#AB6655" }]}>
+        {row.original && <span tw="text-[14px] text-neutral50 line-through">{row.original}</span>}
+        <span tw="text-[17px] font-semibold" css={[{ color: "#AB6655" }]}>
           {row.price}
         </span>
       </div>
@@ -153,7 +153,7 @@ const PriceGroup = ({ detailPageId }: { detailPageId: string }) => {
               type="button"
               onClick={() => setTab(k)}
               css={[
-                tw`flex-1 py-[7px] text-[13px] font-medium transition [&:not(:last-child)]:border-r border-neutral30`,
+                tw`flex-1 py-[4px] text-[14px] font-medium transition [&:not(:last-child)]:border-r border-neutral30`,
                 activeTab === k ? tw`bg-primary text-white` : tw`bg-white text-neutral70`,
               ]}>
               {k === "event" ? "가격이벤트" : "전체 시술"}
@@ -169,7 +169,7 @@ const PriceGroup = ({ detailPageId }: { detailPageId: string }) => {
       {showFade && (
         <CustomLink
           to={`/products/${detailPageId}`}
-          tw="flex items-center justify-center gap-1 mt-3 py-3 bg-white border border-primary text-primary text-[15px] font-medium">
+          tw="flex items-center justify-center gap-1 mt-3 py-[7px] bg-white border border-primary text-primary text-[15px] font-medium">
           가격 더보기 →
         </CustomLink>
       )}
@@ -188,18 +188,18 @@ const BlogPriceSection = ({ detailPages }: { detailPages: PriceDetailPageRef[] }
 
   return (
     <div tw="pt-5 mt-5 border-t border-neutral30">
-      {/* 상세페이지 탭 — 1개여도 동일하게 노출(제목 겸용) */}
-      <div tw="flex gap-1 mb-3 border-b border-neutral30 overflow-x-auto">
+      {/* 상세페이지 탭 — 1개여도 동일하게 노출(제목 겸용). 회색선·스크롤 없음, active만 밑줄 */}
+      <div tw="flex flex-wrap gap-x-3 gap-y-1 mb-3">
         {detailPages.map((dp, i) => (
           <button
             key={dp.id}
             type="button"
             onClick={() => setActiveDp(i)}
             css={[
-              tw`flex-none whitespace-nowrap px-1.5 pt-2 pb-[9px] text-[15px] font-bold border-b-2 -mb-px transition`,
+              tw`flex-none whitespace-nowrap pt-1 pb-[6px] text-[16px] font-bold border-b-2 transition`,
               current === i
                 ? css`
-                    color: #121212;
+                    color: #da7f67;
                     border-bottom-color: #da7f67;
                   `
                 : css`

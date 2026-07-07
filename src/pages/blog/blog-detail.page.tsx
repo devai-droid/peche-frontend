@@ -431,15 +431,13 @@ const BlogDetail = () => {
                     position: sticky;
                     top: ${tocTop}px;
                     align-self: flex-start;
-                    overflow-y: auto;
-                    max-height: calc(100vh - ${tocTop + 24}px);
                     transition: top 0.2s ease;
                   `,
                 ]}>
                 {tocItems.length > 0 && (
                   <nav aria-label={t("blog.toc") || "목차"}>
                     <div
-                      tw="text-[15px] font-semibold text-neutralBlack mb-3 pb-2 border-b"
+                      tw="text-[16px] font-semibold text-neutralBlack mb-3 pb-2 border-b"
                       css={[{ borderColor: "#DA7F67" }]}>
                       {t("blog.toc") || "목차"}
                     </div>
@@ -452,7 +450,7 @@ const BlogDetail = () => {
                               e.preventDefault()
                               handleTocClick(item.id)
                             }}
-                            tw="block py-[5px] text-[14px] leading-[1.5] transition-colors duration-200 no-underline"
+                            tw="block py-[5px] text-[15px] leading-[1.5] transition-colors duration-200 no-underline"
                             css={[
                               activeId === item.id
                                 ? { color: "#DA7F67", fontWeight: 600 }
@@ -482,14 +480,14 @@ const BlogDetail = () => {
               {/* Subtitle (부제목) - right below title */}
               {subtitle && (
                 <p
-                  tw="text-[17px] lg:text-[19px] text-neutral70 leading-[1.8] font-pretendard"
+                  tw="text-[18px] lg:text-[20px] text-neutral70 leading-[1.8] font-pretendard"
                   css={[{ marginBottom: "1.5rem" }]}>
                   {subtitle}
                 </p>
               )}
 
               {/* 작성일 (대분류·상세페이지 표시는 제거) */}
-              <div tw="flex items-center text-[13px] lg:text-[14px] text-neutral50 mb-6 lg:mb-8 pb-6 lg:pb-8 border-b border-neutral30">
+              <div tw="flex items-center text-[14px] lg:text-[15px] text-neutral50 mb-6 lg:mb-8 pb-6 lg:pb-8 border-b border-neutral30">
                 <span>{publishedDate}</span>
               </div>
 
@@ -498,7 +496,7 @@ const BlogDetail = () => {
                 <div
                   tw="mb-8 lg:mb-10 p-5 lg:p-6 rounded-sm"
                   css={[{ backgroundColor: "#FEF5EA", borderLeft: "3px solid #DA7F67" }]}>
-                  <p tw="text-[15px] lg:text-[16px] text-neutralBlack leading-[1.8] font-pretendard m-0">
+                  <p tw="text-[16px] lg:text-[17px] text-neutralBlack leading-[1.8] font-pretendard m-0">
                     {summary}
                   </p>
                 </div>
@@ -515,7 +513,7 @@ const BlogDetail = () => {
                       tw="p-4 border border-neutral30"
                       css={[{ backgroundColor: "#fafafa" }]}>
                       <div
-                        tw="text-[14px] font-semibold text-neutralBlack mb-2 pb-2 border-b"
+                        tw="text-[15px] font-semibold text-neutralBlack mb-2 pb-2 border-b"
                         css={[{ borderColor: "#DA7F67" }]}>
                         {t("blog.toc") || "목차"}
                       </div>
@@ -528,7 +526,7 @@ const BlogDetail = () => {
                                 e.preventDefault()
                                 handleTocClick(item.id)
                               }}
-                              tw="block py-[4px] text-[13px] leading-[1.5] no-underline"
+                              tw="block py-[4px] text-[14px] leading-[1.5] no-underline"
                               css={[{ color: "#555" }]}>
                               {item.text}
                             </a>
@@ -542,7 +540,7 @@ const BlogDetail = () => {
 
               {/* Content */}
               <div
-                tw="max-w-none text-[15px] lg:text-[16px] leading-[1.8] text-neutralBlack"
+                tw="max-w-none text-[16px] lg:text-[17px] leading-[1.8] text-neutralBlack"
                 css={[
                   css`
                     h1,
@@ -748,7 +746,7 @@ const BlogDetail = () => {
               {/* 관련 글 — 본문 내부 링크 자동 수집 */}
               {relatedPosts.length > 0 && (
                 <aside tw="pt-8 mt-10 border-t border-neutral30">
-                  <h2 tw="text-[18px] lg:text-[20px] font-semibold text-neutralBlack mb-4">
+                  <h2 tw="text-[19px] lg:text-[21px] font-semibold text-neutralBlack mb-4">
                     {topicKeyword ? `${topicKeyword} 시술 관련글 더보기` : "관련글 더보기"}
                   </h2>
                   <ul tw="list-none p-0 m-0 flex flex-col gap-[2px]">
@@ -758,7 +756,7 @@ const BlogDetail = () => {
                           to={`/blog/${link.slug}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          tw="text-[14px] lg:text-[15px] leading-[1.6] no-underline transition-colors duration-200"
+                          tw="text-[15px] lg:text-[16px] leading-[1.6] no-underline transition-colors duration-200"
                           css={[{ color: "#555" }, tw`hover:text-[#DA7F67]`]}>
                           {link.anchor}
                         </CustomLink>
@@ -775,7 +773,7 @@ const BlogDetail = () => {
             <button
               onClick={() => navigate(`/${lang}/blog`)}
               tw="
-              px-6 py-3 text-[14px] lg:text-[15px]
+              px-6 py-3 text-[15px] lg:text-[16px]
               border font-medium
               transition-colors duration-200
               hover:text-white
