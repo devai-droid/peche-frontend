@@ -18,6 +18,7 @@ interface Row {
   name: string
   price: string
   original?: string
+  category?: string
 }
 
 // 3번째(초과) 카드 페이드 — 세로 레이아웃, 제목 높이에서 잘라 흰여백 없이 페이드
@@ -43,7 +44,10 @@ const peekCss = css`
 const PriceCard = ({ row, faded }: { row: Row; faded?: boolean }) => {
   return (
     <div css={[tw`flex flex-col gap-[6px] py-[11px] border-b border-neutral30`, faded && peekCss]}>
-      <div tw="text-[15px] font-semibold text-neutralBlack leading-[1.4]">{row.name}</div>
+      <div tw="text-[15px] font-semibold leading-[1.4]">
+        {row.category && <span css={[{ color: "#DA7F67" }]}>{row.category} </span>}
+        <span tw="text-neutralBlack">{row.name}</span>
+      </div>
       <div tw="flex items-baseline gap-2 whitespace-nowrap">
         {row.original && <span tw="text-[12px] text-neutral50 line-through">{row.original}</span>}
         <span tw="text-[15px] font-semibold" css={[{ color: "#AB6655" }]}>
@@ -77,6 +81,7 @@ const PriceGroup = ({ detailPageId }: { detailPageId: string }) => {
     name: tv(e, "name"),
     price: money(e.discountPrice || e.price),
     original: e.discountPrice ? money(e.price) : undefined,
+    category: e.category ? tv(e.category, "name") : undefined,
   }))
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const productRows: Row[] = (products?.items ?? []).map((p: any) => ({
@@ -108,7 +113,7 @@ const PriceGroup = ({ detailPageId }: { detailPageId: string }) => {
                 tw`flex-1 py-[2px] text-[12px] font-medium transition [&:not(:last-child)]:border-r border-neutral30`,
                 activeTab === k ? tw`bg-primary text-white` : tw`bg-white text-neutral70`,
               ]}>
-              {k === "event" ? "가격이벤트" : "전체 시술"}
+              {k === "event" ? "가격·이벤트" : "전체 시술"}
             </button>
           ))}
         </div>
