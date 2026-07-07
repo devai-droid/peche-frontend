@@ -4,6 +4,7 @@ import AppMaxWidth from "@/lib/components/layout/app-max-width.component"
 import Page from "@/lib/components/layout/page.component"
 import useResponsive from "@/lib/hooks/use-responsive"
 import useLanguageValue from "@/lib/hooks/use-language-key"
+import { splitProductPages, deriveCategoryBadges } from "./blog-badges.util"
 import { useTranslation } from "react-i18next"
 import { useParams, useNavigate, useSearchParams } from "react-router-dom"
 import { useQuery } from "@tanstack/react-query"
@@ -248,11 +249,26 @@ const BlogDetail = () => {
     return "/products"
   })()
 
+  // 대분류(배지)·카테고리(상세페이지명) 여러 개 표시용
+  const productPageNames = splitProductPages(post?.productPage)
+  const derivedCatBadges = deriveCategoryBadges(productPageNames, detailPagesData?.items, tv)
+  const categoryBadges =
+    derivedCatBadges.length > 0
+      ? derivedCatBadges
+      : productCategory
+        ? [{ id: productCategory.id, name: tv(productCategory, "name") }]
+        : []
+
   const title = post?.title ?? ""
   const subtitle = post?.subtitle ?? ""
   const summary = post?.summaryText ?? ""
   // 주제 키워드(CTA 버튼명·"관련글 더보기" 헤딩) — frontmatter topic_keyword 원본 우선, 마스터 매칭값 폴백
   const topicKeyword = post?.topicKeyword || post?.keyword?.keyword || ""
+  // CTA 버튼: 글별 ctaLinks(최대 2개, 백엔드서 URL 해석 완료) 우선, 없으면 product_page 기반 단일 버튼 폴백
+  const ctaButtons =
+    post?.ctaLinks && post.ctaLinks.length > 0
+      ? post.ctaLinks.slice(0, 2).map((c) => ({ to: c.url, text: c.text }))
+      : [{ to: ctaTo, text: topicKeyword ? `${topicKeyword} 시술 가격 보기` : "시술 가격 보기" }]
   const content = rewriteBlogHtml(post?.bodyHtml)
   // 의료진 카드: 글의 author_doctor 우선, 없으면 대표 의료진(공통)으로 채움
   // 카드는 어드민에서 관리하는 대표 의료진을 우선 사용 → 한 곳 수정으로 모든 글에 반영
@@ -453,11 +469,14 @@ const BlogDetail = () => {
                     </ul>
                   </nav>
                 )}
-                <CustomLink
-                  to={ctaTo}
-                  tw="block w-full text-center mt-4 text-[13px] px-5 py-[7px] bg-primary text-white font-medium transition hover:bg-[#AB6655]">
-                  {topicKeyword ? `${topicKeyword} 시술 가격 보기` : "시술 가격 보기"}
-                </CustomLink>
+                {ctaButtons.map((b, i) => (
+                  <CustomLink
+                    key={i}
+                    to={b.to}
+                    tw="block w-full text-center mt-4 text-[13px] px-5 py-[7px] bg-primary text-white font-medium transition hover:bg-[#AB6655]">
+                    {b.text}
+                  </CustomLink>
+                ))}
               </aside>
             )}
 
@@ -479,21 +498,22 @@ const BlogDetail = () => {
                 </p>
               )}
 
-              {/* Meta: category · product_page | date */}
-              <div tw="flex items-center gap-3 text-[13px] lg:text-[14px] text-neutral50 mb-6 lg:mb-8 pb-6 lg:pb-8 border-b border-neutral30">
-                {productCategory && (
+              {/* Meta: 대분류(배지 여러 개) · 카테고리(상세페이지명 여러 개) | date */}
+              <div tw="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[13px] lg:text-[14px] text-neutral50 mb-6 lg:mb-8 pb-6 lg:pb-8 border-b border-neutral30">
+                {categoryBadges.map((cat) => (
                   <span
+                    key={cat.id}
                     tw="text-[12px] px-[7px] py-[2px] rounded-sm font-medium"
                     css={[{ color: "#DA7F67", backgroundColor: "rgba(218, 127, 103, 0.1)" }]}>
-                    {tv(productCategory, "name")}
+                    {cat.name}
                   </span>
-                )}
-                {post.productPage && (
-                  <span tw="font-medium" css={[{ color: "#AB6655" }]}>
-                    {post.productPage}
+                ))}
+                {productPageNames.map((nm) => (
+                  <span key={nm} tw="font-medium" css={[{ color: "#AB6655" }]}>
+                    {nm}
                   </span>
-                )}
-                {(productCategory || post.productPage) && <span>|</span>}
+                ))}
+                {(categoryBadges.length > 0 || productPageNames.length > 0) && <span>|</span>}
                 <span>{publishedDate}</span>
               </div>
 
@@ -794,13 +814,18 @@ const BlogDetail = () => {
         </AppMaxWidth>
       </div>
 
-      {/* 모바일 전용 하단 고정 CTA — 상담/예약 탭바(높이 64px) 바로 위에 노출 */}
+      {/* 모바일 전용 하단 고정 CTA — 상담/예약 탭바(높이 64px) 바로 위에 노출. 2개면 나란히 분할 */}
       {!isDesktop && (
-        <CustomLink
-          to={ctaTo}
-          tw="fixed bottom-16 left-0 right-0 z-50 block w-full text-center text-[15px] py-4 bg-primary text-white font-semibold">
-          {topicKeyword ? `${topicKeyword} 시술 가격 보기` : "시술 가격 보기"}
-        </CustomLink>
+        <div tw="fixed bottom-16 left-0 right-0 z-50 flex">
+          {ctaButtons.map((b, i) => (
+            <CustomLink
+              key={i}
+              to={b.to}
+              tw="flex-1 block text-center text-[15px] py-4 bg-primary text-white font-semibold border-white/30 [&:not(:last-child)]:border-r">
+              {b.text}
+            </CustomLink>
+          ))}
+        </div>
       )}
       {/* 모바일 하단 상담/예약 탭바 (다른 페이지와 동일) — lg:hidden 자체 처리 */}
       <BottomButtons

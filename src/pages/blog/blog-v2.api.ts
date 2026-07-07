@@ -53,8 +53,10 @@ export interface BlogV2Post {
   topicKeyword?: string
   /** 주제 키워드 마스터(blog.keywords) 매칭 시 */
   keyword?: { id: string; keyword: string }
-  /** CTA 대상 상세페이지명 (예: "울쎄라피 프라임") — 이름으로 상세페이지 매칭. 없으면 productCategoryId로 fallback */
+  /** 글 노출 위치용 상세페이지명(콤마로 여러 개). CTA와 분리 */
   productPage?: string
+  /** CTA 버튼 링크(최대 2개) — 백엔드에서 이름→URL 해석 완료. 없으면 productPage 기반 단일 CTA로 폴백 */
+  ctaLinks?: Array<{ type: "page" | "category" | "event"; target: string; text: string; url: string }>
   /** 이 글에 적용할 추가 고지문구 type 목록 (일반 면책 제외) */
   notices?: string[]
   productCategoryId?: string
