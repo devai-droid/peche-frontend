@@ -3,7 +3,6 @@ import tw, { css } from "twin.macro"
 import { useTranslation } from "react-i18next"
 import useLanguageValue from "@/lib/hooks/use-language-key"
 import useLanguageQuery from "@/lib/hooks/use-language-query"
-import useResponsive from "@/lib/hooks/use-responsive"
 import { useProductControllerFindMany } from "@/lib/orval/products/products"
 import { useEventControllerFindMany } from "@/lib/orval/events/events"
 import { Chip } from "@/design-system/components"
@@ -31,92 +30,68 @@ interface Row {
   labels?: Labels
 }
 
-// 3번째(초과) 카드 페이드 — 모바일(세로)은 가격이 아래줄이라 짧게 잘라 흰여백 제거, PC(가로)는 카드 전체 페이드
-const fadeCss = (mobile: boolean) =>
-  mobile
-    ? css`
-        position: relative;
-        border-bottom: 0;
-        max-height: 64px;
-        overflow: hidden;
-        padding-bottom: 0;
-        &::after {
-          content: "";
-          position: absolute;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          height: 60%;
-          pointer-events: none;
-          background: linear-gradient(to bottom, rgba(255, 255, 255, 0), #ffffff);
-        }
-      `
-    : css`
-        position: relative;
-        border-bottom: 0;
-        &::after {
-          content: "";
-          position: absolute;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          height: 78%;
-          pointer-events: none;
-          background: linear-gradient(to bottom, rgba(255, 255, 255, 0), #ffffff);
-        }
-      `
+// 3번째(초과) 카드 페이드 — 세로 레이아웃이라 제목 높이에서 잘라 흰여백 없이 페이드
+const peekCss = css`
+  position: relative;
+  border-bottom: 0;
+  max-height: 64px;
+  overflow: hidden;
+  padding-bottom: 0;
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 60%;
+    pointer-events: none;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0), #ffffff);
+  }
+`
 
 const chipTw = tw`h-[24px] px-2 text-[13px] leading-[1] flex items-center`
 
-/** 가격 카드 — 사이트 상품카드 스타일. PC=가로(가격 우측)/모바일=세로 */
-const PriceCard = ({ row, faded, mobile }: { row: Row; faded?: boolean; mobile: boolean }) => {
+/** 가격 카드 — 사이트 상품카드 스타일(칩·코랄 대분류·설명·정가/할인가). 항상 세로 */
+const PriceCard = ({ row, faded }: { row: Row; faded?: boolean }) => {
   const { t } = useTranslation()
   const l = row.labels
   const hasChip = l && (l.pop || l.isNew || l.kakao || l.best)
   return (
-    <div
-      css={[
-        tw`flex flex-col gap-2 py-4 border-b border-neutral30 lg:flex-row lg:items-center lg:gap-5`,
-        faded && fadeCss(mobile),
-      ]}>
-      <div tw="flex flex-col gap-[6px] min-w-0 lg:flex-1">
-        {hasChip && (
-          <div tw="flex gap-1">
-            {l?.pop && (
-              <Chip color="primary" css={[chipTw]}>
-                {t("common.pop")}
-              </Chip>
-            )}
-            {l?.isNew && (
-              <Chip color="gray" css={[chipTw]}>
-                {t("common.new")}
-              </Chip>
-            )}
-            {l?.kakao && (
-              <Chip color="pink" css={[chipTw]}>
-                {t("common.kakaoFriend")}
-              </Chip>
-            )}
-            {l?.best && (
-              <Chip color="darkgray" css={[chipTw]}>
-                {t("common.best")}
-              </Chip>
-            )}
-          </div>
-        )}
-        <div tw="text-[16px] lg:text-[18px] font-semibold leading-[1.4]">
-          {row.category && <span css={[{ color: "#DA7F67" }]}>{row.category} </span>}
-          <span tw="text-neutralBlack">{row.name}</span>
+    <div css={[tw`flex flex-col gap-2 py-4 border-b border-neutral30`, faded && peekCss]}>
+      {hasChip && (
+        <div tw="flex gap-1">
+          {l?.pop && (
+            <Chip color="primary" css={[chipTw]}>
+              {t("common.pop")}
+            </Chip>
+          )}
+          {l?.isNew && (
+            <Chip color="gray" css={[chipTw]}>
+              {t("common.new")}
+            </Chip>
+          )}
+          {l?.kakao && (
+            <Chip color="pink" css={[chipTw]}>
+              {t("common.kakaoFriend")}
+            </Chip>
+          )}
+          {l?.best && (
+            <Chip color="darkgray" css={[chipTw]}>
+              {t("common.best")}
+            </Chip>
+          )}
         </div>
-        {row.description && (
-          <div tw="text-[13px] lg:text-[14px] text-neutral70 leading-[1.5] whitespace-pre-line">
-            {row.description}
-          </div>
-        )}
+      )}
+      <div tw="text-[16px] font-semibold leading-[1.4]">
+        {row.category && <span css={[{ color: "#DA7F67" }]}>{row.category} </span>}
+        <span tw="text-neutralBlack">{row.name}</span>
       </div>
-      <div tw="flex items-baseline gap-2 whitespace-nowrap lg:flex-shrink-0">
+      {row.description && (
+        <div tw="text-[13px] text-neutral70 leading-[1.5] whitespace-pre-line">{row.description}</div>
+      )}
+      <div tw="flex items-baseline gap-2 whitespace-nowrap">
         {row.original && <span tw="text-[13px] text-neutral50 line-through">{row.original}</span>}
-        <span tw="text-[16px] lg:text-[18px] font-semibold" css={[{ color: "#AB6655" }]}>
+        <span tw="text-[16px] font-semibold" css={[{ color: "#AB6655" }]}>
           {row.price}
         </span>
       </div>
@@ -129,7 +104,6 @@ const PriceGroup = ({ detailPageId, detailPageName }: { detailPageId: string; de
   const { t, i18n } = useTranslation()
   const tv = useLanguageValue()
   const langQuery = useLanguageQuery()
-  const { isMobile } = useResponsive()
   const suffix = keyMatch[i18n.language as keyof typeof keyMatch] ?? ""
 
   const { data: products } = useProductControllerFindMany(
@@ -177,7 +151,7 @@ const PriceGroup = ({ detailPageId, detailPageName }: { detailPageId: string; de
 
   return (
     <section tw="mb-[52px] last:mb-0">
-      <h2 tw="text-[18px] lg:text-[20px] font-semibold text-neutralBlack mb-3">{detailPageName} 가격</h2>
+      <h2 tw="text-[17px] font-semibold text-neutralBlack mb-3">{detailPageName} 가격</h2>
       {hasEvent && hasProduct && (
         <div tw="flex gap-2 mb-1.5">
           {(["event", "product"] as const).map((k) => (
@@ -186,7 +160,7 @@ const PriceGroup = ({ detailPageId, detailPageName }: { detailPageId: string; de
               type="button"
               onClick={() => setTab(k)}
               css={[
-                tw`px-4 py-2 text-[14px] font-medium rounded-sm border transition`,
+                tw`px-3 py-2 text-[13px] font-medium rounded-sm border transition`,
                 activeTab === k
                   ? tw`bg-primary text-white border-primary`
                   : tw`bg-white text-neutral70 border-neutral30`,
@@ -198,7 +172,7 @@ const PriceGroup = ({ detailPageId, detailPageName }: { detailPageId: string; de
       )}
       <div>
         {shown.map((row, i) => (
-          <PriceCard key={i} row={row} mobile={isMobile} faded={showFade && i === 2} />
+          <PriceCard key={i} row={row} faded={showFade && i === 2} />
         ))}
       </div>
       {showFade && (
@@ -213,7 +187,7 @@ const PriceGroup = ({ detailPageId, detailPageName }: { detailPageId: string; de
   )
 }
 
-/** 블로그 글 하단 가격 섹션 — product_page 상세페이지들을 상세페이지별로 구분해 노출(섞지 않음) */
+/** 블로그 글 가격 섹션 — product_page 상세페이지들을 상세페이지별로 구분해 노출(섞지 않음) */
 const BlogPriceSection = ({ detailPages }: { detailPages: PriceDetailPageRef[] }) => {
   if (!detailPages.length) return null
   return (

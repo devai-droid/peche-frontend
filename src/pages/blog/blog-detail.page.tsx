@@ -476,6 +476,8 @@ const BlogDetail = () => {
                     {b.text}
                   </CustomLink>
                 ))}
+                {/* 가격 섹션 — PC: 목차·CTA 아래 사이드바에 배치 */}
+                <BlogPriceSection detailPages={priceDetailPages} />
               </aside>
             )}
 
@@ -751,8 +753,8 @@ const BlogDetail = () => {
                 </div>
               </div>
 
-              {/* 가격 섹션 — 의료진 카드 다음. 상세페이지별 구분, 가격이벤트(게시중)·전체 시술 탭 */}
-              <BlogPriceSection detailPages={priceDetailPages} />
+              {/* 가격 섹션 — 모바일: 의료진 카드 다음 (PC는 왼쪽 목차 아래에 배치) */}
+              {!isDesktop && <BlogPriceSection detailPages={priceDetailPages} />}
 
               {/* 관련 글 — 본문 내부 링크 자동 수집 */}
               {relatedPosts.length > 0 && (
