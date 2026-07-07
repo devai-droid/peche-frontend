@@ -58,7 +58,7 @@ const PriceCard = ({ row, faded }: { row: Row; faded?: boolean }) => {
   return (
     <div css={[tw`flex flex-col gap-[6px] py-[11px] border-b border-neutral30`, faded && peekCss]}>
       {hasChip && (
-        <div tw="flex gap-1">
+        <div tw="flex gap-1 mb-1">
           {l?.pop && (
             <Chip color="primary" css={[chipTw]}>
               {t("common.pop")}
@@ -197,7 +197,7 @@ const BlogPriceSection = ({ detailPages }: { detailPages: PriceDetailPageRef[] }
         가격 보기
       </div>
       {/* 폴더 탭(상세페이지) — 열린 탭 흰 배경, 나머지는 선으로만 구분, 박스와 연결 */}
-      <div tw="flex gap-[5px] pl-0.5 relative z-[1]">
+      <div tw="flex gap-[5px] relative z-[1]">
         {detailPages.map((dp, i) => (
           <button
             key={dp.id}
@@ -228,7 +228,7 @@ const BlogPriceSection = ({ detailPages }: { detailPages: PriceDetailPageRef[] }
       {/* 가격 박스 — 흰 배경 + 얇은 선, 열린 탭과 연결 */}
       <div
         css={[
-          tw`px-3.5 pt-3.5 pb-2.5`,
+          tw`px-3.5 pt-3.5 pb-3.5`,
           css`
             background: #fff;
             border: 1px solid ${LINE};
