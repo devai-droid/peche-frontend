@@ -23,14 +23,13 @@ interface Labels {
 }
 interface Row {
   name: string
-  description?: string
   price: string
   original?: string
   category?: string
   labels?: Labels
 }
 
-// 3번째(초과) 카드 페이드 — 세로 레이아웃이라 제목 높이에서 잘라 흰여백 없이 페이드
+// 3번째(초과) 카드 페이드 — 세로 레이아웃, 제목 높이에서 잘라 흰여백 없이 페이드
 const peekCss = css`
   position: relative;
   border-bottom: 0;
@@ -51,7 +50,7 @@ const peekCss = css`
 
 const chipTw = tw`h-[24px] px-2 text-[13px] leading-[1] flex items-center`
 
-/** 가격 카드 — 사이트 상품카드 스타일(칩·코랄 대분류·설명·정가/할인가). 항상 세로 */
+/** 가격 카드 — 칩·코랄 대분류·정가 취소선+할인가 (사이트 상품카드 스타일) */
 const PriceCard = ({ row, faded }: { row: Row; faded?: boolean }) => {
   const { t } = useTranslation()
   const l = row.labels
@@ -96,8 +95,16 @@ const PriceCard = ({ row, faded }: { row: Row; faded?: boolean }) => {
   )
 }
 
-/** 상세페이지 1개의 가격 블록 — 가격이벤트(게시중)·전체 시술 2탭. 3개 초과 시 2개+3번째 페이드+더보기 */
-const PriceGroup = ({ detailPageId, detailPageName }: { detailPageId: string; detailPageName: string }) => {
+/** 상세페이지 1개의 가격 블록 — 가격이벤트(게시중)·전체 시술 반반 탭. 3개 초과 시 2개+페이드+더보기 */
+const PriceGroup = ({
+  detailPageId,
+  detailPageName,
+  showHeading,
+}: {
+  detailPageId: string
+  detailPageName: string
+  showHeading: boolean
+}) => {
   const { t, i18n } = useTranslation()
   const tv = useLanguageValue()
   const langQuery = useLanguageQuery()
@@ -117,7 +124,6 @@ const PriceGroup = ({ detailPageId, detailPageName }: { detailPageId: string; de
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const eventRows: Row[] = (events?.items ?? []).map((e: any) => ({
     name: tv(e, "name"),
-    description: tv(e, "description") || undefined,
     price: money(e.discountPrice || e.price),
     original: e.discountPrice ? money(e.price) : undefined,
     category: e.category ? tv(e.category, "name") : undefined,
@@ -131,7 +137,6 @@ const PriceGroup = ({ detailPageId, detailPageName }: { detailPageId: string; de
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const productRows: Row[] = (products?.items ?? []).map((p: any) => ({
     name: tv(p, "name"),
-    description: tv(p, "description") || undefined,
     price: money(p.discountPrice || p.price),
     original: p.discountPrice ? money(p.price) : undefined,
   }))
@@ -147,8 +152,10 @@ const PriceGroup = ({ detailPageId, detailPageName }: { detailPageId: string; de
   const shown = showFade ? list.slice(0, 3) : list
 
   return (
-    <section tw="mb-[52px] last:mb-0">
-      <h2 tw="text-[21px] font-bold text-neutralBlack mb-3">{detailPageName} 가격</h2>
+    <div>
+      {showHeading && (
+        <h2 tw="text-[21px] font-bold text-neutralBlack mb-3">{detailPageName} 가격</h2>
+      )}
       {hasEvent && hasProduct && (
         <div tw="flex mb-3 rounded-sm overflow-hidden border border-neutral30">
           {(["event", "product"] as const).map((k) => (
@@ -173,22 +180,54 @@ const PriceGroup = ({ detailPageId, detailPageName }: { detailPageId: string; de
       {showFade && (
         <CustomLink
           to={`/products/${detailPageId}`}
-          tw="flex items-center justify-center gap-1 mt-1.5 py-[11px] border border-neutral30 rounded-sm text-[14px] font-semibold"
-          css={[{ color: "#AB6655" }]}>
+          tw="flex items-center justify-center gap-1 mt-3 py-3 bg-white border border-primary text-primary text-[15px] font-medium">
           가격 더보기 →
         </CustomLink>
       )}
-    </section>
+    </div>
   )
 }
 
-/** 블로그 글 가격 섹션 — product_page 상세페이지들을 상세페이지별로 구분해 노출(섞지 않음) */
+/**
+ * 블로그 가격 섹션 — 상세페이지가 여러 개면 상위 탭(상세페이지)으로 전환, 1개면 바로 표시.
+ * 각 상세페이지 안은 가격이벤트/전체 시술 반반 탭.
+ */
 const BlogPriceSection = ({ detailPages }: { detailPages: PriceDetailPageRef[] }) => {
+  const [activeDp, setActiveDp] = useState(0)
   if (!detailPages.length) return null
+  const multi = detailPages.length > 1
+  const current = Math.min(activeDp, detailPages.length - 1)
+
   return (
     <div tw="pt-5 mt-5 border-t border-neutral30">
-      {detailPages.map((dp) => (
-        <PriceGroup key={dp.id} detailPageId={dp.id} detailPageName={dp.name} />
+      {multi && (
+        <div tw="flex gap-1 mb-3 border-b border-neutral30 overflow-x-auto">
+          {detailPages.map((dp, i) => (
+            <button
+              key={dp.id}
+              type="button"
+              onClick={() => setActiveDp(i)}
+              css={[
+                tw`flex-none whitespace-nowrap px-1.5 pt-2 pb-[9px] text-[14px] font-semibold border-b-2 -mb-px transition`,
+                current === i
+                  ? css`
+                      color: #121212;
+                      border-bottom-color: #da7f67;
+                    `
+                  : css`
+                      color: #9b9b9b;
+                      border-bottom-color: transparent;
+                    `,
+              ]}>
+              {dp.name}
+            </button>
+          ))}
+        </div>
+      )}
+      {detailPages.map((dp, i) => (
+        <div key={dp.id} css={[multi && current !== i && tw`hidden`]}>
+          <PriceGroup detailPageId={dp.id} detailPageName={dp.name} showHeading={!multi} />
+        </div>
       ))}
     </div>
   )

@@ -243,20 +243,6 @@ const BlogDetail = () => {
     limit: 100,
   })
 
-  // CTA 링크: product_page(콤마로 여러 상세페이지명 가능) 각각 이름 매칭 → 첫 매칭 상세페이지. 없으면 대분류로 fallback.
-  const ctaTo = (() => {
-    const dpNames = (post?.productPage ?? "")
-      .split(",")
-      .map((s) => s.trim())
-      .filter(Boolean)
-    for (const nm of dpNames) {
-      const dp = (detailPagesData?.items ?? []).find((p) => (tv(p, "name") ?? "").trim() === nm)
-      if (dp) return `/products/${dp.id}`
-    }
-    if (post?.productCategoryId) return `/products?category=${post.productCategoryId}`
-    return "/products"
-  })()
-
   // 가격 섹션용 — product_page(콤마 여러 개) 이름 → 상세페이지(id,name) 매칭. 중복 상세페이지는 1회만.
   const priceDetailPages = useMemo<PriceDetailPageRef[]>(() => {
     const names = (post?.productPage ?? "").split(",").map((s) => s.trim()).filter(Boolean)
@@ -276,13 +262,8 @@ const BlogDetail = () => {
   const title = post?.title ?? ""
   const subtitle = post?.subtitle ?? ""
   const summary = post?.summaryText ?? ""
-  // 주제 키워드(CTA 버튼명·"관련글 더보기" 헤딩) — frontmatter topic_keyword 원본 우선, 마스터 매칭값 폴백
+  // 주제 키워드("관련글 더보기" 헤딩) — frontmatter topic_keyword 원본 우선, 마스터 매칭값 폴백
   const topicKeyword = post?.topicKeyword || post?.keyword?.keyword || ""
-  // CTA 버튼: 글별 ctaLinks(최대 2개, 백엔드서 URL 해석 완료) 우선, 없으면 product_page 기반 단일 버튼 폴백
-  const ctaButtons =
-    post?.ctaLinks && post.ctaLinks.length > 0
-      ? post.ctaLinks.slice(0, 2).map((c) => ({ to: c.url, text: c.text }))
-      : [{ to: ctaTo, text: topicKeyword ? `${topicKeyword} 시술 가격 보기` : "시술 가격 보기" }]
   const content = rewriteBlogHtml(post?.bodyHtml)
   // 의료진 카드: 글의 author_doctor 우선, 없으면 대표 의료진(공통)으로 채움
   // 카드는 어드민에서 관리하는 대표 의료진을 우선 사용 → 한 곳 수정으로 모든 글에 반영
@@ -484,15 +465,7 @@ const BlogDetail = () => {
                     </ul>
                   </nav>
                 )}
-                {ctaButtons.map((b, i) => (
-                  <CustomLink
-                    key={i}
-                    to={b.to}
-                    tw="block w-full text-center mt-4 text-[13px] px-5 py-[7px] bg-primary text-white font-medium transition hover:bg-[#AB6655]">
-                    {b.text}
-                  </CustomLink>
-                ))}
-                {/* 가격 섹션 — PC: 목차·CTA 아래 사이드바에 배치 */}
+                {/* 가격 섹션 — PC: 목차 아래 사이드바에 배치 */}
                 <BlogPriceSection detailPages={priceDetailPages} />
               </aside>
             )}
@@ -820,19 +793,6 @@ const BlogDetail = () => {
         </AppMaxWidth>
       </div>
 
-      {/* 모바일 전용 하단 고정 CTA — 상담/예약 탭바(높이 64px) 바로 위에 노출. 2개면 나란히 분할 */}
-      {!isDesktop && (
-        <div tw="fixed bottom-16 left-0 right-0 z-50 flex">
-          {ctaButtons.map((b, i) => (
-            <CustomLink
-              key={i}
-              to={b.to}
-              tw="flex-1 block text-center text-[15px] py-4 bg-primary text-white font-semibold border-white/30 [&:not(:last-child)]:border-r">
-              {b.text}
-            </CustomLink>
-          ))}
-        </div>
-      )}
       {/* 모바일 하단 상담/예약 탭바 (다른 페이지와 동일) — lg:hidden 자체 처리 */}
       <BottomButtons
         showInquiryButtons={showInquiryButtons}
