@@ -176,10 +176,20 @@ const BlogDetail = () => {
   const noticesParam = searchParams.get("notices")
   const navigate = useNavigate()
   const { isDesktop } = useResponsive()
-  // 헤더는 hideOnScroll(스크롤 내리면 숨고 올리면 나타남). 목차 sticky top을 헤더 표시 여부에 맞춰 동적 조정
-  // → 헤더 숨을 땐 위로(24px), 나타날 땐 헤더 아래(112px = lg:h-28)로 내려 덮이지 않게.
+  // 헤더는 hideOnScroll(스크롤 내리면 숨고 올리면 나타남). 목차 sticky top을 헤더 표시 여부에 맞춰 동적 조정.
+  // 헤더 실제 높이는 #header-height 요소를 런타임 측정(로고바+서브내비 = 대략 135px). 숨을 땐 위(24px)로.
   const headerVisible = !useScrollTrigger()
-  const tocTop = headerVisible ? 112 : 24
+  const [headerH, setHeaderH] = useState(135)
+  useEffect(() => {
+    const measure = () => {
+      const el = document.getElementById("header-height")
+      if (el) setHeaderH(Math.round(el.getBoundingClientRect().height))
+    }
+    measure()
+    window.addEventListener("resize", measure)
+    return () => window.removeEventListener("resize", measure)
+  }, [])
+  const tocTop = headerVisible ? headerH + 8 : 24
   const tv = useLanguageValue()
   const lang = i18n.language
 
