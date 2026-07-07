@@ -154,7 +154,7 @@ const BlogPriceSection = ({ detailPages }: { detailPages: PriceDetailPageRef[] }
         가격 보기
       </div>
       {/* 폴더 탭(상세페이지) — 열린 탭 흰 배경, 나머지는 선으로만 구분, 박스와 연결 */}
-      <div tw="flex gap-[5px] relative z-[1]">
+      <div tw="flex relative z-[1]">
         {detailPages.map((dp, i) => (
           <button
             key={dp.id}
@@ -162,16 +162,23 @@ const BlogPriceSection = ({ detailPages }: { detailPages: PriceDetailPageRef[] }
             onClick={() => setActiveDp(i)}
             css={[
               tw`whitespace-nowrap text-[15px] font-bold px-4 py-1`,
+              // 모든 탭 하단을 박스 상단선과 겹쳐 단일 선으로. 탭끼리는 세로선 겹쳐 간격 0
               css`
                 border: 1px solid ${LINE};
                 border-radius: 0;
+                margin-bottom: -1px;
               `,
+              i > 0 &&
+                css`
+                  margin-left: -1px;
+                `,
               current === i
                 ? css`
                     background: #fff;
                     color: #da7f67;
                     border-bottom-color: #fff;
-                    margin-bottom: -1px;
+                    position: relative;
+                    z-index: 1;
                   `
                 : css`
                     background: transparent;
