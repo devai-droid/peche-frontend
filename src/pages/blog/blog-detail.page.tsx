@@ -746,7 +746,13 @@ const BlogDetail = () => {
               {/* 관련 글 — 본문 내부 링크 자동 수집 */}
               {relatedPosts.length > 0 && (
                 <aside tw="pt-8 mt-10 border-t border-neutral30">
-                  <h2 tw="text-[19px] lg:text-[21px] font-semibold text-neutralBlack mb-4">
+                  {/* 모바일: '가격 보기' 제목과 동일 스타일(16px + 코랄 밑줄)로 통일 */}
+                  <h2
+                    tw="font-semibold text-neutralBlack"
+                    css={[
+                      isDesktop ? tw`text-[21px] mb-4` : tw`text-[16px] pb-2 mb-3`,
+                      !isDesktop && { borderBottom: "1px solid #DA7F67" },
+                    ]}>
                     {topicKeyword ? `${topicKeyword} 시술 관련글 더보기` : "관련글 더보기"}
                   </h2>
                   <ul tw="list-none p-0 m-0 flex flex-col gap-[2px]">

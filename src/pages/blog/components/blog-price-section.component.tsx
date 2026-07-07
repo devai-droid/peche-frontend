@@ -153,7 +153,7 @@ const PriceGroup = ({ detailPageId }: { detailPageId: string }) => {
               type="button"
               onClick={() => setTab(k)}
               css={[
-                tw`flex-1 py-[4px] text-[12px] font-medium transition [&:not(:last-child)]:border-r border-neutral30`,
+                tw`flex-1 py-[2px] text-[12px] font-medium transition [&:not(:last-child)]:border-r border-neutral30`,
                 activeTab === k ? tw`bg-primary text-white` : tw`bg-white text-neutral70`,
               ]}>
               {k === "event" ? "가격이벤트" : "전체 시술"}
@@ -169,7 +169,7 @@ const PriceGroup = ({ detailPageId }: { detailPageId: string }) => {
       {showFade && (
         <CustomLink
           to={`/products/${detailPageId}`}
-          tw="flex items-center justify-center gap-1 mt-3 py-[7px] bg-white border border-primary text-primary text-[13px] font-medium">
+          tw="flex items-center justify-center gap-1 mt-3 py-1 bg-white border border-primary text-primary text-[13px] font-medium">
           가격 더보기 →
         </CustomLink>
       )}
@@ -204,7 +204,7 @@ const BlogPriceSection = ({ detailPages }: { detailPages: PriceDetailPageRef[] }
             type="button"
             onClick={() => setActiveDp(i)}
             css={[
-              tw`whitespace-nowrap text-[15px] font-bold px-4 py-2`,
+              tw`whitespace-nowrap text-[15px] font-bold px-4 py-1.5`,
               css`
                 border: 1px solid ${LINE};
                 border-radius: 9px 9px 0 0;
