@@ -3,14 +3,8 @@ import CustomLink from "@/lib/components/custom-link.component"
 import { css } from "twin.macro"
 import { BlogV2Post, resolveBlogAsset } from "../blog-v2.api"
 
-interface ProductCat {
-  id: string
-  name: string
-}
-
 interface BlogCardProps {
   post: BlogV2Post
-  productCategories?: ProductCat[]
 }
 
 const lineClamp2 = css`
@@ -20,9 +14,7 @@ const lineClamp2 = css`
   overflow: hidden;
 `
 
-const BlogCard = ({ post, productCategories }: BlogCardProps) => {
-  const productCategory = productCategories?.find((c) => c.id === post.productCategoryId)
-
+const BlogCard = ({ post }: BlogCardProps) => {
   const { title } = post
   const summary = post.subtitle ?? post.summaryText ?? ""
   // 목록 노출 날짜 = 최근 수정일(updatedAt). JSON-LD의 dateModified와 일관.
@@ -65,21 +57,9 @@ const BlogCard = ({ post, productCategories }: BlogCardProps) => {
             {summary}
           </p>
 
-          {/* Category + ProductPage + Date + ViewCount */}
-          <div tw="flex items-center gap-2">
-            {productCategory && (
-              <span
-                tw="text-[13px] lg:text-[11px] px-[6px] py-[1px] rounded-sm font-medium"
-                css={[{ color: "#DA7F67", backgroundColor: "rgba(218, 127, 103, 0.1)" }]}>
-                {productCategory.name}
-              </span>
-            )}
-            {post.productPage && (
-              <span tw="text-[13px] lg:text-[11px] font-medium" css={[{ color: "#AB6655" }]}>
-                {post.productPage}
-              </span>
-            )}
-            <span tw="text-[14px] lg:text-[12px] text-neutral50 ml-auto">{displayDate}</span>
+          {/* 날짜만 노출 (대분류·상세페이지 표시는 제거) */}
+          <div tw="flex justify-end">
+            <span tw="text-[14px] lg:text-[12px] text-neutral50 whitespace-nowrap">{displayDate}</span>
           </div>
         </div>
       </div>

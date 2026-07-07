@@ -325,7 +325,7 @@ const Blog = () => {
                   !isDesktop && !isMobile && tw`grid-cols-2`,
                 ]}>
                 {posts.map((post) => (
-                  <BlogCard key={post.id} post={post} productCategories={productCategories} />
+                  <BlogCard key={post.id} post={post} />
                 ))}
               </div>
 

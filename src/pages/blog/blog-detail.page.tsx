@@ -4,15 +4,14 @@ import AppMaxWidth from "@/lib/components/layout/app-max-width.component"
 import Page from "@/lib/components/layout/page.component"
 import useResponsive from "@/lib/hooks/use-responsive"
 import useLanguageValue from "@/lib/hooks/use-language-key"
-import { splitProductPages, deriveCategoryBadges } from "./blog-badges.util"
 import { useTranslation } from "react-i18next"
 import { useParams, useNavigate, useSearchParams } from "react-router-dom"
 import { useQuery } from "@tanstack/react-query"
-import { useProductCategoryControllerFindMany } from "@/lib/orval/product-categories/product-categories"
 import { useProductDetailPageControllerFindMany } from "@/lib/orval/product-detail-pages/product-detail-pages"
 import { ProductDetailPageControllerFindManyStatus } from "@/lib/orval/model"
 import { blogV2PublicApi, resolveBlogAsset, rewriteBlogHtml } from "./blog-v2.api"
 import BlogSeo from "./components/blog-seo.component"
+import BlogPriceSection, { PriceDetailPageRef } from "./components/blog-price-section.component"
 import CustomLink from "@/lib/components/custom-link.component"
 import { BottomButtons } from "@/features/product/components/cart-view.component"
 import tw, { css } from "twin.macro"
@@ -223,12 +222,6 @@ const BlogDetail = () => {
     return out
   }, [commonTexts, post?.notices, isPreview, noticesParam])
 
-  // 시술 대분류(product_category)명 표시용
-  const { data: productCategoriesData } = useProductCategoryControllerFindMany({ limit: 100 })
-  const productCategory = (productCategoriesData?.items ?? []).find(
-    (c) => c.id === post?.productCategoryId,
-  )
-
   // CTA 대상 해석용 — 상세페이지 목록(이름→id 매칭)
   const { data: detailPagesData } = useProductDetailPageControllerFindMany({
     status: ProductDetailPageControllerFindManyStatus.ACTIVE,
@@ -249,15 +242,21 @@ const BlogDetail = () => {
     return "/products"
   })()
 
-  // 대분류(배지)·카테고리(상세페이지명) 여러 개 표시용
-  const productPageNames = splitProductPages(post?.productPage)
-  const derivedCatBadges = deriveCategoryBadges(productPageNames, detailPagesData?.items, tv)
-  const categoryBadges =
-    derivedCatBadges.length > 0
-      ? derivedCatBadges
-      : productCategory
-        ? [{ id: productCategory.id, name: tv(productCategory, "name") }]
-        : []
+  // 가격 섹션용 — product_page(콤마 여러 개) 이름 → 상세페이지(id,name) 매칭. 중복 상세페이지는 1회만.
+  const priceDetailPages = useMemo<PriceDetailPageRef[]>(() => {
+    const names = (post?.productPage ?? "").split(",").map((s) => s.trim()).filter(Boolean)
+    const items = detailPagesData?.items ?? []
+    const seen = new Set<string>()
+    const out: PriceDetailPageRef[] = []
+    for (const nm of names) {
+      const dp = items.find((p) => (tv(p, "name") ?? "").trim() === nm)
+      if (dp?.id && !seen.has(dp.id)) {
+        seen.add(dp.id)
+        out.push({ id: dp.id, name: tv(dp, "name") })
+      }
+    }
+    return out
+  }, [post?.productPage, detailPagesData, tv])
 
   const title = post?.title ?? ""
   const subtitle = post?.subtitle ?? ""
@@ -498,22 +497,8 @@ const BlogDetail = () => {
                 </p>
               )}
 
-              {/* Meta: 대분류(배지 여러 개) · 카테고리(상세페이지명 여러 개) | date */}
-              <div tw="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[13px] lg:text-[14px] text-neutral50 mb-6 lg:mb-8 pb-6 lg:pb-8 border-b border-neutral30">
-                {categoryBadges.map((cat) => (
-                  <span
-                    key={cat.id}
-                    tw="text-[12px] px-[7px] py-[2px] rounded-sm font-medium"
-                    css={[{ color: "#DA7F67", backgroundColor: "rgba(218, 127, 103, 0.1)" }]}>
-                    {cat.name}
-                  </span>
-                ))}
-                {productPageNames.map((nm) => (
-                  <span key={nm} tw="font-medium" css={[{ color: "#AB6655" }]}>
-                    {nm}
-                  </span>
-                ))}
-                {(categoryBadges.length > 0 || productPageNames.length > 0) && <span>|</span>}
+              {/* 작성일 (대분류·상세페이지 표시는 제거) */}
+              <div tw="flex items-center text-[13px] lg:text-[14px] text-neutral50 mb-6 lg:mb-8 pb-6 lg:pb-8 border-b border-neutral30">
                 <span>{publishedDate}</span>
               </div>
 
@@ -765,6 +750,9 @@ const BlogDetail = () => {
                   </div>
                 </div>
               </div>
+
+              {/* 가격 섹션 — 의료진 카드 다음. 상세페이지별 구분, 가격이벤트(게시중)·전체 시술 탭 */}
+              <BlogPriceSection detailPages={priceDetailPages} />
 
               {/* 관련 글 — 본문 내부 링크 자동 수집 */}
               {relatedPosts.length > 0 && (
