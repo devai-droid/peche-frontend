@@ -3,6 +3,7 @@ import DOMPurify from "dompurify"
 import AppMaxWidth from "@/lib/components/layout/app-max-width.component"
 import Page from "@/lib/components/layout/page.component"
 import useResponsive from "@/lib/hooks/use-responsive"
+import { useScrollTrigger } from "@mui/material"
 import useLanguageValue from "@/lib/hooks/use-language-key"
 import { useTranslation } from "react-i18next"
 import { useParams, useNavigate, useSearchParams } from "react-router-dom"
@@ -175,6 +176,10 @@ const BlogDetail = () => {
   const noticesParam = searchParams.get("notices")
   const navigate = useNavigate()
   const { isDesktop } = useResponsive()
+  // 헤더는 hideOnScroll(스크롤 내리면 숨고 올리면 나타남). 목차 sticky top을 헤더 표시 여부에 맞춰 동적 조정
+  // → 헤더 숨을 땐 위로(24px), 나타날 땐 헤더 아래(112px = lg:h-28)로 내려 덮이지 않게.
+  const headerVisible = !useScrollTrigger()
+  const tocTop = headerVisible ? 112 : 24
   const tv = useLanguageValue()
   const lang = i18n.language
 
@@ -433,10 +438,11 @@ const BlogDetail = () => {
                     width: 300px;
                     flex-shrink: 0;
                     position: sticky;
-                    top: 32px;
+                    top: ${tocTop}px;
                     align-self: flex-start;
                     overflow-y: auto;
-                    max-height: calc(100vh - 56px);
+                    max-height: calc(100vh - ${tocTop + 24}px);
+                    transition: top 0.2s ease;
                   `,
                 ]}>
                 {tocItems.length > 0 && (
