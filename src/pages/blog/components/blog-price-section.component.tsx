@@ -149,7 +149,7 @@ const BlogPriceSection = ({ detailPages }: { detailPages: PriceDetailPageRef[] }
     <div tw="mt-6">
       {/* '가격 보기' 제목 — 목차와 동일 스타일(코랄 밑줄) */}
       <div
-        tw="text-[16px] font-semibold text-neutralBlack pb-2 mb-7 lg:mb-3"
+        tw="text-[16px] font-semibold text-neutralBlack pb-2 mb-3"
         css={[{ borderBottom: "1px solid #DA7F67" }]}>
         가격 보기
       </div>
@@ -161,7 +161,7 @@ const BlogPriceSection = ({ detailPages }: { detailPages: PriceDetailPageRef[] }
             type="button"
             onClick={() => setActiveDp(i)}
             css={[
-              tw`whitespace-nowrap text-[15px] font-bold px-4 py-1`,
+              tw`whitespace-nowrap text-[15px] font-bold px-4 pt-3 pb-1 lg:pt-1 lg:pb-1`,
               // 모든 탭 하단을 박스 상단선과 겹쳐 단일 선으로. 탭끼리는 세로선 겹쳐 간격 0
               css`
                 border: 1px solid ${LINE};
