@@ -12,8 +12,12 @@ const keyMatch = { ko: "", en: "EN", ja: "JA", th: "TH", zh: "ZH", "zh-TW": "ZHT
 export interface PriceDetailPageRef {
   id: string
   name: string
-  /** page=상세페이지(더보기 /products/{id}), category=대분류(더보기 /products?category={id}). 기본 page */
-  type?: "page" | "category"
+  /**
+   * page=상세페이지(상품+이벤트, 더보기 /products/{id}),
+   * category=상품 대분류(상품만, 더보기 /products?category={id}),
+   * event=이벤트 대분류(이벤트만, 더보기 /events?category={id}). 기본 page
+   */
+  type?: "page" | "category" | "event"
 }
 
 interface Row {
@@ -67,17 +71,34 @@ const PriceGroup = ({ dp }: { dp: PriceDetailPageRef }) => {
   const langQuery = useLanguageQuery()
   const suffix = keyMatch[i18n.language as keyof typeof keyMatch] ?? ""
 
-  // page=상세페이지 단위(detailPageId), category=대분류 단위(categoryId, 소속 상세페이지 전체 집계)
+  // page=상세페이지(상품+이벤트), category=상품 대분류(상품만), event=이벤트 대분류(이벤트만)
   const isCategory = dp.type === "category"
-  const scope = isCategory ? { categoryId: dp.id } : { detailPageId: dp.id }
+  const isEvent = dp.type === "event"
+  const isPage = !dp.type || dp.type === "page"
 
+  // 상품: page(detailPageId)·category(categoryId)만 조회. event는 상품 없음.
   const { data: products } = useProductControllerFindMany(
-    { ...scope, sortBy: [`order${suffix}`], sortOrder: ["ASC"], page: 1, limit: 500, ...langQuery },
-    { query: { enabled: !!dp.id } },
+    {
+      ...(isCategory ? { categoryId: dp.id } : { detailPageId: dp.id }),
+      sortBy: [`order${suffix}`],
+      sortOrder: ["ASC"],
+      page: 1,
+      limit: 500,
+      ...langQuery,
+    },
+    { query: { enabled: !!dp.id && (isPage || isCategory) } },
   )
+  // 이벤트: page(detailPageId)·event(categoryId=이벤트 대분류)만 조회. category(상품 대분류)는 이벤트 없음.
   const { data: events } = useEventControllerFindMany(
-    { ...scope, sortBy: ["order"], sortOrder: ["ASC"], page: 1, limit: 500, ...langQuery },
-    { query: { enabled: !!dp.id } },
+    {
+      ...(isEvent ? { categoryId: dp.id } : { detailPageId: dp.id }),
+      sortBy: ["order"],
+      sortOrder: ["ASC"],
+      page: 1,
+      limit: 500,
+      ...langQuery,
+    },
+    { query: { enabled: !!dp.id && (isPage || isEvent) } },
   )
 
   const won = t("reservePage.won")
@@ -131,7 +152,13 @@ const PriceGroup = ({ dp }: { dp: PriceDetailPageRef }) => {
       </div>
       {list.length > 0 && (
         <CustomLink
-          to={isCategory ? `/products?category=${dp.id}` : `/products/${dp.id}`}
+          to={
+            isEvent
+              ? `/events?category=${dp.id}`
+              : isCategory
+                ? `/products?category=${dp.id}`
+                : `/products/${dp.id}`
+          }
           tw="flex items-center justify-center gap-1 mt-3 py-1 bg-white border border-primary text-primary text-[13px] font-medium">
           가격 더보기 →
         </CustomLink>

@@ -57,8 +57,8 @@ export interface BlogV2Post {
   productPage?: string
   /** CTA 버튼 링크(최대 2개) — 백엔드에서 이름→URL 해석 완료. 없으면 productPage 기반 단일 CTA로 폴백 */
   ctaLinks?: Array<{ type: "page" | "category" | "event"; target: string; text: string; url: string }>
-  /** 가격 보기 소스 — 백엔드에서 이름→id 해석 완료. page(상세페이지)/category(대분류). 없으면 productPage로 폴백 */
-  priceRefs?: Array<{ type: "page" | "category"; id: string; name: string }>
+  /** 가격 보기 소스 — 백엔드에서 이름→id 해석 완료. page(상세페이지)/category(상품 대분류)/event(이벤트 대분류). 없으면 productPage로 폴백 */
+  priceRefs?: Array<{ type: "page" | "category" | "event"; id: string; name: string }>
   /** 이 글에 적용할 추가 고지문구 type 목록 (일반 면책 제외) */
   notices?: string[]
   productCategoryId?: string
