@@ -123,7 +123,7 @@ const PriceGroup = ({ detailPageId }: { detailPageId: string }) => {
           <PriceCard key={i} row={row} faded={showFade && i === 2} />
         ))}
       </div>
-      {showFade && (
+      {list.length > 0 && (
         <CustomLink
           to={`/products/${detailPageId}`}
           tw="flex items-center justify-center gap-1 mt-3 py-1 bg-white border border-primary text-primary text-[13px] font-medium">
