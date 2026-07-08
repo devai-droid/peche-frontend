@@ -224,13 +224,17 @@ const BlogDetail = () => {
       commonTexts.filter((t) => t.isActive && t.body).map((t) => [t.type, t.body as string]),
     )
     const out: string[] = []
+    // 항상 적용(모든 글 공통): 일반 면책 + AI 이미지 고지
     const general = byType.get("general_disclaimer")
     if (general) out.push(general)
+    const ai = byType.get("ai_image_notice")
+    if (ai) out.push(ai)
     const selected =
       isPreview && noticesParam !== null
         ? noticesParam.split(",").filter(Boolean)
         : post?.notices ?? []
     for (const t of selected) {
+      if (t === "ai_image_notice") continue // 항상 적용이므로 중복 방지
       const b = byType.get(t)
       if (b) out.push(b)
     }
