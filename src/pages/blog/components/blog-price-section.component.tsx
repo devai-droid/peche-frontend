@@ -12,6 +12,8 @@ const keyMatch = { ko: "", en: "EN", ja: "JA", th: "TH", zh: "ZH", "zh-TW": "ZHT
 export interface PriceDetailPageRef {
   id: string
   name: string
+  /** page=상세페이지(더보기 /products/{id}), category=대분류(더보기 /products?category={id}). 기본 page */
+  type?: "page" | "category"
 }
 
 interface Row {
@@ -59,19 +61,23 @@ const PriceCard = ({ row, faded }: { row: Row; faded?: boolean }) => {
 }
 
 /** 상세페이지 1개의 가격 블록 — 가격이벤트(게시중)·전체 시술 반반 탭. 3개 초과 시 2개+페이드+더보기 */
-const PriceGroup = ({ detailPageId }: { detailPageId: string }) => {
+const PriceGroup = ({ dp }: { dp: PriceDetailPageRef }) => {
   const { t, i18n } = useTranslation()
   const tv = useLanguageValue()
   const langQuery = useLanguageQuery()
   const suffix = keyMatch[i18n.language as keyof typeof keyMatch] ?? ""
 
+  // page=상세페이지 단위(detailPageId), category=대분류 단위(categoryId, 소속 상세페이지 전체 집계)
+  const isCategory = dp.type === "category"
+  const scope = isCategory ? { categoryId: dp.id } : { detailPageId: dp.id }
+
   const { data: products } = useProductControllerFindMany(
-    { detailPageId, sortBy: [`order${suffix}`], sortOrder: ["ASC"], page: 1, limit: 500, ...langQuery },
-    { query: { enabled: !!detailPageId } },
+    { ...scope, sortBy: [`order${suffix}`], sortOrder: ["ASC"], page: 1, limit: 500, ...langQuery },
+    { query: { enabled: !!dp.id } },
   )
   const { data: events } = useEventControllerFindMany(
-    { detailPageId, sortBy: ["order"], sortOrder: ["ASC"], page: 1, limit: 500, ...langQuery },
-    { query: { enabled: !!detailPageId } },
+    { ...scope, sortBy: ["order"], sortOrder: ["ASC"], page: 1, limit: 500, ...langQuery },
+    { query: { enabled: !!dp.id } },
   )
 
   const won = t("reservePage.won")
@@ -125,7 +131,7 @@ const PriceGroup = ({ detailPageId }: { detailPageId: string }) => {
       </div>
       {list.length > 0 && (
         <CustomLink
-          to={`/products/${detailPageId}`}
+          to={isCategory ? `/products?category=${dp.id}` : `/products/${dp.id}`}
           tw="flex items-center justify-center gap-1 mt-3 py-1 bg-white border border-primary text-primary text-[13px] font-medium">
           가격 더보기 →
         </CustomLink>
@@ -201,7 +207,7 @@ const BlogPriceSection = ({ detailPages }: { detailPages: PriceDetailPageRef[] }
         ]}>
         {detailPages.map((dp, i) => (
           <div key={dp.id} css={[current !== i && tw`hidden`]}>
-            <PriceGroup detailPageId={dp.id} />
+            <PriceGroup dp={dp} />
           </div>
         ))}
       </div>

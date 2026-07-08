@@ -249,8 +249,12 @@ const BlogDetail = () => {
 
   // 가격 섹션용 — product_page(콤마 여러 개) 이름 → 상세페이지(id,name) 매칭. 중복 상세페이지는 1회만.
   const priceDetailPages = useMemo<PriceDetailPageRef[]>(() => {
+    // 1) 백엔드 price_refs 우선 — page(상세페이지)/category(대분류), 이름→id 해석 완료
+    if (post?.priceRefs?.length) {
+      return post.priceRefs.map((r) => ({ id: r.id, name: r.name, type: r.type }))
+    }
+    // 2) 폴백: product_page 상세페이지명 매칭 (price 미지정 기존 글). '|' 또는 ',' 구분
     const raw = post?.productPage ?? ""
-    // product_page 구분자: 이름에 콤마가 든 상세페이지를 위해 '|'도 지원(있으면 '|', 없으면 기존 ',')
     const names = raw
       .split(raw.includes("|") ? "|" : ",")
       .map((s) => s.trim())
@@ -262,11 +266,11 @@ const BlogDetail = () => {
       const dp = items.find((p) => (tv(p, "name") ?? "").trim() === nm)
       if (dp?.id && !seen.has(dp.id)) {
         seen.add(dp.id)
-        out.push({ id: dp.id, name: tv(dp, "name") })
+        out.push({ id: dp.id, name: tv(dp, "name"), type: "page" })
       }
     }
     return out
-  }, [post?.productPage, detailPagesData, tv])
+  }, [post?.priceRefs, post?.productPage, detailPagesData, tv])
 
   const title = post?.title ?? ""
   const subtitle = post?.subtitle ?? ""
