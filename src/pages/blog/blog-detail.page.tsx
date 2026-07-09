@@ -601,7 +601,7 @@ const BlogDetail = () => {
                     }
                     h2 {
                       font-size: calc(1.7em + 2px);
-                      margin-top: 2.8em;
+                      margin-top: 3.4em;
                       margin-bottom: 1em;
                     }
                     h3 {
@@ -664,6 +664,20 @@ const BlogDetail = () => {
                     }
                     tbody tr:nth-of-type(even) {
                       background: #fafafa;
+                    }
+                    /* 모바일: 셀 여백 최소화 + 너무 넓으면 표 자체 가로 스크롤(PC는 위 규칙 그대로) */
+                    @media (max-width: 1023px) {
+                      table {
+                        display: block;
+                        width: 100%;
+                        overflow-x: auto;
+                        -webkit-overflow-scrolling: touch;
+                        white-space: nowrap;
+                      }
+                      th,
+                      td {
+                        padding: 0.4em 0.5em;
+                      }
                     }
                     /* 인용 출처 — 괄호 전체를 기울임 + 회색 + 작게 */
                     em {
