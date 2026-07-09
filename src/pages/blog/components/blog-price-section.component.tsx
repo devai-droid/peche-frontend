@@ -5,6 +5,8 @@ import useLanguageValue from "@/lib/hooks/use-language-key"
 import useLanguageQuery from "@/lib/hooks/use-language-query"
 import { useProductControllerFindMany } from "@/lib/orval/products/products"
 import { useEventControllerFindMany } from "@/lib/orval/events/events"
+import { useProductDetailPageControllerFindMany } from "@/lib/orval/product-detail-pages/product-detail-pages"
+import { ProductDetailPageControllerFindManyStatus } from "@/lib/orval/model"
 import CustomLink from "@/lib/components/custom-link.component"
 
 const keyMatch = { ko: "", en: "EN", ja: "JA", th: "TH", zh: "ZH", "zh-TW": "ZHTW" } as const
@@ -71,34 +73,42 @@ const PriceGroup = ({ dp }: { dp: PriceDetailPageRef }) => {
   const langQuery = useLanguageQuery()
   const suffix = keyMatch[i18n.language as keyof typeof keyMatch] ?? ""
 
-  // page=상세페이지(상품+이벤트), category=상품 대분류(상품만), event=이벤트 대분류(이벤트만)
+  // page=상세페이지(상품+이벤트 탭), category=대분류 첫 상세페이지의 게시중 이벤트(없으면 상시 상품), event=이벤트 대분류(이벤트만)
   const isCategory = dp.type === "category"
   const isEvent = dp.type === "event"
   const isPage = !dp.type || dp.type === "page"
 
-  // 상품: page(detailPageId)·category(categoryId)만 조회. event는 상품 없음.
-  const { data: products } = useProductControllerFindMany(
+  // category: 대분류의 첫 상세페이지(order) 조회 → 그 상세페이지 기준으로 이벤트/상품 조회
+  const { data: catFirstDp } = useProductDetailPageControllerFindMany(
     {
-      ...(isCategory ? { categoryId: dp.id } : { detailPageId: dp.id }),
-      sortBy: [`order${suffix}`],
+      status: ProductDetailPageControllerFindManyStatus.ACTIVE,
+      categoryId: dp.id,
+      limit: 1,
+      sortBy: ["order"],
       sortOrder: ["ASC"],
-      page: 1,
-      limit: 500,
       ...langQuery,
     },
-    { query: { enabled: !!dp.id && (isPage || isCategory) } },
+    { query: { enabled: isCategory && !!dp.id } },
   )
-  // 이벤트: page(detailPageId)·event(categoryId=이벤트 대분류)만 조회. category(상품 대분류)는 이벤트 없음.
+  // 상품/이벤트 조회 기준 상세페이지 id: page=자기 자신, category=첫 상세페이지
+  const detailId = isCategory ? catFirstDp?.items?.[0]?.id : dp.id
+
+  // 상품: page·category → detailPageId. event는 상품 없음.
+  const { data: products } = useProductControllerFindMany(
+    { detailPageId: detailId, sortBy: [`order${suffix}`], sortOrder: ["ASC"], page: 1, limit: 500, ...langQuery },
+    { query: { enabled: !!detailId && (isPage || isCategory) } },
+  )
+  // 이벤트: page·category → detailPageId(게시중), event → categoryId(이벤트 대분류)
   const { data: events } = useEventControllerFindMany(
     {
-      ...(isEvent ? { categoryId: dp.id } : { detailPageId: dp.id }),
+      ...(isEvent ? { categoryId: dp.id } : { detailPageId: detailId }),
       sortBy: ["order"],
       sortOrder: ["ASC"],
       page: 1,
       limit: 500,
       ...langQuery,
     },
-    { query: { enabled: !!dp.id && (isPage || isEvent) } },
+    { query: { enabled: isEvent ? !!dp.id : !!detailId && (isPage || isCategory) } },
   )
 
   const won = t("reservePage.won")
@@ -122,14 +132,16 @@ const PriceGroup = ({ dp }: { dp: PriceDetailPageRef }) => {
   const [tab, setTab] = useState<"event" | "product">("event")
 
   if (!hasEvent && !hasProduct) return null
-  const activeTab = hasEvent && hasProduct ? tab : hasEvent ? "event" : "product"
+  // 내부 탭은 page 모드에서 상품·이벤트 둘 다 있을 때만. category/event는 단일 리스트(이벤트 우선).
+  const showInnerTab = isPage && hasEvent && hasProduct
+  const activeTab: "event" | "product" = showInnerTab ? tab : hasEvent ? "event" : "product"
   const list = activeTab === "event" ? eventRows : productRows
   const showFade = list.length > 2
   const shown = showFade ? list.slice(0, 3) : list
 
   return (
     <div>
-      {hasEvent && hasProduct && (
+      {showInnerTab && (
         <div tw="flex mb-2 rounded-sm overflow-hidden border border-neutral30">
           {(["event", "product"] as const).map((k) => (
             <button
