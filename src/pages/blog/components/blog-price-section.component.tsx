@@ -51,7 +51,7 @@ const peekCss = css`
 /** 가격 카드 — 상품명 + 가격(정가 취소선+할인가)만 */
 const PriceCard = ({ row, faded }: { row: Row; faded?: boolean }) => {
   return (
-    <div css={[tw`flex flex-col gap-[6px] py-[11px] border-b border-neutral30`, faded && peekCss]}>
+    <div css={[tw`flex flex-col gap-[6px] py-[11px] border-b border-neutral30 last:border-b-0`, faded && peekCss]}>
       <div tw="text-[15px] font-semibold leading-[1.4]">
         {row.category && <span css={[{ color: "#DA7F67" }]}>{row.category} </span>}
         <span tw="text-neutralBlack">{row.name}</span>
