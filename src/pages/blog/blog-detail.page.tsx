@@ -727,11 +727,11 @@ const BlogDetail = () => {
                       font-size: 0.875em;
                       font-style: normal;
                     }
-                    /* FAQ 질문 — 메인색(다크 코랄), 줄 분리 */
+                    /* FAQ 질문 — 메인색(더 어두운 tertiaryDark), 줄 분리 */
                     .faq-q {
                       display: inline-block;
                       margin-bottom: 0.3em;
-                      color: #ab6655;
+                      color: #79473b;
                     }
                     /* FAQ 질문·답변 그룹 사이 간격 */
                     .faq-item {
