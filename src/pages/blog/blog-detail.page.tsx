@@ -134,6 +134,7 @@ function preprocessContent(html: string, lang: string): string {
           }
           node.insertBefore(document.createElement("br"), after)
           ;(strong as HTMLElement).classList.add("faq-q")
+          ;(node as HTMLElement).classList.add("faq-item")
         }
       }
       node = node.nextElementSibling
@@ -655,7 +656,7 @@ const BlogDetail = () => {
                     table {
                       width: 100%;
                       border-collapse: collapse;
-                      margin: 1.5em 0;
+                      margin: 1.5em 0 2.6em;
                       font-size: 0.95em;
                     }
                     th,
@@ -719,18 +720,22 @@ const BlogDetail = () => {
                     .blog-caption {
                       text-align: center;
                       margin-top: -0.4em;
-                      margin-bottom: 1.6em;
+                      margin-bottom: 2.6em;
                     }
                     .blog-caption em {
                       color: #999;
                       font-size: 0.875em;
                       font-style: normal;
                     }
-                    /* FAQ 질문 — 기본(검정) 색, 줄 분리 */
+                    /* FAQ 질문 — 메인색(다크 코랄), 줄 분리 */
                     .faq-q {
                       display: inline-block;
                       margin-bottom: 0.3em;
-                      color: inherit;
+                      color: #ab6655;
+                    }
+                    /* FAQ 질문·답변 그룹 사이 간격 */
+                    .faq-item {
+                      margin-bottom: 1.9em;
                     }
                   `,
                 ]}
