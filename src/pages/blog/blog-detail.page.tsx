@@ -604,8 +604,15 @@ const BlogDetail = () => {
                       margin-top: 3.4em;
                       margin-bottom: 1em;
                     }
+                    /* PC는 세로 공간이 넓어 h2 위 여백을 더 크게(모바일 3.4em 유지) */
+                    @media (min-width: 1024px) {
+                      h2 {
+                        margin-top: 4.4em;
+                      }
+                    }
                     h3 {
                       font-size: 1.15em;
+                      margin-top: 2.4em;
                     }
                     p {
                       margin-bottom: 1em;
