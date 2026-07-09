@@ -79,6 +79,24 @@ export interface BlogV2ListResponse {
   limit: number
 }
 
+/** 가격 보기 한 행(상시/이벤트 공통) — 이름·설명은 백엔드에서 언어별로 이미 해석됨 */
+export interface BlogPriceRow {
+  name: string
+  description?: string | null
+  price: number
+  discountPrice?: number | null
+  labels?: string[] | null
+  categoryName?: string | null
+}
+/** 가격 묶음(탭 1개) — linkType으로 더보기 링크·내부 구성 결정 */
+export interface BlogPriceGroup {
+  linkType: "page" | "category" | "event"
+  linkId: string
+  detailPageName: string
+  products: BlogPriceRow[]
+  events: BlogPriceRow[]
+}
+
 export const blogV2PublicApi = {
   list: (params: {
     lang?: string
@@ -97,6 +115,13 @@ export const blogV2PublicApi = {
     request<BlogV2Post>({
       method: "GET",
       url: `/api/blog-v2/posts/public/detail/${lang}/${encodeURIComponent(slug)}`,
+    }),
+  // 가격 보기 데이터(봇 SSR과 동일 계산) — postId+lang
+  prices: (id: string, lang: string) =>
+    request<BlogPriceGroup[]>({
+      method: "GET",
+      url: `/api/blog-v2/posts/public/prices/${id}`,
+      params: { lang },
     }),
   // 내부링크 치환용 — slug들 중 발행된 글의 slug→제목 맵(미발행/미존재는 미포함)
   slugTitles: (lang: string, slugs: string[]) =>

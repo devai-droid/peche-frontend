@@ -8,11 +8,9 @@ import useLanguageValue from "@/lib/hooks/use-language-key"
 import { useTranslation } from "react-i18next"
 import { useParams, useNavigate, useSearchParams } from "react-router-dom"
 import { useQuery } from "@tanstack/react-query"
-import { useProductDetailPageControllerFindMany } from "@/lib/orval/product-detail-pages/product-detail-pages"
-import { ProductDetailPageControllerFindManyStatus } from "@/lib/orval/model"
 import { blogV2PublicApi, resolveBlogAsset, rewriteBlogHtml } from "./blog-v2.api"
 import BlogSeo from "./components/blog-seo.component"
-import BlogPriceSection, { PriceDetailPageRef } from "./components/blog-price-section.component"
+import BlogPriceSection from "./components/blog-price-section.component"
 import CustomLink from "@/lib/components/custom-link.component"
 import { BottomButtons } from "@/features/product/components/cart-view.component"
 import tw, { css } from "twin.macro"
@@ -242,36 +240,7 @@ const BlogDetail = () => {
     return out
   }, [commonTexts, post?.notices, isPreview, noticesParam])
 
-  // CTA 대상 해석용 — 상세페이지 목록(이름→id 매칭)
-  const { data: detailPagesData } = useProductDetailPageControllerFindMany({
-    status: ProductDetailPageControllerFindManyStatus.ACTIVE,
-    limit: 100,
-  })
-
-  // 가격 섹션용 — product_page(콤마 여러 개) 이름 → 상세페이지(id,name) 매칭. 중복 상세페이지는 1회만.
-  const priceDetailPages = useMemo<PriceDetailPageRef[]>(() => {
-    // 1) 백엔드 price_refs 우선 — page(상세페이지)/category(대분류), 이름→id 해석 완료
-    if (post?.priceRefs?.length) {
-      return post.priceRefs.map((r) => ({ id: r.id, name: r.name, type: r.type }))
-    }
-    // 2) 폴백: product_page 상세페이지명 매칭 (price 미지정 기존 글). '|' 또는 ',' 구분
-    const raw = post?.productPage ?? ""
-    const names = raw
-      .split(raw.includes("|") ? "|" : ",")
-      .map((s) => s.trim())
-      .filter(Boolean)
-    const items = detailPagesData?.items ?? []
-    const seen = new Set<string>()
-    const out: PriceDetailPageRef[] = []
-    for (const nm of names) {
-      const dp = items.find((p) => (tv(p, "name") ?? "").trim() === nm)
-      if (dp?.id && !seen.has(dp.id)) {
-        seen.add(dp.id)
-        out.push({ id: dp.id, name: tv(dp, "name"), type: "page" })
-      }
-    }
-    return out
-  }, [post?.priceRefs, post?.productPage, detailPagesData, tv])
+  // 가격 섹션 데이터는 BlogPriceSection이 백엔드 public/prices(봇 SSR과 동일 계산)에서 직접 조회.
 
   const title = post?.title ?? ""
   const subtitle = post?.subtitle ?? ""
@@ -507,7 +476,7 @@ const BlogDetail = () => {
                   </nav>
                 )}
                 {/* 가격 섹션 — PC: 목차 아래 사이드바에 배치 */}
-                <BlogPriceSection detailPages={priceDetailPages} />
+                <BlogPriceSection postId={post?.id ?? ""} lang={lang} />
               </aside>
             )}
 
@@ -811,7 +780,7 @@ const BlogDetail = () => {
               {/* 가격 섹션 — 모바일: 의료진 카드 다음 (PC는 왼쪽 목차 아래에 배치). 관련글 위 여백만큼 띄움 */}
               {!isDesktop && (
                 <div tw="pt-4">
-                  <BlogPriceSection detailPages={priceDetailPages} />
+                  <BlogPriceSection postId={post?.id ?? ""} lang={lang} />
                 </div>
               )}
 

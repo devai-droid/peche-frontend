@@ -1,26 +1,9 @@
 import React, { useState } from "react"
 import tw, { css } from "twin.macro"
 import { useTranslation } from "react-i18next"
-import useLanguageValue from "@/lib/hooks/use-language-key"
-import useLanguageQuery from "@/lib/hooks/use-language-query"
-import { useProductControllerFindMany } from "@/lib/orval/products/products"
-import { useEventControllerFindMany } from "@/lib/orval/events/events"
-import { useProductDetailPageControllerFindMany } from "@/lib/orval/product-detail-pages/product-detail-pages"
-import { ProductDetailPageControllerFindManyStatus } from "@/lib/orval/model"
+import { useQuery } from "@tanstack/react-query"
 import CustomLink from "@/lib/components/custom-link.component"
-
-const keyMatch = { ko: "", en: "EN", ja: "JA", th: "TH", zh: "ZH", "zh-TW": "ZHTW" } as const
-
-export interface PriceDetailPageRef {
-  id: string
-  name: string
-  /**
-   * page=상세페이지(상품+이벤트, 더보기 /products/{id}),
-   * category=상품 대분류(상품만, 더보기 /products?category={id}),
-   * event=이벤트 대분류(이벤트만, 더보기 /events?category={id}). 기본 page
-   */
-  type?: "page" | "category" | "event"
-}
+import { blogV2PublicApi, BlogPriceGroup, BlogPriceRow } from "../blog-v2.api"
 
 interface Row {
   name: string
@@ -66,66 +49,22 @@ const PriceCard = ({ row, faded }: { row: Row; faded?: boolean }) => {
   )
 }
 
-/** 상세페이지 1개의 가격 블록 — 가격이벤트(게시중)·전체 시술 반반 탭. 3개 초과 시 2개+페이드+더보기 */
-const PriceGroup = ({ dp }: { dp: PriceDetailPageRef }) => {
-  const { t, i18n } = useTranslation()
-  const tv = useLanguageValue()
-  const langQuery = useLanguageQuery()
-  const suffix = keyMatch[i18n.language as keyof typeof keyMatch] ?? ""
-
-  // page=상세페이지(상품+이벤트 탭), category=대분류 첫 상세페이지의 게시중 이벤트(없으면 상시 상품), event=이벤트 대분류(이벤트만)
-  const isCategory = dp.type === "category"
-  const isEvent = dp.type === "event"
-  const isPage = !dp.type || dp.type === "page"
-
-  // category: 대분류의 첫 상세페이지(order) 조회 → 그 상세페이지 기준으로 이벤트/상품 조회
-  const { data: catFirstDp } = useProductDetailPageControllerFindMany(
-    {
-      status: ProductDetailPageControllerFindManyStatus.ACTIVE,
-      categoryId: dp.id,
-      limit: 1,
-      sortBy: ["order"],
-      sortOrder: ["ASC"],
-      ...langQuery,
-    },
-    { query: { enabled: isCategory && !!dp.id } },
-  )
-  // 상품/이벤트 조회 기준 상세페이지 id: page=자기 자신, category=첫 상세페이지
-  const detailId = isCategory ? catFirstDp?.items?.[0]?.id : dp.id
-
-  // 상품: page·category → detailPageId. event는 상품 없음.
-  const { data: products } = useProductControllerFindMany(
-    { detailPageId: detailId, sortBy: [`order${suffix}`], sortOrder: ["ASC"], page: 1, limit: 500, ...langQuery },
-    { query: { enabled: !!detailId && (isPage || isCategory) } },
-  )
-  // 이벤트: page·category → detailPageId(게시중), event → categoryId(이벤트 대분류)
-  const { data: events } = useEventControllerFindMany(
-    {
-      ...(isEvent ? { categoryId: dp.id } : { detailPageId: detailId }),
-      sortBy: ["order"],
-      sortOrder: ["ASC"],
-      page: 1,
-      limit: 500,
-      ...langQuery,
-    },
-    { query: { enabled: isEvent ? !!dp.id : !!detailId && (isPage || isCategory) } },
-  )
-
+/**
+ * 가격 묶음(탭 1개) 렌더 — 데이터는 백엔드(봇 SSR과 동일 계산)에서 이미 산출됨.
+ * page=상품+이벤트 내부 탭, category/event=단일 리스트(이벤트 우선). 3개 초과 시 2개+페이드+더보기.
+ */
+const PriceGroupView = ({ group }: { group: BlogPriceGroup }) => {
+  const { t } = useTranslation()
   const won = t("reservePage.won")
   const money = (n: number) => `${n.toLocaleString()} ${won}`
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const eventRows: Row[] = (events?.items ?? []).map((e: any) => ({
-    name: tv(e, "name"),
-    price: money(e.discountPrice || e.price),
-    original: e.discountPrice ? money(e.price) : undefined,
-    category: e.category ? tv(e.category, "name") : undefined,
-  }))
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const productRows: Row[] = (products?.items ?? []).map((p: any) => ({
-    name: tv(p, "name"),
-    price: money(p.discountPrice || p.price),
-    original: p.discountPrice ? money(p.price) : undefined,
-  }))
+  const toRow = (r: BlogPriceRow): Row => ({
+    name: r.name,
+    price: money(r.discountPrice || r.price),
+    original: r.discountPrice ? money(r.price) : undefined,
+    category: r.categoryName ?? undefined,
+  })
+  const eventRows = group.events.map(toRow)
+  const productRows = group.products.map(toRow)
 
   const hasEvent = eventRows.length > 0
   const hasProduct = productRows.length > 0
@@ -133,11 +72,19 @@ const PriceGroup = ({ dp }: { dp: PriceDetailPageRef }) => {
 
   if (!hasEvent && !hasProduct) return null
   // 내부 탭은 page 모드에서 상품·이벤트 둘 다 있을 때만. category/event는 단일 리스트(이벤트 우선).
-  const showInnerTab = isPage && hasEvent && hasProduct
+  const showInnerTab = group.linkType === "page" && hasEvent && hasProduct
   const activeTab: "event" | "product" = showInnerTab ? tab : hasEvent ? "event" : "product"
   const list = activeTab === "event" ? eventRows : productRows
   const showFade = list.length > 2
   const shown = showFade ? list.slice(0, 3) : list
+
+  // 더보기: page=상세페이지, category=상품 대분류, event=이벤트 대분류
+  const moreTo =
+    group.linkType === "event"
+      ? `/events?category=${group.linkId}`
+      : group.linkType === "category"
+        ? `/products?category=${group.linkId}`
+        : `/products/${group.linkId}`
 
   return (
     <div>
@@ -164,13 +111,7 @@ const PriceGroup = ({ dp }: { dp: PriceDetailPageRef }) => {
       </div>
       {list.length > 0 && (
         <CustomLink
-          to={
-            isEvent
-              ? `/events?category=${dp.id}`
-              : isCategory
-                ? `/products?category=${dp.id}`
-                : `/products/${dp.id}`
-          }
+          to={moreTo}
           tw="flex items-center justify-center gap-1 mt-3 py-1 bg-white border border-primary text-primary text-[13px] font-medium">
           가격 더보기 →
         </CustomLink>
@@ -180,15 +121,22 @@ const PriceGroup = ({ dp }: { dp: PriceDetailPageRef }) => {
 }
 
 /**
- * 블로그 가격 섹션 — 상세페이지가 여러 개면 상위 탭(상세페이지)으로 전환, 1개면 바로 표시.
- * 각 상세페이지 안은 가격이벤트/전체 시술 반반 탭.
+ * 블로그 가격 섹션 — price_refs가 여러 개면 상위 탭(폴더 탭)으로 전환, 1개면 바로 표시.
+ * 데이터는 백엔드 public/prices 엔드포인트(봇 SSR과 동일 계산)에서 가져옴.
  */
 const LINE = "#e5ded9"
 
-const BlogPriceSection = ({ detailPages }: { detailPages: PriceDetailPageRef[] }) => {
+const BlogPriceSection = ({ postId, lang }: { postId: string; lang: string }) => {
   const [activeDp, setActiveDp] = useState(0)
-  if (!detailPages.length) return null
-  const current = Math.min(activeDp, detailPages.length - 1)
+  const { data } = useQuery({
+    queryKey: ["blog-v2-prices", postId, lang],
+    queryFn: () => blogV2PublicApi.prices(postId, lang),
+    enabled: !!postId,
+    staleTime: 1000 * 60 * 5,
+  })
+  const groups = data ?? []
+  if (!groups.length) return null
+  const current = Math.min(activeDp, groups.length - 1)
 
   return (
     <div tw="mt-6">
@@ -198,11 +146,11 @@ const BlogPriceSection = ({ detailPages }: { detailPages: PriceDetailPageRef[] }
         css={[{ borderBottom: "1px solid #DA7F67" }]}>
         가격 보기
       </div>
-      {/* 폴더 탭(상세페이지) — 열린 탭 흰 배경, 나머지는 선으로만 구분, 박스와 연결 */}
+      {/* 폴더 탭 — 열린 탭 흰 배경, 나머지는 선으로만 구분, 박스와 연결 */}
       <div tw="flex relative z-[1]">
-        {detailPages.map((dp, i) => (
+        {groups.map((g, i) => (
           <button
-            key={dp.id}
+            key={g.linkId + i}
             type="button"
             onClick={() => setActiveDp(i)}
             css={[
@@ -230,7 +178,7 @@ const BlogPriceSection = ({ detailPages }: { detailPages: PriceDetailPageRef[] }
                     color: #9b9b9b;
                   `,
             ]}>
-            {dp.name}
+            {g.detailPageName}
           </button>
         ))}
       </div>
@@ -244,9 +192,9 @@ const BlogPriceSection = ({ detailPages }: { detailPages: PriceDetailPageRef[] }
             border-radius: 0;
           `,
         ]}>
-        {detailPages.map((dp, i) => (
-          <div key={dp.id} css={[current !== i && tw`hidden`]}>
-            <PriceGroup dp={dp} />
+        {groups.map((g, i) => (
+          <div key={g.linkId + i} css={[current !== i && tw`hidden`]}>
+            <PriceGroupView group={g} />
           </div>
         ))}
       </div>
