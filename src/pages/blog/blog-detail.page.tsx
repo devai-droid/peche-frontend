@@ -294,9 +294,10 @@ const BlogDetail = () => {
     enabled: relatedSlugs.length > 0,
     staleTime: 1000 * 60,
   })
-  // 본문 최종 가공: (1) 미발행 내부링크 텍스트화 (2) 인용을 각주(위첨자 번호)로 + 하단 "출처" 목록
-  const finalContent = useMemo(() => {
-    if (!sanitizedContent) return sanitizedContent
+  // 본문 최종 가공: (1) 미발행 내부링크 텍스트화 (2) 인용을 각주(위첨자 번호)로 치환.
+  //   하단 "참고 문헌 및 출처" 목록은 별도(referencesHtml)로 뽑아 고지문구 '아래'에 렌더한다.
+  const { finalContent, referencesHtml } = useMemo<{ finalContent: string; referencesHtml: string }>(() => {
+    if (!sanitizedContent) return { finalContent: sanitizedContent, referencesHtml: "" }
     const doc = new DOMParser().parseFromString(sanitizedContent, "text/html")
     // (1) 미발행 내부링크는 링크 제거하고 텍스트만(빈 페이지 링크 방지). 맵 로딩 전엔 원본 유지
     if (slugTitleMap) {
@@ -309,8 +310,8 @@ const BlogDetail = () => {
         }
       })
     }
-    // (2) 각주: 본문 인용(.blog-citation)을 위첨자 번호로 치환하고, 본문 끝에 "출처" 목록 생성.
-    //     같은 URL은 같은 번호로 병합(중복 방지). slugTitleMap과 무관하게 항상 실행.
+    // (2) 각주: 본문 인용(.blog-citation)을 위첨자 번호로 치환. 같은 URL은 같은 번호로 병합.
+    let referencesHtml = ""
     const citeAnchors = Array.from(doc.querySelectorAll("a.blog-citation")) as HTMLAnchorElement[]
     if (citeAnchors.length) {
       const numByHref = new Map<string, number>()
@@ -345,38 +346,19 @@ const BlogDetail = () => {
         a.replaceWith(sup)
       })
       if (refs.length) {
-        const section = doc.createElement("section")
-        section.className = "blog-references"
-        const heading = doc.createElement("h2")
-        heading.textContent = refLabel
-        section.appendChild(heading)
-        const list = doc.createElement("ol")
-        refs.forEach((r, i) => {
-          const li = doc.createElement("li")
-          li.id = `ref-${i + 1}`
-          const num = doc.createElement("span")
-          num.className = "ref-num"
-          num.textContent = `(${i + 1}) `
-          li.appendChild(num)
-          const link = doc.createElement("a")
-          link.setAttribute("href", r.href)
-          link.setAttribute("target", "_blank")
-          link.setAttribute("rel", "noopener noreferrer")
-          link.innerHTML = r.html
-          li.appendChild(link)
-          const back = doc.createElement("a")
-          back.setAttribute("href", `#cite-${i + 1}`)
-          back.className = "ref-back"
-          back.setAttribute("aria-label", "본문으로 돌아가기")
-          back.textContent = " ↩"
-          li.appendChild(back)
-          list.appendChild(li)
-        })
-        section.appendChild(list)
-        doc.body.appendChild(section)
+        const escAttr = (s: string) => s.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;")
+        const items = refs
+          .map(
+            (r, i) =>
+              `<li id="ref-${i + 1}"><span class="ref-num">(${i + 1}) </span>` +
+              `<a href="${escAttr(r.href)}" target="_blank" rel="noopener noreferrer">${r.html}</a>` +
+              `<a href="#cite-${i + 1}" class="ref-back" aria-label="본문으로 돌아가기"> ↩</a></li>`,
+          )
+          .join("")
+        referencesHtml = `<section class="blog-references"><h2>${refLabel}</h2><ol>${items}</ol></section>`
       }
     }
-    return doc.body.innerHTML
+    return { finalContent: doc.body.innerHTML, referencesHtml }
   }, [sanitizedContent, slugTitleMap, refLabel])
 
   // Extract TOC from h2 headings with id attributes (h3 제외 — 목차는 대제목만)
@@ -785,60 +767,6 @@ const BlogDetail = () => {
                       font-weight: 600;
                       text-decoration: none;
                     }
-                    /* 하단 출처 목록 — 목차처럼 회색 테두리 박스(흰 배경), 밑줄도 테두리색과 동일 */
-                    .blog-references {
-                      margin-top: 4.5em;
-                      background: #fff;
-                      border: 1px solid #c8c8c8;
-                      padding: 16px 20px;
-                    }
-                    .blog-references h2 {
-                      font-size: 14px;
-                      font-weight: 600;
-                      color: #1a1a1a;
-                      padding-bottom: 8px;
-                      margin: 0 0 12px;
-                      border-bottom: 1px solid #c8c8c8;
-                    }
-                    .blog-references ol {
-                      list-style: none;
-                      padding: 0;
-                      margin: 0;
-                    }
-                    .blog-references li {
-                      font-size: 15px;
-                      color: #555;
-                      margin: 2px 0;
-                      line-height: 1.6;
-                    }
-                    /* 목록 번호 (N) — 본문 각주와 동일 코랄 */
-                    .blog-references .ref-num {
-                      color: #da7f67;
-                    }
-                    .blog-references a {
-                      color: #555;
-                      text-decoration: none;
-                      word-break: break-all;
-                      transition: color 0.2s;
-                    }
-                    .blog-references a:hover {
-                      color: #da7f67;
-                    }
-                    /* 본문으로 이동(↩) — 회색 */
-                    .blog-references .ref-back {
-                      color: #9b9b9b;
-                      word-break: normal;
-                      margin-left: 4px;
-                    }
-                    @media (min-width: 1024px) {
-                      .blog-references h2 {
-                        font-size: 15px;
-                        margin-bottom: 16px;
-                      }
-                      .blog-references li {
-                        font-size: 16px;
-                      }
-                    }
                     /* 끝 의학 고지 — 본문과 떨어뜨림, 가로선 없음 */
                     .blog-disclaimer {
                       margin-top: 4em;
@@ -892,6 +820,72 @@ const BlogDetail = () => {
                     </p>
                   ))}
                 </div>
+              )}
+
+              {/* 참고 문헌 및 출처 — 고지문구 '아래'에 위치. 각주 번호/↩ 클릭 스크롤은 컨테이너 위임 처리 */}
+              {referencesHtml && (
+                <div
+                  onClick={handleContentAnchorClick}
+                  css={[
+                    css`
+                      .blog-references {
+                        margin-top: 4em;
+                        background: #fff;
+                        border: 1px solid #c8c8c8;
+                        padding: 16px 20px;
+                      }
+                      .blog-references h2 {
+                        font-size: 14px;
+                        font-weight: 600;
+                        color: #1a1a1a;
+                        padding-bottom: 8px;
+                        margin: 0 0 12px;
+                        border-bottom: 1px solid #c8c8c8;
+                      }
+                      .blog-references ol {
+                        list-style: none;
+                        padding: 0;
+                        margin: 0;
+                      }
+                      .blog-references li {
+                        font-size: 15px;
+                        color: #555;
+                        margin: 2px 0;
+                        line-height: 1.6;
+                      }
+                      .blog-references .ref-num {
+                        color: #da7f67;
+                      }
+                      .blog-references a {
+                        color: #555;
+                        text-decoration: none;
+                        word-break: break-all;
+                        transition: color 0.2s;
+                      }
+                      .blog-references a:hover {
+                        color: #da7f67;
+                      }
+                      .blog-references .ref-back {
+                        color: #9b9b9b;
+                        word-break: normal;
+                        margin-left: 4px;
+                      }
+                      /* PC에서만 항목 간격 살짝 넓힘(모바일은 2px 유지) */
+                      @media (min-width: 1024px) {
+                        .blog-references h2 {
+                          font-size: 15px;
+                          margin-bottom: 16px;
+                        }
+                        .blog-references li {
+                          font-size: 16px;
+                          margin: 5px 0;
+                        }
+                      }
+                    `,
+                  ]}
+                  // eslint-disable-next-line react/no-danger
+                  dangerouslySetInnerHTML={{ __html: referencesHtml }}
+                />
               )}
             </article>
           </div>

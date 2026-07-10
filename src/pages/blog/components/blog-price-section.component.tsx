@@ -185,7 +185,7 @@ const BlogPriceSection = ({ postId, lang }: { postId: string; lang: string }) =>
       {/* 가격 박스 — 흰 배경 + 얇은 선, 열린 탭과 연결 */}
       <div
         css={[
-          tw`px-3.5 pt-6 pb-5 lg:pt-3.5 lg:pb-3.5`,
+          tw`px-3.5 pt-4 pb-5 lg:pt-2.5 lg:pb-3.5`,
           css`
             background: #fff;
             border: 1px solid ${LINE};
