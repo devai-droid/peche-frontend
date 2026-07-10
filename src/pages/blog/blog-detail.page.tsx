@@ -678,6 +678,7 @@ const BlogDetail = () => {
                     h3 {
                       font-size: 1.15em;
                       margin-top: 2.4em;
+                      margin-bottom: 0.8em;
                     }
                     p {
                       margin-bottom: 1em;
