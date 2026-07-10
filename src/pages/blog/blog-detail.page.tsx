@@ -248,6 +248,12 @@ const BlogDetail = () => {
   // 주제 키워드("관련글 더보기" 헤딩) — frontmatter topic_keyword 원본 우선, 마스터 매칭값 폴백
   const topicKeyword = post?.topicKeyword || post?.keyword?.keyword || ""
   const content = rewriteBlogHtml(post?.bodyHtml)
+  // 각주 하단 "출처" 섹션 제목 — 언어별
+  const refLabel =
+    ({ ko: "출처", en: "References", zh: "参考来源", tw: "參考來源", ja: "出典", th: "แหล่งอ้างอิง" } as Record<
+      string,
+      string
+    >)[lang] ?? "출처"
   // 의료진 카드: 글의 author_doctor 우선, 없으면 대표 의료진(공통)으로 채움
   // 카드는 어드민에서 관리하는 대표 의료진을 우선 사용 → 한 곳 수정으로 모든 글에 반영
   const cardDoctor = representativeDoctor ?? post?.authorDoctor ?? undefined
@@ -284,20 +290,76 @@ const BlogDetail = () => {
     enabled: relatedSlugs.length > 0,
     staleTime: 1000 * 60,
   })
-  // 본문: 미발행 내부링크는 링크 제거하고 텍스트만(빈 페이지 링크 방지). 발행 전엔 원본 유지(로딩 중)
+  // 본문 최종 가공: (1) 미발행 내부링크 텍스트화 (2) 인용을 각주(위첨자 번호)로 + 하단 "출처" 목록
   const finalContent = useMemo(() => {
-    if (!sanitizedContent || !slugTitleMap) return sanitizedContent
+    if (!sanitizedContent) return sanitizedContent
     const doc = new DOMParser().parseFromString(sanitizedContent, "text/html")
-    doc.querySelectorAll("a.blog-related-link").forEach((a) => {
-      const s = a.getAttribute("data-slug") ?? ""
-      if (s && !slugTitleMap[s]) {
-        const span = doc.createElement("span")
-        span.textContent = a.textContent ?? ""
-        a.replaceWith(span)
+    // (1) 미발행 내부링크는 링크 제거하고 텍스트만(빈 페이지 링크 방지). 맵 로딩 전엔 원본 유지
+    if (slugTitleMap) {
+      doc.querySelectorAll("a.blog-related-link").forEach((a) => {
+        const s = a.getAttribute("data-slug") ?? ""
+        if (s && !slugTitleMap[s]) {
+          const span = doc.createElement("span")
+          span.textContent = a.textContent ?? ""
+          a.replaceWith(span)
+        }
+      })
+    }
+    // (2) 각주: 본문 인용(.blog-citation)을 위첨자 번호로 치환하고, 본문 끝에 "출처" 목록 생성.
+    //     같은 URL은 같은 번호로 병합(중복 방지). slugTitleMap과 무관하게 항상 실행.
+    const citeAnchors = Array.from(doc.querySelectorAll("a.blog-citation")) as HTMLAnchorElement[]
+    if (citeAnchors.length) {
+      const numByHref = new Map<string, number>()
+      const refs: { href: string; html: string }[] = []
+      citeAnchors.forEach((a) => {
+        const href = a.getAttribute("href") ?? ""
+        if (!href) return
+        const known = numByHref.get(href)
+        const isFirst = known === undefined
+        const n = known ?? refs.length + 1
+        if (isFirst) {
+          numByHref.set(href, n)
+          refs.push({ href, html: a.innerHTML })
+        }
+        const sup = doc.createElement("sup")
+        sup.className = "cite-ref"
+        if (isFirst) sup.id = `cite-${n}`
+        const link = doc.createElement("a")
+        link.setAttribute("href", `#ref-${n}`)
+        link.textContent = String(n)
+        sup.appendChild(link)
+        a.replaceWith(sup)
+      })
+      if (refs.length) {
+        const section = doc.createElement("section")
+        section.className = "blog-references"
+        const heading = doc.createElement("h2")
+        heading.textContent = refLabel
+        section.appendChild(heading)
+        const ol = doc.createElement("ol")
+        refs.forEach((r, i) => {
+          const li = doc.createElement("li")
+          li.id = `ref-${i + 1}`
+          const link = doc.createElement("a")
+          link.setAttribute("href", r.href)
+          link.setAttribute("target", "_blank")
+          link.setAttribute("rel", "noopener noreferrer")
+          // 바깥 괄호는 벗겨 목록에선 깔끔하게(본문 인용은 (…) 형태였음)
+          link.innerHTML = r.html.trim().replace(/^\(/, "").replace(/\)$/, "").trim()
+          li.appendChild(link)
+          const back = doc.createElement("a")
+          back.setAttribute("href", `#cite-${i + 1}`)
+          back.className = "ref-back"
+          back.textContent = " ↩"
+          li.appendChild(back)
+          ol.appendChild(li)
+        })
+        section.appendChild(ol)
+        doc.body.appendChild(section)
       }
-    })
+    }
     return doc.body.innerHTML
-  }, [sanitizedContent, slugTitleMap])
+  }, [sanitizedContent, slugTitleMap, refLabel])
 
   // Extract TOC from h2 headings with id attributes (h3 제외 — 목차는 대제목만)
   const tocItems = useMemo<TocItem[]>(() => {
@@ -677,6 +739,49 @@ const BlogDetail = () => {
                     .blog-citation em {
                       color: inherit;
                       font-size: 1em;
+                    }
+                    /* 각주 위첨자 번호 — 본문 인용 자리 */
+                    sup.cite-ref {
+                      font-size: 0.7em;
+                      line-height: 0;
+                      margin-left: 1px;
+                    }
+                    sup.cite-ref a {
+                      color: #DA7F67;
+                      font-weight: 600;
+                      text-decoration: none;
+                      padding: 0 1px;
+                    }
+                    /* 하단 출처 목록 */
+                    .blog-references {
+                      margin-top: 3em;
+                    }
+                    .blog-references h2 {
+                      font-size: 18px;
+                      font-weight: 700;
+                      margin: 0 0 12px;
+                    }
+                    .blog-references ol {
+                      padding-left: 1.4em;
+                      margin: 0;
+                    }
+                    .blog-references li {
+                      font-size: 14px;
+                      color: #666;
+                      margin: 6px 0;
+                      line-height: 1.5;
+                    }
+                    .blog-references a {
+                      color: #8a8a8a;
+                      text-decoration: none;
+                      word-break: break-all;
+                    }
+                    .blog-references a:hover {
+                      text-decoration: underline;
+                    }
+                    .blog-references .ref-back {
+                      color: #DA7F67;
+                      word-break: normal;
                     }
                     /* 끝 의학 고지 — 본문과 떨어뜨림, 가로선 없음 */
                     .blog-disclaimer {
