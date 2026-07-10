@@ -248,16 +248,16 @@ const BlogDetail = () => {
   // 주제 키워드("관련글 더보기" 헤딩) — frontmatter topic_keyword 원본 우선, 마스터 매칭값 폴백
   const topicKeyword = post?.topicKeyword || post?.keyword?.keyword || ""
   const content = rewriteBlogHtml(post?.bodyHtml)
-  // 각주 하단 출처 섹션 제목 — 언어별(설명형)
+  // 각주 하단 출처 섹션 제목 — 언어별
   const refLabel =
     ({
-      ko: "이 글이 본문에서 인용한 자료",
-      en: "Sources cited in this article",
-      zh: "本文引用的资料",
-      tw: "本文引用的資料",
-      ja: "本文で引用した資料",
-      th: "แหล่งอ้างอิงในบทความนี้",
-    } as Record<string, string>)[lang] ?? "이 글이 본문에서 인용한 자료"
+      ko: "참고 문헌 및 출처",
+      en: "References & Sources",
+      zh: "参考文献及来源",
+      tw: "參考文獻及來源",
+      ja: "参考文献・出典",
+      th: "เอกสารอ้างอิงและแหล่งที่มา",
+    } as Record<string, string>)[lang] ?? "참고 문헌 및 출처"
   // 의료진 카드: 글의 author_doctor 우선, 없으면 대표 의료진(공통)으로 채움
   // 카드는 어드민에서 관리하는 대표 의료진을 우선 사용 → 한 곳 수정으로 모든 글에 반영
   const cardDoctor = representativeDoctor ?? post?.authorDoctor ?? undefined
@@ -783,9 +783,12 @@ const BlogDetail = () => {
                       font-weight: 600;
                       text-decoration: none;
                     }
-                    /* 하단 출처 목록 — '관련글 더보기' 섹션과 동일한 디자인 */
+                    /* 하단 출처 목록 — 목차처럼 회색 테두리 박스(흰 배경), 밑줄도 테두리색과 동일 */
                     .blog-references {
                       margin-top: 2.5em;
+                      background: #fff;
+                      border: 1px solid #c8c8c8;
+                      padding: 16px 20px;
                     }
                     .blog-references h2 {
                       font-size: 16px;
@@ -793,7 +796,7 @@ const BlogDetail = () => {
                       color: #1a1a1a;
                       padding-bottom: 8px;
                       margin: 0 0 12px;
-                      border-bottom: 1px solid #DA7F67;
+                      border-bottom: 1px solid #c8c8c8;
                     }
                     .blog-references ol {
                       list-style: none;
@@ -806,8 +809,9 @@ const BlogDetail = () => {
                       margin: 2px 0;
                       line-height: 1.6;
                     }
+                    /* 목록 번호 (N) — 본문 각주와 동일 코랄 */
                     .blog-references .ref-num {
-                      color: #999;
+                      color: #da7f67;
                     }
                     .blog-references a {
                       color: #555;
@@ -816,10 +820,11 @@ const BlogDetail = () => {
                       transition: color 0.2s;
                     }
                     .blog-references a:hover {
-                      color: #DA7F67;
+                      color: #da7f67;
                     }
+                    /* 본문으로 이동(↩) — 회색 */
                     .blog-references .ref-back {
-                      color: #DA7F67;
+                      color: #9b9b9b;
                       word-break: normal;
                       margin-left: 4px;
                     }
