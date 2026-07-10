@@ -793,7 +793,7 @@ const BlogDetail = () => {
                       padding: 16px 20px;
                     }
                     .blog-references h2 {
-                      font-size: 19px;
+                      font-size: 14px;
                       font-weight: 600;
                       color: #1a1a1a;
                       padding-bottom: 8px;
@@ -832,7 +832,7 @@ const BlogDetail = () => {
                     }
                     @media (min-width: 1024px) {
                       .blog-references h2 {
-                        font-size: 25px;
+                        font-size: 15px;
                         margin-bottom: 16px;
                       }
                       .blog-references li {
