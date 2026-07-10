@@ -248,12 +248,16 @@ const BlogDetail = () => {
   // 주제 키워드("관련글 더보기" 헤딩) — frontmatter topic_keyword 원본 우선, 마스터 매칭값 폴백
   const topicKeyword = post?.topicKeyword || post?.keyword?.keyword || ""
   const content = rewriteBlogHtml(post?.bodyHtml)
-  // 각주 하단 "출처" 섹션 제목 — 언어별
+  // 각주 하단 출처 섹션 제목 — 언어별(설명형)
   const refLabel =
-    ({ ko: "출처", en: "References", zh: "参考来源", tw: "參考來源", ja: "出典", th: "แหล่งอ้างอิง" } as Record<
-      string,
-      string
-    >)[lang] ?? "출처"
+    ({
+      ko: "이 글이 본문에서 인용한 자료",
+      en: "Sources cited in this article",
+      zh: "本文引用的资料",
+      tw: "本文引用的資料",
+      ja: "本文で引用した資料",
+      th: "แหล่งอ้างอิงในบทความนี้",
+    } as Record<string, string>)[lang] ?? "이 글이 본문에서 인용한 자료"
   // 의료진 카드: 글의 author_doctor 우선, 없으면 대표 의료진(공통)으로 채움
   // 카드는 어드민에서 관리하는 대표 의료진을 우선 사용 → 한 곳 수정으로 모든 글에 반영
   const cardDoctor = representativeDoctor ?? post?.authorDoctor ?? undefined
@@ -314,19 +318,29 @@ const BlogDetail = () => {
       citeAnchors.forEach((a) => {
         const href = a.getAttribute("href") ?? ""
         if (!href) return
+        // 본문에 이미 있던 리터럴 괄호 "(…)"를 각주 번호로 흡수 → 중복 괄호 방지
+        const prev = a.previousSibling
+        const next = a.nextSibling
+        if (prev && prev.nodeType === 3 && /\(\s*$/.test(prev.textContent ?? "")) {
+          prev.textContent = (prev.textContent ?? "").replace(/\(\s*$/, "")
+        }
+        if (next && next.nodeType === 3 && /^\s*\)/.test(next.textContent ?? "")) {
+          next.textContent = (next.textContent ?? "").replace(/^\s*\)/, "")
+        }
         const known = numByHref.get(href)
         const isFirst = known === undefined
         const n = known ?? refs.length + 1
         if (isFirst) {
           numByHref.set(href, n)
-          refs.push({ href, html: a.innerHTML })
+          // 목록 텍스트: 바깥 괄호 벗겨 저장
+          refs.push({ href, html: a.innerHTML.trim().replace(/^\(/, "").replace(/\)$/, "").trim() })
         }
         const sup = doc.createElement("sup")
         sup.className = "cite-ref"
         if (isFirst) sup.id = `cite-${n}`
         const link = doc.createElement("a")
         link.setAttribute("href", `#ref-${n}`)
-        link.textContent = String(n)
+        link.textContent = `(${n})`
         sup.appendChild(link)
         a.replaceWith(sup)
       })
@@ -336,25 +350,29 @@ const BlogDetail = () => {
         const heading = doc.createElement("h2")
         heading.textContent = refLabel
         section.appendChild(heading)
-        const ol = doc.createElement("ol")
+        const list = doc.createElement("ol")
         refs.forEach((r, i) => {
           const li = doc.createElement("li")
           li.id = `ref-${i + 1}`
+          const num = doc.createElement("span")
+          num.className = "ref-num"
+          num.textContent = `(${i + 1}) `
+          li.appendChild(num)
           const link = doc.createElement("a")
           link.setAttribute("href", r.href)
           link.setAttribute("target", "_blank")
           link.setAttribute("rel", "noopener noreferrer")
-          // 바깥 괄호는 벗겨 목록에선 깔끔하게(본문 인용은 (…) 형태였음)
-          link.innerHTML = r.html.trim().replace(/^\(/, "").replace(/\)$/, "").trim()
+          link.innerHTML = r.html
           li.appendChild(link)
           const back = doc.createElement("a")
           back.setAttribute("href", `#cite-${i + 1}`)
           back.className = "ref-back"
+          back.setAttribute("aria-label", "본문으로 돌아가기")
           back.textContent = " ↩"
           li.appendChild(back)
-          ol.appendChild(li)
+          list.appendChild(li)
         })
-        section.appendChild(ol)
+        section.appendChild(list)
         doc.body.appendChild(section)
       }
     }
@@ -384,6 +402,20 @@ const BlogDetail = () => {
   const scrollTimerRef = useRef<ReturnType<typeof setTimeout>>()
 
   const HEADER_OFFSET = 150
+
+  // 본문 안 각주 링크(#ref-N 번호 / #cite-N ↩) — SPA에선 네이티브 앵커 이동이 막혀서
+  // 목차와 동일하게 JS 스크롤(헤더 높이 보정)로 처리. innerHTML 요소라 컨테이너에서 위임 처리.
+  const handleContentAnchorClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const anchor = (e.target as HTMLElement).closest('a[href^="#"]') as HTMLAnchorElement | null
+    if (!anchor) return
+    const id = decodeURIComponent((anchor.getAttribute("href") ?? "").slice(1))
+    if (!id) return
+    const el = document.getElementById(id)
+    if (!el) return
+    e.preventDefault()
+    const y = el.getBoundingClientRect().top + window.scrollY - HEADER_OFFSET
+    window.scrollTo({ top: y, behavior: "smooth" })
+  }, [])
 
   const handleTocClick = useCallback((id: string) => {
     setActiveId(id)
@@ -614,6 +646,7 @@ const BlogDetail = () => {
 
               {/* Content */}
               <div
+                onClick={handleContentAnchorClick}
                 tw="max-w-none text-[16px] lg:text-[17px] leading-[1.8] text-neutralBlack"
                 css={[
                   css`
@@ -740,48 +773,64 @@ const BlogDetail = () => {
                       color: inherit;
                       font-size: 1em;
                     }
-                    /* 각주 위첨자 번호 — 본문 인용 자리 */
+                    /* 각주 위첨자 번호 — 본문 인용 자리 (괄호 포함 "(N)") */
                     sup.cite-ref {
-                      font-size: 0.7em;
+                      font-size: 0.72em;
                       line-height: 0;
-                      margin-left: 1px;
                     }
                     sup.cite-ref a {
                       color: #DA7F67;
                       font-weight: 600;
                       text-decoration: none;
-                      padding: 0 1px;
                     }
-                    /* 하단 출처 목록 */
+                    /* 하단 출처 목록 — '관련글 더보기' 섹션과 동일한 디자인 */
                     .blog-references {
-                      margin-top: 3em;
+                      margin-top: 2.5em;
                     }
                     .blog-references h2 {
-                      font-size: 18px;
-                      font-weight: 700;
+                      font-size: 16px;
+                      font-weight: 600;
+                      color: #1a1a1a;
+                      padding-bottom: 8px;
                       margin: 0 0 12px;
+                      border-bottom: 1px solid #DA7F67;
                     }
                     .blog-references ol {
-                      padding-left: 1.4em;
+                      list-style: none;
+                      padding: 0;
                       margin: 0;
                     }
                     .blog-references li {
-                      font-size: 14px;
-                      color: #666;
-                      margin: 6px 0;
-                      line-height: 1.5;
+                      font-size: 15px;
+                      color: #555;
+                      margin: 2px 0;
+                      line-height: 1.6;
+                    }
+                    .blog-references .ref-num {
+                      color: #999;
                     }
                     .blog-references a {
-                      color: #8a8a8a;
+                      color: #555;
                       text-decoration: none;
                       word-break: break-all;
+                      transition: color 0.2s;
                     }
                     .blog-references a:hover {
-                      text-decoration: underline;
+                      color: #DA7F67;
                     }
                     .blog-references .ref-back {
                       color: #DA7F67;
                       word-break: normal;
+                      margin-left: 4px;
+                    }
+                    @media (min-width: 1024px) {
+                      .blog-references h2 {
+                        font-size: 21px;
+                        margin-bottom: 16px;
+                      }
+                      .blog-references li {
+                        font-size: 16px;
+                      }
                     }
                     /* 끝 의학 고지 — 본문과 떨어뜨림, 가로선 없음 */
                     .blog-disclaimer {
