@@ -413,8 +413,9 @@ const BlogDetail = () => {
     const el = document.getElementById(id)
     if (!el) return
     e.preventDefault()
-    const y = el.getBoundingClientRect().top + window.scrollY - HEADER_OFFSET
-    window.scrollTo({ top: y, behavior: "smooth" })
+    // 각주 이동 시 대상이 화면 중앙쯤에 오도록(맨 위에 붙으면 잘 안 보임)
+    const y = el.getBoundingClientRect().top + window.scrollY - window.innerHeight / 2
+    window.scrollTo({ top: Math.max(0, y), behavior: "smooth" })
   }, [])
 
   const handleTocClick = useCallback((id: string) => {
@@ -786,13 +787,13 @@ const BlogDetail = () => {
                     }
                     /* 하단 출처 목록 — 목차처럼 회색 테두리 박스(흰 배경), 밑줄도 테두리색과 동일 */
                     .blog-references {
-                      margin-top: 2.5em;
+                      margin-top: 4.5em;
                       background: #fff;
                       border: 1px solid #c8c8c8;
                       padding: 16px 20px;
                     }
                     .blog-references h2 {
-                      font-size: 16px;
+                      font-size: 19px;
                       font-weight: 600;
                       color: #1a1a1a;
                       padding-bottom: 8px;
@@ -831,7 +832,7 @@ const BlogDetail = () => {
                     }
                     @media (min-width: 1024px) {
                       .blog-references h2 {
-                        font-size: 21px;
+                        font-size: 25px;
                         margin-bottom: 16px;
                       }
                       .blog-references li {
