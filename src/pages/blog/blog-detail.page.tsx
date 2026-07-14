@@ -479,8 +479,11 @@ const BlogDetail = () => {
     )
   }
 
-  const publishedDate = post.publishedAt
-    ? new Date(post.publishedAt)
+  // 노출 날짜 = 어드민 최종 수정일(updatedAt). 목록 카드·JSON-LD dateModified와 동일 기준.
+  //   수정 전이면 updatedAt이 곧 작성 시점이라 작성일과 같고, 수정 후에는 최종 수정일이 된다.
+  const displayDateIso = post.updatedAt ?? post.publishedAt
+  const publishedDate = displayDateIso
+    ? new Date(displayDateIso)
         .toLocaleDateString("ko-KR", {
           year: "numeric",
           month: "2-digit",
