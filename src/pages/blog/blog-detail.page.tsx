@@ -3,7 +3,6 @@ import DOMPurify from "dompurify"
 import AppMaxWidth from "@/lib/components/layout/app-max-width.component"
 import Page from "@/lib/components/layout/page.component"
 import useResponsive from "@/lib/hooks/use-responsive"
-import { useScrollTrigger } from "@mui/material"
 import useLanguageValue from "@/lib/hooks/use-language-key"
 import { useTranslation } from "react-i18next"
 import { useParams, useNavigate, useSearchParams } from "react-router-dom"
@@ -175,20 +174,34 @@ const BlogDetail = () => {
   const noticesParam = searchParams.get("notices")
   const navigate = useNavigate()
   const { isDesktop } = useResponsive()
-  // 헤더는 hideOnScroll(스크롤 내리면 숨고 올리면 나타남). 목차 sticky top을 헤더 표시 여부에 맞춰 동적 조정.
-  // 헤더 실제 높이는 #header-height 요소를 런타임 측정(로고바+서브내비 = 대략 135px). 숨을 땐 위(24px)로.
-  const headerVisible = !useScrollTrigger()
-  const [headerH, setHeaderH] = useState(135)
+  // 헤더는 hideOnScroll(내리면 숨고 올리면 나타남) + Slide 애니메이션.
+  // 목차 sticky top을 "헤더의 실제 화면상 하단"에 매 프레임 맞춘다 → 슬라이드 도중에도 절대 안 가려짐.
+  //   - 높이를 재서 표시/숨김을 추정하지 않는다(추정하면 애니메이션 중 어긋나 헤더에 가림).
+  //   - #header-height는 AppBar의 일부만 감싸므로, AppBar 전체를 기준으로 잰다(데스크톱 검색바 등 포함).
+  const [tocTop, setTocTop] = useState(143)
   useEffect(() => {
-    const measure = () => {
-      const el = document.getElementById("header-height")
-      if (el) setHeaderH(Math.round(el.getBoundingClientRect().height))
+    const anchor = document.getElementById("header-height")
+    const bar = (anchor?.closest(".MuiAppBar-root") as HTMLElement | null) ?? anchor
+    if (!bar) return
+    let raf = 0
+    const update = () => {
+      raf = 0
+      // 헤더가 슬라이드로 올라가면 bottom이 작아지거나 음수 → 최소 24px로 수렴
+      const bottom = bar.getBoundingClientRect().bottom
+      setTocTop(Math.round(Math.max(24, bottom + 8)))
     }
-    measure()
-    window.addEventListener("resize", measure)
-    return () => window.removeEventListener("resize", measure)
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(update)
+    }
+    update()
+    window.addEventListener("scroll", onScroll, { passive: true })
+    window.addEventListener("resize", onScroll)
+    return () => {
+      window.removeEventListener("scroll", onScroll)
+      window.removeEventListener("resize", onScroll)
+      if (raf) cancelAnimationFrame(raf)
+    }
   }, [])
-  const tocTop = headerVisible ? headerH + 8 : 24
   const tv = useLanguageValue()
   const lang = i18n.language
 
@@ -520,7 +533,6 @@ const BlogDetail = () => {
                     &::-webkit-scrollbar {
                       display: none;
                     }
-                    transition: top 0.2s ease;
                   `,
                 ]}>
                 {tocItems.length > 0 && (
