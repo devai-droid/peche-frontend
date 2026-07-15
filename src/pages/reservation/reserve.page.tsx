@@ -17,6 +17,11 @@ import useLanguageQuery from "@/lib/hooks/use-language-query"
 import { useEventControllerFindMany } from "@/lib/orval/events/events"
 import { useProductControllerFindMany } from "@/lib/orval/products/products"
 import { AvailableReservationResultDto, Event, Product } from "@/lib/orval/model"
+import {
+  getChangedCartItemIds,
+  getInvalidCartItemIds,
+  isEventExpired,
+} from "@/features/product/utils/cart-validation.util"
 import dayjs from "dayjs"
 import utc from "dayjs/plugin/utc"
 import {
@@ -469,9 +474,7 @@ const SurgeryList = ({
         <div tw="mt-3 px-5 py-4 bg-primary text-white flex justify-between items-center">
           <div tw="text-[16px] md:text-[20px] font-semibold">
             {t("cart.totalPrice")}{" "}
-            <span tw="text-[12px] md:text-[14px] font-normal">
-              {t("cart.vatNotIncluded")}
-            </span>
+            <span tw="text-[12px] md:text-[14px] font-normal">{t("cart.vatNotIncluded")}</span>
           </div>
           <div tw="text-[18px] md:text-[22px] font-bold">
             {cart
@@ -610,7 +613,6 @@ const Reserve = () => {
     limit: 1000,
   })
 
-
   const buildExtraMemo = (baseMemo: string) => {
     const parts: string[] = []
     if (inquiry && consultCategories.length > 0) {
@@ -711,74 +713,25 @@ const Reserve = () => {
     return "A"
   }
 
-  const [memoRequiredType, setMemoRequiredType] = React.useState<"consult" | "package" | null>(
-    null,
-  )
+  const [memoRequiredType, setMemoRequiredType] = React.useState<"consult" | "package" | null>(null)
 
-  // 예약 가능 기준: 방문일이 아니라 "지금 이 이벤트가 노출(게시)기간 중인지"로 판정
-  // 노출 중이면 방문일과 무관하게 예약 가능, 노출이 끝났거나 아직 시작 전이면 만료(예약 불가) 처리
-  const isEventExpired = (_selected: typeof dayjs.prototype) => (event: Event) => {
-    const bundle = (event as any)?.bundle
-    const postStart = bundle?.postStartDate ? new Date(bundle.postStartDate).getTime() : null
-    const postEnd = bundle?.postEndDate ? new Date(bundle.postEndDate).getTime() : null
-    // 게시기간은 날짜만 의미 → 저장된 시각은 무시하고 KST(UTC+9) 날짜 단위로 비교
-    const KST = 9 * 60 * 60 * 1000
-    const DAY = 24 * 60 * 60 * 1000
-    const todayStart = Math.floor((Date.now() + KST) / DAY) * DAY - KST
-    const tomorrowStart = todayStart + DAY
-    if (postStart !== null && postStart >= tomorrowStart) return true // 아직 시작 전
-    if (postEnd !== null && postEnd < todayStart) return true // 이미 종료
-    return false
-  }
-
-  // 최신 목록 기준으로 체크된 항목 중 만료/삭제된 이벤트·상품 id 추출
+  // 카트 검증 로직은 사이드 장바구니(cart-view)와 공유 — cart-validation.util
   const getInvalidItemIds = (
     freshEventById: Map<string, Event>,
     freshProductById: Map<string, Product> | null,
-    selected: typeof dayjs.prototype,
-  ) => {
-    const ids: string[] = []
-    cart.forEach((item) => {
-      const id = item.event?.id || item.product?.id || ""
-      if (!checkedList.includes(id)) return
-      if (item.event) {
-        const fresh = freshEventById.get(id)
-        if (!fresh) ids.push(id) // 삭제된 이벤트
-        else if (isEventExpired(selected)(fresh)) ids.push(id) // 만료된 이벤트
-      } else if (item.product && freshProductById && !freshProductById.has(id)) {
-        ids.push(id) // 삭제된 상품 (목록 확보 시에만 판정)
-      }
-    })
-    return ids
-  }
+  ) => getInvalidCartItemIds(cart, checkedList, freshEventById, freshProductById)
 
-  // 담을 때 값과 최신 값이 다른(가격·이름·설명 등 변경된) 체크 항목 id — 같은 id로 정보만 바뀐 경우
   const getChangedItemIds = (
     freshEventById: Map<string, Event>,
     freshProductById: Map<string, Product> | null,
-  ) => {
-    const FIELDS = ["price", "discountPrice", "name", "description"] as const
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const isDiff = (a: any, b: any) => FIELDS.some((k) => (a?.[k] ?? null) !== (b?.[k] ?? null))
-    const ids: string[] = []
-    cart.forEach((item) => {
-      const id = item.event?.id || item.product?.id || ""
-      if (!checkedList.includes(id)) return
-      if (item.event) {
-        const fresh = freshEventById.get(id)
-        if (fresh && isDiff(item.event, fresh)) ids.push(id)
-      } else if (item.product && freshProductById) {
-        const fresh = freshProductById.get(id)
-        if (fresh && isDiff(item.product, fresh)) ids.push(id)
-      }
-    })
-    return ids
-  }
+  ) => getChangedCartItemIds(cart, checkedList, freshEventById, freshProductById)
 
   // 최신 이벤트/상품 목록 조회 (예약 클릭·모달 확인 공용)
   const fetchFresh = async () => {
     const [evRes, prRes] = await Promise.all([refetchEvents(), refetchProducts()])
-    const freshEventById = new Map((evRes.data?.items ?? liveEvents?.items ?? []).map((e) => [e.id, e]))
+    const freshEventById = new Map(
+      (evRes.data?.items ?? liveEvents?.items ?? []).map((e) => [e.id, e]),
+    )
     const prItems = prRes.data?.items ?? liveProducts?.items ?? []
     // 상품 목록을 못 받았으면(빈 배열) 상품은 건드리지 않음 — 정상 상품 오삭제 방지
     const freshProductById =
@@ -788,9 +741,8 @@ const Reserve = () => {
 
   // '모달 확인' — 최신 정보로 갱신(가격·이름·설명) + 만료/삭제된 이벤트·상품 자동 제거
   const handleRefreshCart = async () => {
-    const selected = selectedDatetime ? dayjs(selectedDatetime.replace("Z", "")) : dayjs()
     const { freshEventById, freshProductById } = await fetchFresh()
-    reconcileCartEvents(freshEventById, isEventExpired(selected), freshProductById ?? undefined)
+    reconcileCartEvents(freshEventById, isEventExpired, freshProductById ?? undefined)
     setEventPeriodAlert(false)
   }
 
@@ -822,9 +774,8 @@ const Reserve = () => {
     }
 
     // 1) 이벤트·상품 유효성 체크 — 옛 장바구니 값이 아닌 서버 최신값으로 (만료/삭제 차단)
-    const selected = dayjs(selectedDatetime.replace("Z", ""))
     const { freshEventById, freshProductById } = await fetchFresh()
-    if (getInvalidItemIds(freshEventById, freshProductById, selected).length > 0) {
+    if (getInvalidItemIds(freshEventById, freshProductById).length > 0) {
       setCartAlertMode("removed") // 예약 불가(삭제) 안내
       setEventPeriodAlert(true)
       return
@@ -1231,7 +1182,10 @@ const Reserve = () => {
         </div>
       </Modal>
 
-      <Modal open={eventPeriodAlert} onClose={() => setEventPeriodAlert(false)} width="max-w-[400px]">
+      <Modal
+        open={eventPeriodAlert}
+        onClose={() => setEventPeriodAlert(false)}
+        width="max-w-[400px]">
         <div tw="font-pretendard">
           <div tw="text-[16px] md:text-[18px] font-semibold mb-4 leading-snug">
             {cartAlertMode === "changed"

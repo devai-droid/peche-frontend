@@ -5,6 +5,7 @@ import React, { useEffect, useLayoutEffect } from "react"
 import { useTranslation } from "react-i18next"
 import tw from "twin.macro"
 import useCart, { CartItem } from "../hooks/use-cart"
+import useCartFreshCheck, { CartCheckResult } from "../hooks/use-cart-fresh-check"
 import useLanguageValue from "@/lib/hooks/use-language-key"
 import { Event } from "@/lib/orval/model"
 import { Language } from "@/lib/locales/i18n.config"
@@ -22,6 +23,43 @@ import dayjs from "dayjs"
 import utc from "dayjs/plugin/utc"
 
 dayjs.extend(utc)
+
+/**
+ * "예약하기"로 예약 페이지에 넘어가기 전 검증에서 만료/삭제·가격변경이 잡혔을 때 뜨는 안내 모달.
+ * 예약 페이지의 안내 모달과 동일한 문구 키를 쓴다. 확인 시 닫기만 하면(장바구니는 이미 최신값으로 정리됨)
+ * 사용자가 바뀐 내용을 보고 다시 예약을 진행한다.
+ */
+const CartFreshCheckModal = ({
+  mode,
+  onClose,
+}: {
+  mode: CartCheckResult | null
+  onClose: () => void
+}) => {
+  const { t } = useTranslation()
+  return (
+    <Modal open={mode !== null && mode !== "ok"} onClose={onClose} width="max-w-[400px]">
+      <div tw="font-pretendard">
+        <div tw="text-[16px] md:text-[18px] font-semibold mb-4 leading-snug">
+          {mode === "changed"
+            ? t("reservePage.productChangedTitle")
+            : t("reservePage.eventExpiredTitle")}
+        </div>
+        <div tw="text-neutral70 text-[14px] md:text-[16px] mb-6 leading-relaxed">
+          {mode === "changed"
+            ? t("reservePage.productChangedDesc")
+            : t("reservePage.eventExpiredDesc")}
+        </div>
+        <Button
+          tw="w-full h-[40px] text-[13px] md:text-[15px]"
+          style={{ variant: "filled", color: "point", size: "sm" }}
+          onClick={onClose}>
+          {t("common.confirm")}
+        </Button>
+      </div>
+    </Modal>
+  )
+}
 
 const BottomButton = tw.button`flex-1 h-16 flex justify-center items-center gap-2 text-white bg-secondary font-semibold`
 const InquiryButton = tw.button`rounded-lg w-16 h-16 flex justify-center items-center flex-col`
@@ -128,10 +166,23 @@ const SurgeryList = () => {
   } = useCart()
 
   const navigate = useCustomNavigate()
+  const { checkAndReconcile } = useCartFreshCheck()
   // 체크박스 UI 상태
   const [inquiryChecked, setInquiryChecked] = React.useState(inquiry)
   // 모달 관련
   const [showInquiryModal, setShowInquiryModal] = React.useState(false)
+  // 예약 이동 전 상품 검증 결과 안내 모달 (null이면 닫힘)
+  const [freshCheckAlert, setFreshCheckAlert] = React.useState<CartCheckResult | null>(null)
+
+  // "예약하기" — 예약 페이지로 넘어가기 전 서버 최신값으로 만료·삭제·가격변경 검증
+  const handleReserve = async () => {
+    const result = await checkAndReconcile()
+    if (result !== "ok") {
+      setFreshCheckAlert(result) // 만료/삭제 → 장바구니 정리, 가격변경 → 최신가 갱신 (안내 후 멈춤)
+      return
+    }
+    navigate("/reservation/new", { state: { inquiryMemo } })
+  }
 
   // 마지막 상품 임포트(=최신 상품 생성) 시각 — 장바구니 안내문구용. KST 날짜로 표시.
   const { data: lastImportedAt } = useQuery({
@@ -143,7 +194,9 @@ const SurgeryList = () => {
       }).then((res) => res.lastImportedAt),
     staleTime: 1000 * 60 * 10,
   })
-  const lastImportedDate = lastImportedAt ? dayjs.utc(lastImportedAt).add(9, "hour").format("YYYY.MM.DD") : null
+  const lastImportedDate = lastImportedAt
+    ? dayjs.utc(lastImportedAt).add(9, "hour").format("YYYY.MM.DD")
+    : null
 
   useEffect(() => {
     if (justAddedId && justAddedId !== "" && !checkedList.includes(justAddedId)) {
@@ -337,13 +390,7 @@ const SurgeryList = () => {
       </div>
       <Button
         disabled={cart.length === 0 && !inquiryChecked && !usePackageChecked}
-        onClick={() => {
-          navigate("/reservation/new", {
-            state: {
-              inquiryMemo,
-            },
-          })
-        }}
+        onClick={handleReserve}
         tw="mt-4 font-pretendard text-[15px] md:text-[17px]"
         style={{
           flexible: true,
@@ -354,6 +401,8 @@ const SurgeryList = () => {
       <div tw="mt-4 text-[13px] md:text-[14px] font-pretendard text-neutral70 whitespace-pre-wrap tracking-tight">
         {t("productDetail.reserveDescription")}
       </div>
+
+      <CartFreshCheckModal mode={freshCheckAlert} onClose={() => setFreshCheckAlert(null)} />
 
       <Modal
         open={showInquiryModal}
@@ -791,10 +840,23 @@ export const BottomButtons = ({
 }) => {
   const { t, i18n } = useTranslation()
   const { setInquiry } = useCart()
+  const { checkAndReconcile } = useCartFreshCheck()
   const language = i18n.language as Language
 
   const navigate = useCustomNavigate()
   const [openWeChatModal, setOpenWeChatModal] = React.useState(false)
+  // 예약 이동 전 상품 검증 결과 안내 모달 (null이면 닫힘)
+  const [freshCheckAlert, setFreshCheckAlert] = React.useState<CartCheckResult | null>(null)
+
+  // "예약하기"(모바일 탭바) — 예약 페이지로 넘어가기 전 서버 최신값으로 만료·삭제·가격변경 검증
+  const handleReserve = async () => {
+    const result = await checkAndReconcile()
+    if (result !== "ok") {
+      setFreshCheckAlert(result)
+      return
+    }
+    navigate("/reservation/new")
+  }
 
   const inquiryButtons: {
     id: number
@@ -891,12 +953,7 @@ export const BottomButtons = ({
           {t("button.inquiry")}
         </BottomButton>
         <div tw="w-px bg-neutral" />
-        <BottomButton
-          onClick={() => {
-            navigate("/reservation/new")
-          }}>
-          {t("button.reserve")}
-        </BottomButton>
+        <BottomButton onClick={handleReserve}>{t("button.reserve")}</BottomButton>
       </div>
       {showInquiryButtons && (
         <div tw="flex gap-3 absolute bottom-full px-4 py-2">
@@ -940,6 +997,7 @@ export const BottomButtons = ({
           </div>
         </div>
       </Modal>
+      <CartFreshCheckModal mode={freshCheckAlert} onClose={() => setFreshCheckAlert(null)} />
     </div>
   )
 }
