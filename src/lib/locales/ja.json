@@ -348,6 +348,7 @@
   },
   "cart": {
     "shoppingCart": "ショッピングカート",
+    "priceChangeNotice": "ご予約確定前に、{{date}} より前にカートへ追加された商品は、価格を含む商品情報が変更される場合があります。",
     "deleteSelection": "選択項目を削除",
     "noSelection": "No selection yet",
     "freePrice": "0KRW",

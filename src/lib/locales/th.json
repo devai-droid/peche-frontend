@@ -348,6 +348,7 @@
   },
   "cart": {
     "shoppingCart": "รถเข็นสินค้า",
+    "priceChangeNotice": "ก่อนยืนยันการจอง สินค้าที่เพิ่มลงตะกร้าก่อนวันที่ {{date}} อาจมีข้อมูลสินค้ารวมถึงราคาที่เปลี่ยนแปลงไป",
     "deleteSelection": "ลบรายการที่เลือก",
     "noSelection": "No selection yet",
     "freePrice": "0วอน",

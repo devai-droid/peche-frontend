@@ -348,6 +348,7 @@
   },
   "cart": {
     "shoppingCart": "購物車",
+    "priceChangeNotice": "預約確認前，於 {{date}} 之前加入購物車的商品，包含價格在內的商品資訊可能已變更。",
     "deleteSelection": "刪除所選內容",
     "noSelection": "No selection yet",
     "freePrice": "0韓元",

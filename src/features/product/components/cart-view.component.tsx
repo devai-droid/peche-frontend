@@ -16,6 +16,12 @@ import InstaImg from "@/assets/images/sns/instagram.png"
 import wechatQrImg from "@/assets/images/wechat-qr.png"
 import useCustomNavigate from "@/lib/hooks/use-custom-navigate"
 import Modal from "@/lib/components/modal/modal.component"
+import { useQuery } from "@tanstack/react-query"
+import { customInstance } from "@/lib/api/http-client"
+import dayjs from "dayjs"
+import utc from "dayjs/plugin/utc"
+
+dayjs.extend(utc)
 
 const BottomButton = tw.button`flex-1 h-16 flex justify-center items-center gap-2 text-white bg-secondary font-semibold`
 const InquiryButton = tw.button`rounded-lg w-16 h-16 flex justify-center items-center flex-col`
@@ -127,6 +133,18 @@ const SurgeryList = () => {
   // 모달 관련
   const [showInquiryModal, setShowInquiryModal] = React.useState(false)
 
+  // 마지막 상품 임포트(=최신 상품 생성) 시각 — 장바구니 안내문구용. KST 날짜로 표시.
+  const { data: lastImportedAt } = useQuery({
+    queryKey: ["product-last-imported-at"],
+    queryFn: () =>
+      customInstance<{ lastImportedAt: string | null }>({
+        url: "/api/products/last-imported-at",
+        method: "GET",
+      }).then((res) => res.lastImportedAt),
+    staleTime: 1000 * 60 * 10,
+  })
+  const lastImportedDate = lastImportedAt ? dayjs.utc(lastImportedAt).add(9, "hour").format("YYYY.MM.DD") : null
+
   useEffect(() => {
     if (justAddedId && justAddedId !== "" && !checkedList.includes(justAddedId)) {
       setCheckedList([...checkedList, justAddedId])
@@ -197,6 +215,12 @@ const SurgeryList = () => {
             {t("cart.deleteSelection")}
           </Button>
         </div>
+
+        {lastImportedDate && (
+          <div tw="pt-3 text-[12px] md:text-[13px] text-neutral50 leading-[150%]">
+            {t("cart.priceChangeNotice", { date: lastImportedDate })}
+          </div>
+        )}
 
         <div
           tw="flex-1 overflow-auto mt-2"

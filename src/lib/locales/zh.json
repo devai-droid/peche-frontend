@@ -348,6 +348,7 @@
   },
   "cart": {
     "shoppingCart": "购物车",
+    "priceChangeNotice": "预约确认前，于 {{date}} 之前加入购物车的商品，包括价格在内的商品信息可能已变更。",
     "deleteSelection": "删除所选内容",
     "noSelection": "No selection yet",
     "freePrice": "0韩元",
