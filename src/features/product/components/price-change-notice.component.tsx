@@ -33,7 +33,7 @@ const PriceChangeNotice = ({
       {icon && (
         <span
           aria-hidden
-          tw="inline-flex shrink-0 items-center justify-center align-middle w-[18px] h-[18px] md:w-[20px] md:h-[20px] mr-1.5 rounded-[5px] bg-tertiaryDark text-white text-[12px] md:text-[13px] font-bold leading-none">
+          tw="inline-flex shrink-0 items-center justify-center align-middle w-[18px] h-[18px] md:w-[20px] md:h-[20px] mr-1.5 rounded-[5px] bg-primary text-white text-[12px] md:text-[13px] font-bold leading-none">
           !
         </span>
       )}
