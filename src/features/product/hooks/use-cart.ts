@@ -2,6 +2,7 @@
 import { Event, Product } from "@/lib/orval/model"
 import React, { useRef } from "react"
 import { useLocalStorage } from "usehooks-ts"
+import { localizedItemName } from "@/features/product/utils/cart-validation.util"
 
 export interface CartItem {
   event?: Event
@@ -211,20 +212,24 @@ const useCart = () => {
     })
     setCart(newCart)
   }
-  // 최신 이벤트 목록 기준으로 카트 정리: 유효 항목은 최신 데이터로 갱신, 만료/삭제 항목은 제거 (단일 setCart)
+  // 최신 이벤트/상품 목록 기준으로 카트 정리: 유효 항목은 최신 데이터로 갱신, 만료/삭제 항목은 제거 (단일 setCart)
+  // 상품은 임포트로 id가 매번 바뀌므로 "현재 언어 이름"으로 매칭 — 이름이 남아있으면 최신값(새 id·가격·설명)으로 교체,
+  // 이름이 사라졌으면(이름 변경·삭제) 제거. 이벤트는 id 기준.
   const reconcileCartEvents = (
     freshEventById: Map<string, Event>,
     isExpired: (event: Event) => boolean,
-    freshProductById?: Map<string, Product>,
+    freshProductByName?: Map<string, Product> | null,
+    lang = "ko",
   ) => {
+    const idRemap = new Map<string, string>() // 이름매칭으로 상품 id가 바뀐 경우 old→new (체크상태 이관용)
     const newCart = cart
       .filter((i) => {
         if (i.event) {
           const fresh = freshEventById.get(i.event.id)
           return !!fresh && !isExpired(fresh) // 목록에 없거나 만료면 제거
         }
-        if (i.product && freshProductById) {
-          return freshProductById.has(i.product.id) // 삭제된 상품 제거 (목록 확보 시에만)
+        if (i.product && freshProductByName) {
+          return freshProductByName.has(localizedItemName(i.product, lang)) // 이름 없으면(변경·삭제) 제거
         }
         return true
       })
@@ -233,16 +238,24 @@ const useCart = () => {
           const fresh = freshEventById.get(i.event.id)
           return fresh ? { ...i, event: fresh } : i // 이벤트 최신값으로 갱신
         }
-        if (i.product && freshProductById) {
-          const fresh = freshProductById.get(i.product.id)
-          return fresh ? { ...i, product: fresh } : i // 상품도 최신값(가격·이름·설명 등)으로 갱신
+        if (i.product && freshProductByName) {
+          const fresh = freshProductByName.get(localizedItemName(i.product, lang))
+          if (fresh) {
+            if (fresh.id !== i.product.id) idRemap.set(i.product.id, fresh.id) // id 바뀜 → 체크상태 이관
+            return { ...i, product: fresh } // 이름 매칭된 최신값(가격·설명·id 등)으로 교체
+          }
+          return i
         }
         return i
       })
     setCart(newCart)
+    const remapId = (id: string) => idRemap.get(id) ?? id
     const remaining = new Set(newCart.map((i) => i.event?.id || i.product?.id || ""))
-    setCheckedList(checkedList.filter((id) => remaining.has(id)))
-    if (justAddedId && !remaining.has(justAddedId)) setJustAddedId("")
+    setCheckedList(checkedList.map(remapId).filter((id) => remaining.has(id)))
+    if (justAddedId) {
+      const nj = remapId(justAddedId)
+      setJustAddedId(remaining.has(nj) ? nj : "")
+    }
   }
 
   const backupToCookie = () => {
