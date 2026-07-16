@@ -191,7 +191,7 @@
     "normalProducts": "일반시술",
     "productList": "시술 목록",
     "addProductYouWant": "원하시는 시술을\n선택해주세요.",
-    "reserveDescription": "모든 시술 VAT 10% 별도입니다.\n결제는 내원시 진행됩니다.",
+    "reserveDescription": "모든 시술 VAT 10% 별도이며, 결제는 내원시 진행됩니다.",
     "reserveButtonActiveText1": "*예약 시간을 선택해주세요",
     "reserveButtonActiveText2": "*필수 동의사항을 체크해주세요",
     "totalPrice": "예상 시술 금액 (부가세 별도)",

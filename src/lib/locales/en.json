@@ -191,7 +191,7 @@
     "normalProducts": "Treatments",
     "productList": "Treatment list",
     "addProductYouWant": "Select treatment\nof your choice.",
-    "reserveDescription": "All treatments are subject to a 10% VAT.\nPayment is due upon arrival.",
+    "reserveDescription": "All treatments are subject to a 10% VAT, and payment is due upon arrival.",
     "reserveButtonActiveText1": "*Please select a reservation time",
     "reserveButtonActiveText2": "*Please check the required consents",
     "totalPrice": "Estimated Treatment Price (*VAT not included)",

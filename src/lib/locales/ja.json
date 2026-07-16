@@ -191,7 +191,7 @@
     "normalProducts": "一般手術",
     "productList": "施術リスト",
     "addProductYouWant": "ご希望の施術を\nお選びください。",
-    "reserveDescription": "すべてのトリートメントには10%のVATが加算されます。\nお支払いはご到着時にお願いいたします。",
+    "reserveDescription": "すべてのトリートメントには10%のVATが加算され、お支払いはご到着時にお願いいたします。",
     "reserveButtonActiveText1": "*予約時間を選択してください",
     "reserveButtonActiveText2": "*必須同意事項を確認してください",
     "totalPrice": "予想施術種類 (*付加価値税別途)",

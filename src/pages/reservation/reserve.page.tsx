@@ -500,6 +500,9 @@ const SurgeryList = ({
             {t("cart.won")}
           </div>
         </div>
+        <div tw="mt-3 text-[13px] md:text-[14px] font-pretendard text-neutral70 leading-[150%]">
+          {t("productDetail.reserveDescription")}
+        </div>
       </div>
 
       {/* 모달 (cart와 완전 동일) */}
@@ -1155,9 +1158,6 @@ const Reserve = () => {
                 onClick={openConfirmModal}>
                 {t("button.reserve")}
               </Button>
-              <div tw="mt-4 text-[13px] md:text-[14px] font-pretendard text-neutral70 whitespace-pre-wrap tracking-tight leading-[150%]">
-                {t("productDetail.reserveDescription")}
-              </div>
             </div>
           </div>
 
