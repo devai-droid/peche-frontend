@@ -34,7 +34,8 @@ const PriceChangeNotice = ({
         <span
           aria-hidden
           css={[
-            tw`inline-flex shrink-0 items-center justify-center bg-secondary3 text-white font-bold leading-none`,
+            // PC 전용 노출(모바일 장바구니에선 아이콘 숨김)
+            tw`hidden md:inline-flex shrink-0 items-center justify-center bg-secondary3 text-white font-bold leading-none`,
             // 직각 사각형. compact는 본문 글자 크기에 맞춰 작게.
             compact
               ? tw`w-[14px] h-[14px] md:w-[15px] md:h-[15px] text-[10px] md:text-[11px]`
