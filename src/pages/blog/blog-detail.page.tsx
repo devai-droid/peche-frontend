@@ -727,7 +727,8 @@ const BlogDetail = () => {
                       height: auto;
                       border-radius: 2px;
                       display: block;
-                      margin-top: 2em;
+                      /* 좌우 auto → 컨테이너보다 좁은 이미지는 가운데 정렬(꽉 찬 이미지는 변화 없음) */
+                      margin: 2em auto 0;
                     }
                     /* 표 */
                     table {
