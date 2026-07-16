@@ -807,7 +807,7 @@ const BlogDetail = () => {
                     /* 이미지 캡션 — 본문 검은색과 분리해 진한 회색, 가운데 정렬 */
                     .blog-caption {
                       text-align: center;
-                      margin-top: -0.4em;
+                      margin-top: 0.9em;
                       margin-bottom: 2.6em;
                     }
                     .blog-caption em {
