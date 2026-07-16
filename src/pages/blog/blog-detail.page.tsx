@@ -21,6 +21,11 @@ interface TocItem {
   level: number
 }
 
+// 출처(각주) 텍스트 끝에 마케터가 붙인 화살표 기호(→ ➡ » 등)를 렌더 시점에 제거.
+//   재업로드 없이 옛 글에도 적용된다. 끝부분만 제거하므로 본문 중간 화살표는 건드리지 않음.
+const stripTrailingArrow = (s: string): string =>
+  s.replace(/[\s←-⇿➡➔-➿️»›]+$/u, "")
+
 function preprocessContent(html: string, lang: string): string {
   const parser = new DOMParser()
   // 인용 출처: 괄호 안 내부 링크(PMID 등)를 괄호 전체 링크로 전환하고 PMID 텍스트는 제거
@@ -107,6 +112,12 @@ function preprocessContent(html: string, lang: string): string {
         .replace(/[^\wㄱ-ㅎ가-힣-]/g, "")
     }
     if (!slug) return
+    // 본문 href는 URL 인코딩된 슬러그(%EC%..)로 저장됨 → 디코딩해야 posts.slug(디코딩 상태)와 매칭돼 관련글 제목/링크가 연동됨
+    try {
+      slug = decodeURIComponent(slug)
+    } catch {
+      /* 잘못된 인코딩이면 원본 유지 */
+    }
     el.setAttribute("href", `/${lang}/blog/${slug}`)
     el.setAttribute("data-slug", slug)
     el.classList.add("blog-related-link")
@@ -346,8 +357,11 @@ const BlogDetail = () => {
         const n = known ?? refs.length + 1
         if (isFirst) {
           numByHref.set(href, n)
-          // 목록 텍스트: 바깥 괄호 벗겨 저장
-          refs.push({ href, html: a.innerHTML.trim().replace(/^\(/, "").replace(/\)$/, "").trim() })
+          // 목록 텍스트: 바깥 괄호 벗기고 끝의 화살표 기호(→ 등) 제거
+          refs.push({
+            href,
+            html: stripTrailingArrow(a.innerHTML.trim().replace(/^\(/, "").replace(/\)$/, "").trim()),
+          })
         }
         const sup = doc.createElement("sup")
         sup.className = "cite-ref"
