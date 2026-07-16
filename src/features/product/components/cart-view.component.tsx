@@ -398,7 +398,7 @@ const SurgeryList = () => {
       </div>
       {lastImportedDate && (
         <div tw="mt-2">
-          <PriceChangeNotice date={lastImportedDate} compact icon />
+          <PriceChangeNotice date={lastImportedDate} compact />
         </div>
       )}
 
