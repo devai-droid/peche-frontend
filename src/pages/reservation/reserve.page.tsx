@@ -1155,7 +1155,7 @@ const Reserve = () => {
                 onClick={openConfirmModal}>
                 {t("button.reserve")}
               </Button>
-              <div tw="mt-4 text-[13px] md:text-[14px] font-pretendard text-neutral70 whitespace-pre-wrap tracking-tight">
+              <div tw="mt-4 text-[13px] md:text-[14px] font-pretendard text-neutral70 whitespace-pre-wrap tracking-tight leading-[150%]">
                 {t("productDetail.reserveDescription")}
               </div>
             </div>
