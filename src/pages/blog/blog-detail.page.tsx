@@ -807,10 +807,15 @@ const BlogDetail = () => {
                     /* 이미지 캡션 — 본문 검은색과 분리해 진한 회색, 가운데 정렬 */
                     .blog-caption {
                       text-align: center;
-                      margin-top: 0.9em;
+                      margin-top: -0.4em;
                       margin-bottom: 2.6em;
                     }
                     .blog-caption em {
+                      /* 이미지와 같은 문단에 있으므로 블록으로 만들어 이미지-캡션 사이 간격 확보 */
+                      display: block;
+                      margin-top: 0.9em;
+                      /* 캡션이 두 줄로 넘어갈 때(모바일) 줄 간격이 본문값을 물려받아 벌어지는 것 방지 */
+                      line-height: 1.45;
                       color: #999;
                       font-size: 0.875em;
                       font-style: normal;
