@@ -9,6 +9,11 @@ const KAKAO_SDK_URL = "https://t1.kakaocdn.net/kakao_js_sdk/2.7.9/kakao.min.js"
 const KAKAO_SDK_INTEGRITY =
   "sha384-JpLApTkB8lPskhVMhT+m5Ln8aHlnS0bsIexhaak0jOhAkMYedQoVghPfSpjNi9K1"
 
+// JS 앱 키. env(.env.{stage})에 값이 있으면 그것을, 없으면 공개 JS 키로 폴백.
+// 기존 index.html이 전 환경에서 이 키를 하드코딩해 쓰던 동작과 동일하게 맞춘다.
+// (dev 환경의 .env.dev에는 카카오 키가 없어 폴백이 필요함)
+const KAKAO_JS_KEY = env.AUTH.KAKAO_APP_JAVASCRIPT_KEY || "5313d72500d7dac2b5295425113bf8e3"
+
 let loadPromise: Promise<void> | null = null
 
 const injectScript = () =>
@@ -39,6 +44,6 @@ export const ensureKakaoSDK = async (): Promise<void> => {
   // @ts-ignore
   if (window.Kakao && !window.Kakao.isInitialized()) {
     // @ts-ignore
-    window.Kakao.init(env.AUTH.KAKAO_APP_JAVASCRIPT_KEY)
+    window.Kakao.init(KAKAO_JS_KEY)
   }
 }
