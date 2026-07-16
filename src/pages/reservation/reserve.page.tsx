@@ -27,6 +27,7 @@ import dayjs from "dayjs"
 import utc from "dayjs/plugin/utc"
 import { useQuery } from "@tanstack/react-query"
 import { customInstance } from "@/lib/api/http-client"
+import PriceChangeNotice from "@/features/product/components/price-change-notice.component"
 import {
   reservationControllerGetAvailableReservationByDayPublic,
   useReservationControllerCreate,
@@ -1088,8 +1089,8 @@ const Reserve = () => {
             {t("reservePage.shoppingCart")}
           </H1>
           {lastImportedDate && (
-            <div tw="pb-10 text-center text-[12px] md:text-[13px] font-pretendard text-neutral50 leading-[150%]">
-              {t("cart.priceChangeNotice", { date: lastImportedDate })}
+            <div tw="pb-10 text-center">
+              <PriceChangeNotice date={lastImportedDate} />
             </div>
           )}
 

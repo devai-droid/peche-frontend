@@ -349,6 +349,8 @@
   "cart": {
     "shoppingCart": "Shopping Cart",
     "priceChangeNotice": "Before your booking is confirmed, items added to your cart before {{date}} may have updated information, including price.",
+    "priceChangeNoticeLine1": "Before your booking is confirmed, items added to your cart before {{date}}",
+    "priceChangeNoticeLine2": "may have updated information, including price.",
     "deleteSelection": "Delete Selected",
     "noSelection": "No selection yet",
     "freePrice": "0KRW",

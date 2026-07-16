@@ -19,6 +19,7 @@ import useCustomNavigate from "@/lib/hooks/use-custom-navigate"
 import Modal from "@/lib/components/modal/modal.component"
 import { useQuery } from "@tanstack/react-query"
 import { customInstance } from "@/lib/api/http-client"
+import PriceChangeNotice from "@/features/product/components/price-change-notice.component"
 import dayjs from "dayjs"
 import utc from "dayjs/plugin/utc"
 
@@ -396,8 +397,8 @@ const SurgeryList = () => {
         {t("productDetail.reserveDescription")}
       </div>
       {lastImportedDate && (
-        <div tw="mt-2 text-[12px] md:text-[13px] font-pretendard text-neutral50 leading-[150%]">
-          {t("cart.priceChangeNotice", { date: lastImportedDate })}
+        <div tw="mt-2">
+          <PriceChangeNotice date={lastImportedDate} alwaysBreak />
         </div>
       )}
 

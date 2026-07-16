@@ -349,6 +349,8 @@
   "cart": {
     "shoppingCart": "장바구니",
     "priceChangeNotice": "예약 확정 전, {{date}} 이전에 담아둔 상품의 경우 가격을 포함한 상품 정보가 변경될 수 있습니다.",
+    "priceChangeNoticeLine1": "예약 확정 전, {{date}} 이전에 담아둔 상품의 경우",
+    "priceChangeNoticeLine2": "가격을 포함한 상품 정보가 변경될 수 있습니다.",
     "deleteSelection": "선택삭제",
     "noSelection": "선택한 시술이 없습니다.",
     "freePrice": "0원",
