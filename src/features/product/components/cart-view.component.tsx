@@ -269,12 +269,6 @@ const SurgeryList = () => {
           </Button>
         </div>
 
-        {lastImportedDate && (
-          <div tw="pt-3 text-[12px] md:text-[13px] text-neutral50 leading-[150%]">
-            {t("cart.priceChangeNotice", { date: lastImportedDate })}
-          </div>
-        )}
-
         <div
           tw="flex-1 overflow-auto mt-2"
           css={{
@@ -401,6 +395,11 @@ const SurgeryList = () => {
       <div tw="mt-4 text-[13px] md:text-[14px] font-pretendard text-neutral70 whitespace-pre-wrap tracking-tight">
         {t("productDetail.reserveDescription")}
       </div>
+      {lastImportedDate && (
+        <div tw="mt-2 text-[12px] md:text-[13px] font-pretendard text-neutral50 leading-[150%]">
+          {t("cart.priceChangeNotice", { date: lastImportedDate })}
+        </div>
+      )}
 
       <CartFreshCheckModal mode={freshCheckAlert} onClose={() => setFreshCheckAlert(null)} />
 

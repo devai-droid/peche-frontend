@@ -25,6 +25,8 @@ import {
 } from "@/features/product/utils/cart-validation.util"
 import dayjs from "dayjs"
 import utc from "dayjs/plugin/utc"
+import { useQuery } from "@tanstack/react-query"
+import { customInstance } from "@/lib/api/http-client"
 import {
   reservationControllerGetAvailableReservationByDayPublic,
   useReservationControllerCreate,
@@ -39,6 +41,8 @@ import { useTranslation } from "react-i18next"
 import { userControllerUpdateMine } from "@/lib/orval/users/users"
 import { useMe } from "@/features/user/hooks/use-user"
 import Modal from "@/lib/components/modal/modal.component"
+
+dayjs.extend(utc)
 
 /* ---------------- Small UI ---------------- */
 const H1 = tw.h1`text-xl font-bold`
@@ -604,6 +608,20 @@ const Reserve = () => {
   const language = i18n.language as Language
   const { user: me } = useMe()
 
+  // 마지막 상품 임포트 시각 — 장바구니 안내문구용. KST 날짜로 표시.
+  const { data: lastImportedAt } = useQuery({
+    queryKey: ["product-last-imported-at"],
+    queryFn: () =>
+      customInstance<{ lastImportedAt: string | null }>({
+        url: "/api/products/last-imported-at",
+        method: "GET",
+      }).then((res) => res.lastImportedAt),
+    staleTime: 1000 * 60 * 10,
+  })
+  const lastImportedDate = lastImportedAt
+    ? dayjs.utc(lastImportedAt).add(9, "hour").format("YYYY.MM.DD")
+    : null
+
   // 카트 항목 유효성 판정을 위한 최신 이벤트 목록 (예약 클릭/새로고침 시 refetch)
   const langQuery = useLanguageQuery()
   const { data: liveEvents, refetch: refetchEvents } = useEventControllerFindMany({
@@ -1066,9 +1084,14 @@ const Reserve = () => {
             </Button>
           </div> */}
 
-          <H1 tw="pt-16 md:pt-10 pb-10 text-[24px] lg:text-[30px] text-center">
+          <H1 tw="pt-16 md:pt-10 pb-3 text-[24px] lg:text-[30px] text-center">
             {t("reservePage.shoppingCart")}
           </H1>
+          {lastImportedDate && (
+            <div tw="pb-10 text-center text-[12px] md:text-[13px] font-pretendard text-neutral50 leading-[150%]">
+              {t("cart.priceChangeNotice", { date: lastImportedDate })}
+            </div>
+          )}
 
           <div tw="flex flex-col lg:flex-row gap-12 w-full">
             {/* ---------------- LEFT ---------------- */}
