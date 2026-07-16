@@ -1090,7 +1090,7 @@ const Reserve = () => {
           </H1>
           {lastImportedDate && (
             <div tw="pb-10 text-center">
-              <PriceChangeNotice date={lastImportedDate} />
+              <PriceChangeNotice date={lastImportedDate} icon />
             </div>
           )}
 

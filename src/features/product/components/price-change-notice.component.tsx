@@ -10,9 +10,13 @@ import tw from "twin.macro"
 const PriceChangeNotice = ({
   date,
   alwaysBreak = false,
+  icon = false,
+  compact = false,
 }: {
   date: string
   alwaysBreak?: boolean
+  icon?: boolean
+  compact?: boolean
 }) => {
   const { t } = useTranslation()
   // 날짜가 들어간 1줄 문구를 날짜값 위치에서 쪼개, 날짜만 별도 색상 span으로 렌더
@@ -20,7 +24,19 @@ const PriceChangeNotice = ({
   const [before, after] = line1.split(date)
   const line2 = t("cart.priceChangeNoticeLine2")
   return (
-    <div tw="text-[16px] md:text-[20px] font-pretendard text-neutral70 leading-[150%]">
+    <div
+      css={[
+        tw`font-pretendard text-neutral70 leading-[150%]`,
+        // compact(사이드 장바구니): '결제는 내원시 진행됩니다' 문구와 동일 크기 / 기본(예약페이지): 크게
+        compact ? tw`text-[13px] md:text-[14px]` : tw`text-[16px] md:text-[20px]`,
+      ]}>
+      {icon && (
+        <span
+          aria-hidden
+          tw="inline-flex shrink-0 items-center justify-center align-middle w-[18px] h-[18px] md:w-[20px] md:h-[20px] mr-1.5 rounded-[5px] bg-tertiaryDark text-white text-[12px] md:text-[13px] font-bold leading-none">
+          !
+        </span>
+      )}
       {before}
       <span tw="text-tertiaryDark">{date}</span>
       {after}{" "}
