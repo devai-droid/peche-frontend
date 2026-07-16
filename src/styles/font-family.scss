@@ -1,3 +1,31 @@
-@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.6/dist/web/static/pretendard.css");
-@import url("https://fonts.googleapis.com/earlyaccess/nanumgothic.css");
-@import url("https://fonts.googleapis.com/css2?family=Inter");
+// 웹폰트 자체 호스팅 (중국 접속 개선)
+// 외부 CDN(구글 폰트·jsdelivr)은 중국에서 차단·지연되어 렌더링을 막으므로,
+// 폰트 파일을 프로젝트에 포함해 자사 도메인(CloudFront)에서 제공한다.
+// 모든 @font-face는 font-display: swap — 폰트 로드 전에도 시스템 폰트로 즉시 렌더링.
+
+// Pretendard: 변수 폰트 1개 파일로 전체 굵기(45~920) 커버
+@font-face {
+  font-family: "Pretendard";
+  font-weight: 45 920;
+  font-style: normal;
+  font-display: swap;
+  src: url("../assets/fonts/pretendard/PretendardVariable.woff2") format("woff2-variations");
+}
+
+// Nanum Gothic: regular 1굵기 (기존 외부 import와 동일)
+@font-face {
+  font-family: "Nanum Gothic";
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url("../assets/fonts/nanum-gothic/nanum-gothic-korean-400-normal.woff2") format("woff2");
+}
+
+// Inter: regular 1굵기 (기존 외부 import와 동일)
+@font-face {
+  font-family: "Inter";
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url("../assets/fonts/inter/inter-latin-400-normal.woff2") format("woff2");
+}
