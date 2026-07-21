@@ -2,6 +2,7 @@ import React, { useMemo, useEffect, useState, useCallback, useRef } from "react"
 import DOMPurify from "dompurify"
 import AppMaxWidth from "@/lib/components/layout/app-max-width.component"
 import Page from "@/lib/components/layout/page.component"
+import NotFoundPage from "@/pages/not-found/not-found.page"
 import useResponsive from "@/lib/hooks/use-responsive"
 import useLanguageValue from "@/lib/hooks/use-language-key"
 import { useTranslation } from "react-i18next"
@@ -478,19 +479,7 @@ const BlogDetail = () => {
   }
 
   if (!post) {
-    return (
-      <Page hiddenHeader={isPreview} hiddenFooter={isPreview} bottomCartExists={false} hideOnScroll>
-        <div tw="min-h-screen flex flex-col items-center justify-center gap-4 font-pretendard">
-          <div tw="text-[18px] text-neutral70">{t("blog.noPosts")}</div>
-          <CustomLink
-            to="/blog"
-            tw="px-4 py-2 border text-[14px] font-medium transition-colors duration-200"
-            css={[{ color: "#DA7F67", borderColor: "#DA7F67" }]}>
-            {t("blog.backToList")}
-          </CustomLink>
-        </div>
-      </Page>
-    )
+    return <NotFoundPage hiddenChrome={isPreview} />
   }
 
   // 노출 날짜 = 어드민 최종 수정일(updatedAt). 목록 카드·JSON-LD dateModified와 동일 기준.
