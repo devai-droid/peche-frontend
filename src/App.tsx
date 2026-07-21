@@ -41,6 +41,12 @@ export default function App() {
           queries: {
             retry: false,
             onError: (error) => {
+              // 404(리소스 없음)는 각 페이지가 not-found 화면으로 처리 → 놀라운 에러 토스트는 띄우지 않음
+              // (예: 특정 언어로 미번역된 블로그 글, 삭제된 상세페이지)
+              if ((error as AxiosError)?.response?.status === 404) {
+                return
+              }
+
               const { message } = error as unknown as { message: string }
 
               // Check if the message contains '401'
