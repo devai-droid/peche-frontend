@@ -155,6 +155,12 @@ const BlogPriceSection = ({ postId, lang }: { postId: string; lang: string }) =>
             onClick={() => setActiveDp(i)}
             css={[
               tw`whitespace-nowrap text-[15px] font-bold px-2 pt-3 pb-2 lg:pt-1 lg:pb-1`,
+              // 시술명이 길면 박스 폭에 맞춰 말줄임(…) — byte 계산 없이 폭 기준으로 자동 처리
+              css`
+                overflow: hidden;
+                text-overflow: ellipsis;
+                min-width: 0;
+              `,
               // 모든 탭 하단을 박스 상단선과 겹쳐 단일 선으로. 탭끼리는 세로선 겹쳐 간격 0
               css`
                 border: 1px solid ${LINE};
