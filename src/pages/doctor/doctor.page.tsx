@@ -7,6 +7,9 @@ import doctorExperience from "@/assets/images/doctor-experience.png"
 import doctorAhnProfile from "@/assets/images/doctor-ahn-profile.png"
 import doctorChoiProfile from "@/assets/images/doctor-choi-profile.png"
 import doctorShinProfile from "@/assets/images/doctor-shin-profile.png"
+import doctorParkProfile from "@/assets/images/doctor-park-profile.jpg"
+import doctorKimProfile from "@/assets/images/doctor-kim-profile.jpg"
+import doctorChoProfile from "@/assets/images/doctor-cho-profile.jpg"
 import doctorDataBased from "@/assets/images/doctor-data-based.png"
 import doctorCommunication from "@/assets/images/doctor-communication.png"
 
@@ -147,7 +150,8 @@ const Section3Title = tw.h2`
 `
 /* PC: row, gap=64  MO: row wrap, gap=24 */
 const DoctorCardRow = styled.div`
-  ${tw`flex flex-row flex-wrap justify-center items-center`}
+  /* MO: 1명씩 / PC(md+): 한 줄에 2명 */
+  ${tw`grid grid-cols-1 md:grid-cols-2 justify-items-center items-start`}
   gap: 24px;
 
   @media (min-width: 768px) {
@@ -326,6 +330,18 @@ const DoctorPage = () => {
                   alt="신동민 원장"
                 />
                 <DoctorCardName>{t("doctor.doctorShin")}</DoctorCardName>
+              </DoctorCard>
+              <DoctorCard>
+                <DoctorCardImage src={doctorParkProfile} alt="Park Hae-kwon" />
+                <DoctorCardName>{t("doctor.doctorPark")}</DoctorCardName>
+              </DoctorCard>
+              <DoctorCard>
+                <DoctorCardImage src={doctorKimProfile} alt="김병준 원장" />
+                <DoctorCardName>{t("doctor.doctorKim")}</DoctorCardName>
+              </DoctorCard>
+              <DoctorCard>
+                <DoctorCardImage src={doctorChoProfile} alt="조진형 원장" />
+                <DoctorCardName>{t("doctor.doctorCho")}</DoctorCardName>
               </DoctorCard>
             </DoctorCardRow>
           </Section3>
