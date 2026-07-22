@@ -5,6 +5,7 @@ import { CSSTransition } from "react-transition-group"
 import { useTranslation } from "react-i18next"
 import { Language } from "@/lib/locales/i18n.config"
 import { IconButton } from "@/design-system/components"
+import { byOrderOptionsLast } from "@/lib/utils/search-result-sort"
 import { CloseIcon, SearchPrimaryIcon } from "@/assets/icon"
 import CustomLink from "@/lib/components/custom-link.component"
 
@@ -195,6 +196,7 @@ const SearchModal = ({ open, onClose }: Props) => {
                             (language === "th" && event.visibleTH)
                           )
                         })
+                        .sort(byOrderOptionsLast)
                         .map((ev) => (
                           <CustomLink
                             to={`/products/${ev.detailPage?.id}`}
@@ -219,7 +221,7 @@ const SearchModal = ({ open, onClose }: Props) => {
                         ))}
 
                       {/* 상품 검색결과 */}
-                      {searchResults.products.map((pd) => (
+                      {[...searchResults.products].sort(byOrderOptionsLast).map((pd) => (
                         <CustomLink
                           to={`/products/${pd.detailPage?.id}`}
                           key={pd.id}

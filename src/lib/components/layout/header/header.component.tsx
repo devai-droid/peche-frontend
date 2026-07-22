@@ -28,6 +28,7 @@ import useCustomNavigate from "@/lib/hooks/use-custom-navigate"
 import { useTranslation } from "react-i18next"
 import useLanguageValue from "@/lib/hooks/use-language-key"
 import { Language } from "@/lib/locales/i18n.config"
+import { byOrderOptionsLast } from "@/lib/utils/search-result-sort"
 import { useSearchControllerFindMany } from "@/lib/orval/search/search"
 import CustomLink from "../../custom-link.component"
 import Modal from "@/lib/components/modal/modal.component"
@@ -360,6 +361,7 @@ const Search = ({ setOpenSearch, clickedKeyword, setClickedKeyword }: MenuProps)
                 self.findIndex((e) => tv(e, "name")?.trim().toLowerCase() === eventName) === index
               )
             })
+            .sort(byOrderOptionsLast)
             .map((event) => (
               <Product
                 key={event.id}
@@ -369,7 +371,7 @@ const Search = ({ setOpenSearch, clickedKeyword, setClickedKeyword }: MenuProps)
                 setOpenSearch={() => setOpenSearch?.(false)}
               />
             ))}
-          {searchResults.products.map((product) => (
+          {[...searchResults.products].sort(byOrderOptionsLast).map((product) => (
             <Product
               key={product.id}
               pageId={product.detailPage ? product.detailPage.id : product.id}
