@@ -4,6 +4,12 @@
 
 ---
 
+## [1.26.26] - 2026-07-22
+
+### Changed
+
+- 박해권 원장 이름 표기에 언어별 직함 반영 — en/th `Dr. Park , Hae-kwon`, ja `Park , Hae-kwon 院長`, zh/tw `Park , Hae-kwon 院长`, ko `박해권 원장`.
+
 ## [1.26.25] - 2026-07-22
 
 ### Added
