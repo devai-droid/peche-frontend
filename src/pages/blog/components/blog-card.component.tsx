@@ -27,7 +27,8 @@ const BlogCard = ({ post }: BlogCardProps) => {
 
   return (
     <CustomLink to={`/blog/${post.slug}`} tw="block" className="group">
-      <div tw="bg-white overflow-hidden font-pretendard tracking-tight">
+      {/* 최상위 overflow-hidden 제거 — 오른쪽 끝에 붙는 날짜 글자가 열별 소수점 폭에서 잘리던 문제. 썸네일은 자체 overflow-hidden 유지 */}
+      <div tw="bg-white font-pretendard tracking-tight">
         {/* Thumbnail */}
         <div tw="w-full aspect-[4/3] overflow-hidden bg-neutral30">
           {post.thumbnailUrl ? (
