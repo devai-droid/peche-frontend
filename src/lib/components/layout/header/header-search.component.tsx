@@ -60,6 +60,19 @@ const Product = ({ name, description, pageId, setOpenSearch }: ProductProps) => 
   )
 }
 
+// 검색결과 정렬: 구글시트 순서(order 오름차순) + 이름에 "(옵션)" 붙은 항목은 맨 뒤로.
+// "(옵션)" 표기는 한국어 base name(name)에만 있으므로 base name으로 판정(다국어 사이트 공통).
+const isOptionItem = (name?: string | null) => (name ?? "").includes("(옵션)")
+const byOrderOptionsLast = (
+  a: { name?: string | null; order?: number | null },
+  b: { name?: string | null; order?: number | null },
+) => {
+  const aOpt = isOptionItem(a.name) ? 1 : 0
+  const bOpt = isOptionItem(b.name) ? 1 : 0
+  if (aOpt !== bOpt) return aOpt - bOpt
+  return (a.order ?? Number.MAX_SAFE_INTEGER) - (b.order ?? Number.MAX_SAFE_INTEGER)
+}
+
 const HeaderSearch = ({ open = false, setOpen, clickedKeyword, setClickedKeyword }: Props) => {
   const { t, i18n } = useTranslation()
   const language = i18n.language as Language
@@ -174,6 +187,8 @@ const HeaderSearch = ({ open = false, setOpen, clickedKeyword, setClickedKeyword
                       index
                     )
                   })
+                  // 구글시트 순서 + "(옵션)" 맨 뒤
+                  .sort(byOrderOptionsLast)
                   .map((event) => (
                     <Product
                       key={event.id}
@@ -184,7 +199,7 @@ const HeaderSearch = ({ open = false, setOpen, clickedKeyword, setClickedKeyword
                     />
                     // Adjust the property name based on your actual API response structure
                   ))}
-                {searchResults.products.map((product) => (
+                {[...searchResults.products].sort(byOrderOptionsLast).map((product) => (
                   <Product
                     key={product.id}
                     pageId={product.detailPage ? product.detailPage.id : product.id}
