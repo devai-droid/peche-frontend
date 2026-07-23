@@ -160,7 +160,7 @@ const DoctorCardRow = styled.div`
 `
 /* PC: column, gap=20  MO: column, gap=12 */
 const DoctorCard = styled.div`
-  ${tw`flex flex-col items-center cursor-pointer`}
+  ${tw`flex flex-col items-center`}
   gap: 12px;
 
   @media (min-width: 768px) {
