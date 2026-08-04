@@ -4,9 +4,8 @@ import { useTranslation } from "react-i18next"
 
 import doctorIntro from "@/assets/images/doctor-intro.png"
 import doctorExperience from "@/assets/images/doctor-experience.png"
-import doctorAhnProfile from "@/assets/images/doctor-ahn-profile.png"
-import doctorChoiProfile from "@/assets/images/doctor-choi-profile.png"
-import doctorShinProfile from "@/assets/images/doctor-shin-profile.png"
+import doctorAhnProfile from "@/assets/images/doctor-ahn-profile.jpg"
+import doctorChoiProfile from "@/assets/images/doctor-choi-profile.jpg"
 import doctorParkProfile from "@/assets/images/doctor-park-profile.jpg"
 import doctorKimProfile from "@/assets/images/doctor-kim-profile.jpg"
 import doctorChoProfile from "@/assets/images/doctor-cho-profile.jpg"
@@ -149,35 +148,28 @@ const Section3 = styled.section`
 const Section3Title = tw.h2`
   text-[24px] md:text-[30px] font-pretendard font-semibold text-neutralBlack tracking-tight leading-[1.4] text-center
 `
-/* PC: row, gap=64  MO: row wrap, gap=24 */
-const DoctorCardRow = styled.div`
-  /* MO: 1명씩 / PC(md+): 한 줄에 2명 */
-  ${tw`grid grid-cols-1 md:grid-cols-2 justify-items-center items-start`}
-  gap: 24px;
-
-  @media (min-width: 768px) {
-    gap: 64px;
-  }
+/* 대표·총괄원장: 한 줄에 2명 (가로형 사진) */
+const DoctorCardRowLead = styled.div`
+  ${tw`grid grid-cols-2 items-start w-full`}
+  gap: 20px;
 `
-/* PC: column, gap=20  MO: column, gap=12 */
+/* 나머지 원장: PC 한 줄에 4명, 모바일 2명 (세로형 사진) */
+const DoctorCardRowRest = styled.div`
+  ${tw`grid grid-cols-2 md:grid-cols-4 items-start w-full`}
+  gap: 20px;
+  margin-top: 20px;
+`
 const DoctorCard = styled.div`
-  ${tw`flex flex-col items-center`}
+  ${tw`flex flex-col items-center w-full`}
   gap: 12px;
 
   @media (min-width: 768px) {
     gap: 20px;
   }
 `
-/* PC: 300x307  MO: 240x246 */
+/* 컨테이너 가로 폭을 꽉 채우고 원본 비율 유지 */
 const DoctorCardImage = styled.img`
-  ${tw`object-cover`}
-  width: 240px;
-  height: 246px;
-
-  @media (min-width: 768px) {
-    width: 300px;
-    height: 307px;
-  }
+  ${tw`w-full h-auto block object-cover`}
 `
 /* PC: 600/18px  MO: 600/16px, center, #4D4D4D */
 const DoctorCardName = tw.p`
@@ -310,28 +302,19 @@ const DoctorPage = () => {
           {/* Section 3: 의료진 카드 */}
           <Section3>
             <Section3Title>{t("doctor.teamTitle")}</Section3Title>
-            <DoctorCardRow>
+            {/* 대표·총괄원장 — 한 줄 2명 */}
+            <DoctorCardRowLead>
               <DoctorCard>
-                <DoctorCardImage
-                  src={doctorAhnProfile}
-                  alt="안태언 대표원장"
-                />
+                <DoctorCardImage src={doctorAhnProfile} alt="안태언 대표원장" />
                 <DoctorCardName>{t("doctor.doctorAhn")}</DoctorCardName>
               </DoctorCard>
               <DoctorCard>
-                <DoctorCardImage
-                  src={doctorChoiProfile}
-                  alt="최재형 총괄원장"
-                />
+                <DoctorCardImage src={doctorChoiProfile} alt="최재형 총괄원장" />
                 <DoctorCardName>{t("doctor.doctorChoi")}</DoctorCardName>
               </DoctorCard>
-              <DoctorCard>
-                <DoctorCardImage
-                  src={doctorShinProfile}
-                  alt="신동민 원장"
-                />
-                <DoctorCardName>{t("doctor.doctorShin")}</DoctorCardName>
-              </DoctorCard>
+            </DoctorCardRowLead>
+            {/* 나머지 원장 — 한 줄 4명(모바일 2명) */}
+            <DoctorCardRowRest>
               <DoctorCard>
                 <DoctorCardImage src={doctorParkProfile} alt="Park Hae-kwon" />
                 <DoctorCardName>{t("doctor.doctorPark")}</DoctorCardName>
@@ -348,7 +331,7 @@ const DoctorPage = () => {
                 <DoctorCardImage src={doctorHongProfile} alt="홍채민 원장" />
                 <DoctorCardName>{t("doctor.doctorHong")}</DoctorCardName>
               </DoctorCard>
-            </DoctorCardRow>
+            </DoctorCardRowRest>
           </Section3>
 
           {/* Section 4: 시술 원칙 */}
