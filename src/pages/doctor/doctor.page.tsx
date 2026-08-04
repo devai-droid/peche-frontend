@@ -136,7 +136,7 @@ const Section2Body = tw.p`
 /* 배경은 화면 가로 전체(full-bleed), 내용은 1440 컨테이너로 제한 */
 const Section3 = styled.section`
   ${tw`w-full flex flex-col items-center`}
-  background-color: #fef5ef;
+  background-color: #fff7ee;
   padding: 96px 0;
 `
 const Section3Inner = styled.div`
