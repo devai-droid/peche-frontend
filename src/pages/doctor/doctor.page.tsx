@@ -179,8 +179,10 @@ const DoctorCardLead = styled.div`
   }
 `
 /* 컨테이너 가로 폭을 꽉 채우고 원본 비율 유지 */
+/* 모든 원장 사진을 동일한 세로(3:4) 프레임으로 통일. 가로형 원본(대표·총괄)은 세로로 crop된다. */
 const DoctorCardImage = styled.img`
-  ${tw`w-full h-auto block object-cover`}
+  ${tw`w-full block object-cover`}
+  aspect-ratio: 570 / 760;
 `
 
 /* ── Section 4: 시술 원칙 ──
