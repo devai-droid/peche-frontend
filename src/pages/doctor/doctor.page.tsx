@@ -148,9 +148,9 @@ const Section3 = styled.section`
 const Section3Title = tw.h2`
   text-[24px] md:text-[30px] font-pretendard font-semibold text-neutralBlack tracking-tight leading-[1.4] text-center
 `
-/* 대표·총괄원장: 한 줄에 2명 (가로형 사진) */
+/* 대표·총괄원장: 2명, 아랫줄과 같은 폭으로 중앙 정렬 */
 const DoctorCardRowLead = styled.div`
-  ${tw`grid grid-cols-2 items-start w-full`}
+  ${tw`flex justify-center items-start w-full`}
   gap: 20px;
 `
 /* 나머지 원장: PC 한 줄에 4명, 모바일 2명 (세로형 사진) */
@@ -165,6 +165,17 @@ const DoctorCard = styled.div`
 
   @media (min-width: 768px) {
     gap: 20px;
+  }
+`
+/* 대표·총괄 카드: 아랫줄 한 칸과 동일 폭(모바일 2열·PC 4열 기준)으로 고정 */
+const DoctorCardLead = styled.div`
+  ${tw`flex flex-col items-center`}
+  gap: 12px;
+  width: calc((100% - 20px) / 2);
+
+  @media (min-width: 768px) {
+    gap: 20px;
+    width: calc((100% - 60px) / 4);
   }
 `
 /* 컨테이너 가로 폭을 꽉 채우고 원본 비율 유지 */
@@ -298,14 +309,14 @@ const DoctorPage = () => {
           {/* Section 3: 의료진 카드 */}
           <Section3>
             <Section3Title>{t("doctor.teamTitle")}</Section3Title>
-            {/* 대표·총괄원장 — 한 줄 2명 */}
+            {/* 대표·총괄원장 — 2명, 아랫줄과 같은 폭으로 중앙 정렬 */}
             <DoctorCardRowLead>
-              <DoctorCard>
+              <DoctorCardLead>
                 <DoctorCardImage src={doctorAhnProfile} alt="안태언 대표원장" />
-              </DoctorCard>
-              <DoctorCard>
+              </DoctorCardLead>
+              <DoctorCardLead>
                 <DoctorCardImage src={doctorChoiProfile} alt="최재형 총괄원장" />
-              </DoctorCard>
+              </DoctorCardLead>
             </DoctorCardRowLead>
             {/* 나머지 원장 — 한 줄 4명(모바일 2명): 신동민·박해권·조진형·홍채민 */}
             <DoctorCardRowRest>
