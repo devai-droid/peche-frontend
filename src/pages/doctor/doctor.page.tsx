@@ -19,11 +19,9 @@ const PageContainer = tw.div`w-full flex flex-col items-center bg-white`
    MO: gap=64, padding=64 0 */
 const ContentContainer = styled.div`
   ${tw`w-full flex flex-col items-center`}
-  gap: 64px;
   padding: 128px 0 64px;
 
   @media (min-width: 768px) {
-    gap: 160px;
     padding: 128px 0 160px;
   }
 `
@@ -93,6 +91,7 @@ const DoctorPosition = styled.span`
    PC/MO: column, align-stretch, width=fill */
 const Section2Wrapper = tw.section`
   w-full flex flex-col items-stretch
+  mt-16 md:mt-40
 `
 /* PC: height=540  MO: height=400 */
 const Section2Image = styled.img`
@@ -135,7 +134,8 @@ const Section2Body = tw.p`
 /* ── Section 3: 의료진 카드 ──
    PC: padding=0 120, gap=40  MO: padding=0 16, gap=24 */
 const Section3 = styled.section`
-  ${tw`w-full max-w-[1440px] flex flex-col items-center bg-neutral`}
+  ${tw`w-full max-w-[1440px] flex flex-col items-center`}
+  background-color: #fef5ef;
   gap: 24px;
   padding: 96px 16px;
 
