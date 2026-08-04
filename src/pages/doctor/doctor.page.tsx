@@ -105,7 +105,7 @@ const Section2Image = styled.img`
 `
 /* PC: padding=64 120 96, gap=16  MO: padding=48 16, gap=12 */
 const Section2TextSection = styled.div`
-  ${tw`w-full flex flex-col justify-center items-center bg-tertiary`}
+  ${tw`w-full flex flex-col justify-center items-center bg-white`}
   gap: 12px;
   padding: 48px 16px;
 
@@ -135,13 +135,13 @@ const Section2Body = tw.p`
 /* ── Section 3: 의료진 카드 ──
    PC: padding=0 120, gap=40  MO: padding=0 16, gap=24 */
 const Section3 = styled.section`
-  ${tw`w-full max-w-[1440px] flex flex-col items-center`}
+  ${tw`w-full max-w-[1440px] flex flex-col items-center bg-neutral`}
   gap: 24px;
-  padding: 0 16px;
+  padding: 96px 16px;
 
   @media (min-width: 768px) {
     gap: 40px;
-    padding: 0 120px;
+    padding: 96px 120px;
   }
 `
 /* PC: 600/30px  MO: 600/24px, center, #121212 */
@@ -193,6 +193,7 @@ const DoctorCardName = tw.p`
 const Section4 = styled.section`
   ${tw`w-full max-w-[1440px] flex flex-col items-stretch`}
   gap: 48px;
+  padding-top: 96px;
 
   @media (min-width: 768px) {
     gap: 64px;
@@ -220,11 +221,10 @@ const Section4Desc = tw.p`
 /* PC: row, padding=0 120, gap=64  MO: row wrap, padding=0 16, gap=48 */
 const PrincipleRow = styled.div`
   ${tw`flex flex-row flex-wrap justify-center`}
-  gap: 48px;
+  gap: 20px;
   padding: 0 16px;
 
   @media (min-width: 768px) {
-    gap: 64px;
     padding: 0 120px;
   }
 `
@@ -236,7 +236,8 @@ const PrincipleCard = styled.div`
 
   @media (min-width: 768px) {
     gap: 40px;
-    width: 568px;
+    flex: 1;
+    min-width: 0;
     padding: 0;
   }
 `
