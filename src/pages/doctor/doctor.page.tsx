@@ -179,10 +179,13 @@ const DoctorCardLead = styled.div`
   }
 `
 /* 컨테이너 가로 폭을 꽉 채우고 원본 비율 유지 */
-/* 모든 원장 사진을 동일한 세로(3:4) 프레임으로 통일. 가로형 원본(대표·총괄)은 세로로 crop된다. */
+/* 모든 원장 사진을 동일한 세로(3:4) 프레임으로 통일. 가로형 원본은 세로로 crop된다. */
 const DoctorCardImage = styled.img`
   ${tw`w-full block object-cover`}
   aspect-ratio: 570 / 760;
+`
+const DoctorCardName = tw.p`
+  text-[16px] md:text-[18px] font-pretendard font-semibold text-neutral80 tracking-tight leading-[1.4] text-center
 `
 
 /* ── Section 4: 시술 원칙 ──
@@ -315,24 +318,30 @@ const DoctorPage = () => {
             <DoctorCardRowLead>
               <DoctorCardLead>
                 <DoctorCardImage src={doctorAhnProfile} alt="안태언 대표원장" />
+                <DoctorCardName>{t("doctor.doctorAhn")}</DoctorCardName>
               </DoctorCardLead>
               <DoctorCardLead>
                 <DoctorCardImage src={doctorChoiProfile} alt="최재형 총괄원장" />
+                <DoctorCardName>{t("doctor.doctorChoi")}</DoctorCardName>
               </DoctorCardLead>
             </DoctorCardRowLead>
             {/* 나머지 원장 — 한 줄 4명(모바일 2명): 신동민·박해권·조진형·홍채민 */}
             <DoctorCardRowRest>
               <DoctorCard>
                 <DoctorCardImage src={doctorShinProfile} alt="신동민 원장" />
+                <DoctorCardName>{t("doctor.doctorShin")}</DoctorCardName>
               </DoctorCard>
               <DoctorCard>
                 <DoctorCardImage src={doctorParkProfile} alt="박해권 원장" />
+                <DoctorCardName>{t("doctor.doctorPark")}</DoctorCardName>
               </DoctorCard>
               <DoctorCard>
                 <DoctorCardImage src={doctorChoProfile} alt="조진형 원장" />
+                <DoctorCardName>{t("doctor.doctorCho")}</DoctorCardName>
               </DoctorCard>
               <DoctorCard>
                 <DoctorCardImage src={doctorHongProfile} alt="홍채민 원장" />
+                <DoctorCardName>{t("doctor.doctorHong")}</DoctorCardName>
               </DoctorCard>
             </DoctorCardRowRest>
           </Section3>
