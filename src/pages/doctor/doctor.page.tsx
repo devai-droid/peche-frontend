@@ -6,8 +6,8 @@ import doctorIntro from "@/assets/images/doctor-intro.png"
 import doctorExperience from "@/assets/images/doctor-experience.png"
 import doctorAhnProfile from "@/assets/images/doctor-ahn-profile.jpg"
 import doctorChoiProfile from "@/assets/images/doctor-choi-profile.jpg"
+import doctorShinProfile from "@/assets/images/doctor-shin-profile.jpg"
 import doctorParkProfile from "@/assets/images/doctor-park-profile.jpg"
-import doctorKimProfile from "@/assets/images/doctor-kim-profile.jpg"
 import doctorChoProfile from "@/assets/images/doctor-cho-profile.jpg"
 import doctorHongProfile from "@/assets/images/doctor-hong-profile.jpg"
 import doctorDataBased from "@/assets/images/doctor-data-based.png"
@@ -171,10 +171,6 @@ const DoctorCard = styled.div`
 const DoctorCardImage = styled.img`
   ${tw`w-full h-auto block object-cover`}
 `
-/* PC: 600/18px  MO: 600/16px, center, #4D4D4D */
-const DoctorCardName = tw.p`
-  text-[16px] md:text-[18px] font-pretendard font-semibold text-neutral80 tracking-tight leading-[1.4] text-center
-`
 
 /* ── Section 4: 시술 원칙 ──
    PC: column, gap=64  MO: column, gap=48 */
@@ -306,30 +302,24 @@ const DoctorPage = () => {
             <DoctorCardRowLead>
               <DoctorCard>
                 <DoctorCardImage src={doctorAhnProfile} alt="안태언 대표원장" />
-                <DoctorCardName>{t("doctor.doctorAhn")}</DoctorCardName>
               </DoctorCard>
               <DoctorCard>
                 <DoctorCardImage src={doctorChoiProfile} alt="최재형 총괄원장" />
-                <DoctorCardName>{t("doctor.doctorChoi")}</DoctorCardName>
               </DoctorCard>
             </DoctorCardRowLead>
-            {/* 나머지 원장 — 한 줄 4명(모바일 2명) */}
+            {/* 나머지 원장 — 한 줄 4명(모바일 2명): 신동민·박해권·조진형·홍채민 */}
             <DoctorCardRowRest>
               <DoctorCard>
-                <DoctorCardImage src={doctorParkProfile} alt="Park Hae-kwon" />
-                <DoctorCardName>{t("doctor.doctorPark")}</DoctorCardName>
+                <DoctorCardImage src={doctorShinProfile} alt="신동민 원장" />
               </DoctorCard>
               <DoctorCard>
-                <DoctorCardImage src={doctorKimProfile} alt="김병준 원장" />
-                <DoctorCardName>{t("doctor.doctorKim")}</DoctorCardName>
+                <DoctorCardImage src={doctorParkProfile} alt="박해권 원장" />
               </DoctorCard>
               <DoctorCard>
                 <DoctorCardImage src={doctorChoProfile} alt="조진형 원장" />
-                <DoctorCardName>{t("doctor.doctorCho")}</DoctorCardName>
               </DoctorCard>
               <DoctorCard>
                 <DoctorCardImage src={doctorHongProfile} alt="홍채민 원장" />
-                <DoctorCardName>{t("doctor.doctorHong")}</DoctorCardName>
               </DoctorCard>
             </DoctorCardRowRest>
           </Section3>
