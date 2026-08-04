@@ -91,7 +91,7 @@ const DoctorPosition = styled.span`
    PC/MO: column, align-stretch, width=fill */
 const Section2Wrapper = tw.section`
   w-full flex flex-col items-stretch
-  mt-16 md:mt-40
+  mt-16 md:mt-24
 `
 /* PC: height=540  MO: height=400 */
 const Section2Image = styled.img`
@@ -133,15 +133,20 @@ const Section2Body = tw.p`
 
 /* ── Section 3: 의료진 카드 ──
    PC: padding=0 120, gap=40  MO: padding=0 16, gap=24 */
+/* 배경은 화면 가로 전체(full-bleed), 내용은 1440 컨테이너로 제한 */
 const Section3 = styled.section`
-  ${tw`w-full max-w-[1440px] flex flex-col items-center`}
+  ${tw`w-full flex flex-col items-center`}
   background-color: #fef5ef;
+  padding: 96px 0;
+`
+const Section3Inner = styled.div`
+  ${tw`w-full max-w-[1440px] flex flex-col items-center`}
   gap: 24px;
-  padding: 96px 16px;
+  padding: 0 16px;
 
   @media (min-width: 768px) {
     gap: 40px;
-    padding: 96px 120px;
+    padding: 0 120px;
   }
 `
 /* PC: 600/30px  MO: 600/24px, center, #121212 */
@@ -314,6 +319,7 @@ const DoctorPage = () => {
 
           {/* Section 3: 의료진 카드 */}
           <Section3>
+            <Section3Inner>
             <Section3Title>{t("doctor.teamTitle")}</Section3Title>
             {/* 대표·총괄원장 — 2명, 아랫줄과 같은 폭으로 중앙 정렬 */}
             <DoctorCardRowLead>
@@ -345,6 +351,7 @@ const DoctorPage = () => {
                 <DoctorCardName>{t("doctor.doctorHong")}</DoctorCardName>
               </DoctorCard>
             </DoctorCardRowRest>
+            </Section3Inner>
           </Section3>
 
           {/* Section 4: 시술 원칙 */}
