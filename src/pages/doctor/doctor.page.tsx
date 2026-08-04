@@ -10,6 +10,7 @@ import doctorShinProfile from "@/assets/images/doctor-shin-profile.png"
 import doctorParkProfile from "@/assets/images/doctor-park-profile.jpg"
 import doctorKimProfile from "@/assets/images/doctor-kim-profile.jpg"
 import doctorChoProfile from "@/assets/images/doctor-cho-profile.jpg"
+import doctorHongProfile from "@/assets/images/doctor-hong-profile.jpg"
 import doctorDataBased from "@/assets/images/doctor-data-based.png"
 import doctorCommunication from "@/assets/images/doctor-communication.png"
 
@@ -342,6 +343,10 @@ const DoctorPage = () => {
               <DoctorCard>
                 <DoctorCardImage src={doctorChoProfile} alt="조진형 원장" />
                 <DoctorCardName>{t("doctor.doctorCho")}</DoctorCardName>
+              </DoctorCard>
+              <DoctorCard>
+                <DoctorCardImage src={doctorHongProfile} alt="홍채민 원장" />
+                <DoctorCardName>{t("doctor.doctorHong")}</DoctorCardName>
               </DoctorCard>
             </DoctorCardRow>
           </Section3>
