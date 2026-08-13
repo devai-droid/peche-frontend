@@ -130,6 +130,25 @@ const articleCss = css`
   hr {
     display: none;
   }
+  /* CTA 버튼 — 한 문단에 링크만 단독으로 있으면 버튼으로 렌더 */
+  .cta-button {
+    text-align: center;
+    margin: 1.8em 0;
+  }
+  .cta-button a {
+    display: inline-block;
+    background: #da7f67;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 14px 34px;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: background 0.2s;
+  }
+  .cta-button a:hover {
+    background: #b45f47;
+  }
 `
 
 function preprocess(html: string): string {
@@ -151,6 +170,15 @@ function preprocess(html: string): string {
   // 이미지 캡션(▲) 단락 마킹
   doc.querySelectorAll("p").forEach((p) => {
     if ((p.textContent ?? "").trim().startsWith("▲")) p.classList.add("blog-caption")
+  })
+  // CTA 버튼: 한 문단에 링크만 단독으로 있으면(문구 없이 [라벨](URL)) 버튼으로 렌더
+  doc.querySelectorAll("p").forEach((p) => {
+    const kids = Array.from(p.childNodes).filter(
+      (n) => !(n.nodeType === 3 && !(n.textContent ?? "").trim()),
+    )
+    if (kids.length === 1 && (kids[0] as HTMLElement).tagName === "A") {
+      p.classList.add("cta-button")
+    }
   })
   return doc.body.innerHTML
 }
