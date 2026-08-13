@@ -130,6 +130,15 @@ const articleCss = css`
   hr {
     display: none;
   }
+  /* FAQ — 블로그와 동일 (질문 어두운 코랄·줄 분리, 문항 간 간격) */
+  .faq-q {
+    display: inline-block;
+    margin-bottom: 0.3em;
+    color: #79473b;
+  }
+  .faq-item {
+    margin-bottom: 1.9em;
+  }
   /* CTA 버튼 — 한 문단에 링크만 단독으로 있으면 버튼으로 렌더. 홈 '카카오톡 상담하기'(bg-primary·풀폭) 형식과 동일 */
   .cta-button {
     margin: 0.9em 0;
@@ -172,6 +181,26 @@ function preprocess(html: string): string {
   doc.querySelectorAll("p").forEach((p) => {
     if ((p.textContent ?? "").trim().startsWith("▲")) p.classList.add("blog-caption")
   })
+  // FAQ: 한 단락에 붙은 Q(strong)와 A를 줄 분리 (블로그와 동일)
+  const faqHeading = Array.from(doc.querySelectorAll("h2, h3")).find((h) =>
+    /FAQ|자주\s*묻는/i.test(h.textContent ?? ""),
+  )
+  if (faqHeading) {
+    let node = faqHeading.nextElementSibling
+    while (node && node.tagName !== "H2") {
+      if (node.tagName === "P") {
+        const strong = node.querySelector("strong")
+        if (strong && strong === node.firstChild && strong.nextSibling) {
+          const after = strong.nextSibling
+          if (after.nodeType === 3) after.textContent = (after.textContent ?? "").replace(/^\s+/, "")
+          node.insertBefore(doc.createElement("br"), after)
+          strong.classList.add("faq-q")
+          ;(node as HTMLElement).classList.add("faq-item")
+        }
+      }
+      node = node.nextElementSibling
+    }
+  }
   // CTA 버튼: 한 문단에 링크만 단독으로 있으면(문구 없이 [라벨](URL)) 버튼으로 렌더
   doc.querySelectorAll("p").forEach((p) => {
     const kids = Array.from(p.childNodes).filter(
