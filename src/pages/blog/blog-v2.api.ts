@@ -116,6 +116,13 @@ export const blogV2PublicApi = {
       method: "GET",
       url: `/api/blog-v2/posts/public/detail/${lang}/${encodeURIComponent(slug)}`,
     }),
+  // 시술 상세페이지 본문(detail_page 글) — product_page 이름으로 조회. 없으면 null.
+  detailPagePost: (productPage: string, lang: string) =>
+    request<BlogV2Post | null>({
+      method: "GET",
+      url: "/api/blog-v2/posts/public/detail-page",
+      params: { productPage, lang },
+    }),
   // 가격 보기 데이터(봇 SSR과 동일 계산) — postId+lang
   prices: (id: string, lang: string) =>
     request<BlogPriceGroup[]>({

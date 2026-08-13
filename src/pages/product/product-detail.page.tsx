@@ -18,6 +18,9 @@ import { useParams, useSearchParams } from "react-router-dom"
 import tw from "twin.macro"
 import { Helmet } from "react-helmet-async"
 import Modal from "@/lib/components/modal/modal.component"
+import { useQuery } from "@tanstack/react-query"
+import { blogV2PublicApi } from "@/pages/blog/blog-v2.api"
+import DetailPageArticle from "./components/detail-page-article.component"
 
 interface ProductProps {
   // eslint-disable-next-line react/no-unused-prop-types
@@ -126,6 +129,15 @@ const ProductDetail = () => {
 
   const keyMatch = { ko: "", en: "EN", ja: "JA", th: "TH", zh: "ZH", "zh-TW": "ZHTW" }
   const lang = i18n.language as keyof typeof keyMatch
+
+  // 시술 상세페이지 본문(detail_page 글) — 상품의 한국어 이름(product_page)으로 조회. 대표 이미지 자리에 렌더.
+  const koName = (productDetail as { name?: string } | undefined)?.name
+  const { data: detailPost } = useQuery({
+    queryKey: ["detail-page-post", koName, i18n.language],
+    queryFn: () => blogV2PublicApi.detailPagePost(koName ?? "", i18n.language),
+    enabled: !!koName,
+    staleTime: 1000 * 60,
+  })
 
   const selectedEventBundleId = params.get("bundle")
 
@@ -379,11 +391,15 @@ const ProductDetail = () => {
                     </div>
                   )}
 
-                  {/* 대표 이미지 영역 */}
-                  {langImage?.url && (
-                    <div tw="bg-white mt-10">
-                      <img src={langImage.url} alt={name} tw="w-full rounded-lg" />
-                    </div>
+                  {/* 대표 이미지 자리 — 상세 본문(detail_page 글)이 있으면 블로그 스타일로 렌더, 없으면 기존 대표 이미지 */}
+                  {detailPost?.bodyHtml ? (
+                    <DetailPageArticle html={detailPost.bodyHtml} />
+                  ) : (
+                    langImage?.url && (
+                      <div tw="bg-white mt-10">
+                        <img src={langImage.url} alt={name} tw="w-full rounded-lg" />
+                      </div>
+                    )
                   )}
                 </>
               )

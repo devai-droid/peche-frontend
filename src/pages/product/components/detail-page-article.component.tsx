@@ -1,0 +1,168 @@
+import React from "react"
+import { css } from "twin.macro"
+
+/**
+ * 시술 상세페이지 본문 렌더 — 블로그 상세(blog-detail)와 동일한 본문 타이포그래피를 적용한다.
+ * detail_page 글의 bodyHtml을 받아, 대표 이미지 자리에 블로그 스타일로 그린다.
+ * (h2 1.7em+2px · h3 1.15em · ul/ol disc·코랄 마커 · 표 · 인용구 · 이미지+캡션)
+ */
+
+// 블로그 본문 CSS와 동일 규칙
+const articleCss = css`
+  font-size: 16px;
+  color: #1a1a1a;
+  line-height: 1.7;
+  word-break: keep-all;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-weight: 600;
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+    line-height: 1.3;
+  }
+  h1 {
+    font-size: 1.5em;
+  }
+  h2 {
+    font-size: calc(1.7em + 2px);
+    margin-top: 3.4em;
+    margin-bottom: 1em;
+  }
+  @media (min-width: 1024px) {
+    h2 {
+      margin-top: 4.4em;
+    }
+  }
+  h2:first-of-type {
+    margin-top: 0.4em;
+  }
+  h3 {
+    font-size: 1.15em;
+    margin-top: 2.4em;
+    margin-bottom: 0.8em;
+  }
+  p {
+    margin-bottom: 1em;
+  }
+  strong {
+    font-weight: 700;
+  }
+  ul {
+    list-style: disc outside;
+    padding-left: 1.4em;
+    margin: 0.4em 0 1.2em;
+  }
+  ol {
+    list-style: decimal outside;
+    padding-left: 1.5em;
+    margin: 0.4em 0 1.2em;
+  }
+  li {
+    margin-bottom: 0.4em;
+    padding-left: 0.2em;
+  }
+  li::marker {
+    color: #da7f67;
+  }
+  blockquote {
+    border-left: 3px solid #da7f67;
+    padding-left: 1em;
+    margin: 1.4em 0;
+    color: #666;
+  }
+  a {
+    color: #da7f67;
+    text-decoration: underline;
+  }
+  img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 2px;
+    display: block;
+    margin: 2em auto 0;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5em 0 2.6em;
+    font-size: 0.95em;
+    overflow-x: auto;
+    display: block;
+  }
+  @media (min-width: 640px) {
+    table {
+      display: table;
+    }
+  }
+  th,
+  td {
+    border: 1px solid #e5e0dc;
+    padding: 0.6em 0.85em;
+    text-align: left;
+    vertical-align: top;
+  }
+  thead th {
+    background: #faf3ef;
+    font-weight: 600;
+  }
+  /* 이미지 캡션(▲로 시작하는 단락) — 블로그와 동일 */
+  .blog-caption {
+    text-align: center;
+    margin-bottom: 2.6em;
+  }
+  .blog-caption em {
+    display: block;
+    margin-top: 0.9em;
+    line-height: 1.45;
+    color: #999;
+    font-size: 0.875em;
+    font-style: normal;
+  }
+  hr {
+    display: none;
+  }
+`
+
+function preprocess(html: string): string {
+  if (typeof window === "undefined") return html
+  const doc = new DOMParser().parseFromString(html, "text/html")
+  // h1 → h2 (블로그 규칙: 본문 최상위 제목은 h2)
+  doc.querySelectorAll("h1").forEach((h1) => {
+    const h2 = doc.createElement("h2")
+    h2.innerHTML = h1.innerHTML
+    h1.replaceWith(h2)
+  })
+  // 가로선 제거
+  doc.querySelectorAll("hr").forEach((hr) => hr.remove())
+  // 외부 링크는 새 창
+  doc.querySelectorAll("a[href^='http']").forEach((a) => {
+    a.setAttribute("target", "_blank")
+    a.setAttribute("rel", "noopener noreferrer")
+  })
+  // 이미지 캡션(▲) 단락 마킹
+  doc.querySelectorAll("p").forEach((p) => {
+    if ((p.textContent ?? "").trim().startsWith("▲")) p.classList.add("blog-caption")
+  })
+  return doc.body.innerHTML
+}
+
+interface Props {
+  html?: string
+}
+
+const DetailPageArticle = ({ html }: Props) => {
+  const processed = React.useMemo(() => (html ? preprocess(html) : ""), [html])
+  if (!processed) return null
+  return (
+    <div tw="bg-white mt-10 px-5 py-8 md:px-9 md:py-10 rounded-lg font-pretendard tracking-tight">
+      <article css={articleCss} dangerouslySetInnerHTML={{ __html: processed }} />
+    </div>
+  )
+}
+
+export default DetailPageArticle
