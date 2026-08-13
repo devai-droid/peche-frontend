@@ -130,24 +130,25 @@ const articleCss = css`
   hr {
     display: none;
   }
-  /* CTA 버튼 — 한 문단에 링크만 단독으로 있으면 버튼으로 렌더 */
+  /* CTA 버튼 — 한 문단에 링크만 단독으로 있으면 버튼으로 렌더. 홈 '카카오톡 상담하기'(bg-primary·풀폭) 형식과 동일 */
   .cta-button {
-    text-align: center;
-    margin: 1.8em 0;
+    margin: 0.9em 0;
   }
   .cta-button a {
-    display: inline-block;
+    display: block;
+    width: 100%;
     background: #da7f67;
     color: #fff;
+    text-align: center;
     text-decoration: none;
-    font-weight: 600;
-    padding: 14px 34px;
-    border-radius: 8px;
+    font-weight: 500;
+    padding: 14px 20px;
     font-size: 15px;
+    border-radius: 2px;
     transition: background 0.2s;
   }
   .cta-button a:hover {
-    background: #b45f47;
+    background: #ab6655;
   }
 `
 
