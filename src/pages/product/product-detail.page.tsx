@@ -393,7 +393,7 @@ const ProductDetail = () => {
 
                   {/* 대표 이미지 자리 — 상세 본문(detail_page 글)이 있으면 블로그 스타일로 렌더, 없으면 기존 대표 이미지 */}
                   {detailPost?.bodyHtml ? (
-                    <DetailPageArticle html={detailPost.bodyHtml} />
+                    <DetailPageArticle html={detailPost.bodyHtml} lang={i18n.language} />
                   ) : (
                     langImage?.url && (
                       <div tw="bg-white mt-10">

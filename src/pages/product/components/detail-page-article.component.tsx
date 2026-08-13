@@ -1,5 +1,9 @@
 import React from "react"
-import { css } from "twin.macro"
+import tw, { css } from "twin.macro"
+import { useQuery } from "@tanstack/react-query"
+import { blogV2PublicApi, resolveBlogAsset } from "@/pages/blog/blog-v2.api"
+import CustomLink from "@/lib/components/custom-link.component"
+import avatarImg from "@/assets/images/avatar.png"
 
 /**
  * 시술 상세페이지 본문 렌더 — 블로그 상세(blog-detail)와 동일한 본문 타이포그래피를 적용한다.
@@ -153,14 +157,58 @@ function preprocess(html: string): string {
 
 interface Props {
   html?: string
+  lang: string
 }
 
-const DetailPageArticle = ({ html }: Props) => {
+const DetailPageArticle = ({ html, lang }: Props) => {
   const processed = React.useMemo(() => (html ? preprocess(html) : ""), [html])
+  // 작성/감수 의료진 카드 — 블로그와 동일하게 어드민 '의료진 정보'의 대표 의료진 사용
+  const { data: doctor } = useQuery({
+    queryKey: ["detail-rep-doctor", lang],
+    queryFn: () => blogV2PublicApi.representativeDoctor(lang),
+    staleTime: 1000 * 60 * 10,
+  })
   if (!processed) return null
+  const authorName = doctor?.name ?? "안태언"
   return (
     <div tw="bg-white mt-10 px-5 py-8 md:px-9 md:py-10 rounded-lg font-pretendard tracking-tight">
       <article css={articleCss} dangerouslySetInnerHTML={{ __html: processed }} />
+
+      {/* 작성/감수 의료진 카드 — 블로그 하단 카드와 동일 */}
+      <div css={[{ marginTop: "4em" }]}>
+        <div
+          tw="flex flex-col lg:flex-row items-stretch rounded-sm overflow-hidden"
+          css={[{ backgroundColor: "#fafafa", border: "1px solid #f0f0f0" }]}>
+          <div
+            role="img"
+            aria-label={authorName}
+            tw="w-full aspect-square lg:w-[200px] lg:aspect-auto lg:self-stretch bg-center bg-cover bg-no-repeat flex-shrink-0"
+            css={[
+              {
+                backgroundImage: `url("${resolveBlogAsset(doctor?.photoUrl) || avatarImg}")`,
+                backgroundPosition: "center top",
+              },
+            ]}
+          />
+          <div tw="flex flex-col justify-center gap-[3px] py-5 px-6 flex-1 min-w-0">
+            <p tw="text-[19px] font-semibold text-neutralBlack leading-[1.3]">
+              {authorName}
+              {doctor?.jobTitle ? ` ${doctor.jobTitle}` : ""}
+            </p>
+            {doctor?.bio && (
+              <p tw="text-[15px] text-neutral50 mt-[6px] leading-[1.6]">{doctor.bio}</p>
+            )}
+            <div tw="flex items-center gap-3 text-[15px] text-neutral50 mt-[6px]">
+              <CustomLink
+                to={doctor?.profileUrl || "/doctor"}
+                tw="font-medium transition-colors duration-200"
+                css={[{ color: "#DA7F67" }]}>
+                의료진 소개 보기
+              </CustomLink>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
