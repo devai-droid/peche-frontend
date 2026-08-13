@@ -258,6 +258,13 @@ const ProductDetail = () => {
         <Helmet>
           <title>{name} | 페슈의원</title>
           <meta name="description" content={`${subTitle}`} />
+          {/* 상세 콘텐츠가 공통(제모 사본)이면 대표 상품을 canonical로 — 중복 콘텐츠 방지 */}
+          {detailPost?.canonicalProductId && detailPost.canonicalProductId !== id && (
+            <link
+              rel="canonical"
+              href={`https://pecheskin.clinic/${i18n.language}/products/${detailPost.canonicalProductId}`}
+            />
+          )}
         </Helmet>
 
         <div tw="w-screen overflow-hidden relative">

@@ -43,6 +43,8 @@ export interface BlogV2Post {
   title: string
   subtitle?: string
   bodyHtml?: string
+  /** 시술 상세페이지 대표(canonical) 상품 id — 제모 공통 사본이면 원본 상품을 가리킴 */
+  canonicalProductId?: string
   bodyMd: string
   thumbnailUrl?: string
   slug: string
