@@ -56,15 +56,11 @@ const useCartFreshCheck = () => {
   }
 
   /**
-   * 검증 후 최신값으로 장바구니를 항상 정리/갱신하고 결과를 반환한다.
-   * (가격 그대로여도 임포트로 바뀐 상품 id를 이름매칭으로 재연결해야 예약이 유효 id로 나감)
-   * - removed: 이름이 사라진(변경·삭제)·만료 항목이 있어 장바구니에서 제거됨
-   * - changed: 이름은 그대로인데 가격·설명이 바뀌어 최신값으로 갱신됨
-   * - ok: 표시상 이상 없음 (그대로 예약 진행 가능)
-   * reconcile 한 번으로 제거·갱신·재연결·클램프를 함께 처리하고, 해당되는 안내를 모두 반환한다.
-   * 반환 배열이 비면 이상 없음(그대로 예약 진행 가능), 아니면 그 안내들을 한 모달에 나열한다.
+   * 예약하기 시 서버 최신값과 대조해 고지할 안내(removed/changed/limited)를 감지해 반환한다.
+   * - 안내가 있으면: 장바구니는 아직 건드리지 않음 → 모달로 먼저 알리고, 확인 시 applyReconcile로 실제 정리.
+   * - 안내가 없으면: 표시상 이상 없음 → 조용히 reconcile(재임포트로 바뀐 상품 id 재연결)하고 그대로 진행 가능.
    */
-  const checkAndReconcile = async (): Promise<CartNotice[]> => {
+  const detectNotices = async (): Promise<CartNotice[]> => {
     const { freshEventById, freshProductByName } = await fetchFresh()
     const invalid = getInvalidCartItemIds(
       cart,
@@ -80,19 +76,28 @@ const useCartFreshCheck = () => {
       freshProductByName,
       lang,
     )
-    // 기존에 2개+ 담긴 첫방문 이벤트(체크된 것) — reconcile에서 1로 정리되므로 고지 대상
+    // 기존에 2개+ 담긴 첫방문 이벤트(체크된 것) — 확인 시 1로 정리 예정
     const overLimit = cart.some(
       (i) => checkedList.includes(i.event?.id || "") && isFirstVisitEvent(i) && i.count > 1,
     )
-    reconcileCartEvents(freshEventById, isEventExpired, freshProductByName, lang)
     const notices: CartNotice[] = []
     if (invalid.length > 0) notices.push("removed")
     if (changed.length > 0) notices.push("changed")
     if (overLimit) notices.push("limited")
+    // 알릴 게 없으면 여기서 조용히 재연결(안내 없이 진행)
+    if (notices.length === 0) {
+      reconcileCartEvents(freshEventById, isEventExpired, freshProductByName, lang)
+    }
     return notices
   }
 
-  return { checkAndReconcile }
+  /** 모달 '확인' 시 실제로 장바구니를 최신값으로 정리(제거·갱신·재연결·첫방문 1개 클램프). */
+  const applyReconcile = async (): Promise<void> => {
+    const { freshEventById, freshProductByName } = await fetchFresh()
+    reconcileCartEvents(freshEventById, isEventExpired, freshProductByName, lang)
+  }
+
+  return { detectNotices, applyReconcile }
 }
 
 export default useCartFreshCheck

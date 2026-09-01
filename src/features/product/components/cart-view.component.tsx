@@ -201,7 +201,7 @@ const SurgeryList = () => {
   } = useCart()
 
   const navigate = useCustomNavigate()
-  const { checkAndReconcile } = useCartFreshCheck()
+  const { detectNotices, applyReconcile } = useCartFreshCheck()
   // 체크박스 UI 상태
   const [inquiryChecked, setInquiryChecked] = React.useState(inquiry)
   // 모달 관련
@@ -209,14 +209,20 @@ const SurgeryList = () => {
   // 예약 이동 전 검증 안내 목록 (빈 배열이면 닫힘)
   const [freshCheckNotices, setFreshCheckNotices] = React.useState<CartNotice[]>([])
 
-  // "예약하기" — 예약 페이지로 넘어가기 전 서버 최신값으로 예약불가·가격변경·첫방문 제한 검증
+  // "예약하기" — 서버 최신값으로 예약불가·가격변경·첫방문 제한 감지. 있으면 모달로 먼저 고지(장바구니 아직 그대로).
   const handleReserve = async () => {
-    const notices = await checkAndReconcile()
+    const notices = await detectNotices()
     if (notices.length > 0) {
-      setFreshCheckNotices(notices) // 해당되는 안내를 한 모달에 나열(장바구니는 이미 정리됨)
+      setFreshCheckNotices(notices)
       return
     }
     navigate("/reservation/new", { state: { inquiryMemo } })
+  }
+
+  // 안내 모달 '확인' — 이때 실제로 장바구니를 최신값으로 정리(제거·갱신·첫방문 1개)
+  const handleNoticeConfirm = async () => {
+    await applyReconcile()
+    setFreshCheckNotices([])
   }
 
   // 마지막 상품 임포트(=최신 상품 생성) 시각 — 장바구니 안내문구용. KST 날짜로 표시.
@@ -436,7 +442,7 @@ const SurgeryList = () => {
         </div>
       )}
 
-      <CartFreshCheckModal notices={freshCheckNotices} onClose={() => setFreshCheckNotices([])} />
+      <CartFreshCheckModal notices={freshCheckNotices} onClose={handleNoticeConfirm} />
 
       <Modal
         open={showInquiryModal}
@@ -874,7 +880,7 @@ export const BottomButtons = ({
 }) => {
   const { t, i18n } = useTranslation()
   const { setInquiry } = useCart()
-  const { checkAndReconcile } = useCartFreshCheck()
+  const { detectNotices, applyReconcile } = useCartFreshCheck()
   const language = i18n.language as Language
 
   const navigate = useCustomNavigate()
@@ -882,14 +888,20 @@ export const BottomButtons = ({
   // 예약 이동 전 검증 안내 목록 (빈 배열이면 닫힘)
   const [freshCheckNotices, setFreshCheckNotices] = React.useState<CartNotice[]>([])
 
-  // "예약하기"(모바일 탭바) — 예약 페이지로 넘어가기 전 서버 최신값으로 예약불가·가격변경·첫방문 제한 검증
+  // "예약하기"(모바일 탭바) — 감지만. 안내 있으면 모달로 먼저 고지(장바구니 아직 그대로)
   const handleReserve = async () => {
-    const notices = await checkAndReconcile()
+    const notices = await detectNotices()
     if (notices.length > 0) {
       setFreshCheckNotices(notices)
       return
     }
     navigate("/reservation/new")
+  }
+
+  // 안내 모달 '확인' — 이때 실제로 장바구니를 최신값으로 정리
+  const handleNoticeConfirm = async () => {
+    await applyReconcile()
+    setFreshCheckNotices([])
   }
 
   const inquiryButtons: {
@@ -1031,7 +1043,7 @@ export const BottomButtons = ({
           </div>
         </div>
       </Modal>
-      <CartFreshCheckModal notices={freshCheckNotices} onClose={() => setFreshCheckNotices([])} />
+      <CartFreshCheckModal notices={freshCheckNotices} onClose={handleNoticeConfirm} />
     </div>
   )
 }

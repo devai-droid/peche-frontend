@@ -819,15 +819,14 @@ const Reserve = () => {
     }
 
     // 1) 이벤트·상품 유효성 체크 — 옛 장바구니 값이 아닌 서버 최신값으로 (예약 불가/변경 차단)
-    // reconcile 전에 판정 → 항상 reconcile(가격 그대로여도 임포트로 바뀐 상품 id를 이름매칭으로 재연결)
+    // 안내가 있으면 장바구니는 아직 그대로 두고 모달로 먼저 고지 → 확인(handleRefreshCart) 때 실제 정리.
     const { freshEventById, freshProductByName } = await fetchFresh()
     const hasInvalid = getInvalidItemIds(freshEventById, freshProductByName).length > 0
     const hasChanged = getChangedItemIds(freshEventById, freshProductByName).length > 0
-    // 기존에 2개+ 담긴 첫방문 이벤트(체크된 것) — reconcile에서 1로 정리되므로 고지 대상
+    // 기존에 2개+ 담긴 첫방문 이벤트(체크된 것) — 확인 시 1로 정리 예정
     const hasOverLimit = cart.some(
       (i) => checkedList.includes(i.event?.id || "") && isFirstVisitEvent(i) && i.count > 1,
     )
-    reconcileCartEvents(freshEventById, isEventExpired, freshProductByName, language)
     // 해당되는 안내를 모아 한 모달에 나열 (예약불가·가격변경·첫방문 1개 정리)
     const notices: CartNotice[] = []
     if (hasInvalid) notices.push("removed")
@@ -838,6 +837,8 @@ const Reserve = () => {
       setEventPeriodAlert(true)
       return
     }
+    // 안내 없으면 조용히 재연결(재임포트로 바뀐 상품 id) 후 진행
+    reconcileCartEvents(freshEventById, isEventExpired, freshProductByName, language)
 
     // 2) 슬롯 재검증 — 선택한 시간이 아직 닥팔에서 열려있는지 (조회~제출 사이 마감 레이스 방지)
     const freshSlots = await getAvailableReservationsPublic(
