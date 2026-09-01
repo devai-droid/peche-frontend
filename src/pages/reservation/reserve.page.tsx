@@ -11,7 +11,7 @@ import Page from "@/lib/components/layout/page.component"
 
 import tw from "twin.macro"
 import useCustomNavigate from "@/lib/hooks/use-custom-navigate"
-import useCart, { CartItem } from "@/features/product/hooks/use-cart"
+import useCart, { CartItem, isFirstVisitEvent } from "@/features/product/hooks/use-cart"
 import useLanguageValue from "@/lib/hooks/use-language-key"
 import useLanguageQuery from "@/lib/hooks/use-language-query"
 import { useEventControllerFindMany } from "@/lib/orval/events/events"
@@ -142,7 +142,8 @@ const SurgeryItem = ({ item, updateCartItem, checked, onCheck }: SurgeryItemProp
               <span tw="w-4 text-center text-[13px] md:text-[15px]">{item.count}</span>
 
               <button
-                tw="w-6 h-6 flex justify-center items-center text-neutral50 bg-neutral"
+                tw="w-6 h-6 flex justify-center items-center text-neutral50 bg-neutral disabled:opacity-40 disabled:cursor-not-allowed"
+                disabled={isFirstVisitEvent(item)} // 첫방문 이벤트는 상품당 1개 제한
                 onClick={() => updateCartItem({ ...item, count: item.count + 1 })}>
                 +
               </button>

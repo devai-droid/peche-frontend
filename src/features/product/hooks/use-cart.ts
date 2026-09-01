@@ -11,6 +11,13 @@ export interface CartItem {
   count: number
 }
 
+/** 첫방문 이벤트 카테고리명 — 번들명은 월마다 바뀌므로(예: "첫방문 이벤트(26년9월)") 고정값인 카테고리명으로 식별 */
+export const FIRST_VISIT_EVENT_CATEGORY = "첫방문 이벤트"
+
+/** 수량 제한(상품당 1개) 대상인지 — 첫방문 이벤트 카테고리 이벤트 */
+export const isFirstVisitEvent = (item?: { event?: Event }): boolean =>
+  item?.event?.category?.name === FIRST_VISIT_EVENT_CATEGORY
+
 /* ---------- Cookie helpers (Safari ITP / 모바일 대응) ---------- */
 const BACKUP_COOKIE = "__cart_backup"
 const BACKUP_MAX_AGE = 300 // 5분
@@ -173,16 +180,19 @@ const useCart = () => {
       (i) => (i.event && i.event?.id === event?.id) || (i.product && i.product?.id === product?.id),
     )
     if (item >= 0) {
-      const newCart = cart.map((i) => {
-        if (
-          (i.event && i.event?.id === event?.id) ||
-          (i.product && i.product?.id === product?.id)
-        ) {
-          return { ...i, count: i.count + 1 }
-        }
-        return i
-      })
-      setCart(newCart)
+      // 첫방문 이벤트는 상품당 1개 제한 — 이미 담겨있으면 수량 증가 없이 유지
+      if (!isFirstVisitEvent({ event })) {
+        const newCart = cart.map((i) => {
+          if (
+            (i.event && i.event?.id === event?.id) ||
+            (i.product && i.product?.id === product?.id)
+          ) {
+            return { ...i, count: i.count + 1 }
+          }
+          return i
+        })
+        setCart(newCart)
+      }
     } else {
       setCart([...cart, { event, product, count: 1 }])
     }

@@ -4,7 +4,7 @@ import { Button, Checkbox, IconButton } from "@/design-system/components"
 import React, { useEffect, useLayoutEffect } from "react"
 import { useTranslation } from "react-i18next"
 import tw from "twin.macro"
-import useCart, { CartItem } from "../hooks/use-cart"
+import useCart, { CartItem, isFirstVisitEvent } from "../hooks/use-cart"
 import useCartFreshCheck, { CartCheckResult } from "../hooks/use-cart-fresh-check"
 import useLanguageValue from "@/lib/hooks/use-language-key"
 import { Event } from "@/lib/orval/model"
@@ -136,7 +136,8 @@ const SurgeryItem = ({
               <span tw="w-4 text-center text-[13px] md:text-[15px]">{item.count}</span>
 
               <button
-                tw="w-6 h-6 flex justify-center items-center text-neutral50 bg-neutral"
+                tw="w-6 h-6 flex justify-center items-center text-neutral50 bg-neutral disabled:opacity-40 disabled:cursor-not-allowed"
+                disabled={isFirstVisitEvent(item)} // 첫방문 이벤트는 상품당 1개 제한
                 onClick={() => updateCartItem({ ...item, count: item.count + 1 })}>
                 +
               </button>
