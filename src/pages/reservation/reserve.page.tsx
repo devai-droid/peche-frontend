@@ -1242,7 +1242,7 @@ const Reserve = () => {
         width="max-w-[400px]">
         <div tw="font-pretendard">
           {cartNotices.length >= 2 && (
-            <div tw="flex items-center gap-2 mb-4 text-[13px] md:text-[14px] text-neutral70">
+            <div tw="flex items-center gap-2 mb-4 text-[13px] md:text-[14px] text-[#E5484D] font-medium">
               <span tw="inline-flex items-center justify-center w-[18px] h-[18px] rounded-full bg-[#E5484D] text-white text-[12px] font-bold leading-none shrink-0">
                 !
               </span>
