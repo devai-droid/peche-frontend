@@ -344,7 +344,8 @@
     "scheduleChangedTitle": "The reservation time you selected cannot be confirmed.",
     "scheduleChangedDesc": "Please select a date and time again.",
     "bundleUntilFormat": "{{name}}: until {{endDate}}",
-    "endDateFormat": "MMM DD, YYYY"
+    "endDateFormat": "MMM DD, YYYY",
+    "firstVisitLimitNotice": "First Visit Event is available only once."
   },
   "cart": {
     "shoppingCart": "Shopping Cart",

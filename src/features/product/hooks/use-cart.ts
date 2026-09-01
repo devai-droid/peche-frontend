@@ -246,7 +246,10 @@ const useCart = () => {
       .map((i) => {
         if (i.event) {
           const fresh = freshEventById.get(i.event.id)
-          return fresh ? { ...i, event: fresh } : i // 이벤트 최신값으로 갱신
+          if (!fresh) return i
+          const next = { ...i, event: fresh } // 이벤트 최신값으로 갱신
+          if (isFirstVisitEvent(next) && next.count > 1) next.count = 1 // 첫방문 이벤트 1개 제한(기존 카트 정리)
+          return next
         }
         if (i.product && freshProductByName) {
           const fresh = freshProductByName.get(localizedItemName(i.product, lang))

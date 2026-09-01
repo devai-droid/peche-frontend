@@ -344,7 +344,8 @@
     "scheduleChangedTitle": "ไม่สามารถยืนยันเวลาจองที่คุณเลือกได้",
     "scheduleChangedDesc": "กรุณาเลือกวันที่และเวลาอีกครั้ง",
     "bundleUntilFormat": "{{name}}: ถึง {{endDate}}",
-    "endDateFormat": "DD MMM YYYY"
+    "endDateFormat": "DD MMM YYYY",
+    "firstVisitLimitNotice": "อีเวนต์สำหรับการมาครั้งแรกใช้ได้เพียง 1 ครั้งเท่านั้น"
   },
   "cart": {
     "shoppingCart": "รถเข็นสินค้า",

@@ -74,8 +74,9 @@ interface SurgeryItemProps {
 
 const SurgeryItem = ({ item, updateCartItem, checked, onCheck }: SurgeryItemProps) => {
   const tv = useLanguageValue()
-  const { i18n } = useTranslation()
+  const { t, i18n } = useTranslation()
   const language = i18n.language as Language
+  const [showLimit, setShowLimit] = React.useState(false) // 첫방문 이벤트 1개 제한 안내 모달
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const name = tv(item.product ?? item.event!, "name")
@@ -142,9 +143,15 @@ const SurgeryItem = ({ item, updateCartItem, checked, onCheck }: SurgeryItemProp
               <span tw="w-4 text-center text-[13px] md:text-[15px]">{item.count}</span>
 
               <button
-                tw="w-6 h-6 flex justify-center items-center text-neutral50 bg-neutral disabled:opacity-40 disabled:cursor-not-allowed"
-                disabled={isFirstVisitEvent(item)} // 첫방문 이벤트는 상품당 1개 제한
-                onClick={() => updateCartItem({ ...item, count: item.count + 1 })}>
+                tw="w-6 h-6 flex justify-center items-center text-neutral50 bg-neutral"
+                onClick={() => {
+                  // 첫방문 이벤트는 상품당 1개 제한 — 증가 대신 안내 모달
+                  if (isFirstVisitEvent(item)) {
+                    setShowLimit(true)
+                    return
+                  }
+                  updateCartItem({ ...item, count: item.count + 1 })
+                }}>
                 +
               </button>
             </div>
@@ -153,6 +160,20 @@ const SurgeryItem = ({ item, updateCartItem, checked, onCheck }: SurgeryItemProp
       </div>
 
       <hr tw="my-5" />
+
+      <Modal open={showLimit} onClose={() => setShowLimit(false)} width="max-w-[360px]">
+        <div tw="font-pretendard">
+          <div tw="text-[15px] md:text-[17px] font-semibold mb-6 leading-relaxed text-center">
+            {t("reservePage.firstVisitLimitNotice")}
+          </div>
+          <Button
+            tw="w-full h-[40px] text-[13px] md:text-[15px]"
+            style={{ variant: "filled", color: "point", size: "sm" }}
+            onClick={() => setShowLimit(false)}>
+            {t("common.confirm")}
+          </Button>
+        </div>
+      </Modal>
     </div>
   )
 }

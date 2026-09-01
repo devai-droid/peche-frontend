@@ -344,7 +344,8 @@
     "scheduleChangedTitle": "選択された予約時間を確定できません。",
     "scheduleChangedDesc": "日付と時間をもう一度選択してください。",
     "bundleUntilFormat": "{{name}}: {{endDate}}まで",
-    "endDateFormat": "YYYY年MM月DD日"
+    "endDateFormat": "YYYY年MM月DD日",
+    "firstVisitLimitNotice": "初診イベントは1回のみご利用いただけます。"
   },
   "cart": {
     "shoppingCart": "ショッピングカート",

@@ -344,7 +344,8 @@
     "scheduleChangedTitle": "无法确认您所选的预约时间。",
     "scheduleChangedDesc": "请重新选择日期和时间。",
     "bundleUntilFormat": "{{name}}: 截至 {{endDate}}",
-    "endDateFormat": "YYYY年MM月DD日"
+    "endDateFormat": "YYYY年MM月DD日",
+    "firstVisitLimitNotice": "首次访问活动每人仅限1次。"
   },
   "cart": {
     "shoppingCart": "购物车",
