@@ -456,7 +456,12 @@
     "profileTitle": "피부과전문의",
     "profileDesc": "대한민국 전체 의사 중 단 2%에 해당하는 피부과 전문의로서, 안티에이징과 피부 재생 분야에서 다수의 학회 활동과 풍부한 임상 연구를 통해 축적한 전문 지식을 바탕으로, 개개인의 피부 상태에 최적화된 치료 시스템을 제공합니다.",
     "profileMore": "자세히 보기 →",
-    "viewEvents": "관련 시술 이벤트 가격 보기"
+    "viewEvents": "관련 시술 이벤트 가격 보기",
+    "priceView": "가격 보기",
+    "priceEvent": "가격·이벤트",
+    "allTreatments": "전체 시술",
+    "priceMore": "가격 더보기",
+    "doctorIntro": "의료진 소개 보기"
   },
   "admin": {
     "login": "관리자 로그인",

@@ -949,7 +949,7 @@ const BlogDetail = () => {
                         to={cardDoctor?.profileUrl || "/doctor"}
                         tw="font-medium transition-colors duration-200"
                         css={[{ color: "#DA7F67" }]}>
-                        의료진 소개 보기
+                        {t("blog.doctorIntro")}
                       </CustomLink>
                     </div>
                   </div>

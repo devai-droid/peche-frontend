@@ -456,7 +456,12 @@
     "profileTitle": "皮肤科专科医生",
     "profileDesc": "作为韩国仅占全体医生2%的皮肤科专科医生，凭借在抗衰老和皮肤再生领域的多次学术活动和丰富的临床研究积累的专业知识，提供针对每个人皮肤状态优化的治疗方案。",
     "profileMore": "了解更多 →",
-    "viewEvents": "查看相关疗程活动价格"
+    "viewEvents": "查看相关疗程活动价格",
+    "priceView": "查看价格",
+    "priceEvent": "价格·活动",
+    "allTreatments": "全部项目",
+    "priceMore": "查看更多价格",
+    "doctorIntro": "查看医生介绍"
   },
   "admin": {
     "login": "管理员登录",

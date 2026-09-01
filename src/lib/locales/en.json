@@ -456,7 +456,12 @@
     "profileTitle": "Board-Certified Dermatologist",
     "profileDesc": "As one of the top 2% of board-certified dermatologists in South Korea, our specialist brings extensive clinical research and academic experience in anti-aging and skin regeneration to provide optimized treatment systems tailored to each individual's skin condition.",
     "profileMore": "Learn more →",
-    "viewEvents": "View Related Treatment Event Prices"
+    "viewEvents": "View Related Treatment Event Prices",
+    "priceView": "View Prices",
+    "priceEvent": "Prices & Events",
+    "allTreatments": "All Treatments",
+    "priceMore": "See More Prices",
+    "doctorIntro": "View Doctor Profile"
   },
   "admin": {
     "login": "Admin Login",

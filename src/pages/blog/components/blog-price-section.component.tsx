@@ -99,7 +99,7 @@ const PriceGroupView = ({ group }: { group: BlogPriceGroup }) => {
                 tw`flex-1 py-[2px] text-[12px] font-medium transition [&:not(:last-child)]:border-r border-neutral30`,
                 activeTab === k ? tw`bg-primary text-white` : tw`bg-white text-neutral70`,
               ]}>
-              {k === "event" ? "가격·이벤트" : "전체 시술"}
+              {k === "event" ? t("blog.priceEvent") : t("blog.allTreatments")}
             </button>
           ))}
         </div>
@@ -113,7 +113,7 @@ const PriceGroupView = ({ group }: { group: BlogPriceGroup }) => {
         <CustomLink
           to={moreTo}
           tw="flex items-center justify-center gap-1 mt-3 py-1 bg-white border border-primary text-primary text-[13px] font-medium">
-          가격 더보기 →
+          {t("blog.priceMore")} →
         </CustomLink>
       )}
     </div>
@@ -127,6 +127,7 @@ const PriceGroupView = ({ group }: { group: BlogPriceGroup }) => {
 const LINE = "#e5ded9"
 
 const BlogPriceSection = ({ postId, lang }: { postId: string; lang: string }) => {
+  const { t } = useTranslation()
   const [activeDp, setActiveDp] = useState(0)
   const { data } = useQuery({
     queryKey: ["blog-v2-prices", postId, lang],
@@ -144,7 +145,7 @@ const BlogPriceSection = ({ postId, lang }: { postId: string; lang: string }) =>
       <div
         tw="text-[16px] font-semibold text-neutralBlack pb-2 mb-3"
         css={[{ borderBottom: "1px solid #DA7F67" }]}>
-        가격 보기
+        {t("blog.priceView")}
       </div>
       {/* 폴더 탭 — 열린 탭 흰 배경, 나머지는 선으로만 구분, 박스와 연결 */}
       <div tw="flex relative z-[1]">
