@@ -49,6 +49,13 @@ dayjs.extend(utc)
 const H1 = tw.h1`text-xl font-bold`
 const H2 = tw.h2`text-lg font-extrabold`
 
+// 장바구니 안내 모달 제목 키 (removed/changed/limited)
+const cartAlertTitleKey = (mode: "removed" | "changed" | "limited"): string => {
+  if (mode === "changed") return "reservePage.productChangedTitle"
+  if (mode === "limited") return "reservePage.firstVisitLimitNotice"
+  return "reservePage.eventExpiredTitle"
+}
+
 const TimeButton = ({ selected, children, ...props }: { selected?: boolean } & any) => {
   return (
     <Button
@@ -708,7 +715,9 @@ const Reserve = () => {
   const [confirmOpen, setConfirmOpen] = React.useState(false)
   const [eventPeriodAlert, setEventPeriodAlert] = React.useState(false)
   // 장바구니 안내 모달 종류: removed(예약 불가 삭제) / changed(가격·정보 변경)
-  const [cartAlertMode, setCartAlertMode] = React.useState<"removed" | "changed">("removed")
+  const [cartAlertMode, setCartAlertMode] = React.useState<"removed" | "changed" | "limited">(
+    "removed",
+  )
   const [scheduleChangedAlert, setScheduleChangedAlert] = React.useState(false)
 
   /* -------- Auth 상태 -------- */
@@ -822,6 +831,10 @@ const Reserve = () => {
     const { freshEventById, freshProductByName } = await fetchFresh()
     const hasInvalid = getInvalidItemIds(freshEventById, freshProductByName).length > 0
     const hasChanged = getChangedItemIds(freshEventById, freshProductByName).length > 0
+    // 기존에 2개+ 담긴 첫방문 이벤트(체크된 것) — reconcile에서 1로 정리되므로 고지 대상
+    const hasOverLimit = cart.some(
+      (i) => checkedList.includes(i.event?.id || "") && isFirstVisitEvent(i) && i.count > 1,
+    )
     reconcileCartEvents(freshEventById, isEventExpired, freshProductByName, language)
     if (hasInvalid) {
       setCartAlertMode("removed") // 예약 불가(이름 변경·삭제·만료) 안내 후 정리
@@ -830,6 +843,11 @@ const Reserve = () => {
     }
     if (hasChanged) {
       setCartAlertMode("changed") // 이름은 그대로·가격/설명 변경 → 최신값으로 갱신 안내
+      setEventPeriodAlert(true)
+      return
+    }
+    if (hasOverLimit) {
+      setCartAlertMode("limited") // 첫방문 이벤트 1개로 정리됨 안내
       setEventPeriodAlert(true)
       return
     }
@@ -1236,16 +1254,16 @@ const Reserve = () => {
         onClose={() => setEventPeriodAlert(false)}
         width="max-w-[400px]">
         <div tw="font-pretendard">
-          <div tw="text-[16px] md:text-[18px] font-semibold mb-4 leading-snug">
-            {cartAlertMode === "changed"
-              ? t("reservePage.productChangedTitle")
-              : t("reservePage.eventExpiredTitle")}
+          <div tw="text-[15px] md:text-[17px] font-semibold mb-4 leading-relaxed">
+            {t(cartAlertTitleKey(cartAlertMode))}
           </div>
-          <div tw="text-neutral70 text-[14px] md:text-[16px] mb-6 leading-relaxed">
-            {cartAlertMode === "changed"
-              ? t("reservePage.productChangedDesc")
-              : t("reservePage.eventExpiredDesc")}
-          </div>
+          {cartAlertMode !== "limited" && (
+            <div tw="text-neutral70 text-[14px] md:text-[16px] mb-6 leading-relaxed">
+              {cartAlertMode === "changed"
+                ? t("reservePage.productChangedDesc")
+                : t("reservePage.eventExpiredDesc")}
+            </div>
+          )}
           <Button
             tw="w-full h-[40px] text-[13px] md:text-[15px]"
             style={{ variant: "filled", color: "point", size: "sm" }}

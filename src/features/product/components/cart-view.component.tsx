@@ -30,6 +30,12 @@ dayjs.extend(utc)
  * 예약 페이지의 안내 모달과 동일한 문구 키를 쓴다. 확인 시 닫기만 하면(장바구니는 이미 최신값으로 정리됨)
  * 사용자가 바뀐 내용을 보고 다시 예약을 진행한다.
  */
+const cartAlertTitleKey = (mode: CartCheckResult | null): string => {
+  if (mode === "changed") return "reservePage.productChangedTitle"
+  if (mode === "limited") return "reservePage.firstVisitLimitNotice"
+  return "reservePage.eventExpiredTitle"
+}
+
 const CartFreshCheckModal = ({
   mode,
   onClose,
@@ -41,16 +47,16 @@ const CartFreshCheckModal = ({
   return (
     <Modal open={mode !== null && mode !== "ok"} onClose={onClose} width="max-w-[400px]">
       <div tw="font-pretendard">
-        <div tw="text-[16px] md:text-[18px] font-semibold mb-4 leading-snug">
-          {mode === "changed"
-            ? t("reservePage.productChangedTitle")
-            : t("reservePage.eventExpiredTitle")}
+        <div tw="text-[15px] md:text-[17px] font-semibold mb-4 leading-relaxed">
+          {t(cartAlertTitleKey(mode))}
         </div>
-        <div tw="text-neutral70 text-[14px] md:text-[16px] mb-6 leading-relaxed">
-          {mode === "changed"
-            ? t("reservePage.productChangedDesc")
-            : t("reservePage.eventExpiredDesc")}
-        </div>
+        {mode !== "limited" && (
+          <div tw="text-neutral70 text-[14px] md:text-[16px] mb-6 leading-relaxed">
+            {mode === "changed"
+              ? t("reservePage.productChangedDesc")
+              : t("reservePage.eventExpiredDesc")}
+          </div>
+        )}
         <Button
           tw="w-full h-[40px] text-[13px] md:text-[15px]"
           style={{ variant: "filled", color: "point", size: "sm" }}

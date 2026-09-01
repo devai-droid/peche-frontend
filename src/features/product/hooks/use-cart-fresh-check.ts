@@ -3,7 +3,7 @@ import { useEventControllerFindMany } from "@/lib/orval/events/events"
 import { useProductControllerFindMany } from "@/lib/orval/products/products"
 import useLanguageQuery from "@/lib/hooks/use-language-query"
 import { Event } from "@/lib/orval/model"
-import useCart from "@/features/product/hooks/use-cart"
+import useCart, { isFirstVisitEvent } from "@/features/product/hooks/use-cart"
 import {
   buildProductByName,
   getChangedCartItemIds,
@@ -11,8 +11,8 @@ import {
   isEventExpired,
 } from "@/features/product/utils/cart-validation.util"
 
-/** 검증 결과: ok(이상 없음) / removed(예약 불가·삭제) / changed(가격·정보 변경) */
-export type CartCheckResult = "ok" | "removed" | "changed"
+/** 검증 결과: ok(이상 없음) / removed(예약 불가·삭제) / changed(가격·정보 변경) / limited(첫방문 이벤트 1개로 정리) */
+export type CartCheckResult = "ok" | "removed" | "changed" | "limited"
 
 /**
  * 사이드 장바구니·모바일 탭바의 "예약하기"에서 예약 페이지로 넘어가기 전,
@@ -69,9 +69,14 @@ const useCartFreshCheck = () => {
       freshProductByName,
       lang,
     )
+    // 기존에 2개+ 담긴 첫방문 이벤트(체크된 것) — reconcile에서 1로 정리되므로 고지 대상
+    const overLimit = cart.some(
+      (i) => checkedList.includes(i.event?.id || "") && isFirstVisitEvent(i) && i.count > 1,
+    )
     reconcileCartEvents(freshEventById, isEventExpired, freshProductByName, lang)
     if (invalid.length > 0) return "removed"
     if (changed.length > 0) return "changed"
+    if (overLimit) return "limited"
     return "ok"
   }
 
