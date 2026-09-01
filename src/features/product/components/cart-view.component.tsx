@@ -5,7 +5,7 @@ import React, { useEffect, useLayoutEffect } from "react"
 import { useTranslation } from "react-i18next"
 import tw from "twin.macro"
 import useCart, { CartItem, isFirstVisitEvent } from "../hooks/use-cart"
-import useCartFreshCheck, { CartCheckResult } from "../hooks/use-cart-fresh-check"
+import useCartFreshCheck, { CartNotice, CART_NOTICE_TEXT } from "../hooks/use-cart-fresh-check"
 import useLanguageValue from "@/lib/hooks/use-language-key"
 import { Event } from "@/lib/orval/model"
 import { Language } from "@/lib/locales/i18n.config"
@@ -26,37 +26,34 @@ import utc from "dayjs/plugin/utc"
 dayjs.extend(utc)
 
 /**
- * "예약하기"로 예약 페이지에 넘어가기 전 검증에서 만료/삭제·가격변경이 잡혔을 때 뜨는 안내 모달.
- * 예약 페이지의 안내 모달과 동일한 문구 키를 쓴다. 확인 시 닫기만 하면(장바구니는 이미 최신값으로 정리됨)
- * 사용자가 바뀐 내용을 보고 다시 예약을 진행한다.
+ * "예약하기"로 예약 페이지에 넘어가기 전 검증에서 잡힌 안내들을 한 모달에 목록으로 표시.
+ * 예약 불가·가격 변경·첫방문 1개 정리 등 해당되는 항목을 모두 나열한다(확인 1번). 장바구니는 이미 정리됨.
  */
-const cartAlertTitleKey = (mode: CartCheckResult | null): string => {
-  if (mode === "changed") return "reservePage.productChangedTitle"
-  if (mode === "limited") return "reservePage.firstVisitLimitNotice"
-  return "reservePage.eventExpiredTitle"
-}
-
 const CartFreshCheckModal = ({
-  mode,
+  notices,
   onClose,
 }: {
-  mode: CartCheckResult | null
+  notices: CartNotice[]
   onClose: () => void
 }) => {
   const { t } = useTranslation()
   return (
-    <Modal open={mode !== null && mode !== "ok"} onClose={onClose} width="max-w-[400px]">
+    <Modal open={notices.length > 0} onClose={onClose} width="max-w-[400px]">
       <div tw="font-pretendard">
-        <div tw="text-[15px] md:text-[17px] font-semibold mb-4 leading-relaxed">
-          {t(cartAlertTitleKey(mode))}
+        <div tw="flex flex-col gap-4 mb-6">
+          {notices.map((n) => (
+            <div key={n}>
+              <div tw="text-[15px] md:text-[17px] font-semibold leading-relaxed">
+                {t(CART_NOTICE_TEXT[n].titleKey)}
+              </div>
+              {CART_NOTICE_TEXT[n].descKey && (
+                <div tw="text-neutral70 text-[14px] md:text-[16px] mt-1 leading-relaxed">
+                  {t(CART_NOTICE_TEXT[n].descKey as string)}
+                </div>
+              )}
+            </div>
+          ))}
         </div>
-        {mode !== "limited" && (
-          <div tw="text-neutral70 text-[14px] md:text-[16px] mb-6 leading-relaxed">
-            {mode === "changed"
-              ? t("reservePage.productChangedDesc")
-              : t("reservePage.eventExpiredDesc")}
-          </div>
-        )}
         <Button
           tw="w-full h-[40px] text-[13px] md:text-[15px]"
           style={{ variant: "filled", color: "point", size: "sm" }}
@@ -200,14 +197,14 @@ const SurgeryList = () => {
   const [inquiryChecked, setInquiryChecked] = React.useState(inquiry)
   // 모달 관련
   const [showInquiryModal, setShowInquiryModal] = React.useState(false)
-  // 예약 이동 전 상품 검증 결과 안내 모달 (null이면 닫힘)
-  const [freshCheckAlert, setFreshCheckAlert] = React.useState<CartCheckResult | null>(null)
+  // 예약 이동 전 검증 안내 목록 (빈 배열이면 닫힘)
+  const [freshCheckNotices, setFreshCheckNotices] = React.useState<CartNotice[]>([])
 
-  // "예약하기" — 예약 페이지로 넘어가기 전 서버 최신값으로 만료·삭제·가격변경 검증
+  // "예약하기" — 예약 페이지로 넘어가기 전 서버 최신값으로 예약불가·가격변경·첫방문 제한 검증
   const handleReserve = async () => {
-    const result = await checkAndReconcile()
-    if (result !== "ok") {
-      setFreshCheckAlert(result) // 만료/삭제 → 장바구니 정리, 가격변경 → 최신가 갱신 (안내 후 멈춤)
+    const notices = await checkAndReconcile()
+    if (notices.length > 0) {
+      setFreshCheckNotices(notices) // 해당되는 안내를 한 모달에 나열(장바구니는 이미 정리됨)
       return
     }
     navigate("/reservation/new", { state: { inquiryMemo } })
@@ -430,7 +427,7 @@ const SurgeryList = () => {
         </div>
       )}
 
-      <CartFreshCheckModal mode={freshCheckAlert} onClose={() => setFreshCheckAlert(null)} />
+      <CartFreshCheckModal notices={freshCheckNotices} onClose={() => setFreshCheckNotices([])} />
 
       <Modal
         open={showInquiryModal}
@@ -873,14 +870,14 @@ export const BottomButtons = ({
 
   const navigate = useCustomNavigate()
   const [openWeChatModal, setOpenWeChatModal] = React.useState(false)
-  // 예약 이동 전 상품 검증 결과 안내 모달 (null이면 닫힘)
-  const [freshCheckAlert, setFreshCheckAlert] = React.useState<CartCheckResult | null>(null)
+  // 예약 이동 전 검증 안내 목록 (빈 배열이면 닫힘)
+  const [freshCheckNotices, setFreshCheckNotices] = React.useState<CartNotice[]>([])
 
-  // "예약하기"(모바일 탭바) — 예약 페이지로 넘어가기 전 서버 최신값으로 만료·삭제·가격변경 검증
+  // "예약하기"(모바일 탭바) — 예약 페이지로 넘어가기 전 서버 최신값으로 예약불가·가격변경·첫방문 제한 검증
   const handleReserve = async () => {
-    const result = await checkAndReconcile()
-    if (result !== "ok") {
-      setFreshCheckAlert(result)
+    const notices = await checkAndReconcile()
+    if (notices.length > 0) {
+      setFreshCheckNotices(notices)
       return
     }
     navigate("/reservation/new")
@@ -1025,7 +1022,7 @@ export const BottomButtons = ({
           </div>
         </div>
       </Modal>
-      <CartFreshCheckModal mode={freshCheckAlert} onClose={() => setFreshCheckAlert(null)} />
+      <CartFreshCheckModal notices={freshCheckNotices} onClose={() => setFreshCheckNotices([])} />
     </div>
   )
 }

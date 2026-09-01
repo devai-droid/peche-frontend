@@ -11,8 +11,18 @@ import {
   isEventExpired,
 } from "@/features/product/utils/cart-validation.util"
 
-/** 검증 결과: ok(이상 없음) / removed(예약 불가·삭제) / changed(가격·정보 변경) / limited(첫방문 이벤트 1개로 정리) */
-export type CartCheckResult = "ok" | "removed" | "changed" | "limited"
+/** 장바구니 안내 종류: removed(예약 불가·삭제) / changed(가격·정보 변경) / limited(첫방문 이벤트 1개로 정리) */
+export type CartNotice = "removed" | "changed" | "limited"
+
+/** 안내별 제목·설명 i18n 키 (설명 없으면 제목만) — 모달에서 목록으로 렌더 */
+export const CART_NOTICE_TEXT: Record<CartNotice, { titleKey: string; descKey?: string }> = {
+  removed: { titleKey: "reservePage.eventExpiredTitle", descKey: "reservePage.eventExpiredDesc" },
+  changed: {
+    titleKey: "reservePage.productChangedTitle",
+    descKey: "reservePage.productChangedDesc",
+  },
+  limited: { titleKey: "reservePage.firstVisitLimitNotice" },
+}
 
 /**
  * 사이드 장바구니·모바일 탭바의 "예약하기"에서 예약 페이지로 넘어가기 전,
@@ -51,9 +61,10 @@ const useCartFreshCheck = () => {
    * - removed: 이름이 사라진(변경·삭제)·만료 항목이 있어 장바구니에서 제거됨
    * - changed: 이름은 그대로인데 가격·설명이 바뀌어 최신값으로 갱신됨
    * - ok: 표시상 이상 없음 (그대로 예약 진행 가능)
-   * 예약 불가(removed)가 우선 — reconcile 한 번으로 제거·갱신·재연결을 함께 처리한다.
+   * reconcile 한 번으로 제거·갱신·재연결·클램프를 함께 처리하고, 해당되는 안내를 모두 반환한다.
+   * 반환 배열이 비면 이상 없음(그대로 예약 진행 가능), 아니면 그 안내들을 한 모달에 나열한다.
    */
-  const checkAndReconcile = async (): Promise<CartCheckResult> => {
+  const checkAndReconcile = async (): Promise<CartNotice[]> => {
     const { freshEventById, freshProductByName } = await fetchFresh()
     const invalid = getInvalidCartItemIds(
       cart,
@@ -74,10 +85,11 @@ const useCartFreshCheck = () => {
       (i) => checkedList.includes(i.event?.id || "") && isFirstVisitEvent(i) && i.count > 1,
     )
     reconcileCartEvents(freshEventById, isEventExpired, freshProductByName, lang)
-    if (invalid.length > 0) return "removed"
-    if (changed.length > 0) return "changed"
-    if (overLimit) return "limited"
-    return "ok"
+    const notices: CartNotice[] = []
+    if (invalid.length > 0) notices.push("removed")
+    if (changed.length > 0) notices.push("changed")
+    if (overLimit) notices.push("limited")
+    return notices
   }
 
   return { checkAndReconcile }

@@ -23,6 +23,7 @@ import {
   getInvalidCartItemIds,
   isEventExpired,
 } from "@/features/product/utils/cart-validation.util"
+import { CartNotice, CART_NOTICE_TEXT } from "@/features/product/hooks/use-cart-fresh-check"
 import dayjs from "dayjs"
 import utc from "dayjs/plugin/utc"
 import { useQuery } from "@tanstack/react-query"
@@ -48,13 +49,6 @@ dayjs.extend(utc)
 /* ---------------- Small UI ---------------- */
 const H1 = tw.h1`text-xl font-bold`
 const H2 = tw.h2`text-lg font-extrabold`
-
-// 장바구니 안내 모달 제목 키 (removed/changed/limited)
-const cartAlertTitleKey = (mode: "removed" | "changed" | "limited"): string => {
-  if (mode === "changed") return "reservePage.productChangedTitle"
-  if (mode === "limited") return "reservePage.firstVisitLimitNotice"
-  return "reservePage.eventExpiredTitle"
-}
 
 const TimeButton = ({ selected, children, ...props }: { selected?: boolean } & any) => {
   return (
@@ -715,9 +709,7 @@ const Reserve = () => {
   const [confirmOpen, setConfirmOpen] = React.useState(false)
   const [eventPeriodAlert, setEventPeriodAlert] = React.useState(false)
   // 장바구니 안내 모달 종류: removed(예약 불가 삭제) / changed(가격·정보 변경)
-  const [cartAlertMode, setCartAlertMode] = React.useState<"removed" | "changed" | "limited">(
-    "removed",
-  )
+  const [cartNotices, setCartNotices] = React.useState<CartNotice[]>([])
   const [scheduleChangedAlert, setScheduleChangedAlert] = React.useState(false)
 
   /* -------- Auth 상태 -------- */
@@ -836,18 +828,13 @@ const Reserve = () => {
       (i) => checkedList.includes(i.event?.id || "") && isFirstVisitEvent(i) && i.count > 1,
     )
     reconcileCartEvents(freshEventById, isEventExpired, freshProductByName, language)
-    if (hasInvalid) {
-      setCartAlertMode("removed") // 예약 불가(이름 변경·삭제·만료) 안내 후 정리
-      setEventPeriodAlert(true)
-      return
-    }
-    if (hasChanged) {
-      setCartAlertMode("changed") // 이름은 그대로·가격/설명 변경 → 최신값으로 갱신 안내
-      setEventPeriodAlert(true)
-      return
-    }
-    if (hasOverLimit) {
-      setCartAlertMode("limited") // 첫방문 이벤트 1개로 정리됨 안내
+    // 해당되는 안내를 모아 한 모달에 나열 (예약불가·가격변경·첫방문 1개 정리)
+    const notices: CartNotice[] = []
+    if (hasInvalid) notices.push("removed")
+    if (hasChanged) notices.push("changed")
+    if (hasOverLimit) notices.push("limited")
+    if (notices.length > 0) {
+      setCartNotices(notices)
       setEventPeriodAlert(true)
       return
     }
@@ -1080,7 +1067,7 @@ const Reserve = () => {
           typeof msg === "string" &&
           (msg.includes("Event is not available") || msg.includes("Product not found"))
         if (isInvalidItem) {
-          setCartAlertMode("removed")
+          setCartNotices(["removed"])
           setEventPeriodAlert(true) // 상황 A: 만료/삭제된 이벤트·상품 → 정리 모달
         } else {
           setScheduleChangedAlert(true) // 상황 B: 시간 마감/일시 오류 → 일정 재선택 안내
@@ -1254,16 +1241,20 @@ const Reserve = () => {
         onClose={() => setEventPeriodAlert(false)}
         width="max-w-[400px]">
         <div tw="font-pretendard">
-          <div tw="text-[15px] md:text-[17px] font-semibold mb-4 leading-relaxed">
-            {t(cartAlertTitleKey(cartAlertMode))}
+          <div tw="flex flex-col gap-4 mb-6">
+            {cartNotices.map((n) => (
+              <div key={n}>
+                <div tw="text-[15px] md:text-[17px] font-semibold leading-relaxed">
+                  {t(CART_NOTICE_TEXT[n].titleKey)}
+                </div>
+                {CART_NOTICE_TEXT[n].descKey && (
+                  <div tw="text-neutral70 text-[14px] md:text-[16px] mt-1 leading-relaxed">
+                    {t(CART_NOTICE_TEXT[n].descKey as string)}
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
-          {cartAlertMode !== "limited" && (
-            <div tw="text-neutral70 text-[14px] md:text-[16px] mb-6 leading-relaxed">
-              {cartAlertMode === "changed"
-                ? t("reservePage.productChangedDesc")
-                : t("reservePage.eventExpiredDesc")}
-            </div>
-          )}
           <Button
             tw="w-full h-[40px] text-[13px] md:text-[15px]"
             style={{ variant: "filled", color: "point", size: "sm" }}
