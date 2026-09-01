@@ -345,7 +345,8 @@
     "consultMemoRequiredAlert": "‘상담 내용’을 입력해주세요",
     "packageMemoRequiredAlert": "‘기타 메모’를 입력해주세요",
     "clearPackage": "보유권 사용 비우기",
-    "firstVisitLimitNotice": "'첫방문 이벤트'는 처음 내원하시는 고객님에 한해 항목별 1개씩만 예약 가능합니다."
+    "firstVisitLimitNotice": "'첫방문 이벤트'는 처음 내원하시는 고객님에 한해 항목별 1개씩만 예약 가능합니다.",
+    "multiNoticeHeader": "아래 내용을 반드시 확인해주세요."
   },
   "cart": {
     "shoppingCart": "장바구니",

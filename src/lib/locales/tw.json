@@ -345,7 +345,8 @@
     "scheduleChangedDesc": "請重新選擇日期和時間。",
     "bundleUntilFormat": "{{name}}: 截至 {{endDate}}",
     "endDateFormat": "YYYY年MM月DD日",
-    "firstVisitLimitNotice": "'首次到院活動'僅限首次就診的顧客，每個項目只能預約1個。"
+    "firstVisitLimitNotice": "'首次到院活動'僅限首次就診的顧客，每個項目只能預約1個。",
+    "multiNoticeHeader": "請務必確認以下內容。"
   },
   "cart": {
     "shoppingCart": "購物車",

@@ -40,10 +40,19 @@ const CartFreshCheckModal = ({
   return (
     <Modal open={notices.length > 0} onClose={onClose} width="max-w-[400px]">
       <div tw="font-pretendard">
+        {notices.length >= 2 && (
+          <div tw="flex items-center gap-2 mb-4 text-[13px] md:text-[14px] text-neutral70">
+            <span tw="inline-flex items-center justify-center w-[18px] h-[18px] rounded-full bg-[#E5484D] text-white text-[12px] font-bold leading-none shrink-0">
+              !
+            </span>
+            <span>{t("reservePage.multiNoticeHeader")}</span>
+          </div>
+        )}
         <div tw="flex flex-col gap-4 mb-6">
-          {notices.map((n) => (
+          {notices.map((n, idx) => (
             <div key={n}>
               <div tw="text-[15px] md:text-[17px] font-semibold leading-relaxed">
+                {notices.length >= 2 && <span tw="text-[#DA7F67]">{idx + 1}. </span>}
                 {t(CART_NOTICE_TEXT[n].titleKey)}
               </div>
               {CART_NOTICE_TEXT[n].descKey && (

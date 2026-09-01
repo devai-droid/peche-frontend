@@ -345,7 +345,8 @@
     "scheduleChangedDesc": "日付と時間をもう一度選択してください。",
     "bundleUntilFormat": "{{name}}: {{endDate}}まで",
     "endDateFormat": "YYYY年MM月DD日",
-    "firstVisitLimitNotice": "「初診イベント」は、初めてご来院のお客様に限り、項目ごとに1点ずつのみご予約いただけます。"
+    "firstVisitLimitNotice": "「初診イベント」は、初めてご来院のお客様に限り、項目ごとに1点ずつのみご予約いただけます。",
+    "multiNoticeHeader": "以下の内容を必ずご確認ください。"
   },
   "cart": {
     "shoppingCart": "ショッピングカート",
