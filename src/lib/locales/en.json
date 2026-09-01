@@ -345,7 +345,7 @@
     "scheduleChangedDesc": "Please select a date and time again.",
     "bundleUntilFormat": "{{name}}: until {{endDate}}",
     "endDateFormat": "MMM DD, YYYY",
-    "firstVisitLimitNotice": "First Visit Event is available only once."
+    "firstVisitLimitNotice": "The 'First Visit Event' is available to first-time visitors only, and can be booked as one item each."
   },
   "cart": {
     "shoppingCart": "Shopping Cart",
