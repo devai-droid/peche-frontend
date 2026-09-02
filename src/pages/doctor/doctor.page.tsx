@@ -150,9 +150,28 @@ const DoctorCardImage = styled.img`
   ${tw`w-full block object-cover`}
   aspect-ratio: 570 / 760;
 `
+/* 이름과 직책 표기.
+   '/'로 직책을 구분하는 언어(영어·태국어)는 PC·모바일 모두 '/'부터 아랫줄로 강제 개행하고,
+   그렇지 않은 언어는 줄바꿈을 지정하지 않고 화면 폭에 맡긴다. */
 const DoctorCardName = tw.p`
   text-[16px] md:text-[18px] font-pretendard font-semibold text-neutral80 tracking-tight leading-[1.4] text-center
 `
+const DoctorCardNameBroken = tw.p`
+  text-[16px] md:text-[18px] font-pretendard font-semibold text-neutral80 tracking-tight leading-[1.4] text-center
+`
+const DoctorLabel = ({ text }: { text: string }) => {
+  if (text.includes("/")) {
+    const [name, position] = text.split("\n")
+    return (
+      <DoctorCardNameBroken>
+        {name}
+        <br />
+        {position}
+      </DoctorCardNameBroken>
+    )
+  }
+  return <DoctorCardName>{text}</DoctorCardName>
+}
 
 /* ── Section 3.5: 예약 전 고민 ──
    말풍선 3개(좌·우·좌)로 고민을 꺼내고, 아래 한 문장으로 답한다.
@@ -446,30 +465,30 @@ const DoctorPage = () => {
               <DoctorCardRowLead>
                 <DoctorCardLead>
                   <DoctorCardImage src={doctorAhnProfile} alt="안태언 대표원장" />
-                  <DoctorCardName>{t("doctor.doctorAhn")}</DoctorCardName>
+                  <DoctorLabel text={t("doctor.doctorAhn")} />
                 </DoctorCardLead>
                 <DoctorCardLead>
                   <DoctorCardImage src={doctorChoiProfile} alt="최재형 총괄원장" />
-                  <DoctorCardName>{t("doctor.doctorChoi")}</DoctorCardName>
+                  <DoctorLabel text={t("doctor.doctorChoi")} />
                 </DoctorCardLead>
               </DoctorCardRowLead>
               {/* 나머지 원장 — 한 줄 4명(모바일 2명): 신동민·박해권·조진형·홍채민 */}
               <DoctorCardRowRest>
                 <DoctorCard>
                   <DoctorCardImage src={doctorShinProfile} alt="신동민 원장" />
-                  <DoctorCardName>{t("doctor.doctorShin")}</DoctorCardName>
+                  <DoctorLabel text={t("doctor.doctorShin")} />
                 </DoctorCard>
                 <DoctorCard>
                   <DoctorCardImage src={doctorParkProfile} alt="박해권 원장" />
-                  <DoctorCardName>{t("doctor.doctorPark")}</DoctorCardName>
+                  <DoctorLabel text={t("doctor.doctorPark")} />
                 </DoctorCard>
                 <DoctorCard>
                   <DoctorCardImage src={doctorChoProfile} alt="조진형 원장" />
-                  <DoctorCardName>{t("doctor.doctorCho")}</DoctorCardName>
+                  <DoctorLabel text={t("doctor.doctorCho")} />
                 </DoctorCard>
                 <DoctorCard>
                   <DoctorCardImage src={doctorHongProfile} alt="홍채민 원장" />
-                  <DoctorCardName>{t("doctor.doctorHong")}</DoctorCardName>
+                  <DoctorLabel text={t("doctor.doctorHong")} />
                 </DoctorCard>
               </DoctorCardRowRest>
             </Section3Inner>
