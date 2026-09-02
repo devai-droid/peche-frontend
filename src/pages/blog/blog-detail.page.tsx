@@ -58,7 +58,7 @@ function preprocessContent(html: string, lang: string): string {
     const base = (h.textContent ?? "")
       .trim()
       .replace(/\s+/g, "_")
-      .replace(/[^\wㄱ-ㅎ가-힣ぁ-んァ-ン一-龯]/g, "")
+      .replace(/[^\wㄱ-ㅎ가-힣ぁ-んァ-ン一-龯฀-๿]/g, "")
     if (!base) return
     const el = h as HTMLElement
     if (!counter[base]) {
