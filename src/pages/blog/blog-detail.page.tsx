@@ -129,7 +129,7 @@ function preprocessContent(html: string, lang: string): string {
 
   // FAQ: 한 단락에 붙은 Q(strong)와 A를 줄 분리
   const faqHeading = Array.from(doc.querySelectorAll("h2, h3")).find((h) =>
-    /FAQ|자주\s*묻는/i.test(h.textContent ?? ""),
+    /FAQ|자주\s*묻는|常见问题|常見問題/i.test(h.textContent ?? ""),
   )
   if (faqHeading) {
     let node = faqHeading.nextElementSibling
