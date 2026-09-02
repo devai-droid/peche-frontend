@@ -338,15 +338,17 @@
     "selectTimeRequired": "Please select a reservation time.",
     "eventPeriodNotAvailable": "This is not an available reservation date for the event product.",
     "eventExpiredTitle": "Your cart contains an item that can't be reserved.",
-    "eventExpiredDesc": "Only reservable items will be kept; items that can't be reserved will be removed from your cart.",
+    "eventExpiredDesc": "Items that cannot be booked — such as ended events or discontinued products — will be removed from your cart.",
     "productChangedTitle": "Product information has changed.",
-    "productChangedDesc": "Please review the updated details before proceeding with your reservation.",
+    "productChangedDesc": "Please review the changes, such as the product name or price, and book again.",
     "scheduleChangedTitle": "The reservation time you selected cannot be confirmed.",
     "scheduleChangedDesc": "Please select a date and time again.",
     "bundleUntilFormat": "{{name}}: until {{endDate}}",
     "endDateFormat": "MMM DD, YYYY",
     "firstVisitLimitNotice": "The 'First Visit Event' is available to first-time visitors only, and can be booked as one item each.",
-    "multiNoticeHeader": "Please be sure to review the items below."
+    "multiNoticeHeader": "Please be sure to review the items below.",
+    "firstVisitLimitTitle": "Your cart includes a First Visit Event item.",
+    "firstVisitLimitDesc": "First Visit Event items can be booked one per item, for first-time visitors only."
   },
   "cart": {
     "shoppingCart": "Shopping Cart",

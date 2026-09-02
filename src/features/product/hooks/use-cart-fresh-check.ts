@@ -21,7 +21,10 @@ export const CART_NOTICE_TEXT: Record<CartNotice, { titleKey: string; descKey?: 
     titleKey: "reservePage.productChangedTitle",
     descKey: "reservePage.productChangedDesc",
   },
-  limited: { titleKey: "reservePage.firstVisitLimitNotice" },
+  limited: {
+    titleKey: "reservePage.firstVisitLimitTitle",
+    descKey: "reservePage.firstVisitLimitDesc",
+  },
 }
 
 /**

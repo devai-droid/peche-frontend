@@ -338,15 +338,17 @@
     "selectTimeRequired": "请选择预约时间。",
     "eventPeriodNotAvailable": "不是活动商品的可预约日期。",
     "eventExpiredTitle": "购物车中包含无法预约的商品。",
-    "eventExpiredDesc": "仅保留可预约的商品，无法预约的商品将从购物车中删除。",
+    "eventExpiredDesc": "活动已结束、已停售等无法预约的商品将从购物车中删除。",
     "productChangedTitle": "商品信息已变更。",
-    "productChangedDesc": "请确认变更后的内容后再继续预约。",
+    "productChangedDesc": "请确认商品名称、价格等变更内容后重新预约。",
     "scheduleChangedTitle": "无法确认您所选的预约时间。",
     "scheduleChangedDesc": "请重新选择日期和时间。",
     "bundleUntilFormat": "{{name}}: 截至 {{endDate}}",
     "endDateFormat": "YYYY年MM月DD日",
     "firstVisitLimitNotice": "'首次到院活动'仅限首次就诊的顾客，每个项目只能预约1个。",
-    "multiNoticeHeader": "请务必确认以下内容。"
+    "multiNoticeHeader": "请务必确认以下内容。",
+    "firstVisitLimitTitle": "购物车中包含首次就诊活动商品。",
+    "firstVisitLimitDesc": "首次就诊活动商品仅限首次就诊者，每个项目只能预约1个。"
   },
   "cart": {
     "shoppingCart": "购物车",

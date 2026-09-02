@@ -338,15 +338,17 @@
     "selectTimeRequired": "請選擇預約時間。",
     "eventPeriodNotAvailable": "不是活動商品的可預約日期。",
     "eventExpiredTitle": "購物車中包含無法預約的商品。",
-    "eventExpiredDesc": "僅保留可預約的商品，無法預約的商品將從購物車中移除。",
+    "eventExpiredDesc": "活動已結束、已停售等無法預約的商品將從購物車中刪除。",
     "productChangedTitle": "商品資訊已變更。",
-    "productChangedDesc": "請確認變更後的內容後再繼續預約。",
+    "productChangedDesc": "請確認商品名稱、價格等變更內容後重新預約。",
     "scheduleChangedTitle": "無法確認您所選的預約時間。",
     "scheduleChangedDesc": "請重新選擇日期和時間。",
     "bundleUntilFormat": "{{name}}: 截至 {{endDate}}",
     "endDateFormat": "YYYY年MM月DD日",
     "firstVisitLimitNotice": "'首次到院活動'僅限首次就診的顧客，每個項目只能預約1個。",
-    "multiNoticeHeader": "請務必確認以下內容。"
+    "multiNoticeHeader": "請務必確認以下內容。",
+    "firstVisitLimitTitle": "購物車中包含首次就診活動商品。",
+    "firstVisitLimitDesc": "首次就診活動商品僅限首次就診者，每個項目只能預約1個。"
   },
   "cart": {
     "shoppingCart": "購物車",

@@ -165,7 +165,7 @@ const SurgeryItem = ({ item, updateCartItem, checked, onCheck }: SurgeryItemProp
       <Modal open={showLimit} onClose={() => setShowLimit(false)} width="max-w-[400px]">
         <div tw="font-pretendard">
           <div tw="text-[15px] md:text-[17px] font-semibold mb-6 leading-relaxed">
-            {t("reservePage.firstVisitLimitNotice")}
+            {t("reservePage.firstVisitLimitDesc")}
           </div>
           <Button
             tw="w-full h-[40px] text-[13px] md:text-[15px]"

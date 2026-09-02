@@ -338,15 +338,17 @@
     "selectTimeRequired": "予約時間を選択してください。",
     "eventPeriodNotAvailable": "イベント商品の予約可能日ではありません。",
     "eventExpiredTitle": "予約できない商品が含まれています。",
-    "eventExpiredDesc": "予約可能な商品のみ残し、予約できない商品はカートから削除されます。",
+    "eventExpiredDesc": "イベント期間終了・販売終了商品など予約できない商品はカートから削除されます。",
     "productChangedTitle": "商品情報が変更されました。",
-    "productChangedDesc": "変更内容をご確認のうえ、ご予約をお進めください。",
+    "productChangedDesc": "商品名・価格など変更内容をご確認のうえ、再度ご予約ください。",
     "scheduleChangedTitle": "選択された予約時間を確定できません。",
     "scheduleChangedDesc": "日付と時間をもう一度選択してください。",
     "bundleUntilFormat": "{{name}}: {{endDate}}まで",
     "endDateFormat": "YYYY年MM月DD日",
     "firstVisitLimitNotice": "「初診イベント」は、初めてご来院のお客様に限り、項目ごとに1点ずつのみご予約いただけます。",
-    "multiNoticeHeader": "以下の内容を必ずご確認ください。"
+    "multiNoticeHeader": "以下の内容を必ずご確認ください。",
+    "firstVisitLimitTitle": "初診イベント商品が含まれています。",
+    "firstVisitLimitDesc": "初診イベント商品は、初めてご来院の方に限り、項目ごとに1点ずつのみご予約いただけます。"
   },
   "cart": {
     "shoppingCart": "ショッピングカート",
