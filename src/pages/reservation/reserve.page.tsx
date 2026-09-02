@@ -809,15 +809,13 @@ const Reserve = () => {
     setConfirmOpen(true)
   }
 
-  // '안내 모달 확인' — 최신값으로 정리. 첫방문 안내(정보성)만 있으면 그대로 예약 진행,
-  // 예약불가·가격변경이 섞였으면 정리만 하고 닫아 재검토(다시 예약하기) 유도.
+  // '안내 모달 확인' — 검증 후 조치(제거·갱신·첫방문 1개)를 실행하고 예약 확인 단계로 진행.
   const handleNoticeConfirm = async () => {
     const { freshEventById, freshProductByName } = await fetchFresh()
     reconcileCartEvents(freshEventById, isEventExpired, freshProductByName, language)
-    const onlyInfo = cartNotices.length > 0 && cartNotices.every((n) => n === "limited")
     setEventPeriodAlert(false)
     setCartNotices([])
-    if (onlyInfo) await proceedToConfirm()
+    await proceedToConfirm()
   }
 
   // 예약 버튼 클릭 시 모달만 여는 함수
