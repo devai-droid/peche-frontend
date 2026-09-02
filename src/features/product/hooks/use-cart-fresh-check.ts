@@ -3,7 +3,7 @@ import { useEventControllerFindMany } from "@/lib/orval/events/events"
 import { useProductControllerFindMany } from "@/lib/orval/products/products"
 import useLanguageQuery from "@/lib/hooks/use-language-query"
 import { Event } from "@/lib/orval/model"
-import useCart, { isFirstVisitEvent } from "@/features/product/hooks/use-cart"
+import useCart from "@/features/product/hooks/use-cart"
 import {
   buildProductByName,
   getChangedCartItemIds,
@@ -59,9 +59,9 @@ const useCartFreshCheck = () => {
   }
 
   /**
-   * 예약하기 시 서버 최신값과 대조해 고지할 안내(removed/changed/limited)를 감지해 반환한다.
-   * - 안내가 있으면: 장바구니는 아직 건드리지 않음 → 모달로 먼저 알리고, 확인 시 applyReconcile로 실제 정리.
-   * - 안내가 없으면: 표시상 이상 없음 → 조용히 reconcile(재임포트로 바뀐 상품 id 재연결)하고 그대로 진행 가능.
+   * 사이드 장바구니·탭바 "예약하기" 시 예약 불가·가격 변경만 감지해 반환한다(첫방문 안내는 최종 예약 페이지에서만).
+   * 장바구니는 아직 건드리지 않고, 안내가 있으면 모달로 먼저 알린 뒤 확인 시 applyReconcile로 정리한다.
+   * 예약 불가/변경이 없으면 그대로 예약 페이지로 이동 — 재임포트 id 재연결·첫방문 정리는 예약 페이지가 처리.
    */
   const detectNotices = async (): Promise<CartNotice[]> => {
     const { freshEventById, freshProductByName } = await fetchFresh()
@@ -79,18 +79,9 @@ const useCartFreshCheck = () => {
       freshProductByName,
       lang,
     )
-    // 첫방문 이벤트가 담겨 있으면(수량 무관) 항상 고지 — "초진 고객만, 항목별 1개" 안내. 2개+면 확인 시 1로 정리.
-    const firstVisitPresent = cart.some(
-      (i) => checkedList.includes(i.event?.id || "") && isFirstVisitEvent(i),
-    )
     const notices: CartNotice[] = []
     if (invalid.length > 0) notices.push("removed")
     if (changed.length > 0) notices.push("changed")
-    if (firstVisitPresent) notices.push("limited")
-    // 알릴 게 없으면 여기서 조용히 재연결(안내 없이 진행)
-    if (notices.length === 0) {
-      reconcileCartEvents(freshEventById, isEventExpired, freshProductByName, lang)
-    }
     return notices
   }
 
