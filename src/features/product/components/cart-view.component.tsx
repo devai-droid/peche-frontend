@@ -219,10 +219,13 @@ const SurgeryList = () => {
     navigate("/reservation/new", { state: { inquiryMemo } })
   }
 
-  // 안내 모달 '확인' — 이때 실제로 장바구니를 최신값으로 정리(제거·갱신·첫방문 1개)
+  // 안내 모달 '확인' — 최신값으로 정리(제거·갱신·첫방문 1개). 첫방문 안내(정보성)만 있으면 그대로 예약 진행,
+  // 예약불가·가격변경이 섞였으면 정리만 하고 닫아 재검토(다시 예약하기) 유도.
   const handleNoticeConfirm = async () => {
     await applyReconcile()
+    const onlyInfo = freshCheckNotices.length > 0 && freshCheckNotices.every((n) => n === "limited")
     setFreshCheckNotices([])
+    if (onlyInfo) navigate("/reservation/new", { state: { inquiryMemo } })
   }
 
   // 마지막 상품 임포트(=최신 상품 생성) 시각 — 장바구니 안내문구용. KST 날짜로 표시.
@@ -898,10 +901,12 @@ export const BottomButtons = ({
     navigate("/reservation/new")
   }
 
-  // 안내 모달 '확인' — 이때 실제로 장바구니를 최신값으로 정리
+  // 안내 모달 '확인' — 정리 후, 첫방문 안내만 있으면 그대로 예약 진행 / 예약불가·가격변경 섞이면 닫아 재검토
   const handleNoticeConfirm = async () => {
     await applyReconcile()
+    const onlyInfo = freshCheckNotices.length > 0 && freshCheckNotices.every((n) => n === "limited")
     setFreshCheckNotices([])
+    if (onlyInfo) navigate("/reservation/new")
   }
 
   const inquiryButtons: {

@@ -784,11 +784,40 @@ const Reserve = () => {
     return { freshEventById, freshProductByName }
   }
 
-  // '모달 확인' — 최신 정보로 갱신(가격·설명·id 재연결) + 예약 불가·만료된 이벤트·상품 자동 제거
-  const handleRefreshCart = async () => {
+  // 슬롯 재검증 + 예약 확인 모달 오픈 (안내 통과 후 공통 진행)
+  const proceedToConfirm = async () => {
+    const freshSlots = await getAvailableReservationsPublic(
+      today.year(),
+      today.month() + 1,
+      today.date(),
+    )
+    const patchedSlots = freshSlots.map((slot) => ({
+      ...slot,
+      datetime: dayjs(slot.datetime).add(9, "hour").toISOString(),
+      building: "BUILDING_1",
+    }))
+    setTodaySlots(patchedSlots) // 버튼도 최신화 (마감된 시간 사라짐)
+    const openTimes = new Set(
+      patchedSlots.map((s) => dayjs(s.datetime.replace("Z", "")).format("HH:mm")),
+    )
+    if (!openTimes.has(dayjs(selectedDatetime.replace("Z", "")).format("HH:mm"))) {
+      setSelectedDatetime("")
+      localStorage.removeItem("reservation:selectedDatetime")
+      setScheduleChangedAlert(true)
+      return
+    }
+    setConfirmOpen(true)
+  }
+
+  // '안내 모달 확인' — 최신값으로 정리. 첫방문 안내(정보성)만 있으면 그대로 예약 진행,
+  // 예약불가·가격변경이 섞였으면 정리만 하고 닫아 재검토(다시 예약하기) 유도.
+  const handleNoticeConfirm = async () => {
     const { freshEventById, freshProductByName } = await fetchFresh()
     reconcileCartEvents(freshEventById, isEventExpired, freshProductByName, language)
+    const onlyInfo = cartNotices.length > 0 && cartNotices.every((n) => n === "limited")
     setEventPeriodAlert(false)
+    setCartNotices([])
+    if (onlyInfo) await proceedToConfirm()
   }
 
   // 예약 버튼 클릭 시 모달만 여는 함수
@@ -818,20 +847,18 @@ const Reserve = () => {
       return
     }
 
-    // 1) 이벤트·상품 유효성 체크 — 옛 장바구니 값이 아닌 서버 최신값으로 (예약 불가/변경 차단)
-    // 안내가 있으면 장바구니는 아직 그대로 두고 모달로 먼저 고지 → 확인(handleRefreshCart) 때 실제 정리.
+    // 1) 이벤트·상품 유효성 체크 — 서버 최신값으로. 안내가 있으면 모달로 먼저 고지 → 확인 시 처리.
     const { freshEventById, freshProductByName } = await fetchFresh()
     const hasInvalid = getInvalidItemIds(freshEventById, freshProductByName).length > 0
     const hasChanged = getChangedItemIds(freshEventById, freshProductByName).length > 0
-    // 기존에 2개+ 담긴 첫방문 이벤트(체크된 것) — 확인 시 1로 정리 예정
-    const hasOverLimit = cart.some(
-      (i) => checkedList.includes(i.event?.id || "") && isFirstVisitEvent(i) && i.count > 1,
+    // 첫방문 이벤트가 담겨 있으면(수량 무관) 항상 고지 — 초진 고객만·항목별 1개 안내
+    const firstVisitPresent = cart.some(
+      (i) => checkedList.includes(i.event?.id || "") && isFirstVisitEvent(i),
     )
-    // 해당되는 안내를 모아 한 모달에 나열 (예약불가·가격변경·첫방문 1개 정리)
     const notices: CartNotice[] = []
     if (hasInvalid) notices.push("removed")
     if (hasChanged) notices.push("changed")
-    if (hasOverLimit) notices.push("limited")
+    if (firstVisitPresent) notices.push("limited")
     if (notices.length > 0) {
       setCartNotices(notices)
       setEventPeriodAlert(true)
@@ -839,30 +866,7 @@ const Reserve = () => {
     }
     // 안내 없으면 조용히 재연결(재임포트로 바뀐 상품 id) 후 진행
     reconcileCartEvents(freshEventById, isEventExpired, freshProductByName, language)
-
-    // 2) 슬롯 재검증 — 선택한 시간이 아직 닥팔에서 열려있는지 (조회~제출 사이 마감 레이스 방지)
-    const freshSlots = await getAvailableReservationsPublic(
-      today.year(),
-      today.month() + 1,
-      today.date(),
-    )
-    const patchedSlots = freshSlots.map((slot) => ({
-      ...slot,
-      datetime: dayjs(slot.datetime).add(9, "hour").toISOString(),
-      building: "BUILDING_1",
-    }))
-    setTodaySlots(patchedSlots) // 버튼도 최신화 (마감된 시간 사라짐)
-    const openTimes = new Set(
-      patchedSlots.map((s) => dayjs(s.datetime.replace("Z", "")).format("HH:mm")),
-    )
-    if (!openTimes.has(dayjs(selectedDatetime.replace("Z", "")).format("HH:mm"))) {
-      setSelectedDatetime("")
-      localStorage.removeItem("reservation:selectedDatetime")
-      setScheduleChangedAlert(true)
-      return
-    }
-
-    setConfirmOpen(true)
+    await proceedToConfirm()
   }
 
   const reserveConfirm = async () => {
@@ -1268,7 +1272,7 @@ const Reserve = () => {
           <Button
             tw="w-full h-[40px] text-[13px] md:text-[15px]"
             style={{ variant: "filled", color: "point", size: "sm" }}
-            onClick={handleRefreshCart}>
+            onClick={handleNoticeConfirm}>
             {t("common.confirm")}
           </Button>
         </div>

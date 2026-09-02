@@ -79,14 +79,14 @@ const useCartFreshCheck = () => {
       freshProductByName,
       lang,
     )
-    // 기존에 2개+ 담긴 첫방문 이벤트(체크된 것) — 확인 시 1로 정리 예정
-    const overLimit = cart.some(
-      (i) => checkedList.includes(i.event?.id || "") && isFirstVisitEvent(i) && i.count > 1,
+    // 첫방문 이벤트가 담겨 있으면(수량 무관) 항상 고지 — "초진 고객만, 항목별 1개" 안내. 2개+면 확인 시 1로 정리.
+    const firstVisitPresent = cart.some(
+      (i) => checkedList.includes(i.event?.id || "") && isFirstVisitEvent(i),
     )
     const notices: CartNotice[] = []
     if (invalid.length > 0) notices.push("removed")
     if (changed.length > 0) notices.push("changed")
-    if (overLimit) notices.push("limited")
+    if (firstVisitPresent) notices.push("limited")
     // 알릴 게 없으면 여기서 조용히 재연결(안내 없이 진행)
     if (notices.length === 0) {
       reconcileCartEvents(freshEventById, isEventExpired, freshProductByName, lang)
