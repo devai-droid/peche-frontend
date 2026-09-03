@@ -133,6 +133,21 @@ const Blog = () => {
     if (typeof total === "number") chipCountByKey.set(chip.key, total)
   })
 
+  // 대분류별 글 개수 — 각 대분류(+전체)의 total만 조회(limit:1). 라벨 옆에 표시.
+  const catCountKeys = [{ id: null as string | null }, ...productCategories.map((c) => ({ id: c.id }))]
+  const catCountQueries = useQueries({
+    queries: catCountKeys.map((c) => ({
+      queryKey: ["blog-v2-cat-count", lang, c.id],
+      queryFn: () => blogV2PublicApi.list({ lang, productCategoryId: c.id ?? undefined, page: 1, limit: 1 }),
+      staleTime: 1000 * 60 * 5,
+    })),
+  })
+  const catCountByKey = new Map<string, number>()
+  catCountKeys.forEach((c, idx) => {
+    const total = catCountQueries[idx]?.data?.total
+    if (typeof total === "number") catCountByKey.set(c.id ?? "__all__", total)
+  })
+
   // 글 목록: v2 공개 API
   const { data, isLoading } = useQuery({
     queryKey: ["blog-v2-public", page, lang, selectedProductCatId, selectedChipKey],
@@ -223,6 +238,13 @@ const Blog = () => {
                       ]}>
                       <div tw="px-2 overflow-hidden text-ellipsis text-[13px] sm:text-[15px] md:text-[17px]">
                         {tab.label}
+                        {catCountByKey.get(tab.id ?? "__all__") !== undefined && (
+                          <span
+                            tw="ml-1.5 font-semibold"
+                            css={[{ color: isSelected ? "#ffffff" : "#DA7F67" }]}>
+                            {catCountByKey.get(tab.id ?? "__all__")}
+                          </span>
+                        )}
                       </div>
                     </button>
                   )
