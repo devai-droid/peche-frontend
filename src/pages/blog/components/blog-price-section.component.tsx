@@ -172,7 +172,7 @@ const BlogPriceSection = ({ postId, lang }: { postId: string; lang: string }) =>
                 css`
                   margin-left: -1px;
                 `,
-              // 선택 탭은 남는 폭을 차지해 이름이 온전히 보이고, 나머지는 좁혀서 몇 글자 + 말줄임으로만 보인다.
+              // 선택 탭은 넓게 보이되 최대 절반(50%)까지만 차지 — 이름이 길면 절반 폭에서 말줄임되고 나머지 탭 자리가 남는다.
               current === i
                 ? css`
                     background: #fff;
@@ -181,6 +181,7 @@ const BlogPriceSection = ({ postId, lang }: { postId: string; lang: string }) =>
                     position: relative;
                     z-index: 1;
                     flex: 1 1 auto;
+                    max-width: 50%;
                   `
                 : css`
                     background: #f2f2f2;
