@@ -131,16 +131,8 @@ const BlogPriceSection = ({ postId, lang }: { postId: string; lang: string }) =>
   const [activeDp, setActiveDp] = useState(0)
   const tabScrollRef = useRef<HTMLDivElement>(null)
   const drag = useRef({ down: false, moved: false, startX: 0, startLeft: 0 })
-  // PC는 마우스 휠이 세로라 가로 스크롤이 안 됨 → 탭이 넘칠 때 세로 휠을 가로 스크롤로 변환(모바일은 터치로 그대로).
-  const onTabWheel = (e: React.WheelEvent<HTMLDivElement>) => {
-    const el = tabScrollRef.current
-    if (!el || el.scrollWidth <= el.clientWidth) return
-    if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
-      el.scrollLeft += e.deltaY
-      e.preventDefault()
-    }
-  }
-  // PC 클릭 드래그로도 가로 스크롤. 5px 이상 움직이면 드래그로 보고 탭 클릭(선택)은 무시한다.
+  // PC 클릭 드래그로 가로 스크롤. 5px 이상 움직이면 드래그로 보고 탭 클릭(선택)은 무시한다. (모바일은 터치로 그대로)
+  // 마우스 휠 가로 변환은 페이지 세로 스크롤과 겹쳐 넣지 않음.
   const onTabDown = (e: React.MouseEvent<HTMLDivElement>) => {
     const el = tabScrollRef.current
     if (!el) return
@@ -178,7 +170,6 @@ const BlogPriceSection = ({ postId, lang }: { postId: string; lang: string }) =>
       {/* 폴더 탭 — 열린 탭 흰 배경, 나머지는 선으로만 구분, 박스와 연결. 탭이 화면을 넘치면 가로 스크롤 */}
       <div
         ref={tabScrollRef}
-        onWheel={onTabWheel}
         onMouseDown={onTabDown}
         onMouseMove={onTabMove}
         onMouseUp={onTabUp}
