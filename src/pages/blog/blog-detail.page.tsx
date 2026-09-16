@@ -283,6 +283,28 @@ const BlogDetail = () => {
       ja: "参考文献・出典",
       th: "เอกสารอ้างอิงและแหล่งที่มา",
     } as Record<string, string>)[lang] ?? "참고 문헌 및 출처"
+  // 관련 글 섹션 제목 — 언어별. 주제 키워드가 있으면 앞에 붙인다.
+  const relatedHeading = topicKeyword
+    ? (
+        {
+          ko: `${topicKeyword} 시술 관련글 더보기`,
+          en: `More on ${topicKeyword}`,
+          zh: `${topicKeyword} 相关文章`,
+          "zh-TW": `${topicKeyword} 相關文章`,
+          ja: `${topicKeyword}の関連記事`,
+          th: `บทความที่เกี่ยวข้องกับ${topicKeyword}`,
+        } as Record<string, string>
+      )[lang] ?? `${topicKeyword} 시술 관련글 더보기`
+    : (
+        {
+          ko: "관련글 더보기",
+          en: "Related Articles",
+          zh: "相关文章",
+          "zh-TW": "相關文章",
+          ja: "関連記事",
+          th: "บทความที่เกี่ยวข้อง",
+        } as Record<string, string>
+      )[lang] ?? "관련글 더보기"
   // 의료진 카드: 글의 author_doctor 우선, 없으면 대표 의료진(공통)으로 채움
   // 카드는 어드민에서 관리하는 대표 의료진을 우선 사용 → 한 곳 수정으로 모든 글에 반영
   const cardDoctor = representativeDoctor ?? post?.authorDoctor ?? undefined
@@ -973,7 +995,7 @@ const BlogDetail = () => {
                       isDesktop ? tw`text-[21px] pb-2 mb-4` : tw`text-[16px] pb-2 mb-3`,
                       { borderBottom: "1px solid #DA7F67" },
                     ]}>
-                    {topicKeyword ? `${topicKeyword} 시술 관련글 더보기` : "관련글 더보기"}
+                    {relatedHeading}
                   </h2>
                   <ul tw="list-none p-0 m-0 flex flex-col gap-[2px]">
                     {relatedPosts.map((link) => {
