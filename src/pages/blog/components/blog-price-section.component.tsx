@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useRef, useState } from "react"
 import tw, { css } from "twin.macro"
 import { useTranslation } from "react-i18next"
 import { useQuery } from "@tanstack/react-query"
@@ -129,6 +129,34 @@ const LINE = "#e5ded9"
 const BlogPriceSection = ({ postId, lang }: { postId: string; lang: string }) => {
   const { t } = useTranslation()
   const [activeDp, setActiveDp] = useState(0)
+  const tabScrollRef = useRef<HTMLDivElement>(null)
+  const drag = useRef({ down: false, moved: false, startX: 0, startLeft: 0 })
+  // PC는 마우스 휠이 세로라 가로 스크롤이 안 됨 → 탭이 넘칠 때 세로 휠을 가로 스크롤로 변환(모바일은 터치로 그대로).
+  const onTabWheel = (e: React.WheelEvent<HTMLDivElement>) => {
+    const el = tabScrollRef.current
+    if (!el || el.scrollWidth <= el.clientWidth) return
+    if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+      el.scrollLeft += e.deltaY
+      e.preventDefault()
+    }
+  }
+  // PC 클릭 드래그로도 가로 스크롤. 5px 이상 움직이면 드래그로 보고 탭 클릭(선택)은 무시한다.
+  const onTabDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    const el = tabScrollRef.current
+    if (!el) return
+    drag.current = { down: true, moved: false, startX: e.pageX, startLeft: el.scrollLeft }
+  }
+  const onTabMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!drag.current.down) return
+    const el = tabScrollRef.current
+    if (!el) return
+    const dx = e.pageX - drag.current.startX
+    if (Math.abs(dx) > 5) drag.current.moved = true
+    el.scrollLeft = drag.current.startLeft - dx
+  }
+  const onTabUp = () => {
+    drag.current.down = false
+  }
   const { data } = useQuery({
     queryKey: ["blog-v2-prices", postId, lang],
     queryFn: () => blogV2PublicApi.prices(postId, lang),
@@ -149,9 +177,20 @@ const BlogPriceSection = ({ postId, lang }: { postId: string; lang: string }) =>
       </div>
       {/* 폴더 탭 — 열린 탭 흰 배경, 나머지는 선으로만 구분, 박스와 연결. 탭이 화면을 넘치면 가로 스크롤 */}
       <div
+        ref={tabScrollRef}
+        onWheel={onTabWheel}
+        onMouseDown={onTabDown}
+        onMouseMove={onTabMove}
+        onMouseUp={onTabUp}
+        onMouseLeave={onTabUp}
         tw="flex relative z-[1] overflow-x-auto"
         css={css`
           scrollbar-width: none;
+          cursor: grab;
+          user-select: none;
+          &:active {
+            cursor: grabbing;
+          }
           &::-webkit-scrollbar {
             display: none;
           }
@@ -160,7 +199,10 @@ const BlogPriceSection = ({ postId, lang }: { postId: string; lang: string }) =>
           <button
             key={g.linkId + i}
             type="button"
-            onClick={() => setActiveDp(i)}
+            onClick={() => {
+              if (drag.current.moved) return // 드래그(스크롤)였으면 탭 선택하지 않음
+              setActiveDp(i)
+            }}
             css={[
               tw`whitespace-nowrap text-[15px] font-bold px-2 pt-3 pb-2 lg:pt-1 lg:pb-1`,
               // 각 탭은 내용 폭으로 두되 최대 약 6자까지만 — 그보다 길면 그 탭만 말줄임(…). 축소하지 않아 탭이 많으면 컨테이너가 가로 스크롤.
