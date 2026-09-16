@@ -196,10 +196,9 @@ const BlogPriceSection = ({ postId, lang }: { postId: string; lang: string }) =>
             }}
             css={[
               tw`whitespace-nowrap text-[15px] font-bold px-2 pt-3 pb-2 lg:pt-1 lg:pb-1`,
-              // 각 탭은 내용 폭으로 두되 최대 약 6자까지만 — 그보다 길면 그 탭만 말줄임(…). 축소하지 않아 탭이 많으면 컨테이너가 가로 스크롤.
+              // 탭은 축소하지 않고 내용 폭으로 두며, 넘으면 말줄임(…). 상한 폭은 아래에서 선택 탭(넓게)/나머지(6자)로 나눔.
               css`
                 flex: 0 0 auto;
-                max-width: 6em;
                 overflow: hidden;
                 text-overflow: ellipsis;
               `,
@@ -213,7 +212,7 @@ const BlogPriceSection = ({ postId, lang }: { postId: string; lang: string }) =>
                 css`
                   margin-left: -1px;
                 `,
-              // 선택 탭은 색으로만 강조(흰 배경 + 코랄 글자). 폭은 위에서 내용 기준으로 통일.
+              // 선택 탭은 넓게(최대 절반) 두어 이름이 많이 보이고, 나머지는 6자까지만(넘으면 말줄임). 넘치면 가로 슬라이드로 접근.
               current === i
                 ? css`
                     background: #fff;
@@ -221,10 +220,12 @@ const BlogPriceSection = ({ postId, lang }: { postId: string; lang: string }) =>
                     border-bottom-color: #fff;
                     position: relative;
                     z-index: 1;
+                    max-width: 50%;
                   `
                 : css`
                     background: #f2f2f2;
                     color: #9b9b9b;
+                    max-width: 6em;
                   `,
             ]}>
             {g.detailPageName}
