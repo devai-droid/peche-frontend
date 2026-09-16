@@ -163,10 +163,10 @@ const BlogPriceSection = ({ postId, lang }: { postId: string; lang: string }) =>
             onClick={() => setActiveDp(i)}
             css={[
               tw`whitespace-nowrap text-[15px] font-bold px-2 pt-3 pb-2 lg:pt-1 lg:pb-1`,
-              // 각 탭은 내용 폭으로 두되 최대 약 11자까지만 — 그보다 길면 그 탭만 말줄임(…). 축소하지 않아 탭이 많으면 컨테이너가 가로 스크롤.
+              // 각 탭은 내용 폭으로 두되 최대 약 6자까지만 — 그보다 길면 그 탭만 말줄임(…). 축소하지 않아 탭이 많으면 컨테이너가 가로 스크롤.
               css`
                 flex: 0 0 auto;
-                max-width: 11em;
+                max-width: 6em;
                 overflow: hidden;
                 text-overflow: ellipsis;
               `,
