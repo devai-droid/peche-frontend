@@ -147,8 +147,15 @@ const BlogPriceSection = ({ postId, lang }: { postId: string; lang: string }) =>
         css={[{ borderBottom: "1px solid #DA7F67" }]}>
         {t("blog.priceView")}
       </div>
-      {/* 폴더 탭 — 열린 탭 흰 배경, 나머지는 선으로만 구분, 박스와 연결 */}
-      <div tw="flex relative z-[1]">
+      {/* 폴더 탭 — 열린 탭 흰 배경, 나머지는 선으로만 구분, 박스와 연결. 탭이 화면을 넘치면 가로 스크롤 */}
+      <div
+        tw="flex relative z-[1] overflow-x-auto"
+        css={css`
+          scrollbar-width: none;
+          &::-webkit-scrollbar {
+            display: none;
+          }
+        `}>
         {groups.map((g, i) => (
           <button
             key={g.linkId + i}
@@ -156,11 +163,12 @@ const BlogPriceSection = ({ postId, lang }: { postId: string; lang: string }) =>
             onClick={() => setActiveDp(i)}
             css={[
               tw`whitespace-nowrap text-[15px] font-bold px-2 pt-3 pb-2 lg:pt-1 lg:pb-1`,
-              // 시술명이 길면 박스 폭에 맞춰 말줄임(…) — byte 계산 없이 폭 기준으로 자동 처리
+              // 각 탭은 내용 폭으로 두되 최대 약 11자까지만 — 그보다 길면 그 탭만 말줄임(…). 축소하지 않아 탭이 많으면 컨테이너가 가로 스크롤.
               css`
+                flex: 0 0 auto;
+                max-width: 11em;
                 overflow: hidden;
                 text-overflow: ellipsis;
-                min-width: 0;
               `,
               // 모든 탭 하단을 박스 상단선과 겹쳐 단일 선으로. 탭끼리는 세로선 겹쳐 간격 0
               css`
@@ -172,7 +180,7 @@ const BlogPriceSection = ({ postId, lang }: { postId: string; lang: string }) =>
                 css`
                   margin-left: -1px;
                 `,
-              // 선택 탭은 넓게 보이되 최대 절반(50%)까지만 차지 — 이름이 길면 절반 폭에서 말줄임되고 나머지 탭 자리가 남는다.
+              // 선택 탭은 색으로만 강조(흰 배경 + 코랄 글자). 폭은 위에서 내용 기준으로 통일.
               current === i
                 ? css`
                     background: #fff;
@@ -180,14 +188,10 @@ const BlogPriceSection = ({ postId, lang }: { postId: string; lang: string }) =>
                     border-bottom-color: #fff;
                     position: relative;
                     z-index: 1;
-                    flex: 1 1 auto;
-                    max-width: 50%;
                   `
                 : css`
                     background: #f2f2f2;
                     color: #9b9b9b;
-                    flex: 0 1 auto;
-                    max-width: 6em;
                   `,
             ]}>
             {g.detailPageName}
