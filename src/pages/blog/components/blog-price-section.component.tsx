@@ -172,6 +172,7 @@ const BlogPriceSection = ({ postId, lang }: { postId: string; lang: string }) =>
                 css`
                   margin-left: -1px;
                 `,
+              // 선택 탭은 남는 폭을 차지해 이름이 온전히 보이고, 나머지는 좁혀서 몇 글자 + 말줄임으로만 보인다.
               current === i
                 ? css`
                     background: #fff;
@@ -179,10 +180,13 @@ const BlogPriceSection = ({ postId, lang }: { postId: string; lang: string }) =>
                     border-bottom-color: #fff;
                     position: relative;
                     z-index: 1;
+                    flex: 1 1 auto;
                   `
                 : css`
                     background: #f2f2f2;
                     color: #9b9b9b;
+                    flex: 0 1 auto;
+                    max-width: 6em;
                   `,
             ]}>
             {g.detailPageName}
