@@ -279,7 +279,7 @@ const BlogDetail = () => {
       ko: "참고 문헌 및 출처",
       en: "References & Sources",
       zh: "参考文献及来源",
-      tw: "參考文獻及來源",
+      "zh-TW": "參考文獻及來源",
       ja: "参考文献・出典",
       th: "เอกสารอ้างอิงและแหล่งที่มา",
     } as Record<string, string>)[lang] ?? "참고 문헌 및 출처"
