@@ -12,7 +12,7 @@ import { blogV2PublicApi } from "./blog-v2.api"
 import BlogCard from "./components/blog-card.component"
 import { BottomButtons } from "@/features/product/components/cart-view.component"
 import BlogPagination from "./components/blog-pagination.component"
-import tw from "twin.macro"
+import tw, { css } from "twin.macro"
 import { useProductCategoryControllerFindMany } from "@/lib/orval/product-categories/product-categories"
 import { useProductDetailPageControllerFindMany } from "@/lib/orval/product-detail-pages/product-detail-pages"
 import { ProductDetailPageControllerFindManyStatus } from "@/lib/orval/model"
@@ -268,6 +268,13 @@ const Blog = () => {
                 placeholder={t("blog.searchPlaceholder")}
                 aria-label={t("blog.searchPlaceholder")}
                 tw="flex-1 min-w-0 bg-transparent outline-none text-[15px] text-neutralBlack placeholder:text-neutral50"
+                css={css`
+                  &::-webkit-search-cancel-button,
+                  &::-webkit-search-decoration {
+                    -webkit-appearance: none;
+                    appearance: none;
+                  }
+                `}
               />
               {searchInput && (
                 <button
@@ -410,7 +417,7 @@ const Blog = () => {
                   !isDesktop && !isMobile && tw`grid-cols-2`,
                 ]}>
                 {posts.map((post) => (
-                  <BlogCard key={post.id} post={post} />
+                  <BlogCard key={post.id} post={post} highlight={q} />
                 ))}
               </div>
 

@@ -5,6 +5,8 @@ import { BlogV2Post, resolveBlogAsset } from "../blog-v2.api"
 
 interface BlogCardProps {
   post: BlogV2Post
+  /** 검색어 — 제목·부제목에서 일치 부분에 배경 하이라이트 */
+  highlight?: string
 }
 
 const lineClamp2 = css`
@@ -14,7 +16,34 @@ const lineClamp2 = css`
   overflow: hidden;
 `
 
-const BlogCard = ({ post }: BlogCardProps) => {
+// 검색어 하이라이트 — 코랄 톤 반투명 배경
+const markStyle = css`
+  background: rgba(218, 127, 103, 0.26);
+  color: inherit;
+  border-radius: 2px;
+  padding: 0 1px;
+`
+
+const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+
+/** text에서 term과 일치하는 부분(대소문자 무시)을 <mark>로 감싼다. term 없으면 원문 그대로. */
+const highlightText = (text: string, term?: string): React.ReactNode => {
+  const t = term?.trim()
+  if (!t || !text) return text
+  const parts = text.split(new RegExp(`(${escapeRegExp(t)})`, "gi"))
+  const lower = t.toLowerCase()
+  return parts.map((part, i) =>
+    part.toLowerCase() === lower ? (
+      <mark key={i} css={markStyle}>
+        {part}
+      </mark>
+    ) : (
+      <React.Fragment key={i}>{part}</React.Fragment>
+    ),
+  )
+}
+
+const BlogCard = ({ post, highlight }: BlogCardProps) => {
   const { title } = post
   const summary = post.subtitle ?? post.summaryText ?? ""
   // 목록 노출 날짜 = 최근 수정일(updatedAt). JSON-LD의 dateModified와 일관.
@@ -49,13 +78,13 @@ const BlogCard = ({ post }: BlogCardProps) => {
           <h3
             tw="text-[18px] lg:text-[18px] font-semibold text-neutralBlack mb-1 leading-[1.4] min-h-[2.8em]"
             css={[lineClamp2]}>
-            {title}
+            {highlightText(title, highlight)}
           </h3>
 
           <p
             tw="text-[15px] lg:text-[14px] text-neutral70 mb-4 leading-[1.5] min-h-[3em]"
             css={[lineClamp2]}>
-            {summary}
+            {highlightText(summary, highlight)}
           </p>
 
           {/* 날짜만 노출 (대분류·상세페이지 표시는 제거) */}
