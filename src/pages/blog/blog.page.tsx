@@ -243,12 +243,13 @@ const Blog = () => {
 
       <div tw="bg-white min-h-screen font-pretendard tracking-tight leading-[150%]">
         <AppMaxWidth tw="max-lg:px-0 max-lg:pt-0 pb-20 lg:pb-32">
-          {/* 검색창 — 배너 아래, 대분류 탭 위 (전체 글에서 제목·요약·본문 검색) */}
-          <div tw="px-4 mt-8 lg:mt-14">
+          {/* 검색창 — 배너 아래, 대분류 탭 위. 직각(둥근 모서리 없음). 폭은 아래 목록 섬네일 2개에 맞춤:
+              PC(4열, 간격 24px)=계산식 calc(50% - 12px), 태블릿(2열)·모바일(1열)=전체폭 */}
+          <div tw="mt-8 lg:mt-14 max-lg:px-4">
             <form
               onSubmit={(e) => e.preventDefault()}
-              tw="flex items-center gap-2 mx-auto w-full max-w-[560px] bg-white rounded-full px-4 py-3 lg:py-3.5"
-              css={[{ border: "1.5px solid #DA7F67" }]}>
+              tw="flex items-center gap-2 bg-white px-4 py-3 lg:py-3.5 w-full"
+              css={[{ border: "1.5px solid #DA7F67" }, isDesktop && { width: "calc(50% - 12px)" }]}>
               <svg
                 width="18"
                 height="18"
