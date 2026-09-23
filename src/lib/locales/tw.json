@@ -434,6 +434,8 @@
     "subtitle": "部落格",
     "notAvailable": "該服務目前正在籌備中。",
     "noPosts": "目前還沒有發佈的文章。",
+    "searchPlaceholder": "以標題或內容搜尋",
+    "searchNoResult": "沒有找到搜尋結果。",
     "backToList": "返回列表",
     "notFoundTitle": "找不到頁面",
     "notFoundDesc": "該頁面不存在，或未提供此語言版本。",

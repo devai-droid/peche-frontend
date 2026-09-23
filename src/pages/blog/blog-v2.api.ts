@@ -105,6 +105,7 @@ export const blogV2PublicApi = {
     productCategoryId?: string
     productPage?: string
     productPageContains?: string
+    q?: string
     page?: number
     limit?: number
   }) =>

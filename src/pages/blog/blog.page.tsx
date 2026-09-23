@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import AppMaxWidth from "@/lib/components/layout/app-max-width.component"
 import Page from "@/lib/components/layout/page.component"
 import bannerImg from "@/assets/images/products-banner.jpg"
@@ -56,6 +56,28 @@ const Blog = () => {
     mutate(next)
     setSearchParams(next, { replace: true })
   }
+
+  // 검색어(제목·요약·본문) — URL 쿼리(q)에 보관해 뒤로가기 시 검색 상태도 복원
+  const q = searchParams.get("q") ?? ""
+  const [searchInput, setSearchInput] = useState(q)
+  // 밖에서 q가 바뀌면(뒤로가기 등) 입력창도 맞춘다
+  useEffect(() => {
+    setSearchInput(q)
+  }, [q])
+  // 입력 디바운스 → URL q 반영(검색 실행). 검색이 바뀌면 1페이지로.
+  useEffect(() => {
+    const handle = setTimeout(() => {
+      const trimmed = searchInput.trim()
+      if (trimmed === q) return
+      updateParams((p) => {
+        if (trimmed) p.set("q", trimmed)
+        else p.delete("q")
+        p.delete("page")
+      })
+    }, 350)
+    return () => clearTimeout(handle)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchInput])
 
   const lang = i18n.language
   const langQuery = useLanguageQuery()
@@ -150,13 +172,14 @@ const Blog = () => {
 
   // 글 목록: v2 공개 API
   const { data, isLoading } = useQuery({
-    queryKey: ["blog-v2-public", page, lang, selectedProductCatId, selectedChipKey],
+    queryKey: ["blog-v2-public", page, lang, selectedProductCatId, selectedChipKey, q],
     queryFn: () =>
       blogV2PublicApi.list({
         lang,
         productCategoryId: selectedProductCatId ?? undefined,
         productPage: selectedChip?.productPage,
         productPageContains: selectedChip?.productPageContains,
+        q: q || undefined,
         page,
         limit: POSTS_PER_PAGE,
       }),
@@ -220,9 +243,46 @@ const Blog = () => {
 
       <div tw="bg-white min-h-screen font-pretendard tracking-tight leading-[150%]">
         <AppMaxWidth tw="max-lg:px-0 max-lg:pt-0 pb-20 lg:pb-32">
+          {/* 검색창 — 배너 아래, 대분류 탭 위 (전체 글에서 제목·요약·본문 검색) */}
+          <div tw="px-4 mt-8 lg:mt-14">
+            <form
+              onSubmit={(e) => e.preventDefault()}
+              tw="flex items-center gap-2 mx-auto w-full max-w-[560px] bg-white rounded-full px-4 py-3 lg:py-3.5"
+              css={[{ border: "1.5px solid #DA7F67" }]}>
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#DA7F67"
+                strokeWidth="2"
+                strokeLinecap="round">
+                <circle cx="11" cy="11" r="7" />
+                <path d="m20 20-3.2-3.2" />
+              </svg>
+              <input
+                type="search"
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+                placeholder={t("blog.searchPlaceholder")}
+                aria-label={t("blog.searchPlaceholder")}
+                tw="flex-1 min-w-0 bg-transparent outline-none text-[15px] text-neutralBlack placeholder:text-neutral50"
+              />
+              {searchInput && (
+                <button
+                  type="button"
+                  onClick={() => setSearchInput("")}
+                  aria-label="검색어 지우기"
+                  tw="flex-shrink-0 text-neutral50 hover:text-neutralBlack text-[18px] leading-none px-1">
+                  ✕
+                </button>
+              )}
+            </form>
+          </div>
+
           {/* 시술 대분류 탭 (product_category) */}
           {productCategories.length > 0 && (
-            <div tw="flex justify-center mt-8 lg:mt-16 mb-4 lg:mb-12 max-lg:p-4">
+            <div tw="flex justify-center mt-6 lg:mt-10 mb-4 lg:mb-12 max-lg:p-4">
               <div tw="grid justify-center bg-neutral30 gap-px p-px grid-cols-3 lg:grid-cols-5 w-full">
                 {tabs.map((tab) => {
                   const isSelected = selectedProductCatId === tab.id
@@ -310,7 +370,9 @@ const Blog = () => {
           {/* Empty State */}
           {!isLoading && posts.length === 0 && (
             <div tw="flex flex-col items-center py-20 max-lg:px-4">
-              <div tw="text-[18px] lg:text-[22px] text-neutral70">{t("blog.noPosts")}</div>
+              <div tw="text-[18px] lg:text-[22px] text-neutral70 text-center">
+                {q ? t("blog.searchNoResult") : t("blog.noPosts")}
+              </div>
               {isAdmin && isDesktop && (
                 <div tw="flex justify-center mt-6">
                   <button
