@@ -248,7 +248,7 @@ const Blog = () => {
           <div tw="mt-8 lg:mt-14 max-lg:px-4">
             <form
               onSubmit={(e) => e.preventDefault()}
-              tw="flex items-center gap-2 bg-white px-4 py-3 lg:py-3.5 w-full"
+              tw="flex items-center gap-2 bg-white px-4 py-3 lg:py-3.5 w-full mx-auto"
               css={[{ border: "1.5px solid #DA7F67" }, isDesktop && { width: "calc(50% - 12px)" }]}>
               <svg
                 width="18"
