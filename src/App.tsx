@@ -14,14 +14,20 @@ import { reloadIfNewVersion } from "./lib/utils/version-check.util"
 export default function App() {
   const { t } = useTranslation()
 
-  // 오래 켜둔 탭(특히 모바일)이 낡은 버전으로 남지 않게: 탭 복귀 시 최신 배포면 자동 새로고침.
-  // 장바구니 등은 localStorage라 유지됨. 새 버전이 아니면 아무 일 없음.
+  // 사이트 전체에서 새 배포를 자동 반영: 탭 복귀 시 + 주기적으로(5분) 최신 배포면 자동 새로고침.
+  // 장바구니·선택시간 등은 localStorage라 유지됨. 새 버전이 아니면 아무 일 없음.
   React.useEffect(() => {
+    reloadIfNewVersion() // 앱 시작 직후 1회
     const onVisible = () => {
       if (document.visibilityState === "visible") reloadIfNewVersion()
     }
     document.addEventListener("visibilitychange", onVisible)
-    return () => document.removeEventListener("visibilitychange", onVisible)
+    // 켜둔 채로 있어도(활성 탭 포함) 새 배포가 나가면 5분 내 자동 갱신
+    const timer = window.setInterval(() => reloadIfNewVersion(), 5 * 60 * 1000)
+    return () => {
+      document.removeEventListener("visibilitychange", onVisible)
+      window.clearInterval(timer)
+    }
   }, [])
 
   const mutationCache = new MutationCache({
