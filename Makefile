@@ -62,7 +62,10 @@ lint:
 	@yarn lint
 
 deploy:
-	@aws $(AWS_PNR) s3 sync ./dist s3://$(S3_BUCKET_NAME)
+	# 해시 붙은 정적 자산(js/css/이미지 등)은 오래 캐시 — 내용 바뀌면 파일명 해시가 바뀌므로 안전. html은 제외.
+	@aws $(AWS_PNR) s3 sync ./dist s3://$(S3_BUCKET_NAME) --exclude "*.html" --cache-control "public, max-age=31536000"
+	# html(index 등)은 항상 재검증(no-cache) — 브라우저가 옛 index를 붙잡아 옛 번들을 로드하는 문제 방지. cp라 매번 강제 업로드.
+	@aws $(AWS_PNR) s3 cp ./dist s3://$(S3_BUCKET_NAME) --recursive --exclude "*" --include "*.html" --cache-control "no-cache, must-revalidate" --content-type "text/html"
 	@aws $(AWS_PNR) cloudfront create-invalidation --distribution-id $(DISTRIBUTION_ID) --paths "/*"
 	@echo $(DISTRIBUTION_URL)
 

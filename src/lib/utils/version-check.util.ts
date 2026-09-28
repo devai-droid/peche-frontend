@@ -35,11 +35,29 @@ export const isNewVersionDeployed = async (): Promise<boolean> => {
   }
 }
 
-/** 낡았으면 새로고침(true 반환). 장바구니 등 localStorage는 유지된다. */
+const RELOADED_FLAG = "vc-reloaded"
+
+/**
+ * 낡았으면 새로고침(true 반환). 장바구니 등 localStorage는 유지된다.
+ * 무한 새로고침 방지: 이미 한 번 새로고침했는데도 여전히 낡으면(index.html 캐시 등) 다시 새로고침하지 않는다.
+ * 최신이 되면 플래그를 지워 다음 배포부터 다시 동작한다.
+ */
 export const reloadIfNewVersion = async (): Promise<boolean> => {
-  if (await isNewVersionDeployed()) {
-    window.location.reload()
-    return true
+  const stale = await isNewVersionDeployed()
+  if (!stale) {
+    try {
+      sessionStorage.removeItem(RELOADED_FLAG)
+    } catch {
+      // ignore
+    }
+    return false
   }
-  return false
+  try {
+    if (sessionStorage.getItem(RELOADED_FLAG) === "1") return false // 새로고침했는데도 stale → 루프 방지
+    sessionStorage.setItem(RELOADED_FLAG, "1")
+  } catch {
+    // ignore
+  }
+  window.location.reload()
+  return true
 }
