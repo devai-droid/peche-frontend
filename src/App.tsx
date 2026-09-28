@@ -9,9 +9,20 @@ import { ToastType } from "./design-system/components/toast/toast.component.type
 import { CssBaseline } from "@mui/material"
 import router from "./routers/routes"
 import { useTranslation } from "react-i18next"
+import { reloadIfNewVersion } from "./lib/utils/version-check.util"
 
 export default function App() {
   const { t } = useTranslation()
+
+  // 오래 켜둔 탭(특히 모바일)이 낡은 버전으로 남지 않게: 탭 복귀 시 최신 배포면 자동 새로고침.
+  // 장바구니 등은 localStorage라 유지됨. 새 버전이 아니면 아무 일 없음.
+  React.useEffect(() => {
+    const onVisible = () => {
+      if (document.visibilityState === "visible") reloadIfNewVersion()
+    }
+    document.addEventListener("visibilitychange", onVisible)
+    return () => document.removeEventListener("visibilitychange", onVisible)
+  }, [])
 
   const mutationCache = new MutationCache({
     onError: (error, _value, _context, mutation) => {

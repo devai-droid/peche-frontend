@@ -4,6 +4,7 @@ import { Button, Checkbox, IconButton } from "@/design-system/components"
 import React, { useEffect, useLayoutEffect } from "react"
 import { useTranslation } from "react-i18next"
 import tw from "twin.macro"
+import { reloadIfNewVersion } from "@/lib/utils/version-check.util"
 import useCart, { CartItem, isFirstVisitEvent } from "../hooks/use-cart"
 import useCartFreshCheck, { CartNotice, CART_NOTICE_TEXT } from "../hooks/use-cart-fresh-check"
 import useLanguageValue from "@/lib/hooks/use-language-key"
@@ -211,6 +212,7 @@ const SurgeryList = () => {
 
   // "예약하기" — 서버 최신값으로 예약불가·가격변경·첫방문 제한 감지. 있으면 모달로 먼저 고지(장바구니 아직 그대로).
   const handleReserve = async () => {
+    if (await reloadIfNewVersion()) return // 낡은 화면이면 새 코드로 새로고침 후 중단(장바구니 유지)
     const notices = await detectNotices()
     if (notices.length > 0) {
       setFreshCheckNotices(notices)
@@ -891,6 +893,7 @@ export const BottomButtons = ({
 
   // "예약하기"(모바일 탭바) — 감지만. 안내 있으면 모달로 먼저 고지(장바구니 아직 그대로)
   const handleReserve = async () => {
+    if (await reloadIfNewVersion()) return // 낡은 화면이면 새 코드로 새로고침 후 중단(장바구니 유지)
     const notices = await detectNotices()
     if (notices.length > 0) {
       setFreshCheckNotices(notices)

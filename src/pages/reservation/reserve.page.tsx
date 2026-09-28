@@ -25,6 +25,7 @@ import {
   isEventExpired,
 } from "@/features/product/utils/cart-validation.util"
 import { CartNotice, CART_NOTICE_TEXT } from "@/features/product/hooks/use-cart-fresh-check"
+import { reloadIfNewVersion } from "@/lib/utils/version-check.util"
 import dayjs from "dayjs"
 import utc from "dayjs/plugin/utc"
 import { useQuery } from "@tanstack/react-query"
@@ -821,6 +822,7 @@ const Reserve = () => {
 
   // 예약 버튼 클릭 시 모달만 여는 함수
   const openConfirmModal = async () => {
+    if (await reloadIfNewVersion()) return // 낡은 화면이면 새 코드로 새로고침 후 중단(장바구니·선택시간 유지)
     if (!authInfo) {
       alert(t("reservePage.needAuth"))
       return
