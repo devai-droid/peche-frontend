@@ -18,7 +18,8 @@ import { useEventControllerFindMany } from "@/lib/orval/events/events"
 import { useProductControllerFindMany } from "@/lib/orval/products/products"
 import { AvailableReservationResultDto, Event, Product } from "@/lib/orval/model"
 import {
-  buildProductByName,
+  buildFreshProductIndex,
+  FreshProductIndex,
   getChangedCartItemIds,
   getInvalidCartItemIds,
   isEventExpired,
@@ -761,18 +762,18 @@ const Reserve = () => {
 
   const [memoRequiredType, setMemoRequiredType] = React.useState<"consult" | "package" | null>(null)
 
-  // 카트 검증 로직은 사이드 장바구니(cart-view)와 공유 — cart-validation.util (상품은 현재 언어 이름 기준)
+  // 카트 검증 로직은 사이드 장바구니(cart-view)와 공유 — cart-validation.util (상품은 id 우선 매칭)
   const getInvalidItemIds = (
     freshEventById: Map<string, Event>,
-    freshProductByName: Map<string, Product> | null,
-  ) => getInvalidCartItemIds(cart, checkedList, freshEventById, freshProductByName, language)
+    freshProductIndex: FreshProductIndex | null,
+  ) => getInvalidCartItemIds(cart, checkedList, freshEventById, freshProductIndex, language)
 
   const getChangedItemIds = (
     freshEventById: Map<string, Event>,
-    freshProductByName: Map<string, Product> | null,
-  ) => getChangedCartItemIds(cart, checkedList, freshEventById, freshProductByName, language)
+    freshProductIndex: FreshProductIndex | null,
+  ) => getChangedCartItemIds(cart, checkedList, freshEventById, freshProductIndex, language)
 
-  // 최신 이벤트/상품 목록 조회 (예약 클릭·모달 확인 공용). 상품은 임포트로 id가 바뀌므로 이름 Map으로.
+  // 최신 이벤트/상품 목록 조회 (예약 클릭·모달 확인 공용). 상품은 id+유일이름 색인으로.
   const fetchFresh = async () => {
     const [evRes, prRes] = await Promise.all([refetchEvents(), refetchProducts()])
     const freshEventById = new Map(
@@ -780,8 +781,8 @@ const Reserve = () => {
     )
     const prItems = prRes.data?.items ?? liveProducts?.items ?? []
     // 상품 목록을 못 받았으면(빈 배열) 상품은 건드리지 않음 — 정상 상품 오삭제 방지
-    const freshProductByName = prItems.length > 0 ? buildProductByName(prItems, language) : null
-    return { freshEventById, freshProductByName }
+    const freshProductIndex = prItems.length > 0 ? buildFreshProductIndex(prItems, language) : null
+    return { freshEventById, freshProductIndex }
   }
 
   // 슬롯 재검증 + 예약 확인 모달 오픈 (안내 통과 후 공통 진행)
@@ -811,8 +812,8 @@ const Reserve = () => {
 
   // '안내 모달 확인' — 검증 후 조치(제거·갱신·첫방문 1개)를 실행하고 예약 확인 단계로 진행.
   const handleNoticeConfirm = async () => {
-    const { freshEventById, freshProductByName } = await fetchFresh()
-    reconcileCartEvents(freshEventById, isEventExpired, freshProductByName, language)
+    const { freshEventById, freshProductIndex } = await fetchFresh()
+    reconcileCartEvents(freshEventById, isEventExpired, freshProductIndex, language)
     setEventPeriodAlert(false)
     setCartNotices([])
     await proceedToConfirm()
@@ -846,9 +847,9 @@ const Reserve = () => {
     }
 
     // 1) 이벤트·상품 유효성 체크 — 서버 최신값으로. 안내가 있으면 모달로 먼저 고지 → 확인 시 처리.
-    const { freshEventById, freshProductByName } = await fetchFresh()
-    const hasInvalid = getInvalidItemIds(freshEventById, freshProductByName).length > 0
-    const hasChanged = getChangedItemIds(freshEventById, freshProductByName).length > 0
+    const { freshEventById, freshProductIndex } = await fetchFresh()
+    const hasInvalid = getInvalidItemIds(freshEventById, freshProductIndex).length > 0
+    const hasChanged = getChangedItemIds(freshEventById, freshProductIndex).length > 0
     // 첫방문 이벤트가 담겨 있으면(수량 무관) 항상 고지 — 초진 고객만·항목별 1개 안내
     const firstVisitPresent = cart.some(
       (i) => checkedList.includes(i.event?.id || "") && isFirstVisitEvent(i),
@@ -863,7 +864,7 @@ const Reserve = () => {
       return
     }
     // 안내 없으면 조용히 재연결(재임포트로 바뀐 상품 id) 후 진행
-    reconcileCartEvents(freshEventById, isEventExpired, freshProductByName, language)
+    reconcileCartEvents(freshEventById, isEventExpired, freshProductIndex, language)
     await proceedToConfirm()
   }
 

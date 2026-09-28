@@ -2,7 +2,10 @@
 import { Event, Product } from "@/lib/orval/model"
 import React, { useRef } from "react"
 import { useLocalStorage } from "usehooks-ts"
-import { localizedItemName } from "@/features/product/utils/cart-validation.util"
+import {
+  resolveFreshProduct,
+  FreshProductIndex,
+} from "@/features/product/utils/cart-validation.util"
 
 export interface CartItem {
   event?: Event
@@ -228,18 +231,19 @@ const useCart = () => {
   const reconcileCartEvents = (
     freshEventById: Map<string, Event>,
     isExpired: (event: Event) => boolean,
-    freshProductByName?: Map<string, Product> | null,
+    freshProductIndex?: FreshProductIndex | null,
     lang = "ko",
   ) => {
-    const idRemap = new Map<string, string>() // 이름매칭으로 상품 id가 바뀐 경우 old→new (체크상태 이관용)
+    const idRemap = new Map<string, string>() // 상품 id가 바뀐 경우(재임포트) old→new (체크상태 이관용)
     const newCart = cart
       .filter((i) => {
         if (i.event) {
           const fresh = freshEventById.get(i.event.id)
           return !!fresh && !isExpired(fresh) // 목록에 없거나 만료면 제거
         }
-        if (i.product && freshProductByName) {
-          return freshProductByName.has(localizedItemName(i.product, lang)) // 이름 없으면(변경·삭제) 제거
+        if (i.product && freshProductIndex) {
+          // id 우선, 없으면 유일 이름. 특정 불가(null)면 제거
+          return resolveFreshProduct(i.product, freshProductIndex, lang) !== null
         }
         return true
       })
@@ -251,11 +255,11 @@ const useCart = () => {
           if (isFirstVisitEvent(next) && next.count > 1) next.count = 1 // 첫방문 이벤트 1개 제한(기존 카트 정리)
           return next
         }
-        if (i.product && freshProductByName) {
-          const fresh = freshProductByName.get(localizedItemName(i.product, lang))
+        if (i.product && freshProductIndex) {
+          const fresh = resolveFreshProduct(i.product, freshProductIndex, lang)
           if (fresh) {
             if (fresh.id !== i.product.id) idRemap.set(i.product.id, fresh.id) // id 바뀜 → 체크상태 이관
-            return { ...i, product: fresh } // 이름 매칭된 최신값(가격·설명·id 등)으로 교체
+            return { ...i, product: fresh } // 최신값(가격·설명·id 등)으로 교체
           }
           return i
         }

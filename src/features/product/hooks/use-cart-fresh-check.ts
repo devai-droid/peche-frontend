@@ -5,7 +5,7 @@ import useLanguageQuery from "@/lib/hooks/use-language-query"
 import { Event } from "@/lib/orval/model"
 import useCart, { isFirstVisitEvent } from "@/features/product/hooks/use-cart"
 import {
-  buildProductByName,
+  buildFreshProductIndex,
   getChangedCartItemIds,
   getInvalidCartItemIds,
   isEventExpired,
@@ -46,7 +46,7 @@ const useCartFreshCheck = () => {
   })
   const { cart, checkedList, reconcileCartEvents } = useCart()
 
-  // 최신 이벤트/상품 목록 조회 (예약 페이지 fetchFresh와 동일). 상품은 이름 Map으로.
+  // 최신 이벤트/상품 목록 조회 (예약 페이지 fetchFresh와 동일). 상품은 id+유일이름 색인으로.
   const fetchFresh = async () => {
     const [evRes, prRes] = await Promise.all([refetchEvents(), refetchProducts()])
     const freshEventById = new Map(
@@ -54,8 +54,8 @@ const useCartFreshCheck = () => {
     )
     const prItems = prRes.data?.items ?? liveProducts?.items ?? []
     // 상품 목록을 못 받았으면(빈 배열) 상품은 건드리지 않음 — 정상 상품 오삭제 방지
-    const freshProductByName = prItems.length > 0 ? buildProductByName(prItems, lang) : null
-    return { freshEventById, freshProductByName }
+    const freshProductIndex = prItems.length > 0 ? buildFreshProductIndex(prItems, lang) : null
+    return { freshEventById, freshProductIndex }
   }
 
   /**
@@ -64,19 +64,19 @@ const useCartFreshCheck = () => {
    * 안내가 없으면 조용히 reconcile(재임포트로 바뀐 상품 id 재연결)하고 그대로 진행.
    */
   const detectNotices = async (): Promise<CartNotice[]> => {
-    const { freshEventById, freshProductByName } = await fetchFresh()
+    const { freshEventById, freshProductIndex } = await fetchFresh()
     const invalid = getInvalidCartItemIds(
       cart,
       checkedList,
       freshEventById,
-      freshProductByName,
+      freshProductIndex,
       lang,
     )
     const changed = getChangedCartItemIds(
       cart,
       checkedList,
       freshEventById,
-      freshProductByName,
+      freshProductIndex,
       lang,
     )
     // 첫방문 이벤트가 담겨 있으면(수량 무관) 항상 고지 — 초진 고객만·항목별 1개. 2개+면 확인 시 1로 정리.
@@ -89,15 +89,15 @@ const useCartFreshCheck = () => {
     if (firstVisitPresent) notices.push("limited")
     // 알릴 게 없으면 조용히 재연결 후 진행
     if (notices.length === 0) {
-      reconcileCartEvents(freshEventById, isEventExpired, freshProductByName, lang)
+      reconcileCartEvents(freshEventById, isEventExpired, freshProductIndex, lang)
     }
     return notices
   }
 
   /** 모달 '확인' 시 실제로 장바구니를 최신값으로 정리(제거·갱신·재연결·첫방문 1개 클램프). */
   const applyReconcile = async (): Promise<void> => {
-    const { freshEventById, freshProductByName } = await fetchFresh()
-    reconcileCartEvents(freshEventById, isEventExpired, freshProductByName, lang)
+    const { freshEventById, freshProductIndex } = await fetchFresh()
+    reconcileCartEvents(freshEventById, isEventExpired, freshProductIndex, lang)
   }
 
   return { detectNotices, applyReconcile }
