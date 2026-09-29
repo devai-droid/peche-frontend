@@ -795,14 +795,12 @@ const Reserve = () => {
     )
     const patchedSlots = freshSlots.map((slot) => ({
       ...slot,
-      datetime: dayjs(slot.datetime).add(9, "hour").toISOString(),
       building: "BUILDING_1",
     }))
     setTodaySlots(patchedSlots) // 버튼도 최신화 (마감된 시간 사라짐)
-    const openTimes = new Set(
-      patchedSlots.map((s) => dayjs(s.datetime.replace("Z", "")).format("HH:mm")),
-    )
-    if (!openTimes.has(dayjs(selectedDatetime.replace("Z", "")).format("HH:mm"))) {
+    // 슬롯·선택값 모두 HH:mm를 문자열에서 그대로 잘라 비교 — 시간대 변환 없음
+    const openTimes = new Set(patchedSlots.map((s) => s.datetime.slice(11, 16)))
+    if (!openTimes.has(selectedDatetime.slice(11, 16))) {
       setSelectedDatetime("")
       localStorage.removeItem("reservation:selectedDatetime")
       setScheduleChangedAlert(true)
@@ -873,12 +871,12 @@ const Reserve = () => {
   const reserveConfirm = async () => {
     if (!authInfo) return
 
-    const selected = dayjs(selectedDatetime.replace("Z", ""))
-
-    const currentTime = dayjs()
+    // 선택값·현재시각 모두 한국시각(KST) 기준으로 비교 — 브라우저 시간대와 무관
+    const selected = dayjs.utc(selectedDatetime)
+    const nowKst = dayjs.utc().add(9, "hour")
     const cutoff = getTodayCutoffTime()
 
-    const isToday = selected.isSame(currentTime, "day")
+    const isToday = selected.isSame(nowKst, "day")
 
     if (isToday && selected.isBefore(cutoff)) {
       alert(t("reservePage.timeExpired"))
@@ -957,10 +955,9 @@ const Reserve = () => {
       usePackageChecked
     ) {
       getAvailableReservationsPublic(today.year(), today.month() + 1, today.date()).then((res) => {
-        // UTC → KST (+9h) 변환 패치
+        // 백엔드 슬롯은 이미 한국시각 문자열(예: 2026-09-30T20:00)이다. 시간대 변환 없이 그대로 사용.
         const patched = res.map((slot) => ({
           ...slot,
-          datetime: dayjs(slot.datetime).add(9, "hour").toISOString(),
           building: "BUILDING_1",
         }))
 
@@ -972,8 +969,9 @@ const Reserve = () => {
 
   dayjs.extend(utc)
 
+  // 한국 현재시각(KST) 기준 마감 컷오프 = 지금 + 30분(30분 단위 올림). 브라우저 시간대와 무관.
   const getTodayCutoffTime = () => {
-    let cutoff = dayjs().startOf("minute").add(30, "minute")
+    let cutoff = dayjs.utc().add(9, "hour").startOf("minute").add(30, "minute")
 
     const remainder = cutoff.minute() % 30
     if (remainder !== 0) {
@@ -984,12 +982,12 @@ const Reserve = () => {
   }
 
   const renderTimeSlots = () => {
-    const isToday = today.isSame(dayjs(), "day")
+    // 선택한 날짜가 한국 기준 '오늘'인지
+    const isToday = today.format("YYYY-MM-DD") === dayjs.utc().add(9, "hour").format("YYYY-MM-DD")
     const cutoffTime = isToday ? getTodayCutoffTime() : null
 
-    const availableTimes = new Set(
-      todaySlots.map((slot) => dayjs(slot.datetime.replace("Z", "")).format("HH:mm")),
-    )
+    // 백엔드 슬롯 문자열(2026-09-30T20:00)에서 HH:mm를 그대로 잘라 씀 — 시간대 변환 없음
+    const availableTimes = new Set(todaySlots.map((slot) => slot.datetime.slice(11, 16)))
 
     return (
       <div tw="w-full p-4 font-pretendard">
@@ -1029,7 +1027,7 @@ const Reserve = () => {
           ].map((slot) => {
             const availableFromBackend = availableTimes.has(slot)
 
-            const slotDatetime = dayjs(`${today.format("YYYY-MM-DD")}T${slot}:00`)
+            const slotDatetime = dayjs.utc(`${today.format("YYYY-MM-DD")}T${slot}:00`)
 
             const blockedByTime = isToday && cutoffTime && slotDatetime.isBefore(cutoffTime)
 
@@ -1044,12 +1042,12 @@ const Reserve = () => {
                 onClick={() => {
                   if (disabled) return
 
-                  const base = todaySlots[0]?.datetime
-                  if (!base) return
+                  if (todaySlots.length === 0) return
 
-                  const [datePart] = base.split("T")
+                  // 제출값은 선택한 날짜(한국 기준) + 슬롯 라벨(한국시각). 시간대 변환 없이 고정.
+                  const datePart = today.format("YYYY-MM-DD")
                   const value = `${datePart}T${slot}:00.000Z`
-                  setSelectedDatetime(`${datePart}T${slot}:00.000Z`)
+                  setSelectedDatetime(value)
                   // 카톡 본인인증 후 선택 리셋되는 것 방지하기 위해 localStorage 사용
                   localStorage.setItem("reservation:today", today.toISOString())
                   localStorage.setItem("reservation:selectedDatetime", value)
