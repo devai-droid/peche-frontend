@@ -383,6 +383,7 @@
     "reservationInfo": "预订信息",
     "reservationNumber": "预订编号",
     "reservationDate": "预订日期和时间",
+    "kstNote": "(以韩国时间 KST 为准)",
     "treatmentList": "预订治疗名称",
     "totalPrice": "总金额",
     "vatNotIncluded": "韩元(不含增值税)",

@@ -70,7 +70,9 @@ const DATE_FORMAT_BY_LANG: Record<string, (d: dayjs.Dayjs) => string> = {
 }
 
 const formatReservationDatetime = (dt: string, language: string) => {
-  const d = dayjs(dt.replace("Z", "")).tz("Asia/Seoul")
+  // 저장된 예약 시각은 숫자 자체가 한국시각(KST)이다. UTC로 그대로 읽어 표시하면
+  // 보는 사람 기기 시간대와 무관하게 항상 한국시각으로 고정된다(해외 접속 시 밀림 방지).
+  const d = dayjs.utc(dt)
 
   const formatter = DATE_FORMAT_BY_LANG[language] ?? DATE_FORMAT_BY_LANG.ko
 
@@ -156,8 +158,10 @@ const Reservations = () => {
   }, [user, isAdmin])
 
   reservations.forEach((r) => {
-    const date = dayjs.utc(r.datetime).tz("Asia/Seoul")
-    const nowKst = dayjs().tz("Asia/Seoul")
+    // 저장값 숫자가 곧 한국시각이므로 UTC로 그대로 읽고(예약 KST 벽시계),
+    // 지금 시각도 한국시각 벽시계(UTC+9)로 맞춰 비교한다 — 어느 나라에서 봐도 동일하게 분류.
+    const date = dayjs.utc(r.datetime)
+    const nowKst = dayjs.utc().add(9, "hour")
 
     if (r.status === "CANCELED") {
       pastReservations.push(r)
@@ -171,7 +175,7 @@ const Reservations = () => {
   const groupByDate = (list: Reservation[]) => {
     const groups: Record<string, Reservation[]> = {}
     list.forEach((r) => {
-      const key = dayjs(r.datetime).format("YYYY-MM-DD")
+      const key = dayjs.utc(r.datetime).format("YYYY-MM-DD")
       if (!groups[key]) groups[key] = []
       groups[key].push(r)
     })
@@ -358,7 +362,7 @@ const Reservations = () => {
       r.events.reduce((a, e) => a + (e.event.discountPrice || e.event.price), 0)
 
     // 지난 예약인지 계산
-    const isPast = dayjs(r.datetime).isBefore(dayjs())
+    const isPast = dayjs.utc(r.datetime).isBefore(dayjs.utc().add(9, "hour"))
 
     return (
       <Card key={r.id} tw="bg-white px-6 pb-6 flex flex-col gap-6">
@@ -392,7 +396,10 @@ const Reservations = () => {
 
           <Row>
             <Label>{t("reservationCheckPage.reservationDate")}</Label>
-            <div tw="text-neutral60">{formatReservationDatetime(r.datetime, language)}</div>
+            <div tw="text-neutral60">
+              {formatReservationDatetime(r.datetime, language)}
+              <span tw="ml-1 text-[12px] text-neutral50">{t("reservationCheckPage.kstNote")}</span>
+            </div>
           </Row>
 
           <Row>
@@ -422,6 +429,7 @@ const Reservations = () => {
         <AccordionHeader open={isOpen} onClick={() => toggle(date)}>
           <span tw="text-[16px] md:text-[18px]">
             {formatReservationDatetime(list[0].datetime, language)}
+            <span tw="ml-1 text-[12px] text-neutral50">{t("reservationCheckPage.kstNote")}</span>
           </span>
 
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2">

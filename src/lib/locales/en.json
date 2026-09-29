@@ -383,6 +383,7 @@
     "reservationInfo": "Reservation Information",
     "reservationNumber": "Reservation number",
     "reservationDate": "Reservation date and time",
+    "kstNote": "(Korea Standard Time, KST)",
     "treatmentList": "Reservation treatment name",
     "totalPrice": "Total amount",
     "vatNotIncluded": "KRW (VAT not included)",

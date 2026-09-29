@@ -383,6 +383,7 @@
     "reservationInfo": "預訂資訊",
     "reservationNumber": "預訂編號",
     "reservationDate": "預訂日期和時間",
+    "kstNote": "(以韓國時間 KST 為準)",
     "treatmentList": "預訂治療名稱",
     "totalPrice": "總金額",
     "vatNotIncluded": "韓元(不含增值稅)",

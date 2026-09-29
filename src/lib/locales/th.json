@@ -383,6 +383,7 @@
     "reservationInfo": "ข้อมูลการจอง",
     "reservationNumber": "หมายเลขการจอง",
     "reservationDate": "วันที่และเวลาการจอง",
+    "kstNote": "(อ้างอิงเวลาเกาหลี KST)",
     "treatmentList": "ชื่อการรักษาการจอง",
     "totalPrice": "จำนวนเงินทั้งหมด",
     "vatNotIncluded": "วอน (ไม่รวม VAT)",
