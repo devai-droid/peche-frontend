@@ -348,7 +348,15 @@
     "firstVisitLimitNotice": "The 'First Visit Event' is available to first-time visitors only, and can be booked as one item each.",
     "multiNoticeHeader": "Please be sure to review the items below.",
     "firstVisitLimitTitle": "Your cart includes a First Visit Event item.",
-    "firstVisitLimitDesc": "First Visit Event items can be booked one per item, for first-time visitors only."
+    "firstVisitLimitDesc": "First Visit Event items can be booked one per item, for first-time visitors only.",
+    "consultOptionTitle": "Select Consultation Option",
+    "consultOptionRequired": "Required",
+    "consultOptionDisabledNote": "You have chosen to select treatments after an in-person consultation or to use an existing treatment package, so no selection is needed here.",
+    "consultOptionWithout": "Direct Treatment (No Consultation)",
+    "consultOptionWith": "Consultation & Treatment",
+    "consultOptionWithNote": "(Free 3D Skin Analysis)",
+    "stepSelectTreatment": "Select Treatments",
+    "stepSelectDatetime": "Select Date & Time"
   },
   "cart": {
     "shoppingCart": "Shopping Cart",

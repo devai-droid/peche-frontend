@@ -103,6 +103,8 @@ function fattenCartItem(slim: any): CartItem {
   }
 }
 
+export type ConsultOption = "" | "without" | "with"
+
 const useCart = () => {
   const [inquiry, setInquiry] = useLocalStorage<boolean>("inquiry", false)
   const [cart, setCart] = useLocalStorage<CartItem[]>("cart", [])
@@ -123,6 +125,8 @@ const useCart = () => {
     [],
   )
   const [packageMemo, setPackageMemo] = useLocalStorage<string>("packageMemo", "")
+  // 상담 여부 선택: "" 미선택 / "without" 상담 없이 시술 / "with" 상담 후 시술
+  const [consultOption, setConsultOption] = useLocalStorage<ConsultOption>("consultOption", "")
 
   // hydrate 완료 여부
   const hasHydratedRef = useRef(false)
@@ -138,6 +142,7 @@ const useCart = () => {
     setJustAddedId("")
     setCheckedList([])
     setInquiryMemo("")
+    setConsultOption("")
     localStorage.removeItem("eventEndDates")
   }
   const getCheckedProductIds = () => {
@@ -346,6 +351,8 @@ const useCart = () => {
     setPackageCategories,
     packageMemo,
     setPackageMemo,
+    consultOption,
+    setConsultOption,
     hasHydrated: hasHydratedRef,
     backupToCookie,
     restoreFromCookie,

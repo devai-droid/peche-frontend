@@ -348,7 +348,15 @@
     "firstVisitLimitNotice": "「初診イベント」は、初めてご来院のお客様に限り、項目ごとに1点ずつのみご予約いただけます。",
     "multiNoticeHeader": "以下の内容を必ずご確認ください。",
     "firstVisitLimitTitle": "初診イベント商品が含まれています。",
-    "firstVisitLimitDesc": "初診イベント商品は、初めてご来院の方に限り、項目ごとに1点ずつのみご予約いただけます。"
+    "firstVisitLimitDesc": "初診イベント商品は、初めてご来院の方に限り、項目ごとに1点ずつのみご予約いただけます。",
+    "consultOptionTitle": "カウンセリング有無の選択",
+    "consultOptionRequired": "必須",
+    "consultOptionDisabledNote": "「来院カウンセリング後に施術を選択」または「既存施術チケットの利用」をお選びのため、こちらでの選択は不要です。",
+    "consultOptionWithout": "事前カウンセリングなし施術",
+    "consultOptionWith": "カウンセリング後の施術",
+    "consultOptionWithNote": "（3D肌診断無料）",
+    "stepSelectTreatment": "施術の選択",
+    "stepSelectDatetime": "日時の選択"
   },
   "cart": {
     "shoppingCart": "ショッピングカート",

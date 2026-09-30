@@ -348,7 +348,15 @@
     "firstVisitLimitNotice": "'首次到院活动'仅限首次就诊的顾客，每个项目只能预约1个。",
     "multiNoticeHeader": "请务必确认以下内容。",
     "firstVisitLimitTitle": "购物车中包含首次就诊活动商品。",
-    "firstVisitLimitDesc": "首次就诊活动商品仅限首次就诊者，每个项目只能预约1个。"
+    "firstVisitLimitDesc": "首次就诊活动商品仅限首次就诊者，每个项目只能预约1个。",
+    "consultOptionTitle": "选择是否咨询",
+    "consultOptionRequired": "必填",
+    "consultOptionDisabledNote": "您已选择“到院咨询后再选择项目”或“使用已有疗程次数”，因此无需在此选择。",
+    "consultOptionWithout": "无需咨询，直接治疗",
+    "consultOptionWith": "咨询后治疗",
+    "consultOptionWithNote": "（免费3D皮肤检测）",
+    "stepSelectTreatment": "选择项目",
+    "stepSelectDatetime": "选择日期与时间"
   },
   "cart": {
     "shoppingCart": "购物车",

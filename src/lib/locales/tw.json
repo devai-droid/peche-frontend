@@ -348,7 +348,15 @@
     "firstVisitLimitNotice": "'首次到院活動'僅限首次就診的顧客，每個項目只能預約1個。",
     "multiNoticeHeader": "請務必確認以下內容。",
     "firstVisitLimitTitle": "購物車中包含首次就診活動商品。",
-    "firstVisitLimitDesc": "首次就診活動商品僅限首次就診者，每個項目只能預約1個。"
+    "firstVisitLimitDesc": "首次就診活動商品僅限首次就診者，每個項目只能預約1個。",
+    "consultOptionTitle": "選擇是否諮詢",
+    "consultOptionRequired": "必填",
+    "consultOptionDisabledNote": "您已選擇「到院諮詢後再選擇療程」或「使用既有療程次數」，因此無須在此選擇。",
+    "consultOptionWithout": "不諮詢，直接進行療程",
+    "consultOptionWith": "諮詢後進行療程",
+    "consultOptionWithNote": "（免費3D肌膚檢測）",
+    "stepSelectTreatment": "選擇療程",
+    "stepSelectDatetime": "選擇日期與時間"
   },
   "cart": {
     "shoppingCart": "購物車",

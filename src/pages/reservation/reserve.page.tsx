@@ -11,7 +11,11 @@ import Page from "@/lib/components/layout/page.component"
 
 import tw from "twin.macro"
 import useCustomNavigate from "@/lib/hooks/use-custom-navigate"
-import useCart, { CartItem, isFirstVisitEvent } from "@/features/product/hooks/use-cart"
+import useCart, {
+  CartItem,
+  ConsultOption,
+  isFirstVisitEvent,
+} from "@/features/product/hooks/use-cart"
 import useLanguageValue from "@/lib/hooks/use-language-key"
 import useLanguageQuery from "@/lib/hooks/use-language-query"
 import { useEventControllerFindMany } from "@/lib/orval/events/events"
@@ -50,7 +54,6 @@ dayjs.extend(utc)
 
 /* ---------------- Small UI ---------------- */
 const H1 = tw.h1`text-xl font-bold`
-const H2 = tw.h2`text-lg font-extrabold`
 
 const TimeButton = ({ selected, children, ...props }: { selected?: boolean } & any) => {
   return (
@@ -73,9 +76,11 @@ interface SurgeryItemProps {
   updateCartItem: (item: CartItem) => void
   checked: boolean
   onCheck: (checked: boolean) => void
+  /* 마지막 항목은 아래 구분선을 그리지 않는다 */
+  isLast?: boolean
 }
 
-const SurgeryItem = ({ item, updateCartItem, checked, onCheck }: SurgeryItemProps) => {
+const SurgeryItem = ({ item, updateCartItem, checked, onCheck, isLast }: SurgeryItemProps) => {
   const tv = useLanguageValue()
   const { t, i18n } = useTranslation()
   const language = i18n.language as Language
@@ -162,7 +167,7 @@ const SurgeryItem = ({ item, updateCartItem, checked, onCheck }: SurgeryItemProp
         </div>
       </div>
 
-      <hr tw="my-5" />
+      {!isLast && <hr tw="my-5" />}
 
       <Modal open={showLimit} onClose={() => setShowLimit(false)} width="max-w-[400px]">
         <div tw="font-pretendard">
@@ -177,6 +182,105 @@ const SurgeryItem = ({ item, updateCartItem, checked, onCheck }: SurgeryItemProp
           </Button>
         </div>
       </Modal>
+    </div>
+  )
+}
+
+/* ── 상담 여부 선택 섹션 ──
+   장바구니에 시술을 담은 경우 반드시 하나를 골라야 한다.
+   '방문 상담 후 시술 선택'이나 '기존 시술 보유권 사용'을 고르면 선택할 필요가 없어 비활성화한다. */
+const CONSULT_OPTIONS: { key: Exclude<ConsultOption, "">; labelKey: string; noteKey?: string }[] = [
+  { key: "without", labelKey: "reservePage.consultOptionWithout" },
+  {
+    key: "with",
+    labelKey: "reservePage.consultOptionWith",
+    noteKey: "reservePage.consultOptionWithNote",
+  },
+]
+
+/* 각 박스 위에 붙는 단계 머리말 */
+interface StepHeaderProps {
+  step: number
+  title: string
+  required?: boolean
+}
+
+const StepHeader = ({ step, title, required }: StepHeaderProps) => {
+  const { t } = useTranslation()
+
+  return (
+    <div tw="flex items-center gap-2 mb-4 font-pretendard">
+      <span tw="text-primary text-[12px] md:text-[13px] font-bold tracking-[0.06em] leading-none">
+        STEP {step}
+      </span>
+      <span tw="text-[16px] md:text-[18px] font-semibold text-neutralBlack leading-none">
+        {title}
+      </span>
+      {required && (
+        <span tw="text-primary text-[13px] md:text-[14px] font-semibold leading-none">
+          {t("reservePage.consultOptionRequired")}
+        </span>
+      )}
+    </div>
+  )
+}
+
+interface ConsultOptionSectionProps {
+  value: ConsultOption
+  onChange: (v: ConsultOption) => void
+  disabled: boolean
+}
+
+const ConsultOptionSection = ({ value, onChange, disabled }: ConsultOptionSectionProps) => {
+  const { t } = useTranslation()
+
+  const buttonStyle = (selected: boolean) => {
+    if (disabled) return tw`bg-neutral text-neutral50 border-neutral20 cursor-not-allowed`
+    if (selected) return tw`bg-secondary text-white border-secondary`
+    return tw`bg-white text-neutral80 border-neutral20`
+  }
+
+  const noteStyle = (selected: boolean) => {
+    if (disabled) return tw`text-neutral50`
+    if (selected) return tw`text-white`
+    return tw`text-primary`
+  }
+
+  return (
+    <div tw="font-pretendard">
+      <StepHeader step={2} title={t("reservePage.consultOptionTitle")} required />
+
+      {disabled && (
+        <div tw="text-neutral70 text-[13px] md:text-[14px] leading-[150%] mb-4">
+          {t("reservePage.consultOptionDisabledNote")}
+        </div>
+      )}
+
+      <div tw="flex flex-col sm:flex-row gap-2">
+        {CONSULT_OPTIONS.map((opt) => {
+          const selected = !disabled && value === opt.key
+          return (
+            <button
+              key={opt.key}
+              type="button"
+              disabled={disabled}
+              onClick={() => onChange(opt.key)}
+              css={[
+                tw`flex-1 px-4 py-[10px] border text-left leading-[140%]`,
+                buttonStyle(selected),
+              ]}>
+              <span tw="flex flex-wrap items-baseline gap-x-1">
+                <span tw="text-[14px] md:text-[15px] font-semibold">{t(opt.labelKey)}</span>
+                {opt.noteKey && (
+                  <span css={[tw`text-[12px] md:text-[13px]`, noteStyle(selected)]}>
+                    {t(opt.noteKey)}
+                  </span>
+                )}
+              </span>
+            </button>
+          )
+        })}
+      </div>
     </div>
   )
 }
@@ -301,8 +405,10 @@ const SurgeryList = ({
           }}
           label={
             <div tw="flex items-center gap-2">
-              <H2>{t("button.selectAll")}</H2>
-              <span tw="text-primary font-semibold text-[18px] lg:text-[22px]">
+              <span tw="text-[14px] md:text-[16px] font-semibold text-neutralBlack">
+                {t("button.selectAll")}
+              </span>
+              <span tw="text-primary font-semibold text-[14px] md:text-[16px]">
                 ({checkedList.length}/{cart.length})
               </span>
             </div>
@@ -458,12 +564,14 @@ const SurgeryList = ({
         </div>
       )}
 
-      <div tw="pl-4 pr-4">
-        <div>
-          {cart.map((item) => (
+      <div>
+        {/* 담긴 시술은 한 단계 안으로 들여 쓴다 */}
+        <div tw="px-4">
+          {cart.map((item, idx) => (
             <SurgeryItem
               key={item.event?.id || item.product?.id}
               item={item}
+              isLast={idx === cart.length - 1}
               updateCartItem={updateCartItem}
               checked={checkedList.includes(item.event?.id || item.product?.id || "")}
               onCheck={(checked) => {
@@ -477,7 +585,6 @@ const SurgeryList = ({
             />
           ))}
         </div>
-        {!inquiryChecked && <hr tw="border-t border-neutral20 my-4" />}
         <div tw="flex gap-2 my-6 justify-center">
           <LinkButton
             to="/events"
@@ -663,6 +770,9 @@ const Reserve = () => {
 
   const buildExtraMemo = (baseMemo: string) => {
     const parts: string[] = []
+    if (!consultOptionDisabled && consultOption) {
+      parts.push(`[상담 여부] ${consultOption === "with" ? "상담 후 시술" : "상담 없이 시술"}`)
+    }
     if (inquiry && consultCategories.length > 0) {
       parts.push(`[관심 분야] ${consultCategories.join(", ")}`)
     }
@@ -703,6 +813,8 @@ const Reserve = () => {
     setPackageCategories,
     packageMemo,
     setPackageMemo,
+    consultOption,
+    setConsultOption,
   } = useCart()
 
   const [today, setToday] = React.useState(dayjs())
@@ -994,9 +1106,13 @@ const Reserve = () => {
         <div
           css={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(90px, 1fr))",
+            // 모바일은 한 줄에 3개 고정, 그 이상 화면은 폭에 맞춰 채운다
+            gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
             gap: "5px",
             width: "100%",
+            "@media (min-width: 768px)": {
+              gridTemplateColumns: "repeat(auto-fill, minmax(90px, 1fr))",
+            },
             "@media (min-width: 2200px)": {
               gap: "10px",
             },
@@ -1097,8 +1213,21 @@ const Reserve = () => {
     }
   }, [cart, inquiry, usePackageChecked])
 
+  /* -------- 상담 여부 선택 -------- */
+  // 방문 상담 후 시술을 고르거나 보유권을 사용하면 상담 여부를 따로 고를 필요가 없다
+  const consultOptionDisabled = inquiry || usePackageChecked
+  // 장바구니에 담은 시술로 예약할 때만 상담 여부가 필수다
+  const consultOptionRequired = !consultOptionDisabled && cart.length > 0
+  const consultOptionMissing = consultOptionRequired && !consultOption
+
+  React.useEffect(() => {
+    // 비활성화 상태로 넘어가면 이전에 고른 값을 지운다
+    if (consultOptionDisabled && consultOption) setConsultOption("")
+  }, [consultOptionDisabled])
+
   /* -------- 예약 버튼 disabled -------- */
-  const reservationDisabled = !authInfo || !agree.terms || !agree.privacy || !selectedDatetime
+  const reservationDisabled =
+    !authInfo || !agree.terms || !agree.privacy || !selectedDatetime || consultOptionMissing
 
   /* ---------------- Render ---------------- */
   return (
@@ -1130,9 +1259,10 @@ const Reserve = () => {
 
           <div tw="flex flex-col lg:flex-row gap-12 w-full">
             {/* ---------------- LEFT ---------------- */}
-            <div tw="flex-1 min-w-0 flex flex-col gap-10">
+            <div tw="flex-1 min-w-0 flex flex-col gap-6">
               {/* --- 시술 리스트 섹션 --- */}
               <div tw="bg-white p-6">
+                <StepHeader step={1} title={t("reservePage.stepSelectTreatment")} />
                 <SurgeryList
                   cart={cart}
                   updateCartItem={updateCartItem}
@@ -1152,8 +1282,18 @@ const Reserve = () => {
                 />
               </div>
 
+              {/* --- 상담 여부 선택 섹션 --- */}
+              <div tw="bg-white p-6">
+                <ConsultOptionSection
+                  value={consultOption}
+                  onChange={setConsultOption}
+                  disabled={consultOptionDisabled}
+                />
+              </div>
+
               {/* --- 캘린더 섹션 --- */}
               <div tw="bg-white p-6">
+                <StepHeader step={3} title={t("reservePage.stepSelectDatetime")} />
                 <Calendar
                   key={language}
                   value={today}

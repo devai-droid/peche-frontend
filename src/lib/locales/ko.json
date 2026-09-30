@@ -348,7 +348,15 @@
     "firstVisitLimitNotice": "'첫방문 이벤트'는 처음 내원하시는 고객님에 한해 항목별 1개씩만 예약 가능합니다.",
     "multiNoticeHeader": "아래 내용을 반드시 확인해주세요.",
     "firstVisitLimitTitle": "첫방문 이벤트 상품이 포함되어 있습니다.",
-    "firstVisitLimitDesc": "첫방문 이벤트 상품은 처음 내원하시는 분에 한해 항목별 1개씩만 예약 가능합니다."
+    "firstVisitLimitDesc": "첫방문 이벤트 상품은 처음 내원하시는 분에 한해 항목별 1개씩만 예약 가능합니다.",
+    "consultOptionTitle": "상담 여부 선택",
+    "consultOptionRequired": "필수",
+    "consultOptionDisabledNote": "방문 상담 후 시술 선택 또는 기존 시술 보유권 사용을 고르셨기 때문에 따로 선택하지 않으셔도 됩니다.",
+    "consultOptionWithout": "상담 없이 시술",
+    "consultOptionWith": "상담 후 시술",
+    "consultOptionWithNote": "(3D 피부 촬영 진단 무료)",
+    "stepSelectTreatment": "시술 선택",
+    "stepSelectDatetime": "날짜·시간 선택"
   },
   "cart": {
     "shoppingCart": "장바구니",
