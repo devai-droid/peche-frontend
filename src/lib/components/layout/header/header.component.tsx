@@ -32,8 +32,24 @@ import { byOrderOptionsLast } from "@/lib/utils/search-result-sort"
 import { useSearchControllerFindMany } from "@/lib/orval/search/search"
 import CustomLink from "../../custom-link.component"
 import Modal from "@/lib/components/modal/modal.component"
+import { useSiteConfig } from "@/lib/hooks/use-site-config"
+import { activeSocialLinks, SocialPlatform } from "@/lib/utils/social-links.util"
 
 import useCart from "@/features/product/hooks/use-cart"
+
+/** 플랫폼 → 헤더용(컬러) 아이콘. 여기 없는 플랫폼은 헤더 아이콘으로 노출하지 않음. */
+const HEADER_ICON: Partial<Record<SocialPlatform, React.FC<React.SVGProps<SVGSVGElement>>>> = {
+  naverPlace: NaverPlaceIcon,
+  naverBlog: NaverBlogIcon,
+  kakao: KakaoFriendsIcon,
+  instagram: InstaLogoIcon,
+  whatsapp: WhatsappIcon,
+  tiktok: TiktokIcon,
+  wechat: WechatIcon,
+  facebook: FacebookIcon,
+  line: LineIcon,
+  x: XIcon,
+}
 
 const HeaderContainer = tw.header`h-16 lg:h-20 relative bg-neutral`
 
@@ -115,6 +131,7 @@ const LeftMenu = ({
 }) => {
   const { i18n } = useTranslation()
   const language = i18n.language as Language
+  const cfg = useSiteConfig()
 
   if (!isDesktop) {
     return (
@@ -125,18 +142,32 @@ const LeftMenu = ({
   }
 
   const socialLinks = SOCIAL_LINKS[language] ?? SOCIAL_LINKS.ko
+  // 어드민 SNS 설정이 있으면 그걸로(아이콘 매핑), 없으면 기존 하드코딩.
+  const cfgSocial = activeSocialLinks(cfg?.socialLinks)
+  const snsItems = cfgSocial
+    ? cfgSocial
+        .filter((l) => !!HEADER_ICON[l.platform as SocialPlatform])
+        .map((l) => ({
+          Icon: HEADER_ICON[l.platform as SocialPlatform] as React.FC<React.SVGProps<SVGSVGElement>>,
+          url: l.url as string | undefined,
+          isModal: l.platform === "wechat",
+          key: l.platform,
+        }))
+    : socialLinks.map((item, i) => ({
+        Icon: item.icon,
+        url: item.url as string | undefined,
+        isModal: item.type === "modal",
+        key: String(i),
+      }))
 
   return (
     <div tw="flex items-center gap-[7px]">
-      {socialLinks.map((item, idx) => {
-        const Icon = item.icon
-
-        if (item.type === "modal") {
-          const handleClick = openWeChatModal
+      {snsItems.map(({ Icon, url, isModal, key }) => {
+        if (isModal) {
           return (
             <button
-              key={idx}
-              onClick={handleClick}
+              key={key}
+              onClick={openWeChatModal}
               className="sns-btn-conversion"
               tw="flex items-center justify-center hover:opacity-80">
               <Icon width={28} height={28} />
@@ -146,8 +177,8 @@ const LeftMenu = ({
 
         return (
           <a
-            key={idx}
-            href={item.url}
+            key={key}
+            href={url}
             target="_blank"
             rel="noopener noreferrer"
             tw="flex items-center justify-center hover:opacity-80">

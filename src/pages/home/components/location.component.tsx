@@ -8,6 +8,7 @@ import useCustomNavigate from "@/lib/hooks/use-custom-navigate"
 import { Language } from "@/lib/locales/i18n.config"
 import Modal from "@/lib/components/modal/modal.component"
 import { useSiteConfig } from "@/lib/hooks/use-site-config"
+import { socialUrl } from "@/lib/utils/social-links.util"
 
 const MapSection = tw.section`
   w-full bg-neutral overflow-hidden
@@ -148,12 +149,25 @@ const Location = () => {
               </InfoTextWrapper>
 
               <ButtonGroup>
-                <OutlineButton onClick={() => window.open("https://naver.me/FLe0V59M", "_blank")}>
+                <OutlineButton
+                  onClick={() =>
+                    window.open(
+                      socialUrl(siteConfig?.socialLinks, "naverPlace", "https://naver.me/FLe0V59M"),
+                      "_blank",
+                    )
+                  }>
                   {t("location.rightButton1")}
                 </OutlineButton>
                 <OutlineButton
                   onClick={() =>
-                    window.open("https://maps.app.goo.gl/bkkdJBLVdT7UkKtg9", "_blank")
+                    window.open(
+                      socialUrl(
+                        siteConfig?.socialLinks,
+                        "googlePlace",
+                        "https://maps.app.goo.gl/bkkdJBLVdT7UkKtg9",
+                      ),
+                      "_blank",
+                    )
                   }>
                   {t("location.rightButton2")}
                 </OutlineButton>
@@ -165,7 +179,16 @@ const Location = () => {
         {/* Right side */}
         <MapColumn>
           <GoogleMapWrapper
-            onClick={() => window.open("https://maps.app.goo.gl/bkkdJBLVdT7UkKtg9", "_blank")}
+            onClick={() =>
+              window.open(
+                socialUrl(
+                  siteConfig?.socialLinks,
+                  "googlePlace",
+                  "https://maps.app.goo.gl/bkkdJBLVdT7UkKtg9",
+                ),
+                "_blank",
+              )
+            }
             tw="cursor-pointer">
             <img src={mapImg} alt="페슈의원 위치" tw="w-full h-full object-cover" />
           </GoogleMapWrapper>

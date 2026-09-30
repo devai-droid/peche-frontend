@@ -6,6 +6,7 @@ import Page from "@/lib/components/layout/page.component"
 import mapImg from "@/assets/images/why-peche-map.png"
 import CartView from "@/features/product/components/cart-view.component"
 import { useSiteConfig } from "@/lib/hooks/use-site-config"
+import { socialUrl } from "@/lib/utils/social-links.util"
 
 // 이미지 import
 import modelImg from "@/assets/images/intro-model.jpg"
@@ -796,13 +797,22 @@ const Intro = () => {
 
                     <ButtonGroup>
                       <OutlineButton
-                        onClick={() => window.open("https://naver.me/FLe0V59M", "_blank")}>
+                        onClick={() =>
+                          window.open(
+                            socialUrl(siteConfig?.socialLinks, "naverPlace", "https://naver.me/FLe0V59M"),
+                            "_blank",
+                          )
+                        }>
                         {t("location.rightButton1")}
                       </OutlineButton>
                       <OutlineButton
                         onClick={() =>
                           window.open(
-                            "https://maps.app.goo.gl/bkkdJBLVdT7UkKtg9",
+                            socialUrl(
+                              siteConfig?.socialLinks,
+                              "googlePlace",
+                              "https://maps.app.goo.gl/bkkdJBLVdT7UkKtg9",
+                            ),
                             "_blank",
                           )
                         }>
@@ -816,7 +826,16 @@ const Intro = () => {
               {/* Right side */}
               <MapColumn>
                 <GoogleMapWrapper
-                  onClick={() => window.open("https://maps.app.goo.gl/bkkdJBLVdT7UkKtg9", "_blank")}
+                  onClick={() =>
+                    window.open(
+                      socialUrl(
+                        siteConfig?.socialLinks,
+                        "googlePlace",
+                        "https://maps.app.goo.gl/bkkdJBLVdT7UkKtg9",
+                      ),
+                      "_blank",
+                    )
+                  }
                   tw="cursor-pointer">
                   <img src={mapImg} alt="페슈의원 위치" tw="w-full h-full object-cover" />
                 </GoogleMapWrapper>

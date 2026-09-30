@@ -20,6 +20,21 @@ import { Language } from "@/lib/locales/i18n.config"
 import Modal from "@/lib/components/modal/modal.component"
 import wechatQrImg from "@/assets/images/wechat-qr.png"
 import { useSiteConfig } from "@/lib/hooks/use-site-config"
+import { activeSocialLinks, SocialPlatform } from "@/lib/utils/social-links.util"
+
+/** 플랫폼 → 푸터용(회색) 아이콘. 여기 없는 플랫폼(googlePlace 등)은 푸터 아이콘으로 노출하지 않음. */
+const FOOTER_ICON: Partial<Record<SocialPlatform, React.FC<React.SVGProps<SVGSVGElement>>>> = {
+  naverPlace: NaverPlaceGrayIcon,
+  naverBlog: NaverBlogGrayIcon,
+  kakao: KakaoFriendsGrayIcon,
+  instagram: InstaLogoGrayIcon,
+  whatsapp: WhatsappGrayIcon,
+  tiktok: TiktokGrayIcon,
+  wechat: WechatGrayIcon,
+  facebook: FacebookGrayIcon,
+  line: LineGrayIcon,
+  x: XGrayIcon,
+}
 
 /**
  * 어드민 '기본 정보 관리' 값(표시용 주소·대표자명·사업자등록번호·대표번호)으로 푸터 한 줄을 조합.
@@ -152,6 +167,24 @@ const Footer = ({ bottomCartExists = false }: FooterProps) => {
         )
       : t("footer.info")
 
+  // 어드민 SNS 설정이 있으면 그걸로(아이콘 매핑), 없으면 기존 하드코딩 목록으로.
+  const cfgSocial = activeSocialLinks(cfg?.socialLinks)
+  const snsItems = cfgSocial
+    ? cfgSocial
+        .filter((l) => !!FOOTER_ICON[l.platform as SocialPlatform])
+        .map((l) => ({
+          Icon: FOOTER_ICON[l.platform as SocialPlatform] as React.FC<React.SVGProps<SVGSVGElement>>,
+          url: l.url as string | undefined,
+          isModal: l.platform === "wechat",
+          key: l.platform,
+        }))
+    : socialLinks.map((item, i) => ({
+        Icon: item.icon,
+        url: item.url as string | undefined,
+        isModal: item.type === "modal",
+        key: String(i),
+      }))
+
   return (
     <FooterWrapper>
       <FooterInner>
@@ -175,15 +208,12 @@ const Footer = ({ bottomCartExists = false }: FooterProps) => {
           </PolicyLinks>
 
           <SNSIcons>
-            {socialLinks.map((item, i) => {
-              const Icon = item.icon
-
-              if (item.type === "modal") {
-                const handleClick = () => setOpenWeChatModal(true)
+            {snsItems.map(({ Icon, url, isModal, key }) => {
+              if (isModal) {
                 return (
                   <button
-                    key={i}
-                    onClick={handleClick}
+                    key={key}
+                    onClick={() => setOpenWeChatModal(true)}
                     className="sns-btn-conversion"
                     tw="flex items-center hover:opacity-60 transition">
                     <Icon width={28} height={28} />
@@ -192,7 +222,7 @@ const Footer = ({ bottomCartExists = false }: FooterProps) => {
               }
 
               return (
-                <IconLink key={i} href={item.url} target="_blank" rel="noopener noreferrer">
+                <IconLink key={key} href={url} target="_blank" rel="noopener noreferrer">
                   <Icon width={28} height={28} />
                 </IconLink>
               )
