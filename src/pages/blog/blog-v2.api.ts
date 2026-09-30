@@ -175,6 +175,13 @@ export interface BlogV2CommonText {
   isActive: boolean
 }
 
+export interface SiteSocialLink {
+  platform: string
+  url?: string
+  enabled: boolean
+  order: number
+}
+
 export interface BlogV2SiteConfig {
   hospitalName?: string
   baseUrl?: string
@@ -191,4 +198,13 @@ export interface BlogV2SiteConfig {
   sameAs?: string[]
   knowsAbout?: string[]
   certifications?: string[]
+  weekdayHours?: string
+  weekendHours?: string
+  lunchInfo?: string
+  parkingInfo?: string
+  representativeName?: string
+  businessRegistrationNumber?: string
+  displayAddress?: string
+  landmark?: string
+  socialLinks?: SiteSocialLink[]
 }

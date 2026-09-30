@@ -5,6 +5,7 @@ import tw, { styled } from "twin.macro"
 import Page from "@/lib/components/layout/page.component"
 import mapImg from "@/assets/images/why-peche-map.png"
 import CartView from "@/features/product/components/cart-view.component"
+import { useSiteConfig } from "@/lib/hooks/use-site-config"
 
 // 이미지 import
 import modelImg from "@/assets/images/intro-model.jpg"
@@ -492,6 +493,7 @@ const GoogleMapWrapper = tw.div`
  * ────────────────────────────── */
 const Intro = () => {
   const { t, i18n } = useTranslation()
+  const siteConfig = useSiteConfig() // 어드민 '기본 정보 관리' 값(진료시간 등). 비면 아래 하드코딩 폴백.
   const language = i18n.language as Language
   const navigate = useCustomNavigate()
   const [isMobile, setIsMobile] = React.useState(false)
@@ -757,9 +759,11 @@ const Intro = () => {
                   <InfoBlock>
                     <InfoTextWrapper>
                       <InfoTitle>{t("location.hours")}</InfoTitle>
-                      <InfoText>{t("location.weekdayHours")}</InfoText>
-                      <InfoText>{t("location.weekendHours")}</InfoText>
-                      <InfoText tw="text-primary">{t("location.lunch")}</InfoText>
+                      <InfoText>{siteConfig?.weekdayHours || t("location.weekdayHours")}</InfoText>
+                      <InfoText>{siteConfig?.weekendHours || t("location.weekendHours")}</InfoText>
+                      <InfoText tw="text-primary">
+                        {siteConfig?.lunchInfo || t("location.lunch")}
+                      </InfoText>
                     </InfoTextWrapper>
 
                     <ButtonGroup>
@@ -779,9 +783,15 @@ const Intro = () => {
                   <InfoBlock>
                     <InfoTextWrapper>
                       <InfoTitle>{t("location.directions")}</InfoTitle>
-                      <InfoText>{t("location.address1")}</InfoText>
-                      <InfoText>{t("location.address2")}</InfoText>
-                      <InfoText tw="text-primary">{t("location.subway")}</InfoText>
+                      {(siteConfig?.displayAddress
+                        ? siteConfig.displayAddress.split("\n")
+                        : [t("location.address1"), t("location.address2")]
+                      ).map((line, i) => (
+                        <InfoText key={i}>{line}</InfoText>
+                      ))}
+                      <InfoText tw="text-primary">
+                        {siteConfig?.landmark || t("location.subway")}
+                      </InfoText>
                     </InfoTextWrapper>
 
                     <ButtonGroup>

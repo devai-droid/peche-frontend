@@ -23,7 +23,7 @@ export const BLOG_SITE: BlogSiteConfig = {
   hospitalName: "페슈의원",
   baseUrl: "https://pecheskin.clinic",
   organizationType: "MedicalClinic",
-  telephone: "1661-2365",
+  telephone: "02-553-8176",
   address: { locality: "강남구", region: "서울특별시", country: "KR" },
   geo: undefined, // TODO: 마케터 좌표 입력 시 { latitude, longitude } 채움
   medicalSpecialty: "Dermatology",

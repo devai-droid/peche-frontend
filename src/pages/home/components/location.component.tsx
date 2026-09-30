@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next"
 import useCustomNavigate from "@/lib/hooks/use-custom-navigate"
 import { Language } from "@/lib/locales/i18n.config"
 import Modal from "@/lib/components/modal/modal.component"
+import { useSiteConfig } from "@/lib/hooks/use-site-config"
 
 const MapSection = tw.section`
   w-full bg-neutral overflow-hidden
@@ -66,6 +67,7 @@ const InfoTextWrapper = tw.div`
 
 const Location = () => {
   const { t, i18n } = useTranslation()
+  const siteConfig = useSiteConfig() // 어드민 진료시간 값. 비면 하드코딩 폴백.
   const navigate = useCustomNavigate()
   const language = i18n.language as Language
 
@@ -111,9 +113,11 @@ const Location = () => {
             <InfoBlock>
               <InfoTextWrapper>
                 <InfoTitle>{t("location.hours")}</InfoTitle>
-                <InfoText>{t("location.weekdayHours")}</InfoText>
-                <InfoText>{t("location.weekendHours")}</InfoText>
-                <InfoText tw="text-primary">{t("location.lunch")}</InfoText>
+                <InfoText>{siteConfig?.weekdayHours || t("location.weekdayHours")}</InfoText>
+                <InfoText>{siteConfig?.weekendHours || t("location.weekendHours")}</InfoText>
+                <InfoText tw="text-primary">
+                  {siteConfig?.lunchInfo || t("location.lunch")}
+                </InfoText>
               </InfoTextWrapper>
 
               <ButtonGroup tw="mt-[1px]">
@@ -132,9 +136,15 @@ const Location = () => {
             <InfoBlock>
               <InfoTextWrapper>
                 <InfoTitle>{t("location.directions")}</InfoTitle>
-                <InfoText>{t("location.address1")}</InfoText>
-                <InfoText>{t("location.address2")}</InfoText>
-                <InfoText tw="text-primary">{t("location.subway")}</InfoText>
+                {(siteConfig?.displayAddress
+                  ? siteConfig.displayAddress.split("\n")
+                  : [t("location.address1"), t("location.address2")]
+                ).map((line, i) => (
+                  <InfoText key={i}>{line}</InfoText>
+                ))}
+                <InfoText tw="text-primary">
+                  {siteConfig?.landmark || t("location.subway")}
+                </InfoText>
               </InfoTextWrapper>
 
               <ButtonGroup>

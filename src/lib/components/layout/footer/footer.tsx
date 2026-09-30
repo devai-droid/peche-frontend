@@ -19,6 +19,23 @@ import { useTranslation } from "react-i18next"
 import { Language } from "@/lib/locales/i18n.config"
 import Modal from "@/lib/components/modal/modal.component"
 import wechatQrImg from "@/assets/images/wechat-qr.png"
+import { useSiteConfig } from "@/lib/hooks/use-site-config"
+
+/**
+ * 어드민 '기본 정보 관리' 값(표시용 주소·대표자명·사업자등록번호·대표번호)으로 푸터 한 줄을 조합.
+ * 언어별 라벨·구분자만 다르고 구조는 동일. 값이 하나라도 비면 기존 하드코딩(footer.info)으로 폴백.
+ */
+const FOOTER_INFO_TEMPLATE: Partial<
+  Record<Language, (addr: string, rep: string, biz: string, tel: string) => string>
+> = {
+  ko: (a, r, b, t) => `${a} | 대표 : ${r} | 사업자등록번호 ${b} | 대표 번호 ${t}`,
+  en: (a, r, b, t) =>
+    `${a}  |  Representative: ${r}  |  Business Registration Number ${b}  |  Main Number ${t}`,
+  ja: (a, r, b, t) => `${a}｜代表者：${r}｜事業者登録番号：${b}｜代表電話番号：${t}`,
+  zh: (a, r, b, t) => `${a} | 代表：${r} | 营业执照号码：${b} | 总机：${t}`,
+  "zh-TW": (a, r, b, t) => `${a} | 代表：${r} | 營業執照號碼：${b} | 總機：${t}`,
+  th: (a, r, b, t) => `${a} | ผู้แทน: ${r} | เลขทะเบียนธุรกิจ ${b} | เบอร์โทรศัพท์หลัก ${t}`,
+}
 
 
 const FooterWrapper = tw.footer`
@@ -122,6 +139,19 @@ const Footer = ({ bottomCartExists = false }: FooterProps) => {
 
   const socialLinks = FOOTER_SOCIAL_LINKS[language] ?? FOOTER_SOCIAL_LINKS.ko
 
+  // 어드민 값이 다 있으면 언어별 템플릿으로 조합, 아니면 기존 하드코딩 폴백
+  const cfg = useSiteConfig()
+  const tpl = FOOTER_INFO_TEMPLATE[language] ?? FOOTER_INFO_TEMPLATE.ko
+  const footerInfo =
+    cfg?.displayAddress && cfg?.representativeName && cfg?.businessRegistrationNumber && cfg?.telephone && tpl
+      ? tpl(
+          cfg.displayAddress.replace(/\n/g, " "),
+          cfg.representativeName,
+          cfg.businessRegistrationNumber,
+          cfg.telephone,
+        )
+      : t("footer.info")
+
   return (
     <FooterWrapper>
       <FooterInner>
@@ -129,7 +159,7 @@ const Footer = ({ bottomCartExists = false }: FooterProps) => {
         <FooterTop>
           <LogoBlock>
             <FooterLogo width={129} height={24} aria-label="Peche Clinic" />
-            <div tw="mt-2">{t("footer.info")}</div>
+            <div tw="mt-2">{footerInfo}</div>
             <div>© 2025 Peche. All Rights Reserved.</div>
           </LogoBlock>
         </FooterTop>

@@ -3,10 +3,13 @@ import Page from "@/lib/components/layout/page.component"
 import CartView from "@/features/product/components/cart-view.component"
 import CustomLink from "@/lib/components/custom-link.component"
 import { useLocation } from "react-router-dom"
+import { useSiteConfig } from "@/lib/hooks/use-site-config"
 
 const SignupComplete = () => {
   const location = useLocation()
   const name = location.state?.name || "회원"
+  const siteConfig = useSiteConfig()
+  const tel = siteConfig?.telephone || "02-553-8176"
 
   return (
     <Page hiddenFooter={false}>
@@ -20,7 +23,7 @@ const SignupComplete = () => {
               아래 <span tw="font-semibold">홈으로 이동</span> 버튼을 클릭하여 홈페이지를
               이용해주세요.
               <br />
-              문의사항이 있으실 경우 02-553-8176 로 연락주세요.
+              문의사항이 있으실 경우 {tel} 로 연락주세요.
             </p>
 
             <CustomLink to="/">
