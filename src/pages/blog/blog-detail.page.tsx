@@ -230,10 +230,15 @@ const BlogDetail = () => {
   // 봇 SSR은 백엔드가 301로 처리하고, 사람 화면은 여기서 처리한다. 미리보기(어드민 iframe)는 제외.
   useEffect(() => {
     if (isPreview) return
+    // 옛 글을 새 글로 영구 이전(301) — 블로그→블로그. 봇은 백엔드가 301, 사람은 여기서 이동.
+    if (post?.redirectToSlug) {
+      navigate(`/${lang}/blog/${post.redirectToSlug}`, { replace: true })
+      return
+    }
     if (post?.canonicalProductId) {
       navigate(`/${lang}/products/${post.canonicalProductId}`, { replace: true })
     }
-  }, [post?.canonicalProductId, isPreview, lang, navigate])
+  }, [post?.canonicalProductId, post?.redirectToSlug, isPreview, lang, navigate])
 
   // 대표 의료진(어드민 '의료진 정보'에서 관리) — 모든 글 하단 의료진 카드 공통 소스.
   // 어드민에서 수정하면 짧은 캐시 후 전체 글에 자동 반영.

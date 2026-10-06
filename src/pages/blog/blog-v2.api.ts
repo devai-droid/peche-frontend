@@ -45,6 +45,8 @@ export interface BlogV2Post {
   bodyHtml?: string
   /** 시술 상세페이지 대표(canonical) 상품 id — 제모 공통 사본이면 원본 상품을 가리킴 */
   canonicalProductId?: string
+  /** 옛 글 영구 이전(301) 대상 slug — 있으면 /{lang}/blog/{이 slug}로 이동 */
+  redirectToSlug?: string
   bodyMd: string
   thumbnailUrl?: string
   slug: string
