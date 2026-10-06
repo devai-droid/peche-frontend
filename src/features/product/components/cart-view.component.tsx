@@ -992,6 +992,30 @@ export const BottomButtons = ({
       lang: [Language.JPN],
       link: "https://www.instagram.com/pecheclinic.jp/",
     },
+    {
+      id: 10,
+      name: t("button.inquiryButton.instagram"),
+      icon: InstaImg,
+      css: insta,
+      lang: [Language.KOR],
+      link: "https://www.instagram.com/peche_clinic/",
+    },
+    {
+      id: 11,
+      name: t("button.inquiryButton.instagram"),
+      icon: InstaImg,
+      css: insta,
+      lang: [Language.TWN],
+      link: "https://www.instagram.com/pecheclinic_tw/",
+    },
+    {
+      id: 12,
+      name: t("button.inquiryButton.instagram"),
+      icon: InstaImg,
+      css: insta,
+      lang: [Language.THA],
+      link: "https://www.instagram.com/pecheclinic_th/",
+    },
   ]
 
   return (
