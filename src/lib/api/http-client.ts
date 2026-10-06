@@ -32,11 +32,14 @@ export const customInstance = <T>(config: AxiosRequestConfig): Promise<T> => {
   return axiosClient({
     ...newConfig,
     cancelToken: source.token,
+    // encode:false로 보내되, 쿼리에서 공백으로 해석되는 '+'만 %2B로 인코딩(예: 상품명 "클라디에 R+").
     paramsSerializer: (params) =>
-      qs.stringify(params, {
-        arrayFormat: "comma",
-        encode: false,
-      }),
+      qs
+        .stringify(params, {
+          arrayFormat: "comma",
+          encode: false,
+        })
+        .replace(/\+/g, "%2B"),
   }).then(({ data }) => data)
 }
 export { setAuthHeader, clearAuthHeader }

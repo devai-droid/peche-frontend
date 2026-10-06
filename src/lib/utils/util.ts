@@ -39,9 +39,12 @@ export const ordinalSuffixOf = (num: number) => {
 export const zeroPad = (num: number, places: number) => String(num).padStart(places, "0")
 
 export function toQueryString(query?: object) {
-  const queryString = qs.stringify(query, {
-    arrayFormat: "comma",
-    encode: false,
-  })
+  // encode:false로 보내되, 쿼리에서 공백으로 해석되는 '+'만 %2B로 인코딩(예: 상품명 "클라디에 R+").
+  const queryString = qs
+    .stringify(query, {
+      arrayFormat: "comma",
+      encode: false,
+    })
+    .replace(/\+/g, "%2B")
   return queryString ? `?${queryString}` : ""
 }
