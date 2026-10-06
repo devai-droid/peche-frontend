@@ -209,4 +209,7 @@ export interface BlogV2SiteConfig {
   displayAddress?: string
   landmark?: string
   socialLinks?: SiteSocialLink[]
+  commonSocialLinks?: SiteSocialLink[]
+  primaryConsultPlatform?: string
+  primaryConsultUrl?: string
 }

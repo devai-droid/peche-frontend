@@ -15,6 +15,8 @@ import LineImg from "@/assets/images/sns/line.png"
 import WhatsAppImg from "@/assets/images/sns/whatsapp.png"
 import WeChatImg from "@/assets/images/sns/wechat.png"
 import InstaImg from "@/assets/images/sns/instagram.png"
+import { useSiteConfig } from "@/lib/hooks/use-site-config"
+import { getConsultChannel } from "@/lib/utils/social-links.util"
 import wechatQrImg from "@/assets/images/wechat-qr.png"
 import useCustomNavigate from "@/lib/hooks/use-custom-navigate"
 import Modal from "@/lib/components/modal/modal.component"
@@ -81,6 +83,16 @@ const InquiryButton = tw.button`rounded-lg w-16 h-16 flex justify-center items-c
 const kakao = tw`bg-[#FFE812]`
 const line = tw`bg-[#00CF2E] text-white`
 const insta = tw`bg-transparent p-0`
+
+// 대표 상담 채널 플랫폼 → 아이콘 이미지 / 배경 스타일
+const CONSULT_IMG: Record<string, string> = {
+  kakao: KakaoImg,
+  line: LineImg,
+  whatsapp: WhatsAppImg,
+  wechat: WeChatImg,
+}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const CONSULT_CSS: Record<string, any> = { kakao, line, whatsapp: line, wechat: line }
 
 const SurgeryItem = ({
   item,
@@ -888,6 +900,9 @@ export const BottomButtons = ({
 
   const navigate = useCustomNavigate()
   const [openWeChatModal, setOpenWeChatModal] = React.useState(false)
+  // 대표 상담 채널(어드민 값, 없으면 언어별 폴백) — 탭바 상담 버튼
+  const siteConfig = useSiteConfig()
+  const consult = getConsultChannel(siteConfig, language)
   // 예약 이동 전 검증 안내 목록 (빈 배열이면 닫힘)
   const [freshCheckNotices, setFreshCheckNotices] = React.useState<CartNotice[]>([])
 
@@ -1032,25 +1047,29 @@ export const BottomButtons = ({
       </div>
       {showInquiryButtons && (
         <div tw="flex gap-3 absolute bottom-full px-4 py-2">
+          {/* 대표 상담 채널 (어드민 값, 없으면 언어별 폴백) */}
+          <InquiryButton
+            className="sns-btn-conversion"
+            css={CONSULT_CSS[consult.platform] ?? line}
+            onClick={() => {
+              if (consult.isModal) setOpenWeChatModal(true)
+            }}>
+            {consult.isModal ? (
+              <img src={CONSULT_IMG[consult.platform] ?? WeChatImg} alt="snsIcon" />
+            ) : (
+              <a href={consult.url} target="_blank" rel="noopener noreferrer">
+                <img src={CONSULT_IMG[consult.platform] ?? KakaoImg} alt="snsIcon" />
+              </a>
+            )}
+          </InquiryButton>
+          {/* 인스타그램 (언어별) */}
           {inquiryButtons
-            .filter((button) => button.lang.includes(language))
+            .filter((button) => button.lang.includes(language) && button.icon === InstaImg)
             .map((button) => (
-              <InquiryButton
-                key={button.id}
-                className="sns-btn-conversion"
-                css={button.css}
-                onClick={() => {
-                  if (button.type === "modal") {
-                    setOpenWeChatModal(true)
-                  }
-                }}>
-                {button.type === "modal" ? (
+              <InquiryButton key={button.id} className="sns-btn-conversion" css={button.css}>
+                <a href={button.link} target="_blank" rel="noopener noreferrer">
                   <img src={button.icon} alt="snsIcon" />
-                ) : (
-                  <a href={button.link} target="_blank" rel="noopener noreferrer">
-                    <img src={button.icon} alt="snsIcon" />
-                  </a>
-                )}
+                </a>
               </InquiryButton>
             ))}
         </div>

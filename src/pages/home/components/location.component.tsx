@@ -8,7 +8,7 @@ import useCustomNavigate from "@/lib/hooks/use-custom-navigate"
 import { Language } from "@/lib/locales/i18n.config"
 import Modal from "@/lib/components/modal/modal.component"
 import { useSiteConfig } from "@/lib/hooks/use-site-config"
-import { socialUrl } from "@/lib/utils/social-links.util"
+import { socialUrl, getConsultChannel } from "@/lib/utils/social-links.util"
 
 const MapSection = tw.section`
   w-full bg-neutral overflow-hidden
@@ -74,35 +74,13 @@ const Location = () => {
 
   const [openWeChatModal, setOpenWeChatModal] = React.useState(false)
   const handleChatClick = () => {
-    if (language === "ko") {
-      window.open("https://pf.kakao.com/_dxoiLn", "_blank")
-      return
-    }
-
-    if (language === "zh") {
-      // 중국어 → 위챗 모달 표시
+    // 대표 상담 채널(어드민 값, 없으면 언어별 폴백). wechat은 QR 모달.
+    const ch = getConsultChannel(siteConfig, language)
+    if (ch.isModal) {
       setOpenWeChatModal(true)
       return
     }
-
-    if (language === "ja") {
-      window.open("https://line.me/R/ti/p/@235wfyao", "_blank")
-      return
-    }
-
-    if (language === "en") {
-      window.open("https://wa.me/message/4Y5JC2HX6OH5H1", "_blank")
-      return
-    }
-
-    if (language === "th") {
-      window.open("https://line.me/R/ti/p/@892druai", "_blank")
-      return
-    }
-
-    if (language === "zh-TW") {
-      window.open("https://line.me/R/ti/p/@683jgqmd", "_blank")
-    }
+    if (ch.url) window.open(ch.url, "_blank")
   }
   return (
     <MapSection>

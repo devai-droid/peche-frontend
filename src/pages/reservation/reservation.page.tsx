@@ -13,6 +13,8 @@ import KakaoHelp from "@/assets/images/sns/icon_kakao_help.png"
 import WhatsAppHelp from "@/assets/images/sns/icon_WhatsApp_help.png"
 import LineHelp from "@/assets/images/sns/icon_LINE_help.png"
 import WeChatHelp from "@/assets/images/sns/icon_WeChat_help.png"
+import { useSiteConfig } from "@/lib/hooks/use-site-config"
+import { getConsultChannel } from "@/lib/utils/social-links.util"
 import InstaHelpIcon from "@/assets/images/sns/icon_instagram_help.png"
 import wechatQrImg from "@/assets/images/wechat-qr.png"
 import EmailAuthModal from "@/features/auth/components/email-auth-modal.component"
@@ -465,18 +467,16 @@ const Reservations = () => {
       th: LineHelp,
     }
 
-    const helpIcon = helpImageMap[language]
-
-    const HELP_LINKS: Record<Language, string> = {
-      ko: "https://pf.kakao.com/_dxoiLn",
-      en: "https://wa.me/message/3ARKGGTBNAY2M1",
-      ja: "https://line.me/R/ti/p/@235wfyao",
-      th: "https://line.me/R/ti/p/@892druai",
-      "zh-TW": "https://line.me/R/ti/p/@683jgqmd",
-
-      // 중국 간체는 상담채널 없음 → 빈 문자열 또는 undefined
-      zh: "",
+    // 대표 상담 채널(어드민 값, 없으면 언어별 폴백) — 장바구니/예약 페이지 상담채널
+    const siteConfig = useSiteConfig()
+    const consult = getConsultChannel(siteConfig, language)
+    const CONSULT_HELP_IMG: Record<string, string> = {
+      kakao: KakaoHelp,
+      whatsapp: WhatsAppHelp,
+      wechat: WeChatHelp,
+      line: LineHelp,
     }
+    const helpIcon = CONSULT_HELP_IMG[consult.platform] ?? helpImageMap[language]
 
     const INSTAGRAM_LINKS: Record<string, string> = {
       en: "https://www.instagram.com/pecheclinic.en/",
@@ -486,20 +486,11 @@ const Reservations = () => {
     const instaLink = INSTAGRAM_LINKS[language]
 
     const handleHelpClick = () => {
-      if (language === Language.CHN) {
+      if (consult.isModal) {
         setOpenWeChatModal(true)
         return
       }
-
-      if (language === Language.ENG) {
-        window.open("https://wa.me/message/4Y5JC2HX6OH5H1", "_blank")
-        return
-      }
-
-      const url = HELP_LINKS[language as Language]
-      if (!url) return
-
-      window.open(url, "_blank")
+      if (consult.url) window.open(consult.url, "_blank")
     }
 
     return (

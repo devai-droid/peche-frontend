@@ -142,16 +142,18 @@ const LeftMenu = ({
   }
 
   const socialLinks = SOCIAL_LINKS[language] ?? SOCIAL_LINKS.ko
-  // 어드민 SNS 설정이 있으면 그걸로(아이콘 매핑), 없으면 기존 하드코딩.
-  const cfgSocial = activeSocialLinks(cfg?.socialLinks)
-  const snsItems = cfgSocial
-    ? cfgSocial
+  // 어드민 SNS 설정이 있으면 그걸로(공통 + 언어별, 아이콘 매핑), 없으면 기존 하드코딩.
+  const cfgCommon = activeSocialLinks(cfg?.commonSocialLinks) ?? []
+  const cfgLang = activeSocialLinks(cfg?.socialLinks) ?? []
+  const cfgMerged = [...cfgCommon, ...cfgLang]
+  const snsItems = cfgMerged.length
+    ? cfgMerged
         .filter((l) => !!HEADER_ICON[l.platform as SocialPlatform])
-        .map((l) => ({
+        .map((l, i) => ({
           Icon: HEADER_ICON[l.platform as SocialPlatform] as React.FC<React.SVGProps<SVGSVGElement>>,
           url: l.url as string | undefined,
           isModal: l.platform === "wechat",
-          key: l.platform,
+          key: `${l.platform}-${i}`,
         }))
     : socialLinks.map((item, i) => ({
         Icon: item.icon,

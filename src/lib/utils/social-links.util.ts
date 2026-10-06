@@ -51,3 +51,33 @@ export const socialUrl = (
   const hit = links?.find((l) => l.platform === platform && l.enabled && !!l.url)
   return hit?.url || fallback
 }
+
+/** 대표 상담 채널(상담하기 버튼·모바일 탭바 목적지) */
+export interface ConsultChannel {
+  platform: string
+  url: string
+  isModal: boolean // wechat 등 QR 모달
+}
+
+/** 어드민 미설정 시 언어별 대표 상담 채널 폴백 (기존 하드코딩과 동일) */
+const CONSULT_FALLBACK: Record<string, { platform: string; url?: string }> = {
+  ko: { platform: "kakao", url: "http://pf.kakao.com/_dxoiLn" },
+  en: { platform: "whatsapp", url: "https://wa.me/message/4Y5JC2HX6OH5H1" },
+  ja: { platform: "line", url: "https://line.me/R/ti/p/@235wfyao" },
+  th: { platform: "line", url: "https://line.me/R/ti/p/@892druai" },
+  "zh-TW": { platform: "line", url: "https://line.me/R/ti/p/@683jgqmd" },
+  zh: { platform: "wechat" },
+}
+
+/**
+ * 현재 언어의 대표 상담 채널. 어드민 값(primaryConsult*)이 있으면 그걸, 없으면 언어별 하드코딩 폴백.
+ */
+export const getConsultChannel = (
+  cfg: { primaryConsultPlatform?: string; primaryConsultUrl?: string } | undefined,
+  lang: string,
+): ConsultChannel => {
+  const fb = CONSULT_FALLBACK[lang] ?? CONSULT_FALLBACK.ko
+  const platform = cfg?.primaryConsultPlatform || fb.platform
+  const url = cfg?.primaryConsultUrl || fb.url || ""
+  return { platform, url, isModal: platform === "wechat" }
+}
