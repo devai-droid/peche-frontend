@@ -156,21 +156,30 @@ const Footer = ({ bottomCartExists = false }: FooterProps) => {
         )
       : t("footer.info")
 
-  // 어드민 SNS 설정이 있으면 그걸로(공통 + 언어별, 아이콘 매핑), 없으면 기존 하드코딩 목록으로.
+  // 어드민 SNS 설정이 있으면 그걸로(공통 + 언어별), 없으면 기존 하드코딩 목록으로.
+  // 아이콘은 업로드한 iconUrl 우선, 없으면 platform 기준 내장 아이콘.
   const cfgCommon = activeSocialLinks(cfg?.commonSocialLinks) ?? []
   const cfgLang = activeSocialLinks(cfg?.socialLinks) ?? []
   const cfgMerged = [...cfgCommon, ...cfgLang]
-  const snsItems = cfgMerged.length
+  const snsItems: {
+    Icon?: React.FC<React.SVGProps<SVGSVGElement>>
+    iconUrl?: string
+    url?: string
+    isModal: boolean
+    key: string
+  }[] = cfgMerged.length
     ? cfgMerged
-        .filter((l) => !!FOOTER_ICON[l.platform as SocialPlatform])
+        .filter((l) => !!l.iconUrl || !!FOOTER_ICON[l.platform as SocialPlatform])
         .map((l, i) => ({
-          Icon: FOOTER_ICON[l.platform as SocialPlatform] as React.FC<React.SVGProps<SVGSVGElement>>,
+          Icon: FOOTER_ICON[l.platform as SocialPlatform],
+          iconUrl: l.iconUrl,
           url: l.url as string | undefined,
           isModal: l.platform === "wechat",
           key: `${l.platform}-${i}`,
         }))
     : socialLinks.map((item, i) => ({
         Icon: item.icon,
+        iconUrl: undefined,
         url: item.url as string | undefined,
         isModal: item.type === "modal",
         key: String(i),
@@ -199,7 +208,12 @@ const Footer = ({ bottomCartExists = false }: FooterProps) => {
           </PolicyLinks>
 
           <SNSIcons>
-            {snsItems.map(({ Icon, url, isModal, key }) => {
+            {snsItems.map(({ Icon, iconUrl, url, isModal, key }) => {
+              const iconNode = iconUrl ? (
+                <img src={iconUrl} alt="" width={28} height={28} tw="object-contain" />
+              ) : Icon ? (
+                <Icon width={28} height={28} />
+              ) : null
               if (isModal) {
                 return (
                   <button
@@ -207,14 +221,14 @@ const Footer = ({ bottomCartExists = false }: FooterProps) => {
                     onClick={() => setOpenWeChatModal(true)}
                     className="sns-btn-conversion"
                     tw="flex items-center hover:opacity-60 transition">
-                    <Icon width={28} height={28} />
+                    {iconNode}
                   </button>
                 )
               }
 
               return (
                 <IconLink key={key} href={url} target="_blank" rel="noopener noreferrer">
-                  <Icon width={28} height={28} />
+                  {iconNode}
                 </IconLink>
               )
             })}

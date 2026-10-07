@@ -58,6 +58,7 @@ export interface ConsultChannel {
   platform: string
   url: string
   isModal: boolean // wechat 등 QR 모달
+  iconUrl?: string // 업로드한 아이콘(있으면 기본 아이콘 대신 사용)
 }
 
 /** 어드민 미설정 시 언어별 대표 상담 채널 폴백 (기존 하드코딩과 동일) */
@@ -107,6 +108,7 @@ export const getConsultChannels = (
       platform: p.platform,
       url: p.url || "",
       isModal: p.platform === "wechat",
+      iconUrl: p.iconUrl,
     }))
   }
   const single = getConsultChannel(cfg, lang)

@@ -1058,10 +1058,10 @@ export const BottomButtons = ({
                 if (consult.isModal) setOpenWeChatModal(true)
               }}>
               {consult.isModal ? (
-                <img src={CONSULT_IMG[consult.platform] ?? WeChatImg} alt="snsIcon" />
+                <img src={consult.iconUrl || CONSULT_IMG[consult.platform] || WeChatImg} alt="snsIcon" />
               ) : (
                 <a href={consult.url} target="_blank" rel="noopener noreferrer">
-                  <img src={CONSULT_IMG[consult.platform] ?? KakaoImg} alt="snsIcon" />
+                  <img src={consult.iconUrl || CONSULT_IMG[consult.platform] || KakaoImg} alt="snsIcon" />
                 </a>
               )}
             </InquiryButton>

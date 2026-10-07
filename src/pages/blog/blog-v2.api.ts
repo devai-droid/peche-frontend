@@ -184,6 +184,10 @@ export interface SiteSocialLink {
   order: number
   /** 대표 상담 채널 여부(언어당 1개) */
   isPrimary?: boolean
+  /** 업로드한 아이콘 이미지 URL. 없으면 platform 기준 기본(내장) 아이콘 */
+  iconUrl?: string
+  /** 표시용 이름(선택) */
+  label?: string
 }
 
 export interface BlogV2SiteConfig {

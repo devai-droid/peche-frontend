@@ -131,17 +131,26 @@ const LeftMenu = ({
   const cfgCommon = activeSocialLinks(cfg?.commonSocialLinks) ?? []
   const cfgLang = activeSocialLinks(cfg?.socialLinks) ?? []
   const cfgMerged = [...cfgCommon, ...cfgLang]
-  const snsItems = cfgMerged.length
+  // 아이콘은 업로드한 iconUrl 우선, 없으면 platform 기준 내장 아이콘.
+  const snsItems: {
+    Icon?: React.FC<React.SVGProps<SVGSVGElement>>
+    iconUrl?: string
+    url?: string
+    isModal: boolean
+    key: string
+  }[] = cfgMerged.length
     ? cfgMerged
-        .filter((l) => !!HEADER_ICON[l.platform as SocialPlatform])
+        .filter((l) => !!l.iconUrl || !!HEADER_ICON[l.platform as SocialPlatform])
         .map((l, i) => ({
-          Icon: HEADER_ICON[l.platform as SocialPlatform] as React.FC<React.SVGProps<SVGSVGElement>>,
+          Icon: HEADER_ICON[l.platform as SocialPlatform],
+          iconUrl: l.iconUrl,
           url: l.url as string | undefined,
           isModal: l.platform === "wechat",
           key: `${l.platform}-${i}`,
         }))
     : socialLinks.map((item, i) => ({
         Icon: item.icon,
+        iconUrl: undefined,
         url: item.url as string | undefined,
         isModal: item.type === "modal",
         key: String(i),
@@ -149,7 +158,12 @@ const LeftMenu = ({
 
   return (
     <div tw="flex items-center gap-[7px]">
-      {snsItems.map(({ Icon, url, isModal, key }) => {
+      {snsItems.map(({ Icon, iconUrl, url, isModal, key }) => {
+        const iconNode = iconUrl ? (
+          <img src={iconUrl} alt="" width={28} height={28} tw="object-contain" />
+        ) : Icon ? (
+          <Icon width={28} height={28} />
+        ) : null
         if (isModal) {
           return (
             <button
@@ -157,7 +171,7 @@ const LeftMenu = ({
               onClick={openWeChatModal}
               className="sns-btn-conversion"
               tw="flex items-center justify-center hover:opacity-80">
-              <Icon width={28} height={28} />
+              {iconNode}
             </button>
           )
         }
@@ -169,7 +183,7 @@ const LeftMenu = ({
             target="_blank"
             rel="noopener noreferrer"
             tw="flex items-center justify-center hover:opacity-80">
-            <Icon width={28} height={28} />
+            {iconNode}
           </a>
         )
       })}
