@@ -16,7 +16,7 @@ import WhatsAppImg from "@/assets/images/sns/whatsapp.png"
 import WeChatImg from "@/assets/images/sns/wechat.png"
 import InstaImg from "@/assets/images/sns/instagram.png"
 import { useSiteConfig } from "@/lib/hooks/use-site-config"
-import { getConsultChannel } from "@/lib/utils/social-links.util"
+import { getConsultChannels } from "@/lib/utils/social-links.util"
 import wechatQrImg from "@/assets/images/wechat-qr.png"
 import useCustomNavigate from "@/lib/hooks/use-custom-navigate"
 import Modal from "@/lib/components/modal/modal.component"
@@ -900,9 +900,10 @@ export const BottomButtons = ({
 
   const navigate = useCustomNavigate()
   const [openWeChatModal, setOpenWeChatModal] = React.useState(false)
-  // 대표 상담 채널(어드민 값, 없으면 언어별 폴백) — 탭바 상담 버튼
+  // 대표 상담 채널(어드민 값, 없으면 언어별 폴백) — 탭바 상담 버튼. 복수 지정 가능.
   const siteConfig = useSiteConfig()
-  const consult = getConsultChannel(siteConfig, language)
+  // 인스타는 아래에서 따로 붙이므로 대표 목록에선 제외(중복 방지)
+  const consultChannels = getConsultChannels(siteConfig, language).filter((c) => c.platform !== "instagram")
   // 예약 이동 전 검증 안내 목록 (빈 배열이면 닫힘)
   const [freshCheckNotices, setFreshCheckNotices] = React.useState<CartNotice[]>([])
 
@@ -1047,21 +1048,24 @@ export const BottomButtons = ({
       </div>
       {showInquiryButtons && (
         <div tw="flex gap-3 absolute bottom-full px-4 py-2">
-          {/* 대표 상담 채널 (어드민 값, 없으면 언어별 폴백) */}
-          <InquiryButton
-            className="sns-btn-conversion"
-            css={CONSULT_CSS[consult.platform] ?? line}
-            onClick={() => {
-              if (consult.isModal) setOpenWeChatModal(true)
-            }}>
-            {consult.isModal ? (
-              <img src={CONSULT_IMG[consult.platform] ?? WeChatImg} alt="snsIcon" />
-            ) : (
-              <a href={consult.url} target="_blank" rel="noopener noreferrer">
-                <img src={CONSULT_IMG[consult.platform] ?? KakaoImg} alt="snsIcon" />
-              </a>
-            )}
-          </InquiryButton>
+          {/* 대표 상담 채널 (어드민 값, 복수 가능. 없으면 언어별 폴백) */}
+          {consultChannels.map((consult, i) => (
+            <InquiryButton
+              key={`consult-${consult.platform}-${i}`}
+              className="sns-btn-conversion"
+              css={CONSULT_CSS[consult.platform] ?? line}
+              onClick={() => {
+                if (consult.isModal) setOpenWeChatModal(true)
+              }}>
+              {consult.isModal ? (
+                <img src={CONSULT_IMG[consult.platform] ?? WeChatImg} alt="snsIcon" />
+              ) : (
+                <a href={consult.url} target="_blank" rel="noopener noreferrer">
+                  <img src={CONSULT_IMG[consult.platform] ?? KakaoImg} alt="snsIcon" />
+                </a>
+              )}
+            </InquiryButton>
+          ))}
           {/* 인스타그램 (언어별) */}
           {inquiryButtons
             .filter((button) => button.lang.includes(language) && button.icon === InstaImg)

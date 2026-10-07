@@ -90,3 +90,25 @@ export const getConsultChannel = (
   const url = primary?.url || cfg?.primaryConsultUrl || fb.url || ""
   return { platform, url, isModal: platform === "wechat" }
 }
+
+/**
+ * 현재 언어의 대표 상담 채널 '여러 개'(모바일 하단 탭바용). isPrimary로 지정한 항목을 order순으로 모두 반환.
+ * 지정이 없으면 단일 대표(getConsultChannel)를 폴백으로 1개 반환.
+ */
+export const getConsultChannels = (
+  cfg: { socialLinks?: SiteSocialLink[]; primaryConsultPlatform?: string; primaryConsultUrl?: string } | undefined,
+  lang: string,
+): ConsultChannel[] => {
+  const primaries = (cfg?.socialLinks ?? [])
+    .filter((l) => l.isPrimary && l.enabled && (!!l.url || l.platform === "wechat"))
+    .sort((a, b) => a.order - b.order)
+  if (primaries.length > 0) {
+    return primaries.map((p) => ({
+      platform: p.platform,
+      url: p.url || "",
+      isModal: p.platform === "wechat",
+    }))
+  }
+  const single = getConsultChannel(cfg, lang)
+  return single.platform ? [single] : []
+}
