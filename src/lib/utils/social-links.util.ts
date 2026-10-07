@@ -37,7 +37,8 @@ export const SOCIAL_PLATFORMS: { platform: SocialPlatform; label: string; modal?
  */
 export const activeSocialLinks = (links?: SiteSocialLink[]): SiteSocialLink[] | null => {
   if (!links || links.length === 0) return null
-  const active = links.filter((l) => l.enabled && (!!l.url || l.platform === "wechat"))
+  // 노출 ON이고, 링크가 있거나 이미지 팝업(위챗 등)인 항목만
+  const active = links.filter((l) => l.enabled && (!!l.url || l.isModal || l.platform === "wechat"))
   return active.length > 0 ? [...active].sort((a, b) => a.order - b.order) : null
 }
 
@@ -59,6 +60,7 @@ export interface ConsultChannel {
   url: string
   isModal: boolean // wechat 등 QR 모달
   iconUrl?: string // 업로드한 아이콘(있으면 기본 아이콘 대신 사용)
+  modalImageUrl?: string // isModal일 때 팝업 이미지(업로드본)
 }
 
 /** 어드민 미설정 시 언어별 대표 상담 채널 폴백 (기존 하드코딩과 동일) */
@@ -101,14 +103,15 @@ export const getConsultChannels = (
   lang: string,
 ): ConsultChannel[] => {
   const primaries = (cfg?.socialLinks ?? [])
-    .filter((l) => l.isPrimary && l.enabled && (!!l.url || l.platform === "wechat"))
+    .filter((l) => l.isPrimary && l.enabled && (!!l.url || l.isModal || l.platform === "wechat"))
     .sort((a, b) => a.order - b.order)
   if (primaries.length > 0) {
     return primaries.map((p) => ({
       platform: p.platform,
       url: p.url || "",
-      isModal: p.platform === "wechat",
+      isModal: !!p.isModal || p.platform === "wechat",
       iconUrl: p.iconUrl,
+      modalImageUrl: p.modalImageUrl,
     }))
   }
   const single = getConsultChannel(cfg, lang)

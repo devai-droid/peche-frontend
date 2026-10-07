@@ -17,7 +17,6 @@ import WeChatImg from "@/assets/images/sns/wechat.png"
 import InstaImg from "@/assets/images/sns/instagram.png"
 import { useSiteConfig } from "@/lib/hooks/use-site-config"
 import { getConsultChannels } from "@/lib/utils/social-links.util"
-import wechatQrImg from "@/assets/images/wechat-qr.png"
 import useCustomNavigate from "@/lib/hooks/use-custom-navigate"
 import Modal from "@/lib/components/modal/modal.component"
 import { useQuery } from "@tanstack/react-query"
@@ -899,7 +898,8 @@ export const BottomButtons = ({
   const language = i18n.language as Language
 
   const navigate = useCustomNavigate()
-  const [openWeChatModal, setOpenWeChatModal] = React.useState(false)
+  // 이미지 팝업으로 띄울 이미지 URL(null이면 닫힘). 위챗 등.
+  const [modalImage, setModalImage] = React.useState<string | null>(null)
   // 대표 상담 채널(어드민 값, 없으면 언어별 폴백) — 탭바 상담 버튼. 복수 지정 가능.
   const siteConfig = useSiteConfig()
   // 인스타는 아래에서 따로 붙이므로 대표 목록에선 제외(중복 방지)
@@ -1055,7 +1055,7 @@ export const BottomButtons = ({
               className="sns-btn-conversion"
               css={CONSULT_CSS[consult.platform] ?? line}
               onClick={() => {
-                if (consult.isModal) setOpenWeChatModal(true)
+                if (consult.isModal) setModalImage(consult.modalImageUrl || WeChatImg)
               }}>
               {consult.isModal ? (
                 <img src={consult.iconUrl || CONSULT_IMG[consult.platform] || WeChatImg} alt="snsIcon" />
@@ -1078,20 +1078,20 @@ export const BottomButtons = ({
             ))}
         </div>
       )}
-      <Modal open={openWeChatModal} onClose={() => setOpenWeChatModal(false)} width="max-w-md">
+      <Modal open={!!modalImage} onClose={() => setModalImage(null)} width="max-w-md">
         <div tw="-mx-10 -my-8">
           <div tw="bg-[#F3F3F3] w-full relative">
             <div tw="px-4 pb-3 pt-12">
               <div tw="text-[24px] font-time text-neutral90">Peche clinic</div>
             </div>
 
-            <button tw="absolute top-3 right-4" onClick={() => setOpenWeChatModal(false)}>
+            <button tw="absolute top-3 right-4" onClick={() => setModalImage(null)}>
               ✕
             </button>
           </div>
 
           <div tw="p-6 flex justify-center bg-white">
-            <img src={wechatQrImg} alt="wechat qr" tw="w-[240px] h-[240px] object-contain" />
+            {modalImage && <img src={modalImage} alt="" tw="w-[240px] h-[240px] object-contain" />}
           </div>
         </div>
       </Modal>

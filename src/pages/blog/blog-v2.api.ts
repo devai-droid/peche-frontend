@@ -188,6 +188,10 @@ export interface SiteSocialLink {
   iconUrl?: string
   /** 표시용 이름(선택) */
   label?: string
+  /** 링크 대신 이미지 팝업으로 띄움(위챗 QR 등) */
+  isModal?: boolean
+  /** 팝업 이미지 URL(isModal일 때) */
+  modalImageUrl?: string
 }
 
 export interface BlogV2SiteConfig {

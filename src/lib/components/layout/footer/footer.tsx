@@ -139,7 +139,8 @@ interface FooterProps {
 const Footer = ({ bottomCartExists = false }: FooterProps) => {
   const { t, i18n } = useTranslation()
   const language = i18n.language as Language
-  const [openWeChatModal, setOpenWeChatModal] = React.useState(false)
+  // 이미지 팝업으로 띄울 이미지 URL(null이면 닫힘). 위챗 등.
+  const [modalImage, setModalImage] = React.useState<string | null>(null)
 
   const socialLinks = FOOTER_SOCIAL_LINKS[language] ?? FOOTER_SOCIAL_LINKS.ko
 
@@ -166,6 +167,7 @@ const Footer = ({ bottomCartExists = false }: FooterProps) => {
     iconUrl?: string
     url?: string
     isModal: boolean
+    modalImage?: string
     key: string
   }[] = cfgMerged.length
     ? cfgMerged
@@ -174,7 +176,9 @@ const Footer = ({ bottomCartExists = false }: FooterProps) => {
           Icon: FOOTER_ICON[l.platform as SocialPlatform],
           iconUrl: l.iconUrl,
           url: l.url as string | undefined,
-          isModal: l.platform === "wechat",
+          isModal: !!l.isModal || l.platform === "wechat",
+          // 팝업 이미지: 업로드본 우선, 없으면 위챗 기본 QR
+          modalImage: l.modalImageUrl || (l.platform === "wechat" ? wechatQrImg : undefined),
           key: `${l.platform}-${i}`,
         }))
     : socialLinks.map((item, i) => ({
@@ -182,6 +186,7 @@ const Footer = ({ bottomCartExists = false }: FooterProps) => {
         iconUrl: undefined,
         url: item.url as string | undefined,
         isModal: item.type === "modal",
+        modalImage: item.type === "modal" ? wechatQrImg : undefined,
         key: String(i),
       }))
 
@@ -208,7 +213,7 @@ const Footer = ({ bottomCartExists = false }: FooterProps) => {
           </PolicyLinks>
 
           <SNSIcons>
-            {snsItems.map(({ Icon, iconUrl, url, isModal, key }) => {
+            {snsItems.map(({ Icon, iconUrl, url, isModal, modalImage, key }) => {
               const iconNode = iconUrl ? (
                 <img src={iconUrl} alt="" width={28} height={28} tw="object-contain" />
               ) : Icon ? (
@@ -218,7 +223,7 @@ const Footer = ({ bottomCartExists = false }: FooterProps) => {
                 return (
                   <button
                     key={key}
-                    onClick={() => setOpenWeChatModal(true)}
+                    onClick={() => modalImage && setModalImage(modalImage)}
                     className="sns-btn-conversion"
                     tw="flex items-center hover:opacity-60 transition">
                     {iconNode}
@@ -237,20 +242,20 @@ const Footer = ({ bottomCartExists = false }: FooterProps) => {
       </FooterInner>
       {/* 상담받기 버튼/카트 유무에 따라 height 조정 */}
       <Spacer className={bottomCartExists ? "h-[90px]" : "h-[40px]"} />
-      <Modal open={openWeChatModal} onClose={() => setOpenWeChatModal(false)} width="max-w-md">
+      <Modal open={!!modalImage} onClose={() => setModalImage(null)} width="max-w-md">
         <div tw="-mx-10 -my-8">
           <div tw="bg-[#F3F3F3] w-full relative">
             <div tw="px-4 pb-3 pt-12">
               <div tw="text-[24px] font-time text-neutral90">Peche clinic</div>
             </div>
 
-            <button tw="absolute top-3 right-4" onClick={() => setOpenWeChatModal(false)}>
+            <button tw="absolute top-3 right-4" onClick={() => setModalImage(null)}>
               <CloseIcon width={22} height={22} />
             </button>
           </div>
 
           <div tw="p-6 flex justify-center bg-white">
-            <img src={wechatQrImg} alt="" tw="w-[240px] h-[240px] object-contain" />
+            {modalImage && <img src={modalImage} alt="" tw="w-[240px] h-[240px] object-contain" />}
           </div>
         </div>
       </Modal>

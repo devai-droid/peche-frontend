@@ -109,10 +109,10 @@ const SOCIAL_LINKS: Record<Language, SocialItem[]> = {
 
 const LeftMenu = ({
   isDesktop,
-  openWeChatModal,
+  openImageModal,
 }: {
   isDesktop?: boolean
-  openWeChatModal?: () => void
+  openImageModal?: (img: string) => void
 }) => {
   const { i18n } = useTranslation()
   const language = i18n.language as Language
@@ -137,6 +137,7 @@ const LeftMenu = ({
     iconUrl?: string
     url?: string
     isModal: boolean
+    modalImage?: string
     key: string
   }[] = cfgMerged.length
     ? cfgMerged
@@ -145,7 +146,8 @@ const LeftMenu = ({
           Icon: HEADER_ICON[l.platform as SocialPlatform],
           iconUrl: l.iconUrl,
           url: l.url as string | undefined,
-          isModal: l.platform === "wechat",
+          isModal: !!l.isModal || l.platform === "wechat",
+          modalImage: l.modalImageUrl || (l.platform === "wechat" ? wechatQrImg : undefined),
           key: `${l.platform}-${i}`,
         }))
     : socialLinks.map((item, i) => ({
@@ -153,12 +155,13 @@ const LeftMenu = ({
         iconUrl: undefined,
         url: item.url as string | undefined,
         isModal: item.type === "modal",
+        modalImage: item.type === "modal" ? wechatQrImg : undefined,
         key: String(i),
       }))
 
   return (
     <div tw="flex items-center gap-[7px]">
-      {snsItems.map(({ Icon, iconUrl, url, isModal, key }) => {
+      {snsItems.map(({ Icon, iconUrl, url, isModal, modalImage, key }) => {
         const iconNode = iconUrl ? (
           <img src={iconUrl} alt="" width={28} height={28} tw="object-contain" />
         ) : Icon ? (
@@ -168,7 +171,7 @@ const LeftMenu = ({
           return (
             <button
               key={key}
-              onClick={openWeChatModal}
+              onClick={() => modalImage && openImageModal?.(modalImage)}
               className="sns-btn-conversion"
               tw="flex items-center justify-center hover:opacity-80">
               {iconNode}
@@ -428,7 +431,8 @@ const HeaderComponent = ({ onClickDrawer, clickedKeyword, setClickedKeyword }: P
   const { isDesktop } = useResponsive()
   const [openSearch, setOpenSearch] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [openWeChatModal, setOpenWeChatModal] = useState(false)
+  // 이미지 팝업으로 띄울 이미지 URL(null이면 닫힘). 위챗 등.
+  const [modalImage, setModalImage] = useState<string | null>(null)
 
   useEffect(() => {
     if (clickedKeyword && !isDesktop) {
@@ -448,10 +452,7 @@ const HeaderComponent = ({ onClickDrawer, clickedKeyword, setClickedKeyword }: P
         <>
           <div tw="absolute-center">{isDesktop && <Logo />}</div>
           <AppMaxWidth tw="h-full flex justify-between items-center font-pretendard md:text-[15px] text-[13px]">
-            <LeftMenu
-              isDesktop={isDesktop}
-              openWeChatModal={() => setOpenWeChatModal(true)}
-            />
+            <LeftMenu isDesktop={isDesktop} openImageModal={(img) => setModalImage(img)} />
             <RightMenu
               isDesktop={isDesktop}
               setOpenSearch={setOpenSearch}
@@ -461,7 +462,7 @@ const HeaderComponent = ({ onClickDrawer, clickedKeyword, setClickedKeyword }: P
             />
           </AppMaxWidth>
           {!isDesktop && isMenuOpen && <MobileMenu />}
-          <Modal open={openWeChatModal} onClose={() => setOpenWeChatModal(false)} width="max-w-md">
+          <Modal open={!!modalImage} onClose={() => setModalImage(null)} width="max-w-md">
             <div tw="-mx-10 -my-8">
               {/* 상단 회색 영역 */}
               <div tw="bg-[#F3F3F3] w-full relative">
@@ -469,14 +470,14 @@ const HeaderComponent = ({ onClickDrawer, clickedKeyword, setClickedKeyword }: P
                   <div tw="text-[24px] font-time text-neutral90">Peche clinic</div>
                 </div>
 
-                <button tw="absolute top-3 right-4" onClick={() => setOpenWeChatModal(false)}>
+                <button tw="absolute top-3 right-4" onClick={() => setModalImage(null)}>
                   <CloseIcon width={22} height={22} />
                 </button>
               </div>
 
-              {/* QR 영역 */}
+              {/* 이미지 영역 */}
               <div tw="p-6 flex justify-center bg-white">
-                <img src={wechatQrImg} alt="" tw="w-[240px] h-[240px] object-contain" />
+                {modalImage && <img src={modalImage} alt="" tw="w-[240px] h-[240px] object-contain" />}
               </div>
             </div>
           </Modal>
