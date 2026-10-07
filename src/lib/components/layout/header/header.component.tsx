@@ -13,6 +13,8 @@ import {
   WechatIcon,
   LineIcon,
   WhatsappIcon,
+  TiktokIcon,
+  XIcon,
 } from "@/assets/icon"
 import wechatQrImg from "@/assets/images/wechat-qr.png"
 import { IconButton, Logo, MobileLogo } from "@/design-system/components"
@@ -46,6 +48,8 @@ const HEADER_ICON: Partial<Record<SocialPlatform, React.FC<React.SVGProps<SVGSVG
   whatsapp: WhatsappIcon,
   wechat: WechatIcon,
   line: LineIcon,
+  tiktok: TiktokIcon,
+  x: XIcon,
 }
 
 const HeaderContainer = tw.header`h-16 lg:h-20 relative bg-neutral`

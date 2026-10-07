@@ -9,6 +9,8 @@ import {
   WhatsappGrayIcon,
   WechatGrayIcon,
   LineGrayIcon,
+  TiktokGrayIcon,
+  XGrayIcon,
   CloseIcon,
 } from "@/assets/icon"
 import { ReactComponent as FooterLogo } from "@/assets/icons/peche-footer-logo.svg"
@@ -31,6 +33,8 @@ const FOOTER_ICON: Partial<Record<SocialPlatform, React.FC<React.SVGProps<SVGSVG
   whatsapp: WhatsappGrayIcon,
   wechat: WechatGrayIcon,
   line: LineGrayIcon,
+  tiktok: TiktokGrayIcon,
+  x: XGrayIcon,
 }
 
 /**
