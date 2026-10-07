@@ -22,6 +22,7 @@ import WhatsAppHelp from "@/assets/images/sns/icon_WhatsApp_help.png"
 import LineHelp from "@/assets/images/sns/icon_LINE_help.png"
 import WeChatHelp from "@/assets/images/sns/icon_WeChat_help.png"
 import wechatQrImg from "@/assets/images/wechat-qr.png"
+import { useSiteConfig } from "@/lib/hooks/use-site-config"
 
 const PageContainer = tw.div`w-full flex flex-col items-center bg-white`
 
@@ -391,6 +392,9 @@ const WhyPechePage = () => {
   const { t, i18n } = useTranslation()
   const language = i18n.language as Language
   const [openWeChatModal, setOpenWeChatModal] = React.useState(false)
+  const siteConfig = useSiteConfig()
+  // 위치/지도 버튼 전용 링크(어드민 공통값, 없으면 하드코딩 폴백)
+  const mapUrl = siteConfig?.googlePlaceUrl || "https://maps.app.goo.gl/bkkdJBLVdT7UkKtg9"
 
   // 한국어 페이지 접근 시 홈으로 리다이렉트
   React.useEffect(() => {
@@ -539,21 +543,12 @@ const WhyPechePage = () => {
                     </ContactCardDesc>
                   </ContactCardTextGroup>
                 </ContactCardTop>
-                <ContactCardLink
-                  onClick={() =>
-                    window.open(
-                      "https://maps.app.goo.gl/bkkdJBLVdT7UkKtg9",
-                      "_blank",
-                    )
-                  }
-                >
+                <ContactCardLink onClick={() => window.open(mapUrl, "_blank")}>
                   {t("whyPeche.contactDirectionsCta")} →
                 </ContactCardLink>
               </ContactCard>
             </ContactCardsCol>
-            <MapContainerLarge
-              onClick={() => window.open("https://maps.app.goo.gl/bkkdJBLVdT7UkKtg9", "_blank")}
-              tw="cursor-pointer">
+            <MapContainerLarge onClick={() => window.open(mapUrl, "_blank")} tw="cursor-pointer">
               <img
                 src={whyPecheMap}
                 alt="페슈의원 위치"

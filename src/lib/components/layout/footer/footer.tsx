@@ -4,14 +4,11 @@ import CustomLink from "@/lib/components/custom-link.component"
 import {
   NaverBlogGrayIcon,
   InstaLogoGrayIcon,
-  TiktokGrayIcon,
-  NaverPlaceGrayIcon,
+  ThreadsGrayIcon,
   KakaoFriendsGrayIcon,
   WhatsappGrayIcon,
   WechatGrayIcon,
-  XGrayIcon,
   LineGrayIcon,
-  FacebookGrayIcon,
   CloseIcon,
 } from "@/assets/icon"
 import { ReactComponent as FooterLogo } from "@/assets/icons/peche-footer-logo.svg"
@@ -22,18 +19,18 @@ import wechatQrImg from "@/assets/images/wechat-qr.png"
 import { useSiteConfig } from "@/lib/hooks/use-site-config"
 import { activeSocialLinks, SocialPlatform } from "@/lib/utils/social-links.util"
 
-/** 플랫폼 → 푸터용(회색) 아이콘. 여기 없는 플랫폼(googlePlace 등)은 푸터 아이콘으로 노출하지 않음. */
+/**
+ * 플랫폼 → 푸터용(회색) 아이콘. 여기 없는 플랫폼은 푸터 아이콘으로 노출하지 않음.
+ * 플레이스(구글·네이버)는 SNS가 아니라 '위치/지도 링크'로 분리돼 여기 없다.
+ */
 const FOOTER_ICON: Partial<Record<SocialPlatform, React.FC<React.SVGProps<SVGSVGElement>>>> = {
-  naverPlace: NaverPlaceGrayIcon,
   naverBlog: NaverBlogGrayIcon,
   kakao: KakaoFriendsGrayIcon,
   instagram: InstaLogoGrayIcon,
+  threads: ThreadsGrayIcon,
   whatsapp: WhatsappGrayIcon,
-  tiktok: TiktokGrayIcon,
   wechat: WechatGrayIcon,
-  facebook: FacebookGrayIcon,
   line: LineGrayIcon,
-  x: XGrayIcon,
 }
 
 /**
@@ -105,41 +102,29 @@ type FooterSocialItem =
       url?: undefined
     }
 
+// 어드민 SNS 설정이 비었을 때만 쓰는 폴백. 지정 목록(플레이스·목록밖 제외)과 동일. 쓰레드는 URL 미정이라 제외.
 const FOOTER_SOCIAL_LINKS: Record<Language, FooterSocialItem[]> = {
   ko: [
-    { icon: NaverPlaceGrayIcon, url: "https://naver.me/FLe0V59M" },
-    { icon: NaverBlogGrayIcon, url: "https://blog.naver.com/pecheclinic" },
     { icon: KakaoFriendsGrayIcon, url: "http://pf.kakao.com/_dxoiLn" },
     { icon: InstaLogoGrayIcon, url: "https://www.instagram.com/peche_clinic/" },
+    { icon: NaverBlogGrayIcon, url: "https://blog.naver.com/pecheclinic" },
   ],
   en: [
     { icon: WhatsappGrayIcon, url: "https://wa.me/message/4Y5JC2HX6OH5H1" },
     { icon: InstaLogoGrayIcon, url: "https://www.instagram.com/pecheclinic.en/" },
-    { icon: TiktokGrayIcon, url: "https://www.tiktok.com/@pecheclinic_eng" },
   ],
-  zh: [
-    { icon: InstaLogoGrayIcon, url: "https://www.instagram.com/pecheclinic.cn/" },
-    { icon: WechatGrayIcon, type: "modal", modalKey: "wechat" },
-  ],
+  zh: [{ icon: WechatGrayIcon, type: "modal", modalKey: "wechat" }],
   "zh-TW": [
-    { icon: InstaLogoGrayIcon, url: "https://www.instagram.com/pecheclinic_tw/" },
-    { icon: FacebookGrayIcon, url: "https://www.facebook.com/profile.php?id=61582363886175" },
     { icon: LineGrayIcon, url: "https://line.me/R/ti/p/@683jgqmd" },
+    { icon: InstaLogoGrayIcon, url: "https://www.instagram.com/pecheclinic_tw/" },
   ],
   ja: [
-    { icon: InstaLogoGrayIcon, url: "https://www.instagram.com/pecheclinic.jp/" },
     { icon: LineGrayIcon, url: "https://line.me/R/ti/p/@235wfyao" },
-    {
-      icon: TiktokGrayIcon,
-      url: "https://www.tiktok.com/@pecheclinic_jp?is_from_webapp=1&sender_device=pc",
-    },
-    { icon: XGrayIcon, url: "https://x.com/pecheclinic_jp" },
+    { icon: InstaLogoGrayIcon, url: "https://www.instagram.com/pecheclinic.jp/" },
   ],
   th: [
-    { icon: InstaLogoGrayIcon, url: "https://www.instagram.com/pecheclinic_th/" },
-    { icon: FacebookGrayIcon, url: "https://www.facebook.com/profile.php?id=61582230961269" },
     { icon: LineGrayIcon, url: "https://line.me/R/ti/p/@892druai" },
-    { icon: TiktokGrayIcon, url: "https://www.tiktok.com/@pecheclinic_th" },
+    { icon: InstaLogoGrayIcon, url: "https://www.instagram.com/pecheclinic_th/" },
   ],
 }
 

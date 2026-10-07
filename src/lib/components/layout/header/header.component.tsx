@@ -8,12 +8,9 @@ import {
   ShoppingIcon,
   NaverBlogIcon,
   InstaLogoIcon,
-  TiktokIcon,
-  NaverPlaceIcon,
+  ThreadsIcon,
   KakaoFriendsIcon,
   WechatIcon,
-  XIcon,
-  FacebookIcon,
   LineIcon,
   WhatsappIcon,
 } from "@/assets/icon"
@@ -37,18 +34,18 @@ import { activeSocialLinks, SocialPlatform } from "@/lib/utils/social-links.util
 
 import useCart from "@/features/product/hooks/use-cart"
 
-/** 플랫폼 → 헤더용(컬러) 아이콘. 여기 없는 플랫폼은 헤더 아이콘으로 노출하지 않음. */
+/**
+ * 플랫폼 → 헤더용(컬러) 아이콘. 여기 없는 플랫폼은 헤더 아이콘으로 노출하지 않음.
+ * 플레이스(구글·네이버)는 SNS가 아니라 '위치/지도 링크'로 분리돼 여기 없다.
+ */
 const HEADER_ICON: Partial<Record<SocialPlatform, React.FC<React.SVGProps<SVGSVGElement>>>> = {
-  naverPlace: NaverPlaceIcon,
   naverBlog: NaverBlogIcon,
   kakao: KakaoFriendsIcon,
   instagram: InstaLogoIcon,
+  threads: ThreadsIcon,
   whatsapp: WhatsappIcon,
-  tiktok: TiktokIcon,
   wechat: WechatIcon,
-  facebook: FacebookIcon,
   line: LineIcon,
-  x: XIcon,
 }
 
 const HeaderContainer = tw.header`h-16 lg:h-20 relative bg-neutral`
@@ -79,46 +76,30 @@ interface SocialModalItem {
 
 type SocialItem = SocialLinkItem | SocialModalItem
 
-// 언어별 소셜 링크 & 아이콘 매핑
+// 언어별 소셜 링크 & 아이콘 매핑 — 어드민 SNS 설정이 비었을 때만 쓰는 폴백.
+// 지정 목록(플레이스·목록밖 제외)과 동일. 쓰레드는 URL 미정이라 제외.
 const SOCIAL_LINKS: Record<Language, SocialItem[]> = {
   ko: [
-    { icon: NaverPlaceIcon, url: "https://naver.me/FLe0V59M" },
-    { icon: NaverBlogIcon, url: "https://blog.naver.com/pecheclinic" },
     { icon: KakaoFriendsIcon, url: "http://pf.kakao.com/_dxoiLn" },
     { icon: InstaLogoIcon, url: "https://www.instagram.com/peche_clinic/" },
+    { icon: NaverBlogIcon, url: "https://blog.naver.com/pecheclinic" },
   ],
   en: [
     { icon: WhatsappIcon, url: "https://wa.me/message/4Y5JC2HX6OH5H1" },
     { icon: InstaLogoIcon, url: "https://www.instagram.com/pecheclinic.en/" },
-    { icon: TiktokIcon, url: "https://www.tiktok.com/@pecheclinic_eng?lang=ko-KR" },
   ],
-  zh: [
-    { icon: InstaLogoIcon, url: "https://www.instagram.com/pecheclinic.cn/" },
-    // { icon: XiaoIcon, url: "" },
-    { icon: WechatIcon, type: "modal", modalKey: "wechat" }, // QR 모달 표시
-  ],
+  zh: [{ icon: WechatIcon, type: "modal", modalKey: "wechat" }],
   "zh-TW": [
-    { icon: InstaLogoIcon, url: "https://www.instagram.com/pecheclinic_tw/" },
-    { icon: FacebookIcon, url: "https://www.facebook.com/profile.php?id=61582363886175" },
     { icon: LineIcon, url: "https://line.me/R/ti/p/@683jgqmd" },
+    { icon: InstaLogoIcon, url: "https://www.instagram.com/pecheclinic_tw/" },
   ],
   ja: [
-    { icon: InstaLogoIcon, url: "https://www.instagram.com/pecheclinic.jp/" },
     { icon: LineIcon, url: "https://line.me/R/ti/p/@235wfyao" },
-    {
-      icon: TiktokIcon,
-      url: "https://www.tiktok.com/@pecheclinic_jp?is_from_webapp=1&sender_device=pc",
-    },
-    { icon: XIcon, url: "https://x.com/pecheclinic_jp" },
+    { icon: InstaLogoIcon, url: "https://www.instagram.com/pecheclinic.jp/" },
   ],
   th: [
-    { icon: InstaLogoIcon, url: "https://www.instagram.com/pecheclinic_th/" },
-    { icon: FacebookIcon, url: "https://www.facebook.com/profile.php?id=61582230961269" },
     { icon: LineIcon, url: "https://line.me/R/ti/p/@892druai" },
-    {
-      icon: TiktokIcon,
-      url: "https://www.tiktok.com/@pecheclinic_th?is_from_webapp=1&sender_device=pc",
-    },
+    { icon: InstaLogoIcon, url: "https://www.instagram.com/pecheclinic_th/" },
   ],
 }
 

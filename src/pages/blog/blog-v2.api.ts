@@ -212,4 +212,7 @@ export interface BlogV2SiteConfig {
   commonSocialLinks?: SiteSocialLink[]
   primaryConsultPlatform?: string
   primaryConsultUrl?: string
+  /** 위치/지도 버튼 전용 링크(모든 언어 공통). SNS와 분리 */
+  googlePlaceUrl?: string
+  naverPlaceUrl?: string
 }

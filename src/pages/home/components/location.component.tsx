@@ -8,7 +8,7 @@ import useCustomNavigate from "@/lib/hooks/use-custom-navigate"
 import { Language } from "@/lib/locales/i18n.config"
 import Modal from "@/lib/components/modal/modal.component"
 import { useSiteConfig } from "@/lib/hooks/use-site-config"
-import { socialUrl, getConsultChannel } from "@/lib/utils/social-links.util"
+import { getConsultChannel } from "@/lib/utils/social-links.util"
 
 const MapSection = tw.section`
   w-full bg-neutral overflow-hidden
@@ -129,21 +129,14 @@ const Location = () => {
               <ButtonGroup>
                 <OutlineButton
                   onClick={() =>
-                    window.open(
-                      socialUrl(siteConfig?.socialLinks, "naverPlace", "https://naver.me/FLe0V59M"),
-                      "_blank",
-                    )
+                    window.open(siteConfig?.naverPlaceUrl || "https://naver.me/FLe0V59M", "_blank")
                   }>
                   {t("location.rightButton1")}
                 </OutlineButton>
                 <OutlineButton
                   onClick={() =>
                     window.open(
-                      socialUrl(
-                        siteConfig?.socialLinks,
-                        "googlePlace",
-                        "https://maps.app.goo.gl/bkkdJBLVdT7UkKtg9",
-                      ),
+                      siteConfig?.googlePlaceUrl || "https://maps.app.goo.gl/bkkdJBLVdT7UkKtg9",
                       "_blank",
                     )
                   }>
@@ -159,11 +152,7 @@ const Location = () => {
           <GoogleMapWrapper
             onClick={() =>
               window.open(
-                socialUrl(
-                  siteConfig?.socialLinks,
-                  "googlePlace",
-                  "https://maps.app.goo.gl/bkkdJBLVdT7UkKtg9",
-                ),
+                siteConfig?.googlePlaceUrl || "https://maps.app.goo.gl/bkkdJBLVdT7UkKtg9",
                 "_blank",
               )
             }

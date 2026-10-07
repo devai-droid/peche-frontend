@@ -6,7 +6,7 @@ import Page from "@/lib/components/layout/page.component"
 import mapImg from "@/assets/images/why-peche-map.png"
 import CartView from "@/features/product/components/cart-view.component"
 import { useSiteConfig } from "@/lib/hooks/use-site-config"
-import { socialUrl, getConsultChannel } from "@/lib/utils/social-links.util"
+import { getConsultChannel } from "@/lib/utils/social-links.util"
 
 // 이미지 import
 import modelImg from "@/assets/images/intro-model.jpg"
@@ -776,21 +776,14 @@ const Intro = () => {
                     <ButtonGroup>
                       <OutlineButton
                         onClick={() =>
-                          window.open(
-                            socialUrl(siteConfig?.socialLinks, "naverPlace", "https://naver.me/FLe0V59M"),
-                            "_blank",
-                          )
+                          window.open(siteConfig?.naverPlaceUrl || "https://naver.me/FLe0V59M", "_blank")
                         }>
                         {t("location.rightButton1")}
                       </OutlineButton>
                       <OutlineButton
                         onClick={() =>
                           window.open(
-                            socialUrl(
-                              siteConfig?.socialLinks,
-                              "googlePlace",
-                              "https://maps.app.goo.gl/bkkdJBLVdT7UkKtg9",
-                            ),
+                            siteConfig?.googlePlaceUrl || "https://maps.app.goo.gl/bkkdJBLVdT7UkKtg9",
                             "_blank",
                           )
                         }>
@@ -806,11 +799,7 @@ const Intro = () => {
                 <GoogleMapWrapper
                   onClick={() =>
                     window.open(
-                      socialUrl(
-                        siteConfig?.socialLinks,
-                        "googlePlace",
-                        "https://maps.app.goo.gl/bkkdJBLVdT7UkKtg9",
-                      ),
+                      siteConfig?.googlePlaceUrl || "https://maps.app.goo.gl/bkkdJBLVdT7UkKtg9",
                       "_blank",
                     )
                   }

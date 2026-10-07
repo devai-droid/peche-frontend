@@ -67,6 +67,8 @@ export { ReactComponent as WechatGrayIcon } from "@/assets/icons/Logo-Wechat-Gra
 export { ReactComponent as LineGrayIcon } from "@/assets/icons/Logo-Line-Gray.svg"
 export { ReactComponent as XGrayIcon } from "@/assets/icons/Logo-X-Gray.svg"
 export { ReactComponent as FacebookGrayIcon } from "@/assets/icons/Logo-Facebook-Gray.svg"
+export { ReactComponent as ThreadsGrayIcon } from "@/assets/icons/Logo-Threads-Gray.svg"
+export { ReactComponent as ThreadsIcon } from "@/assets/icons/Logo-Threads.svg"
 export { ReactComponent as GrayPlusIcon } from "@/assets/icons/plus-gray.svg"
 export { ReactComponent as PecheFooterIcon } from "@/assets/icons/peche-footer-logo.svg"
 export { ReactComponent as KakaoLogoMini } from "@/assets/icons/kakao.svg"

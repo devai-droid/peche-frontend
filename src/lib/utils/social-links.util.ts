@@ -6,6 +6,7 @@ export type SocialPlatform =
   | "naverBlog"
   | "kakao"
   | "instagram"
+  | "threads"
   | "whatsapp"
   | "tiktok"
   | "wechat"
