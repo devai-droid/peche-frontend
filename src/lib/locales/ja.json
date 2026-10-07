@@ -402,7 +402,8 @@
     "cancelConfirm": "本当に予約をキャンセルしますか？",
     "back": "戻る",
     "reservationCanceled": "予約をキャンセルしました",
-    "cancelError": "キャンセル中にエラーが発生しました。"
+    "cancelError": "キャンセル中にエラーが発生しました。",
+    "changeHistory": "予約変更履歴"
   },
   "error": {
     "verificationNeeded": "本人確認が必要です。",

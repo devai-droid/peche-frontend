@@ -402,7 +402,8 @@
     "cancelConfirm": "Are you sure you want to cancel your reservation?",
     "back": "Go back",
     "reservationCanceled": "Reservation canceled",
-    "cancelError": "An error occurred during cancellation."
+    "cancelError": "An error occurred during cancellation.",
+    "changeHistory": "Reservation Change History"
   },
   "error": {
     "verificationNeeded": "Identity verification is required.",

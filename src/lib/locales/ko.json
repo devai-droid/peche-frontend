@@ -402,7 +402,8 @@
     "cancelConfirm": "정말 예약을 취소하시겠습니까?",
     "back": "뒤로가기",
     "reservationCanceled": "예약 취소됨",
-    "cancelError": "취소 중 오류가 발생했습니다."
+    "cancelError": "취소 중 오류가 발생했습니다.",
+    "changeHistory": "예약 변경 내역"
   },
   "error": {
     "verificationNeeded": "본인인증이 필요합니다.",

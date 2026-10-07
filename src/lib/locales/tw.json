@@ -402,7 +402,8 @@
     "cancelConfirm": "您確定要取消預訂嗎？",
     "back": "回去",
     "reservationCanceled": "預訂已取消",
-    "cancelError": "取消過程中發生錯誤。"
+    "cancelError": "取消過程中發生錯誤。",
+    "changeHistory": "預約變更記錄"
   },
   "error": {
     "verificationNeeded": "需要本人认证。",

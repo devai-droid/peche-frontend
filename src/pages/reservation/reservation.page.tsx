@@ -378,6 +378,12 @@ const Reservations = () => {
       : r.products.reduce((a, p) => a + (p.product.discountPrice || p.product.price), 0) +
         r.events.reduce((a, e) => a + (e.event.discountPrice || e.event.price), 0)
 
+    // 예약 변경 이력(일시 변경 기록)
+    const changeHistory =
+      (r as unknown as {
+        changeHistory?: { fromDatetime: string; toDatetime: string; changedAt: string }[]
+      }).changeHistory ?? []
+
     // 지난 예약인지 계산
     const isPast = dayjs.utc(r.datetime).isBefore(dayjs.utc().add(9, "hour"))
 
@@ -431,6 +437,27 @@ const Reservations = () => {
             </div>
           </Row>
         </div>
+
+        {/* ---------------- 예약변경내역 ---------------- */}
+        {changeHistory.length > 0 && (
+          <div>
+            <div tw="font-semibold text-[16px] md:text-[18px] mb-3 text-neutralBlack">
+              {t("reservationCheckPage.changeHistory")}
+            </div>
+            <div tw="flex flex-col gap-1">
+              {changeHistory.map((h, i) => (
+                <div key={i} tw="text-neutral60 text-[13px] md:text-[14px]">
+                  {formatReservationDatetime(h.fromDatetime, language)}
+                  {" → "}
+                  {formatReservationDatetime(h.toDatetime, language)}
+                  <span tw="ml-1 text-[12px] text-neutral50">
+                    ({dayjs(h.changedAt).format("YYYY-MM-DD")})
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* ---------------- 버튼 영역 ---------------- */}
         {renderButtons(r, isPast)}
