@@ -465,12 +465,7 @@ const Reservations = () => {
             <Label>{t("reservationCheckPage.treatmentList")}</Label>
             <div tw="flex-1 flex flex-col text-neutral60">
               {items.map((it, i) => (
-                <div
-                  key={i}
-                  css={[
-                    tw`flex justify-between gap-3 py-1.5`,
-                    items.length > 1 && tw`border-b border-b-[0.5px] border-neutral20`,
-                  ]}>
+                <div key={i} tw="flex justify-between gap-3 py-1.5 border-b border-b-[0.5px] border-neutral20">
                   <span tw="whitespace-pre-wrap break-keep">{it.name}</span>
                   <span tw="shrink-0 whitespace-nowrap tabular-nums text-neutral50 text-[14px] md:text-[16px]">
                     {t("reservationCheckPage.quantityUnit", { n: it.count })} · {it.price.toLocaleString()}
