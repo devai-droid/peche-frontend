@@ -403,7 +403,8 @@
     "back": "戻る",
     "reservationCanceled": "予約をキャンセルしました",
     "cancelError": "キャンセル中にエラーが発生しました。",
-    "changeHistory": "予約変更履歴"
+    "changeHistory": "予約変更履歴",
+    "quantityUnit": "数量 {{n}}"
   },
   "error": {
     "verificationNeeded": "本人確認が必要です。",

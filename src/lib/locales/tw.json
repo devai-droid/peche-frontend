@@ -403,7 +403,8 @@
     "back": "回去",
     "reservationCanceled": "預訂已取消",
     "cancelError": "取消過程中發生錯誤。",
-    "changeHistory": "預約變更記錄"
+    "changeHistory": "預約變更記錄",
+    "quantityUnit": "數量 {{n}}"
   },
   "error": {
     "verificationNeeded": "需要本人认证。",

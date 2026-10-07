@@ -403,7 +403,8 @@
     "back": "回去",
     "reservationCanceled": "预订已取消",
     "cancelError": "取消过程中发生错误。",
-    "changeHistory": "预约变更记录"
+    "changeHistory": "预约变更记录",
+    "quantityUnit": "数量 {{n}}"
   },
   "error": {
     "verificationNeeded": "需要本人认证。",

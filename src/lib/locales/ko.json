@@ -403,7 +403,8 @@
     "back": "뒤로가기",
     "reservationCanceled": "예약 취소됨",
     "cancelError": "취소 중 오류가 발생했습니다.",
-    "changeHistory": "예약 변경 내역"
+    "changeHistory": "예약 변경 내역",
+    "quantityUnit": "수량 {{n}}"
   },
   "error": {
     "verificationNeeded": "본인인증이 필요합니다.",

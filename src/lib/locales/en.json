@@ -403,7 +403,8 @@
     "back": "Go back",
     "reservationCanceled": "Reservation canceled",
     "cancelError": "An error occurred during cancellation.",
-    "changeHistory": "Reservation Change History"
+    "changeHistory": "Reservation Change History",
+    "quantityUnit": "Qty {{n}}"
   },
   "error": {
     "verificationNeeded": "Identity verification is required.",
