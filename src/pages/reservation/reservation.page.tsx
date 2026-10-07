@@ -356,12 +356,27 @@ const Reservations = () => {
   // 카드 렌더링
   // ─────────────────────────────────
   const renderReservationCard = (r: Reservation) => {
-    const products = r.products.map((p) => p.product.name)
-    const events = r.events.map((e) => e.event.name)
+    // 예약 당시 스냅샷(이름·가격·수량)이 있으면 그걸 우선 사용 — 상품 재임포트·가격변경에도 이력 보존.
+    // 스냅샷 없는 옛 예약은 기존 방식(현재 상품 참조)으로 폴백.
+    const snap = r as unknown as {
+      productSnapshot?: { name: string; price: number; count: number }[]
+      eventSnapshot?: { name: string; price: number; count: number }[]
+    }
+    const useSnapshot = !!(snap.productSnapshot?.length || snap.eventSnapshot?.length)
+    const withCount = (name: string, count: number) => (count > 1 ? `${name} x${count}` : name)
 
-    const totalPrice =
-      r.products.reduce((a, p) => a + (p.product.discountPrice || p.product.price), 0) +
-      r.events.reduce((a, e) => a + (e.event.discountPrice || e.event.price), 0)
+    const products = useSnapshot
+      ? (snap.productSnapshot ?? []).map((p) => withCount(p.name, p.count))
+      : r.products.map((p) => p.product.name)
+    const events = useSnapshot
+      ? (snap.eventSnapshot ?? []).map((e) => withCount(e.name, e.count))
+      : r.events.map((e) => e.event.name)
+
+    const totalPrice = useSnapshot
+      ? (snap.productSnapshot ?? []).reduce((a, p) => a + p.price * p.count, 0) +
+        (snap.eventSnapshot ?? []).reduce((a, e) => a + e.price * e.count, 0)
+      : r.products.reduce((a, p) => a + (p.product.discountPrice || p.product.price), 0) +
+        r.events.reduce((a, e) => a + (e.event.discountPrice || e.event.price), 0)
 
     // 지난 예약인지 계산
     const isPast = dayjs.utc(r.datetime).isBefore(dayjs.utc().add(9, "hour"))
