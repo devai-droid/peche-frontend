@@ -375,9 +375,10 @@ const Reservations = () => {
     const useSnapshot = !!(snap.productSnapshot?.length || snap.eventSnapshot?.length)
 
     // 현재 언어에 맞는 이름 선택(비면 한국어 폴백). 스냅샷·라이브 상품/이벤트/대분류 모두 동일 필드 구조.
+    // 번체는 i18n 언어코드가 "tw"가 아니라 "zh-TW"다(Language.TWN). 기존 상세/이벤트 페이지와 동일 매핑.
     const nameKey =
-      ({ ko: "name", en: "nameEN", zh: "nameZH", tw: "nameZHTW", ja: "nameJA", th: "nameTH" } as const)[
-        language as "ko" | "en" | "zh" | "tw" | "ja" | "th"
+      ({ ko: "name", en: "nameEN", zh: "nameZH", "zh-TW": "nameZHTW", ja: "nameJA", th: "nameTH" } as const)[
+        language as "ko" | "en" | "zh" | "zh-TW" | "ja" | "th"
       ] ?? "name"
     const localizedName = (o?: {
       name?: string
