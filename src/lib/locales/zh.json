@@ -89,7 +89,8 @@
     "leftButton1": "预约",
     "leftButton2": "在微信上聊天",
     "rightButton1": "纳弗广场景观",
-    "rightButton2": "在Google地图上查看"
+    "rightButton2": "在Google地图上查看",
+    "kakaoMap": "在Kakao地图上查看"
   },
   "footer": {
     "title": "可感知美丽的诗丽雅皮肤科",

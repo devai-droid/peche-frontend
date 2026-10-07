@@ -89,7 +89,8 @@
     "leftButton1": "จองนัดหมาย",
     "leftButton2": "แชทบน LINE",
     "rightButton1": "ดูบน Naver Place",
-    "rightButton2": "ดูบนแผนที่ Google"
+    "rightButton2": "ดูบนแผนที่ Google",
+    "kakaoMap": "ดูบนแผนที่ Kakao"
   },
   "footer": {
     "title": "ซีเนียร์คลีนิก คังนัม",

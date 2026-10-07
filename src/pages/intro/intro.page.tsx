@@ -789,6 +789,11 @@ const Intro = () => {
                         }>
                         {t("location.rightButton2")}
                       </OutlineButton>
+                      {siteConfig?.kakaoPlaceUrl && (
+                        <OutlineButton onClick={() => window.open(siteConfig.kakaoPlaceUrl, "_blank")}>
+                          {t("location.kakaoMap")}
+                        </OutlineButton>
+                      )}
                     </ButtonGroup>
                   </InfoBlock>
                 </div>

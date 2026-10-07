@@ -89,7 +89,8 @@
     "leftButton1": "預約",
     "leftButton2": "在LINE上聊天",
     "rightButton1": "納弗廣場景觀",
-    "rightButton2": "在Google地圖上查看"
+    "rightButton2": "在Google地圖上查看",
+    "kakaoMap": "在Kakao地圖上查看"
   },
   "footer": {
     "title": "可感知美丽的诗丽雅皮肤科",

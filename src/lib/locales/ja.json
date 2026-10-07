@@ -89,7 +89,8 @@
     "leftButton1": "予約する",
     "leftButton2": "ラインでチャット",
     "rightButton1": "ネイバープレイスで見る",
-    "rightButton2": "Google マップで見る"
+    "rightButton2": "Google マップで見る",
+    "kakaoMap": "カカオマップで見る"
   },
   "footer": {
     "title": "美しさを感覚する、PECHEクリニック",

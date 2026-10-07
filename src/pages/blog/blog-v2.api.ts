@@ -182,6 +182,8 @@ export interface SiteSocialLink {
   url?: string
   enabled: boolean
   order: number
+  /** 대표 상담 채널 여부(언어당 1개) */
+  isPrimary?: boolean
 }
 
 export interface BlogV2SiteConfig {
@@ -215,4 +217,5 @@ export interface BlogV2SiteConfig {
   /** 위치/지도 버튼 전용 링크(모든 언어 공통). SNS와 분리 */
   googlePlaceUrl?: string
   naverPlaceUrl?: string
+  kakaoPlaceUrl?: string
 }

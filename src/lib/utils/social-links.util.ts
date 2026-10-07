@@ -71,14 +71,22 @@ const CONSULT_FALLBACK: Record<string, { platform: string; url?: string }> = {
 }
 
 /**
- * 현재 언어의 대표 상담 채널. 어드민 값(primaryConsult*)이 있으면 그걸, 없으면 언어별 하드코딩 폴백.
+ * 현재 언어의 대표 상담 채널.
+ * 어드민의 언어별 SNS 중 isPrimary(대표)로 지정한 항목을 쓰고, 없으면 기존 primaryConsult* → 언어별 하드코딩 폴백.
  */
 export const getConsultChannel = (
-  cfg: { primaryConsultPlatform?: string; primaryConsultUrl?: string } | undefined,
+  cfg:
+    | {
+        socialLinks?: SiteSocialLink[]
+        primaryConsultPlatform?: string
+        primaryConsultUrl?: string
+      }
+    | undefined,
   lang: string,
 ): ConsultChannel => {
   const fb = CONSULT_FALLBACK[lang] ?? CONSULT_FALLBACK.ko
-  const platform = cfg?.primaryConsultPlatform || fb.platform
-  const url = cfg?.primaryConsultUrl || fb.url || ""
+  const primary = cfg?.socialLinks?.find((l) => l.isPrimary && l.enabled)
+  const platform = primary?.platform || cfg?.primaryConsultPlatform || fb.platform
+  const url = primary?.url || cfg?.primaryConsultUrl || fb.url || ""
   return { platform, url, isModal: platform === "wechat" }
 }
