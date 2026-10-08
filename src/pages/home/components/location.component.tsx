@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next"
 import useCustomNavigate from "@/lib/hooks/use-custom-navigate"
 import { Language } from "@/lib/locales/i18n.config"
 import Modal from "@/lib/components/modal/modal.component"
+import PlaceButtonLabel from "@/lib/components/place-button-label.component"
 import { useSiteConfig } from "@/lib/hooks/use-site-config"
 import { getConsultChannel } from "@/lib/utils/social-links.util"
 
@@ -131,7 +132,7 @@ const Location = () => {
                   onClick={() =>
                     window.open(siteConfig?.naverPlaceUrl || "https://naver.me/FLe0V59M", "_blank")
                   }>
-                  {t("location.rightButton1")}
+                  <PlaceButtonLabel text={t("location.rightButton1")} />
                 </OutlineButton>
                 <OutlineButton
                   onClick={() =>
@@ -140,11 +141,11 @@ const Location = () => {
                       "_blank",
                     )
                   }>
-                  {t("location.rightButton2")}
+                  <PlaceButtonLabel text={t("location.rightButton2")} />
                 </OutlineButton>
                 {siteConfig?.kakaoPlaceUrl && (
                   <OutlineButton onClick={() => window.open(siteConfig.kakaoPlaceUrl, "_blank")}>
-                    {t("location.kakaoMap")}
+                    <PlaceButtonLabel text={t("location.kakaoMap")} />
                   </OutlineButton>
                 )}
               </ButtonGroup>
