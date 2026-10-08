@@ -954,7 +954,7 @@ const BlogDetail = () => {
                     tw="w-full aspect-square lg:w-[200px] lg:aspect-auto lg:self-stretch bg-center bg-cover bg-no-repeat flex-shrink-0"
                     css={[
                       {
-                        backgroundImage: `url("${resolveBlogAsset(cardDoctor?.photoUrl) || avatarImg}")`,
+                        backgroundImage: `url("${resolveBlogAsset(cardDoctor?.blogPhotoUrl || cardDoctor?.photoUrl) || avatarImg}")`,
                         backgroundPosition: "center top",
                       },
                     ]}

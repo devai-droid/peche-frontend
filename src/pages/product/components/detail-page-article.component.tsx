@@ -243,7 +243,7 @@ const DetailPageArticle = ({ html, lang }: Props) => {
             tw="w-full aspect-square lg:w-[200px] lg:aspect-auto lg:self-stretch bg-center bg-cover bg-no-repeat flex-shrink-0"
             css={[
               {
-                backgroundImage: `url("${resolveBlogAsset(doctor?.photoUrl) || avatarImg}")`,
+                backgroundImage: `url("${resolveBlogAsset(doctor?.blogPhotoUrl || doctor?.photoUrl) || avatarImg}")`,
                 backgroundPosition: "center top",
               },
             ]}

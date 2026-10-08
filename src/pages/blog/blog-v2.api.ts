@@ -33,6 +33,8 @@ export interface BlogV2Doctor {
   bio?: string
   associations?: string[]
   photoUrl?: string
+  /** 블로그 카드 전용 사진. 없으면 photoUrl 사용 */
+  blogPhotoUrl?: string
   profileUrl?: string
 }
 
