@@ -155,6 +155,13 @@ export const blogV2PublicApi = {
       url: "/api/blog-v2/doctors/public/representative",
       params: lang ? { lang } : undefined,
     }),
+  // 공개 의료진 목록(언어 기준, 없으면 ko 폴백) — 웹사이트 '의료진 소개' 섹션용
+  doctorList: (lang?: string) =>
+    request<BlogV2Doctor[]>({
+      method: "GET",
+      url: "/api/blog-v2/doctors/public",
+      params: lang ? { lang } : undefined,
+    }),
   // 공통 고지문구(활성만, 글 언어 기준) — 글 하단 결합용
   commonTexts: (lang?: string) =>
     request<BlogV2CommonText[]>({

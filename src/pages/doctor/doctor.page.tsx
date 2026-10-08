@@ -1,6 +1,8 @@
 import tw, { styled } from "twin.macro"
 import Page from "@/lib/components/layout/page.component"
 import { useTranslation } from "react-i18next"
+import { useQuery } from "@tanstack/react-query"
+import { blogV2PublicApi, resolveBlogAsset } from "@/pages/blog/blog-v2.api"
 
 import doctorAhnProfile from "@/assets/images/doctor-ahn-profile.jpg"
 import doctorChoiProfile from "@/assets/images/doctor-choi-profile.jpg"
@@ -417,7 +419,21 @@ const PrincipleBody = tw.p`
 
 /* ── Doctor Page ── */
 const DoctorPage = () => {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const language = i18n.language
+
+  // 의료진 소개 섹션: 어드민(blog.doctors) 데이터 우선, 비어 있거나 실패하면 기존 하드코딩 폴백.
+  const { data: apiDoctors } = useQuery({
+    queryKey: ["doctor-list", language],
+    queryFn: () => blogV2PublicApi.doctorList(language),
+    staleTime: 5 * 60 * 1000,
+    retry: false,
+  })
+  const doctors = apiDoctors ?? []
+  // 이름+직함 라벨 조합(영어·태국어는 줄바꿈 '/ ' 포맷, 그 외는 공백).
+  const slashLang = language === "en" || language === "th"
+  const buildDoctorLabel = (name: string, jobTitle?: string) =>
+    jobTitle ? (slashLang ? `${name}\n/ ${jobTitle}` : `${name} ${jobTitle}`) : name
 
   return (
     <Page hiddenFooter={false} bottomCartExists={false}>
@@ -461,36 +477,66 @@ const DoctorPage = () => {
           <Section3>
             <Section3Inner>
               <Section3Title>{t("doctor.teamTitle")}</Section3Title>
-              {/* 대표·총괄원장 — 2명, 아랫줄과 같은 폭으로 중앙 정렬 */}
-              <DoctorCardRowLead>
-                <DoctorCardLead>
-                  <DoctorCardImage src={doctorAhnProfile} alt="안태언 대표원장" />
-                  <DoctorLabel text={t("doctor.doctorAhn")} />
-                </DoctorCardLead>
-                <DoctorCardLead>
-                  <DoctorCardImage src={doctorChoiProfile} alt="최재형 총괄원장" />
-                  <DoctorLabel text={t("doctor.doctorChoi")} />
-                </DoctorCardLead>
-              </DoctorCardRowLead>
-              {/* 나머지 원장 — 한 줄 4명(모바일 2명): 신동민·박해권·조진형·홍채민 */}
-              <DoctorCardRowRest>
-                <DoctorCard>
-                  <DoctorCardImage src={doctorShinProfile} alt="신동민 원장" />
-                  <DoctorLabel text={t("doctor.doctorShin")} />
-                </DoctorCard>
-                <DoctorCard>
-                  <DoctorCardImage src={doctorParkProfile} alt="박해권 원장" />
-                  <DoctorLabel text={t("doctor.doctorPark")} />
-                </DoctorCard>
-                <DoctorCard>
-                  <DoctorCardImage src={doctorChoProfile} alt="조진형 원장" />
-                  <DoctorLabel text={t("doctor.doctorCho")} />
-                </DoctorCard>
-                <DoctorCard>
-                  <DoctorCardImage src={doctorHongProfile} alt="홍채민 원장" />
-                  <DoctorLabel text={t("doctor.doctorHong")} />
-                </DoctorCard>
-              </DoctorCardRowRest>
+              {doctors.length > 0 ? (
+                <>
+                  {/* 대표·총괄원장 — 앞 2명 */}
+                  <DoctorCardRowLead>
+                    {doctors.slice(0, 2).map((d) => (
+                      <DoctorCardLead key={d.id}>
+                        <DoctorCardImage
+                          src={resolveBlogAsset(d.photoUrl)}
+                          alt={`${d.name} ${d.jobTitle ?? ""}`.trim()}
+                        />
+                        <DoctorLabel text={buildDoctorLabel(d.name, d.jobTitle)} />
+                      </DoctorCardLead>
+                    ))}
+                  </DoctorCardRowLead>
+                  {/* 나머지 원장 */}
+                  <DoctorCardRowRest>
+                    {doctors.slice(2).map((d) => (
+                      <DoctorCard key={d.id}>
+                        <DoctorCardImage
+                          src={resolveBlogAsset(d.photoUrl)}
+                          alt={`${d.name} ${d.jobTitle ?? ""}`.trim()}
+                        />
+                        <DoctorLabel text={buildDoctorLabel(d.name, d.jobTitle)} />
+                      </DoctorCard>
+                    ))}
+                  </DoctorCardRowRest>
+                </>
+              ) : (
+                <>
+                  {/* 어드민 값이 없을 때 기존 하드코딩 폴백 */}
+                  <DoctorCardRowLead>
+                    <DoctorCardLead>
+                      <DoctorCardImage src={doctorAhnProfile} alt="안태언 대표원장" />
+                      <DoctorLabel text={t("doctor.doctorAhn")} />
+                    </DoctorCardLead>
+                    <DoctorCardLead>
+                      <DoctorCardImage src={doctorChoiProfile} alt="최재형 총괄원장" />
+                      <DoctorLabel text={t("doctor.doctorChoi")} />
+                    </DoctorCardLead>
+                  </DoctorCardRowLead>
+                  <DoctorCardRowRest>
+                    <DoctorCard>
+                      <DoctorCardImage src={doctorShinProfile} alt="신동민 원장" />
+                      <DoctorLabel text={t("doctor.doctorShin")} />
+                    </DoctorCard>
+                    <DoctorCard>
+                      <DoctorCardImage src={doctorParkProfile} alt="박해권 원장" />
+                      <DoctorLabel text={t("doctor.doctorPark")} />
+                    </DoctorCard>
+                    <DoctorCard>
+                      <DoctorCardImage src={doctorChoProfile} alt="조진형 원장" />
+                      <DoctorLabel text={t("doctor.doctorCho")} />
+                    </DoctorCard>
+                    <DoctorCard>
+                      <DoctorCardImage src={doctorHongProfile} alt="홍채민 원장" />
+                      <DoctorLabel text={t("doctor.doctorHong")} />
+                    </DoctorCard>
+                  </DoctorCardRowRest>
+                </>
+              )}
             </Section3Inner>
           </Section3>
 
