@@ -252,14 +252,6 @@ const B2bAuth = ({ onAuth, onAgreementChange, resetKey }: Props) => {
                   {t("auth.confirm")}
                 </Button>
               </div>
-              <button
-                tw="mt-2 text-[12px] text-neutral60 underline"
-                onClick={() => {
-                  setCodeSent(false)
-                  setCode("")
-                }}>
-                입력 정보 수정
-              </button>
             </div>
           )}
         </div>
