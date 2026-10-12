@@ -48,6 +48,8 @@ import { Language } from "@/lib/locales/i18n.config"
 import { useTranslation } from "react-i18next"
 import { userControllerUpdateMine } from "@/lib/orval/users/users"
 import { useMe } from "@/features/user/hooks/use-user"
+import B2bAuth from "@/features/b2b/components/b2b-auth.component"
+import { b2bApi, b2bErrorMessage, b2bTokenStore } from "@/features/b2b/b2b.api"
 import Modal from "@/lib/components/modal/modal.component"
 
 dayjs.extend(utc)
@@ -834,6 +836,8 @@ const Reserve = () => {
   }
 
   const [authInfo, setAuthInfo] = React.useState<AuthInfo | null>(null)
+  // B2B: 예약 완료·인증 만료 시 회사 이메일 인증 화면 초기화용
+  const [b2bResetKey, setB2bResetKey] = React.useState(0)
 
   const [agree, setAgree] = React.useState({
     terms: false,
@@ -997,6 +1001,11 @@ const Reserve = () => {
       return
     }
 
+    if (env.B2B_MODE) {
+      await reserveB2b()
+      return
+    }
+
     try {
       await userControllerUpdateMine({ languageLocale: language })
 
@@ -1024,7 +1033,44 @@ const Reserve = () => {
     }
   }
 
+  /** B2B 사이트 예약: 회사 이메일 인증 1건을 소모해 예약 1건 생성(가격·흐름은 공식 사이트와 동일) */
+  const reserveB2b = async () => {
+    const b2bToken = b2bTokenStore.get()
+    if (!b2bToken) {
+      setConfirmOpen(false)
+      alert("회사 이메일 인증이 만료되었습니다. 다시 인증해 주세요.")
+      setB2bResetKey((k) => k + 1)
+      return
+    }
+    try {
+      await b2bApi.createReservation(
+        {
+          datetime: selectedDatetime.replace("Z", ""),
+          productIds: getProductIdsWithInquiry(),
+          eventIds: getCheckedEventIds(),
+          userMemo: buildExtraMemo(inquiryMemo) || undefined,
+          category: getReservationCategory(),
+          quantities: getCheckedQuantities(),
+        },
+        b2bToken,
+      )
+      b2bTokenStore.clear()
+      localStorage.removeItem("reservation:selectedDatetime")
+      resetCart()
+      navigate("/reservation/complete")
+    } catch (error: any) {
+      setConfirmOpen(false)
+      if (error?.response?.status === 403 || error?.response?.status === 401) {
+        alert(b2bErrorMessage(error, "회사 이메일 인증을 다시 진행해 주세요."))
+        setB2bResetKey((k) => k + 1)
+        return
+      }
+      reservationErrorHandler(error)
+    }
+  }
+
   React.useEffect(() => {
+    if (env.B2B_MODE) return
     const token = localStorage.getItem("authToken")
 
     if (token && me) {
@@ -1178,6 +1224,20 @@ const Reserve = () => {
   }
 
   /* -------- 예약하기 -------- */
+  const reservationErrorHandler = (error: any) => {
+    setConfirmOpen(false)
+    const msg: string = error?.response?.data?.message ?? ""
+    const isInvalidItem =
+      typeof msg === "string" &&
+      (msg.includes("Event is not available") || msg.includes("Product not found"))
+    if (isInvalidItem) {
+      setCartNotices(["removed"])
+      setEventPeriodAlert(true) // 상황 A: 만료/삭제된 이벤트·상품 → 정리 모달
+    } else {
+      setScheduleChangedAlert(true) // 상황 B: 시간 마감/일시 오류 → 일정 재선택 안내
+    }
+  }
+
   const { mutate } = useReservationControllerCreate({
     mutation: {
       onError: (error: any) => {
@@ -1315,11 +1375,19 @@ const Reserve = () => {
 
             {/* ---------------- RIGHT: Auth + 예약 버튼 ---------------- */}
             <div tw="hidden lg:block w-[390px] shrink-0">
-              <Auth
-                onAuth={(info) => setAuthInfo(info)}
-                onAgreementChange={(a) => setAgree(a)}
-                onBeforeKakaoAuth={backupToCookie}
-              />
+              {env.B2B_MODE ? (
+                <B2bAuth
+                  onAuth={(info) => setAuthInfo(info)}
+                  onAgreementChange={(a) => setAgree(a)}
+                  resetKey={b2bResetKey}
+                />
+              ) : (
+                <Auth
+                  onAuth={(info) => setAuthInfo(info)}
+                  onAgreementChange={(a) => setAgree(a)}
+                  onBeforeKakaoAuth={backupToCookie}
+                />
+              )}
 
               {/* 예약 버튼 */}
               <Button
@@ -1334,11 +1402,19 @@ const Reserve = () => {
 
           {/* ---------------- MOBILE ---------------- */}
           <div tw="block lg:hidden mt-10">
-            <Auth
-              onAuth={(info) => setAuthInfo(info)}
-              onAgreementChange={(a) => setAgree(a)}
-              onBeforeKakaoAuth={backupToCookie}
-            />
+            {env.B2B_MODE ? (
+              <B2bAuth
+                onAuth={(info) => setAuthInfo(info)}
+                onAgreementChange={(a) => setAgree(a)}
+                resetKey={b2bResetKey}
+              />
+            ) : (
+              <Auth
+                onAuth={(info) => setAuthInfo(info)}
+                onAgreementChange={(a) => setAgree(a)}
+                onBeforeKakaoAuth={backupToCookie}
+              />
+            )}
 
             <Button
               tw="w-full h-[52px] mt-6 font-bold"

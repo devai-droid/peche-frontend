@@ -21,6 +21,7 @@ import AdminLogin from "@/pages/admin/admin-login.page"
 import AdminCategories from "@/pages/admin/admin-categories.page"
 import DoctorPage from "@/pages/doctor/doctor.page"
 import WhyPechePage from "@/pages/why-peche/why-peche.page"
+import { env } from "@/lib/env"
 
 const router = createBrowserRouter([
   {
@@ -34,7 +35,8 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: (() => {
-      const browserLang = (navigator.language || "ko").toLowerCase()
+      // B2B 사이트(협약 기업 임직원 전용)는 한국어 고정
+      const browserLang = env.B2B_MODE ? "ko" : (navigator.language || "ko").toLowerCase()
       let lang = "ko"
       if (browserLang.startsWith("en")) lang = "en"
       else if (browserLang.startsWith("zh-tw") || browserLang.startsWith("zh-hant")) lang = "tw"
@@ -76,7 +78,11 @@ const router = createBrowserRouter([
       { path: "events", element: <Events /> },
       { path: "events/:id", element: <ProductDetail /> },
 
-      { path: "reservation", element: <Reservations /> },
+      // B2B 사이트는 로그인 기반 예약 확인이 없음 → 장바구니(예약)로
+      {
+        path: "reservation",
+        element: env.B2B_MODE ? <Navigate replace to="new" /> : <Reservations />,
+      },
       { path: "reservation/new", element: <Reserve /> },
       { path: "reservation/complete", element: <ReservationComplete /> },
       {

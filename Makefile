@@ -5,6 +5,8 @@ SERVICE_NAME ?= base
 INFRA_NAME ?= peche
 AWS_REGION ?= ap-northeast-2
 ENV ?= $(STAGE)
+# 협약 기업 임직원 전용 사이트(B2B) 빌드 여부. shoot-b2b 가 true 로 넘긴다.
+B2B_MODE ?= false
 AWS_PNR = --profile $(INFRA_NAME) --region $(AWS_REGION)
 
 ifeq ($(ENV), local)
@@ -39,6 +41,7 @@ env:
 	@echo "DISTRIBUTION_URL=$(DISTRIBUTION_URL)" >> ./env/.env.$(STAGE)
 	@echo "KAKAO_APP_REST_KEY=$(KAKAO_APP_REST_KEY)" >> ./env/.env.$(STAGE)
 	@echo "KAKAO_APP_JAVASCRIPT_KEY=$(KAKAO_APP_JAVASCRIPT_KEY)" >> ./env/.env.$(STAGE)
+	@echo "B2B_MODE=$(B2B_MODE)" >> ./env/.env.$(STAGE)
 
 orval:
 	@npx orval -i $(BACKEND_API_URL)/docs-json
@@ -80,3 +83,17 @@ copy-index:
 	fi
 
 shoot: build deploy
+
+# ── B2B 사이트(협약 기업 임직원 전용, 별도 도메인) ──
+# 같은 코드를 B2B_MODE=true 로 빌드해 별도 S3·CloudFront 에 올린다. 버킷·배포 ID 는 SSM /peche/$(STAGE)/base/b2b/*
+B2B_PARAM = /$(INFRA_NAME)/$(STAGE)/$(SERVICE_NAME)/b2b
+shoot-b2b:
+	@$(MAKE) build deploy-b2b STAGE=$(STAGE) B2B_MODE=true \
+		DISTRIBUTION_URL=$$(aws ssm get-parameter $(AWS_PNR) --name "$(B2B_PARAM)/url" | jq -r '.Parameter.Value') \
+		S3_BUCKET_NAME=$$(aws ssm get-parameter $(AWS_PNR) --name "$(B2B_PARAM)/bucket-name" | jq -r '.Parameter.Value') \
+		DISTRIBUTION_ID=$$(aws ssm get-parameter $(AWS_PNR) --name "$(B2B_PARAM)/distribution-id" | jq -r '.Parameter.Value')
+
+deploy-b2b: deploy
+	# 검색엔진 수집 차단
+	@printf "User-agent: *\nDisallow: /\n" > ./dist/robots.txt
+	@aws $(AWS_PNR) s3 cp ./dist/robots.txt s3://$(S3_BUCKET_NAME)/robots.txt --cache-control "no-cache" --content-type "text/plain"
