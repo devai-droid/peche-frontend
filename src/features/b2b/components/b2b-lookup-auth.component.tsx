@@ -71,9 +71,6 @@ const B2bLookupAuth = () => {
 
   return (
     <div tw="w-full max-w-[420px] mx-auto font-pretendard tracking-tight leading-[150%] text-[13px] lg:text-[15px]">
-      <p tw="mb-6 text-center text-[13px] lg:text-[14px] text-neutral60">
-        예약할 때 인증한 회사 이메일을 입력해 주세요.
-      </p>
 
       <div tw="flex flex-col gap-4">
         <div>

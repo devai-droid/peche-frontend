@@ -658,7 +658,7 @@ const Reservations = () => {
         {/* ===================== 인증 버튼 그룹 ===================== */}
         {/* B2B 사이트: 카카오·이메일 인증 대신 회사 이메일 인증 */}
         {env.B2B_MODE && (
-          <div tw="-mt-4 mb-10 px-4 md:px-0">
+          <div tw="mb-10 px-4 md:px-0">
             <B2bLookupAuth />
           </div>
         )}
