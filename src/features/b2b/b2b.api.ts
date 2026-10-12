@@ -39,6 +39,10 @@ export const b2bTokenStore = {
 }
 
 export const b2bApi = {
+  /** 예약 화면 안내 문구(어드민에서 입력, 비어 있으면 null) */
+  notice: () =>
+    customInstance<{ reservationNotice: string | null }>({ url: "/api/b2b/notice", method: "GET" }),
+
   requestCode: (data: { email: string; name: string; phone: string }) =>
     customInstance<{ sent: boolean }>({ url: "/api/b2b/auth/code", method: "POST", data }),
 
