@@ -1,5 +1,5 @@
 import { customInstance } from "@/lib/api/http-client"
-import { CreateReservationDto } from "@/lib/orval/model"
+import { CreateReservationDto, Reservation } from "@/lib/orval/model"
 
 /**
  * B2B 사이트 전용 API. 회사 이메일 인증 토큰은 예약 1건용(30분·1회)이라
@@ -60,6 +60,13 @@ export const b2bApi = {
       data,
     }),
 
+  // B2B 예약확인 목록: B2B 사이트에서 한 예약만 + 예약 때 입력한 이름·연락처
+  myReservations: () =>
+    customInstance<{ items: (Reservation & { b2bName?: string; b2bPhone?: string })[] }>({
+      url: "/api/b2b/my-reservations",
+      method: "GET",
+    }),
+
   createReservation: (data: CreateReservationDto, token: string) =>
     customInstance<unknown>({
       url: "/api/b2b/reservations",
@@ -87,3 +94,7 @@ export const isTokenExpired = (token?: string | null) => {
     return false
   }
 }
+
+/** +821012345678 → 01012345678 */
+export const formatB2bPhone = (phone?: string) =>
+  phone?.startsWith("+82") ? `0${phone.slice(3)}` : phone

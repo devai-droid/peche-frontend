@@ -71,9 +71,8 @@ const B2bLookupAuth = () => {
 
   return (
     <div tw="w-full max-w-[420px] mx-auto font-pretendard tracking-tight leading-[150%] text-[13px] lg:text-[15px]">
-      <p tw="font-bold mb-1 text-[14px] lg:text-[16px]">협력 기업 임직원 확인</p>
-      <p tw="mb-6 text-[12px] lg:text-[13px] text-neutral60">
-        예약할 때 인증한 회사 이메일로 확인하면 예약 내역 조회·변경·취소를 할 수 있습니다.
+      <p tw="mb-6 text-center text-[13px] lg:text-[14px] text-neutral60">
+        예약할 때 인증한 회사 이메일을 입력해 주세요.
       </p>
 
       <div tw="flex flex-col gap-4">

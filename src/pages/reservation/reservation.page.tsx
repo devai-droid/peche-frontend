@@ -47,7 +47,8 @@ import "dayjs/locale/zh-tw"
 import "dayjs/locale/th"
 import { env } from "@/lib/env"
 import B2bLookupAuth from "@/features/b2b/components/b2b-lookup-auth.component"
-import { isTokenExpired } from "@/features/b2b/b2b.api"
+import { b2bApi, formatB2bPhone, isTokenExpired } from "@/features/b2b/b2b.api"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { useToken } from "@/lib/hooks/use-token"
 import { useLogout } from "@/features/auth/hooks/use-auth"
 
@@ -146,13 +147,22 @@ const Reservations = () => {
 
   const { data: reservationData } = useReservationControllerFindMine(
     { statusIn: ["DONE", "WAITING", "CANCELED"] },
-    { query: { enabled: authenticated, retry: false } },
+    { query: { enabled: authenticated && !env.B2B_MODE, retry: false } },
   )
+  // B2B 사이트: B2B 사이트에서 한 예약만(공식 사이트 예약과 분리), 고객 정보는 예약 때 입력한 값
+  const queryClient = useQueryClient()
+  const { data: b2bReservationData } = useQuery({
+    queryKey: ["b2b", "my-reservations"],
+    queryFn: () => b2bApi.myReservations(),
+    enabled: authenticated && env.B2B_MODE,
+    retry: false,
+  })
 
   const { mutateAsync: updateReservation } = useReservationControllerUpdate()
   const { mutateAsync: removeReservation } = useReservationControllerRemove()
 
-  const reservations: Reservation[] = reservationData?.items ?? []
+  const reservations: Reservation[] =
+    (env.B2B_MODE ? b2bReservationData?.items : reservationData?.items) ?? []
 
   // ─────────────────────────────────
   // 예약 그룹 분리
@@ -299,6 +309,7 @@ const Reservations = () => {
     if (!selectedDatetime) return
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     await updateReservation({ id: changeId!, data: { datetime: selectedDatetime } })
+    if (env.B2B_MODE) queryClient.invalidateQueries({ queryKey: ["b2b", "my-reservations"] })
     alert(t("reservePage.reservationChangeConfirm"))
     setChangeId(null)
   }
@@ -308,6 +319,7 @@ const Reservations = () => {
 
     try {
       await removeReservation({ id: cancelId })
+      if (env.B2B_MODE) queryClient.invalidateQueries({ queryKey: ["b2b", "my-reservations"] })
       alert(t("reservePage.reservationCancelConfirm"))
     } catch (e) {
       alert(t("reservationCheckPage.cancelError"))
@@ -451,12 +463,18 @@ const Reservations = () => {
 
           <Row>
             <Label>{t("reservationCheckPage.name")}</Label>
-            <div tw="text-neutral60">{user?.name ?? "-"}</div>
+            <div tw="text-neutral60">
+              {(env.B2B_MODE ? (r as { b2bName?: string }).b2bName : user?.name) ?? "-"}
+            </div>
           </Row>
 
           <Row>
             <Label>{t("reservationCheckPage.contact")}</Label>
-            <div tw="text-neutral60">{user?.phoneNumber || user?.email || "-"}</div>
+            <div tw="text-neutral60">
+              {(env.B2B_MODE
+                ? formatB2bPhone((r as { b2bPhone?: string }).b2bPhone)
+                : user?.phoneNumber || user?.email) || "-"}
+            </div>
           </Row>
         </div>
 
@@ -638,7 +656,13 @@ const Reservations = () => {
         </div>
 
         {/* ===================== 인증 버튼 그룹 ===================== */}
-        <div tw="flex justify-center gap-4 mb-10" css={tw`flex-row`}>
+        {/* B2B 사이트: 카카오·이메일 인증 대신 회사 이메일 인증 */}
+        {env.B2B_MODE && (
+          <div tw="-mt-4 mb-10 px-4 md:px-0">
+            <B2bLookupAuth />
+          </div>
+        )}
+        <div tw="flex justify-center gap-4 mb-10" css={[tw`flex-row`, env.B2B_MODE && tw`hidden`]}>
           {/* ---- 카카오 인증 (한국어 전용) ---- */}
           {isKorean && (
             <button
@@ -766,7 +790,7 @@ const Reservations = () => {
               {t("reservationCheckPage.reservationCheck")}
             </H1>
             <div tw="bg-white w-full max-w-[580px] md:min-h-[470px] px-4 py-10 rounded-none font-pretendard">
-              {env.B2B_MODE ? <B2bLookupAuth /> : <AuthButtons />}
+              <AuthButtons />
             </div>
           </AppMaxWidth>
         </div>
