@@ -115,6 +115,26 @@ yarn install            # lockfile이 변경됐으면 반드시 실행
 - ❌ 의존성 변경 후 `yarn.lock` 커밋 누락
 - ❌ `package.json` 버전·`CHANGELOG.md` 업데이트 빠뜨린 채 배포
 
+## B2B 사이트(임직원 전용, partner.pecheskin.clinic) — 브랜치 분리 ⚠️
+
+B2B 사이트는 공식 사이트와 **같은 코드**를 `B2B_MODE=true` 로 빌드해 별도 S3·CloudFront 에 올린다. 작업 브랜치는 공식 사이트와 분리한다.
+
+| 구분 | 브랜치 | 배포 명령 | 주소 |
+|---|---|---|---|
+| 공식 사이트 | `develop` | `STAGE=prod make shoot` | pecheskin.clinic |
+| B2B 사이트 | `b2b` | `STAGE=prod make shoot-b2b` | partner.pecheskin.clinic |
+
+- **B2B 사이트만 바뀌는 수정(문구·화면·B2B 전용 기능)은 `b2b` 브랜치에 커밋**한다. develop 에 넣지 않는다.
+  - 작업: `git checkout b2b && git pull origin b2b` → 수정 → 커밋 → `git push origin b2b` → `STAGE=prod make shoot-b2b`
+  - 기록은 `CHANGELOG.b2b.md` 에 남긴다. `package.json` 버전·`CHANGELOG.md` 는 건드리지 않는다(develop 과 병합 충돌 방지).
+- **공식 사이트 수정은 지금처럼 develop** 에서 하고, 상품·예약 등 공통 기능이 B2B 에도 반영돼야 하면 `b2b` 에 develop 을 병합한다:
+  `git checkout b2b && git pull origin b2b && git merge origin/develop && git push origin b2b` → `make shoot-b2b`
+- 두 사이트에 공통으로 영향 주는 코드(예약 페이지 구조 등)를 develop 에서 바꾼 뒤에는 B2B 사이트도 병합·배포해 맞춰 둔다.
+- Makefile 이 잘못된 브랜치 배포를 막는다: `shoot-b2b` 는 `b2b` 브랜치에서만, `shoot` 은 `b2b` 브랜치에서 불가.
+- B2B 코드는 `env.B2B_MODE` 분기 안에 둔다(`src/features/b2b/`, 헤더·예약 화면 분기). 공식 사이트 화면에 영향이 없어야 한다.
+- 백엔드(`/api/b2b/*`)·어드민(협약사 관리·B2B 예약 이력)은 사이트가 하나라 브랜치를 나누지 않는다(각 저장소 develop).
+- 인프라: S3 `pecheclinic-prod-partner`, CloudFront `E3EVRBUSNSH4Q6`, SSM `/peche/prod/base/b2b/{url,bucket-name,distribution-id}`.
+
 ## 배포
 
 - 운영: `STAGE=prod make shoot` (orval → webpack build → S3 sync → CloudFront 무효화)

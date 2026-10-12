@@ -82,12 +82,17 @@ copy-index:
 		echo "Using default-index.html"; \
 	fi
 
-shoot: build deploy
+shoot:
+	@# 공식 사이트는 develop 에서만 배포(b2b 브랜치 내용이 공식 사이트에 올라가지 않도록)
+	@if [ "$$(git rev-parse --abbrev-ref HEAD)" = "b2b" ]; then echo "❌ b2b 브랜치에서는 공식 사이트를 배포할 수 없습니다. B2B 사이트는 make shoot-b2b"; exit 1; fi
+	@$(MAKE) build deploy
 
 # ── B2B 사이트(협약 기업 임직원 전용, 별도 도메인) ──
 # 같은 코드를 B2B_MODE=true 로 빌드해 별도 S3·CloudFront 에 올린다. 버킷·배포 ID 는 SSM /peche/$(STAGE)/base/b2b/*
 B2B_PARAM = /$(INFRA_NAME)/$(STAGE)/$(SERVICE_NAME)/b2b
 shoot-b2b:
+	@# B2B 사이트는 반드시 b2b 브랜치에서 배포(공식 사이트 develop 과 분리)
+	@if [ "$$(git rev-parse --abbrev-ref HEAD)" != "b2b" ]; then echo "❌ B2B 사이트는 b2b 브랜치에서만 배포합니다. (git checkout b2b)"; exit 1; fi
 	@$(MAKE) build deploy-b2b STAGE=$(STAGE) B2B_MODE=true \
 		DISTRIBUTION_URL=$$(aws ssm get-parameter $(AWS_PNR) --name "$(B2B_PARAM)/url" | jq -r '.Parameter.Value') \
 		S3_BUCKET_NAME=$$(aws ssm get-parameter $(AWS_PNR) --name "$(B2B_PARAM)/bucket-name" | jq -r '.Parameter.Value') \
