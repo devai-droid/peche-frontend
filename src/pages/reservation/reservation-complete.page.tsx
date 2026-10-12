@@ -7,6 +7,7 @@ import React from "react"
 import Modal from "@/lib/components/modal/modal.component"
 import wechatQrImg from "@/assets/images/wechat-qr.png"
 import { CloseIcon } from "@/assets/icon"
+import { env } from "@/lib/env"
 
 const ReservationComplete = () => {
   const { t, i18n } = useTranslation()
@@ -58,11 +59,12 @@ const ReservationComplete = () => {
 
           {/* 버튼 영역 */}
           <div tw="flex gap-4">
+            {/* B2B 사이트는 예약 확인 페이지가 없음(예약마다 회사 이메일 인증) → 처음으로 */}
             <Button
               tw="flex-1 text-[15px] md:text-[16px]"
               style={{ variant: "outlined", color: "point", size: "md" }}
-              onClick={() => navigate("/reservation")}>
-              {t("reservePage.reservationCheck")}
+              onClick={() => navigate(env.B2B_MODE ? "/" : "/reservation")}>
+              {env.B2B_MODE ? "처음으로" : t("reservePage.reservationCheck")}
             </Button>
 
             <Button
