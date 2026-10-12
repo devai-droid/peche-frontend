@@ -256,14 +256,14 @@ const RightMenu = ({ isDesktop, isMenuOpen, setIsMenuOpen }: MenuProps) => {
             </span>
           </button>
 
-          {/* B2B 사이트는 예약마다 회사 이메일 인증 → 예약 확인·언어 선택 없음 */}
+          <div tw="ml-8" />
+          <button tw="cursor-pointer" onClick={() => navigate("/reservation")}>
+            {t("header.checkReservation")}
+          </button>
+
+          {/* B2B 사이트는 한국어 전용 → 언어 선택 없음 */}
           {!env.B2B_MODE && (
             <>
-              <div tw="ml-8" />
-              <button tw="cursor-pointer" onClick={() => navigate("/reservation")}>
-                {t("header.checkReservation")}
-              </button>
-
               <div tw="ml-8" />
               <HeaderLanguage />
             </>
@@ -300,13 +300,11 @@ const RightMenu = ({ isDesktop, isMenuOpen, setIsMenuOpen }: MenuProps) => {
           {/* 모바일: 메뉴 열림 상태 */}
           {isMenuOpen && (
             <>
-              {!env.B2B_MODE && (
-                <button
-                  tw="text-[14px] text-primary font-semibold mr-4 border-b border-primary"
-                  onClick={() => navigate("/reservation")}>
-                  {t("header.checkReservation")}
-                </button>
-              )}
+              <button
+                tw="text-[14px] text-primary font-semibold mr-4 border-b border-primary"
+                onClick={() => navigate("/reservation")}>
+                {t("header.checkReservation")}
+              </button>
               <IconButton
                 tw="p-2"
                 icon={CloseIcon}

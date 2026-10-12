@@ -78,11 +78,8 @@ const router = createBrowserRouter([
       { path: "events", element: <Events /> },
       { path: "events/:id", element: <ProductDetail /> },
 
-      // B2B 사이트는 로그인 기반 예약 확인이 없음 → 장바구니(예약)로
-      {
-        path: "reservation",
-        element: env.B2B_MODE ? <Navigate replace to="new" /> : <Reservations />,
-      },
+      // B2B 사이트도 같은 예약확인 화면(로그인 대신 회사 이메일 인증)
+      { path: "reservation", element: <Reservations /> },
       { path: "reservation/new", element: <Reserve /> },
       { path: "reservation/complete", element: <ReservationComplete /> },
       {

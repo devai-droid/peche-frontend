@@ -49,6 +49,17 @@ export const b2bApi = {
   verify: (data: { email: string; name: string; phone: string; code: string }) =>
     customInstance<B2bVerified>({ url: "/api/b2b/auth/verify", method: "POST", data }),
 
+  // 예약확인(조회·변경·취소)용 인증: 회사 이메일만
+  requestLookupCode: (data: { email: string }) =>
+    customInstance<{ sent: boolean }>({ url: "/api/b2b/lookup/code", method: "POST", data }),
+
+  verifyLookup: (data: { email: string; code: string }) =>
+    customInstance<{ token: string; expiresAt: string }>({
+      url: "/api/b2b/lookup/verify",
+      method: "POST",
+      data,
+    }),
+
   createReservation: (data: CreateReservationDto, token: string) =>
     customInstance<unknown>({
       url: "/api/b2b/reservations",
@@ -64,4 +75,15 @@ export const b2bErrorMessage = (error: unknown, fallback: string) => {
     ?.data?.message
   if (Array.isArray(message)) return fallback
   return message || fallback
+}
+
+/** JWT 만료 여부(만료 정보를 못 읽으면 만료로 보지 않음) */
+export const isTokenExpired = (token?: string | null) => {
+  if (!token) return false
+  try {
+    const payload = JSON.parse(atob(token.split(".")[1]))
+    return typeof payload.exp === "number" && payload.exp * 1000 <= Date.now()
+  } catch {
+    return false
+  }
 }

@@ -45,6 +45,11 @@ import "dayjs/locale/zh-cn"
 import "dayjs/locale/ja"
 import "dayjs/locale/zh-tw"
 import "dayjs/locale/th"
+import { env } from "@/lib/env"
+import B2bLookupAuth from "@/features/b2b/components/b2b-lookup-auth.component"
+import { isTokenExpired } from "@/features/b2b/b2b.api"
+import { useToken } from "@/lib/hooks/use-token"
+import { useLogout } from "@/features/auth/hooks/use-auth"
 
 dayjs.extend(localizedFormat)
 dayjs.extend(utc)
@@ -158,6 +163,19 @@ const Reservations = () => {
   React.useEffect(() => {
     setAuthenticated(!!user?.id && !isAdmin)
   }, [user, isAdmin])
+
+  // B2B: 예약확인 인증은 30분짜리 → 만료되면 자동으로 인증 화면으로
+  const { token } = useToken()
+  const { logout } = useLogout()
+  React.useEffect(() => {
+    if (!env.B2B_MODE) return undefined
+    if (isTokenExpired(token)) {
+      logout()
+      return undefined
+    }
+    const timer = setInterval(() => isTokenExpired(token) && logout(), 30 * 1000)
+    return () => clearInterval(timer)
+  }, [token])
 
   reservations.forEach((r) => {
     // 저장값 숫자가 곧 한국시각이므로 UTC로 그대로 읽고(예약 KST 벽시계),
@@ -748,7 +766,7 @@ const Reservations = () => {
               {t("reservationCheckPage.reservationCheck")}
             </H1>
             <div tw="bg-white w-full max-w-[580px] md:min-h-[470px] px-4 py-10 rounded-none font-pretendard">
-              <AuthButtons />
+              {env.B2B_MODE ? <B2bLookupAuth /> : <AuthButtons />}
             </div>
           </AppMaxWidth>
         </div>
