@@ -153,12 +153,9 @@ const B2bAuth = ({ onAuth, onAgreementChange, resetKey }: Props) => {
       )}
 
       <div tw="mb-2">
-        <p tw="font-bold mb-1 text-[14px] lg:text-[16px]">
-          회사 이메일 인증
+        <p tw="font-bold mb-3 text-[14px] lg:text-[16px]">
+          협력 기업 임직원 확인
           <span tw="text-error">*</span>
-        </p>
-        <p tw="mb-4 text-[12px] lg:text-[13px] text-neutral60">
-          협약 기업 임직원 확인을 위해 예약할 때마다 회사 이메일 인증이 필요합니다.
         </p>
       </div>
 
