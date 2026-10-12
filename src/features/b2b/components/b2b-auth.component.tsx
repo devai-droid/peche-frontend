@@ -201,11 +201,13 @@ const B2bAuth = ({ onAuth, onAgreementChange, resetKey }: Props) => {
           <div>
             <Label>{t("auth.phone")}</Label>
             <Field
-              placeholder="010-0000-0000"
-              inputMode="tel"
+              placeholder="01012345678"
+              inputMode="numeric"
+              maxLength={11}
               value={phone}
               disabled={codeSent}
-              onChange={(e) => setPhone(e.target.value)}
+              // '-' 없이 숫자만 입력(붙여넣기 시 '-'·공백은 자동 제거)
+              onChange={(e) => setPhone(e.target.value.replace(/[^0-9]/g, ""))}
             />
             {phone.length > 0 && !isValidMobile(phone) && (
               <div tw="mt-1 text-[12px] text-red-500">휴대폰 번호를 정확히 입력해 주세요.</div>
