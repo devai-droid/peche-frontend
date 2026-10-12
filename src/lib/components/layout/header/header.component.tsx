@@ -77,7 +77,7 @@ const B2B_WHITE_CONTENT = env.B2B_MODE
 /** B2B 사이트 표시 배지 */
 const B2bBadge = () =>
   env.B2B_MODE ? (
-    <span tw="ml-2 lg:ml-3 px-2 py-[2px] rounded-full border border-white text-white text-[11px] lg:text-[12px] font-semibold whitespace-nowrap font-pretendard">
+    <span tw="px-2 py-[2px] border border-white text-white text-[11px] lg:text-[12px] leading-[16px] font-semibold whitespace-nowrap font-pretendard">
       임직원 전용
     </span>
   ) : null
@@ -149,8 +149,11 @@ const LeftMenu = ({
   if (!isDesktop) {
     return (
       <div tw="flex items-center gap-4">
-        <MobileLogo />
-        <B2bBadge />
+        {/* B2B: 배지를 로고에 바짝 붙여 로고의 일부처럼 보이게 */}
+        <span tw="flex items-center gap-1.5">
+          <MobileLogo />
+          <B2bBadge />
+        </span>
       </div>
     )
   }
@@ -491,14 +494,19 @@ const HeaderComponent = ({ onClickDrawer, clickedKeyword, setClickedKeyword }: P
         />
       ) : (
         <>
-          <div tw="absolute-center flex items-center">
+          {/* 로고는 정확히 가운데, B2B 배지는 로고 오른쪽 바깥에 붙인다(가운데 정렬에 영향 없음) */}
+          <div tw="absolute-center">
             {isDesktop && (
-              <>
+              <div tw="relative flex items-center">
                 <span css={B2B_WHITE_CONTENT} tw="flex">
                   <Logo />
                 </span>
-                <B2bBadge />
-              </>
+                {env.B2B_MODE && (
+                  <span tw="absolute left-full top-1/2 -translate-y-1/2 ml-3">
+                    <B2bBadge />
+                  </span>
+                )}
+              </div>
             )}
           </div>
           <AppMaxWidth
