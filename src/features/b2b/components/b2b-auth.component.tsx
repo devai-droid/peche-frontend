@@ -24,6 +24,8 @@ interface Props {
   resetKey?: number
 }
 
+const RESEND_WAIT_SECONDS = 60
+
 const isValidEmail = (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
 const isValidMobile = (value: string) => /^01[016789][0-9]{7,8}$/.test(value.replace(/[^0-9]/g, ""))
 
@@ -40,6 +42,8 @@ const B2bAuth = ({ onAuth, onAgreementChange, resetKey }: Props) => {
   const [email, setEmail] = React.useState("")
   const [code, setCode] = React.useState("")
   const [codeSent, setCodeSent] = React.useState(false)
+  // 인증번호 재요청 대기(서버 규칙: 60초에 1번). 남은 초.
+  const [resendLeft, setResendLeft] = React.useState(0)
   const [sending, setSending] = React.useState(false)
   const [verifying, setVerifying] = React.useState(false)
   const [verified, setVerified] = React.useState<{ companyName: string; name: string } | null>(null)
@@ -81,15 +85,23 @@ const B2bAuth = ({ onAuth, onAgreementChange, resetKey }: Props) => {
     setVerified(null)
     setCode("")
     setCodeSent(false)
+    setResendLeft(0)
     onAuth(null)
   }, [resetKey])
 
+  React.useEffect(() => {
+    if (resendLeft <= 0) return undefined
+    const timer = setTimeout(() => setResendLeft((left) => left - 1), 1000)
+    return () => clearTimeout(timer)
+  }, [resendLeft])
+
   const requestCode = async () => {
-    if (!formValid || sending) return
+    if (!formValid || sending || resendLeft > 0) return
     setSending(true)
     try {
       await b2bApi.requestCode({ name: name.trim(), phone, email: email.trim() })
       setCodeSent(true)
+      setResendLeft(RESEND_WAIT_SECONDS)
       toast({ type: ToastType.Success, message: "회사 이메일로 인증번호를 보냈습니다." })
     } catch (e) {
       toast({
@@ -226,12 +238,19 @@ const B2bAuth = ({ onAuth, onAgreementChange, resetKey }: Props) => {
               />
               <Button
                 tw="h-[40px] px-4 text-[13px] lg:text-[15px] whitespace-nowrap"
-                disabled={!formValid || sending}
+                disabled={!formValid || sending || resendLeft > 0}
                 style={{ variant: "filled", color: "point" }}
                 onClick={requestCode}>
                 {codeSent ? "재발송" : t("auth.sendCode")}
               </Button>
             </div>
+            {/* 첫 요청 후부터 재발송 대기시간 안내('다시 인증'을 눌러도 대기 중이면 계속 표시) */}
+            {resendLeft > 0 && (
+              <div tw="mt-1.5 text-[12px] lg:text-[13px] text-neutral60">
+                인증번호는 60초에 한 번 요청할 수 있습니다.{" "}
+                <span tw="text-primary font-semibold">{resendLeft}초</span> 후 재발송할 수 있습니다.
+              </div>
+            )}
           </div>
           {codeSent && (
             <div>
