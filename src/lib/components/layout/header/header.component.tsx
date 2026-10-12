@@ -55,6 +55,33 @@ const HEADER_ICON: Partial<Record<SocialPlatform, React.FC<React.SVGProps<SVGSVG
 
 const HeaderContainer = tw.header`h-16 lg:h-20 relative bg-neutral`
 
+/**
+ * B2B 사이트(임직원 전용)는 공식 사이트와 헷갈리지 않도록 상단 헤더를 검정으로 바꾸고
+ * 로고·좌우 아이콘을 흰색으로 반전한다. 공식 사이트에는 적용되지 않는다.
+ */
+const B2B_HEADER_STYLE = env.B2B_MODE ? tw`bg-[#111111]` : undefined
+const B2B_WHITE_CONTENT = env.B2B_MODE
+  ? {
+      color: "#fff",
+      // 내장 아이콘(svg)은 흰색 실루엣으로
+      "& svg": { filter: "brightness(0) invert(1)" },
+      // 업로드 아이콘(img)은 배경이 있는 경우가 많아 흑백 반전(흰 배경 → 검정, 검정 로고 → 흰색)
+      "& img": { filter: "grayscale(1) invert(1)" },
+      // 쓰레드처럼 색 배경 위에 흰 글자인 아이콘은 통째로 흰색이 되므로 흰 배경 + 검은 글자로
+      "& [data-sns='threads'] svg": { filter: "none" },
+      "& [data-sns='threads'] svg rect": { fill: "#fff" },
+      "& [data-sns='threads'] svg path": { fill: "#111" },
+    }
+  : undefined
+
+/** B2B 사이트 표시 배지 */
+const B2bBadge = () =>
+  env.B2B_MODE ? (
+    <span tw="ml-2 lg:ml-3 px-2 py-[2px] rounded-full border border-white text-white text-[11px] lg:text-[12px] font-semibold whitespace-nowrap font-pretendard">
+      임직원 전용
+    </span>
+  ) : null
+
 interface MenuProps {
   isDesktop?: boolean
   setOpenSearch?: (open: boolean) => void
@@ -123,6 +150,7 @@ const LeftMenu = ({
     return (
       <div tw="flex items-center gap-4">
         <MobileLogo />
+        <B2bBadge />
       </div>
     )
   }
@@ -172,6 +200,7 @@ const LeftMenu = ({
           return (
             <button
               key={key}
+              data-sns={key.split("-")[0]}
               onClick={() => modalImage && openImageModal?.(modalImage)}
               className="sns-btn-conversion"
               tw="flex items-center justify-center hover:opacity-80">
@@ -183,6 +212,7 @@ const LeftMenu = ({
         return (
           <a
             key={key}
+            data-sns={key.split("-")[0]}
             href={url}
             target="_blank"
             rel="noopener noreferrer"
@@ -353,8 +383,10 @@ const Search = ({ setOpenSearch, clickedKeyword, setClickedKeyword }: MenuProps)
   }
 
   return (
-    <div tw="h-full flex items-center mx-4">
-      <div tw="w-full border-b border-black flex items-center mr-4">
+    <div tw="h-full flex items-center mx-4" css={B2B_WHITE_CONTENT}>
+      <div
+        tw="w-full border-b border-black flex items-center mr-4"
+        css={env.B2B_MODE && tw`border-white`}>
         <form
           tw="contents"
           onSubmit={(e) => {
@@ -367,6 +399,7 @@ const Search = ({ setOpenSearch, clickedKeyword, setClickedKeyword }: MenuProps)
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder={t("header.searchSurgery")}
             tw="w-full p-2 text-sm outline-none"
+            css={env.B2B_MODE && tw`bg-transparent text-white placeholder:text-neutral50`}
           />
         </form>
       </div>
@@ -380,7 +413,7 @@ const Search = ({ setOpenSearch, clickedKeyword, setClickedKeyword }: MenuProps)
       {/* 여기에 검색 결과 보여주기. */}
       {searchResults && delayedSearchTerm && (
         <div
-          tw="absolute left-0 mt-2 top-20 bg-white z-10 overflow-y-auto"
+          tw="absolute left-0 mt-2 top-20 bg-white text-neutralBlack z-10 overflow-y-auto"
           style={{
             maxHeight: "calc(100vh - 90px)",
             width: "100%",
@@ -449,7 +482,7 @@ const HeaderComponent = ({ onClickDrawer, clickedKeyword, setClickedKeyword }: P
   }, [clickedKeyword])
 
   return (
-    <HeaderContainer>
+    <HeaderContainer css={B2B_HEADER_STYLE}>
       {openSearch ? (
         <Search
           setOpenSearch={setOpenSearch}
@@ -458,8 +491,19 @@ const HeaderComponent = ({ onClickDrawer, clickedKeyword, setClickedKeyword }: P
         />
       ) : (
         <>
-          <div tw="absolute-center">{isDesktop && <Logo />}</div>
-          <AppMaxWidth tw="h-full flex justify-between items-center font-pretendard md:text-[15px] text-[13px]">
+          <div tw="absolute-center flex items-center">
+            {isDesktop && (
+              <>
+                <span css={B2B_WHITE_CONTENT} tw="flex">
+                  <Logo />
+                </span>
+                <B2bBadge />
+              </>
+            )}
+          </div>
+          <AppMaxWidth
+            tw="h-full flex justify-between items-center font-pretendard md:text-[15px] text-[13px]"
+            css={B2B_WHITE_CONTENT}>
             <LeftMenu isDesktop={isDesktop} openImageModal={(img) => setModalImage(img)} />
             <RightMenu
               isDesktop={isDesktop}
@@ -485,7 +529,9 @@ const HeaderComponent = ({ onClickDrawer, clickedKeyword, setClickedKeyword }: P
 
               {/* 이미지 영역 */}
               <div tw="p-6 flex justify-center bg-white">
-                {modalImage && <img src={modalImage} alt="" tw="w-[240px] h-[240px] object-contain" />}
+                {modalImage && (
+                  <img src={modalImage} alt="" tw="w-[240px] h-[240px] object-contain" />
+                )}
               </div>
             </div>
           </Modal>

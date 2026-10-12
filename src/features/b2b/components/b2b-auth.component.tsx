@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next"
 import i18n from "i18next"
 import { Button, Checkbox, Input, toast } from "@/design-system/components"
 import { ToastType } from "@/design-system/components/toast/toast.component.type"
+import { useQuery } from "@tanstack/react-query"
 import { b2bApi, b2bErrorMessage, b2bTokenStore } from "@/features/b2b/b2b.api"
 
 const H2 = tw.h2`text-lg font-extrabold`
@@ -47,6 +48,13 @@ const B2bAuth = ({ onAuth, onAgreementChange, resetKey }: Props) => {
   const [agreeTerms, setAgreeTerms] = React.useState(false)
   const [agreePrivacy, setAgreePrivacy] = React.useState(false)
   const [agreeMarketing, setAgreeMarketing] = React.useState(false)
+
+  // 예약 화면 안내 문구(본인 이용·내원 시 확인 방법 등). 어드민 '협약사 관리'에서 입력, 비우면 숨김.
+  const { data: notice } = useQuery({
+    queryKey: ["b2b", "notice"],
+    queryFn: () => b2bApi.notice().then((res) => res.reservationNotice),
+    staleTime: 1000 * 60 * 5,
+  })
 
   const formValid = !!name.trim() && isValidMobile(phone) && isValidEmail(email)
 
@@ -131,6 +139,12 @@ const B2bAuth = ({ onAuth, onAgreementChange, resetKey }: Props) => {
         <H2>{t("reservePage.customerInfo")}</H2>
         <div tw="mt-4 mb-3 border-t border-neutral20" />
       </div>
+
+      {notice && (
+        <div tw="mb-5 p-4 bg-neutral border border-neutral20 text-[13px] lg:text-[14px] leading-[160%] whitespace-pre-line text-neutral70">
+          {notice}
+        </div>
+      )}
 
       <div tw="mb-2">
         <p tw="font-bold mb-1 text-[14px] lg:text-[16px]">
