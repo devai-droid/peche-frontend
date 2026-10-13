@@ -1297,7 +1297,7 @@ const Reserve = () => {
 
   /* ---------------- Render ---------------- */
   return (
-    <Page>
+    <Page hiddenFooter={false}>
       <div tw="bg-neutral w-screen min-h-screen">
         <AppMaxWidth tw="py-8 lg:py-12 overflow-x-hidden font-pretendard">
           {/* ---------------- 회원가입 안내 배너 (임시) ---------------- */}

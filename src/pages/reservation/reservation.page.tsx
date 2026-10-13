@@ -741,7 +741,7 @@ const Reservations = () => {
   // ─────────────────────────────────
   if (!authenticated) {
     return (
-      <Page>
+      <Page hiddenFooter={false}>
         <div tw="bg-neutral min-h-screen w-full font-pretendard">
           <AppMaxWidth tw="pt-20 pb-20 flex flex-col items-center">
             <H1 tw="pt-4 md:pt-0 pb-8 text-[24px] lg:text-[30px] text-center">
@@ -757,7 +757,7 @@ const Reservations = () => {
   }
 
   return (
-    <Page>
+    <Page hiddenFooter={false}>
       <div tw="bg-neutral min-h-screen w-full font-pretendard">
         <AppMaxWidth tw="pt-16 pb-20 flex flex-col items-center gap-6">
           <H1 tw="pt-4 md:pt-0 pb-0 text-[24px] lg:text-[30px] text-center">
