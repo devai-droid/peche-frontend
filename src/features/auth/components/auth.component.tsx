@@ -180,12 +180,11 @@ const Auth = ({ onAuth, onAgreementChange, onBeforeKakaoAuth }: Props) => {
       </div>
 
       {reservationNotice && (
-        <div tw="mb-5">
-          {/* 예약 화면 왼쪽 'STEP n' 라벨과 같은 스타일 (B2B NOTICE와 동일) */}
-          <p tw="mb-2 text-primary text-[12px] md:text-[13px] font-bold tracking-[0.06em] leading-none font-pretendard">
+        <div tw="mb-5 px-3 py-2.5 bg-neutral border border-neutral20">
+          <p tw="mb-1.5 text-primary text-[12px] md:text-[13px] font-bold tracking-[0.06em] leading-none font-pretendard">
             NOTICE
           </p>
-          <div tw="px-3 py-2.5 bg-neutral border border-neutral20 text-[13px] lg:text-[14px] leading-[160%] whitespace-pre-line text-neutral70">
+          <div tw="text-[13px] lg:text-[14px] leading-[160%] whitespace-pre-line text-neutral70">
             {reservationNotice}
           </div>
         </div>
