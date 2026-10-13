@@ -235,4 +235,8 @@ export interface BlogV2SiteConfig {
   googlePlaceUrl?: string
   naverPlaceUrl?: string
   kakaoPlaceUrl?: string
+  /** 예약 화면 안내(NOTICE) 문구 — 언어별. 줄바꿈 유지 */
+  reservationNotice?: string
+  /** 예약 화면 안내(NOTICE) 노출 여부 — 언어별. false면 박스 미노출 */
+  reservationNoticeEnabled?: boolean
 }

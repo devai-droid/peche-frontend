@@ -17,6 +17,7 @@ import EmailAuthModal from "./email-auth-modal.component"
 import { useMe } from "@/features/user/hooks/use-user"
 import { useLogout } from "@/features/auth/hooks/use-auth"
 import Modal from "@/lib/components/modal/modal.component"
+import { useSiteConfig } from "@/lib/hooks/use-site-config"
 
 const H2 = tw.h2`text-lg font-extrabold`
 
@@ -39,6 +40,12 @@ const Auth = ({ onAuth, onAgreementChange, onBeforeKakaoAuth }: Props) => {
   const { user: me } = useMe()
   const { logout } = useLogout()
   const isKorean = language === Language.KOR
+
+  // 예약 화면 안내(NOTICE): 어드민 '기본 정보 관리'에서 언어별 작성·노출 토글. 끄면 박스 미노출.
+  const siteConfig = useSiteConfig()
+  const reservationNotice = siteConfig?.reservationNoticeEnabled
+    ? siteConfig?.reservationNotice?.trim()
+    : ""
 
   const [params] = useSearchParams()
   const pathVisit = params.get("path_visit")
@@ -171,6 +178,19 @@ const Auth = ({ onAuth, onAgreementChange, onBeforeKakaoAuth }: Props) => {
         <H2>{t("reservePage.customerInfo")}</H2>
         <div tw="mt-4 mb-3 border-t border-neutral20" />
       </div>
+
+      {reservationNotice && (
+        <div tw="mb-5">
+          {/* 예약 화면 왼쪽 'STEP n' 라벨과 같은 스타일 (B2B NOTICE와 동일) */}
+          <p tw="mb-2 text-primary text-[12px] md:text-[13px] font-bold tracking-[0.06em] leading-none font-pretendard">
+            NOTICE
+          </p>
+          <div tw="px-3 py-2.5 bg-neutral border border-neutral20 text-[13px] lg:text-[14px] leading-[160%] whitespace-pre-line text-neutral70">
+            {reservationNotice}
+          </div>
+        </div>
+      )}
+
       {CounselingChannel}
 
       {/* ================= 본인인증 (하단) ================= */}
