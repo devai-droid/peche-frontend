@@ -1022,6 +1022,12 @@ const Reserve = () => {
         },
         {
           onSuccess: () => {
+            // 광고 전환 추적: 예약이 최종 성공한 직후 1회만 push(성공 시에만, 중복 금지).
+            // GTM(dataLayer)이 이 이벤트로 예약완료 전환을 잡는다. URL 판별 대신 명시적 이벤트.
+            const w = window as unknown as { dataLayer?: Record<string, unknown>[] }
+            w.dataLayer = w.dataLayer || []
+            w.dataLayer.push({ event: "reservation_complete" })
+
             localStorage.removeItem("reservation:selectedDatetime")
             resetCart()
             navigate("/reservation/complete")
