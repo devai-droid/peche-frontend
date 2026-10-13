@@ -26,9 +26,20 @@ const Calendar = ({ disabledDate, footer, ...props }: CalendarProp) => {
   const language = i18n.language as Language
   const isChinese = language === "zh" || language === "zh-TW"
 
+  // 달력 헤더 년월 표기: 한·중·일은 "연도 먼저"(YYYY년 M월), 그 외는 기본(월 YYYY)
+  const monthAndYearFormat =
+    language === "ja" || isChinese
+      ? "YYYY[年] M[月]"
+      : language === "ko"
+      ? "YYYY[년] M[월]"
+      : "MMMM YYYY"
+
   return (
     <div>
-      <LocalizationProvider adapterLocale={language} dateAdapter={AdapterDayjs}>
+      <LocalizationProvider
+        adapterLocale={language}
+        dateAdapter={AdapterDayjs}
+        dateFormats={{ monthAndYear: monthAndYearFormat }}>
         <DateCalendar
           className="!w-full !max-h-[28rem] !h-[28rem]"
           sx={{
