@@ -180,7 +180,7 @@ const Auth = ({ onAuth, onAgreementChange, onBeforeKakaoAuth }: Props) => {
       </div>
 
       {reservationNotice && (
-        <div tw="mb-5 px-3 py-2.5 bg-[#FEF5EF] border border-neutral20">
+        <div tw="mb-5 px-3 py-2.5 bg-[#FEF5EF]">
           <p tw="mb-1.5 text-primary text-[12px] md:text-[13px] font-bold tracking-[0.06em] leading-none font-pretendard">
             NOTICE
           </p>
