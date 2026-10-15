@@ -1022,15 +1022,31 @@ const Reserve = () => {
         },
         {
           onSuccess: () => {
-            // 광고 전환 추적: 예약이 최종 성공한 직후 1회만 push(성공 시에만, 중복 금지).
-            // GTM(dataLayer)이 이 이벤트로 예약완료 전환을 잡는다. URL 판별 대신 명시적 이벤트.
+            // 광고 전환 추적: 예약 성공 직후 1회만 push(성공 시에만, 중복 금지).
+            // ⚠️ push 직후 바로 화면을 이동하면 메타/구글로 나갈 네트워크 요청이
+            //    전송 전에 취소된다. eventCallback으로 태그 전송이 끝난 뒤(또는
+            //    eventTimeout 2초 뒤) 이동한다.
             const w = window as unknown as { dataLayer?: Record<string, unknown>[] }
             w.dataLayer = w.dataLayer || []
-            w.dataLayer.push({ event: "reservation_complete" })
 
             localStorage.removeItem("reservation:selectedDatetime")
             resetCart()
-            navigate("/reservation/complete")
+
+            let moved = false
+            const goComplete = () => {
+              if (moved) return
+              moved = true
+              navigate("/reservation/complete")
+            }
+
+            w.dataLayer.push({
+              event: "reservation_complete",
+              eventCallback: goComplete,
+              eventTimeout: 2000,
+            })
+
+            // GTM이 없거나(광고 차단 등) 콜백이 오지 않아도 반드시 이동
+            window.setTimeout(goComplete, 2000)
           },
         },
       )
